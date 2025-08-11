@@ -106,7 +106,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
             <Link href="/" className="text-muted-foreground hover:text-primary transition-colors">
               Home
             </Link>
-            <Link href="/blog" className="text-muted-foreground hover:text-primary transition-colors">
+            <Link href="/blog" className="text-action font-medium">
               Blog
             </Link>
             <Button className="bg-action text-action-foreground hover:bg-action/90">Book Consultation</Button>

@@ -48,15 +48,6 @@ export default function Blog() {
             <Link href="/" className="text-muted-foreground hover:text-primary transition-colors">
               Home
             </Link>
-            <a href="/#about" className="text-muted-foreground hover:text-primary transition-colors">
-              About
-            </a>
-            <a href="/#services" className="text-muted-foreground hover:text-primary transition-colors">
-              Services
-            </a>
-            <a href="/#portfolio" className="text-muted-foreground hover:text-primary transition-colors">
-              Portfolio
-            </a>
             <span className="text-action font-medium">Blog</span>
             <Button className="bg-action text-action-foreground hover:bg-action/90">Book Consultation</Button>
           </nav>
@@ -71,7 +62,7 @@ export default function Blog() {
             className="inline-flex items-center text-muted-foreground hover:text-primary transition-colors mb-8"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Portfolio
+            Back to Home
           </Link>
           <h1 className="text-4xl md:text-5xl font-bold text-primary mb-6">
             Insights on Software Development & Tech Leadership
