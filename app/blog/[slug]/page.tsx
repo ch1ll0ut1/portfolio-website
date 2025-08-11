@@ -2,6 +2,8 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { ArrowLeft, Calendar, Clock, User, Github, Linkedin } from "lucide-react"
 import Link from "next/link"
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
+import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
 
 // This would typically come from a CMS or database
 const getBlogPost = (slug: string) => {
@@ -157,33 +159,66 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
           </header>
 
           <div className="prose prose-lg max-w-none">
-            {post.content.split("\n").map((paragraph, index) => {
-              if (paragraph.startsWith("## ")) {
-                return (
-                  <h2 key={index} className="text-2xl font-bold text-primary mt-12 mb-6">
-                    {paragraph.replace("## ", "")}
-                  </h2>
-                )
+            {(() => {
+              const lines = post.content.split("\n")
+              const elements = []
+              let i = 0
+              
+              while (i < lines.length) {
+                const line = lines[i]
+                
+                if (line.startsWith("## ")) {
+                  elements.push(
+                    <h2 key={i} className="text-2xl font-bold text-primary mt-12 mb-6">
+                      {line.replace("## ", "")}
+                    </h2>
+                  )
+                } else if (line.startsWith("### ")) {
+                  elements.push(
+                    <h3 key={i} className="text-xl font-semibold text-primary mt-8 mb-4">
+                      {line.replace("### ", "")}
+                    </h3>
+                  )
+                } else if (line.startsWith("```")) {
+                  // Find the end of the code block
+                  const codeLines = []
+                  let language = line.replace("```", "").trim() || "javascript"
+                  i++ // Skip the opening ```
+                  
+                  while (i < lines.length && !lines[i].startsWith("```")) {
+                    codeLines.push(lines[i])
+                    i++
+                  }
+                  
+                  elements.push(
+                    <div key={i} className="my-6">
+                      <SyntaxHighlighter
+                        language={language}
+                        style={oneDark}
+                        customStyle={{
+                          borderRadius: '8px',
+                          fontSize: '14px',
+                          padding: '16px',
+                        }}
+                        showLineNumbers={true}
+                      >
+                        {codeLines.join("\n")}
+                      </SyntaxHighlighter>
+                    </div>
+                  )
+                } else if (line.trim() !== "") {
+                  elements.push(
+                    <p key={i} className="text-muted-foreground leading-relaxed mb-6">
+                      {line}
+                    </p>
+                  )
+                }
+                
+                i++
               }
-              if (paragraph.startsWith("### ")) {
-                return (
-                  <h3 key={index} className="text-xl font-semibold text-primary mt-8 mb-4">
-                    {paragraph.replace("### ", "")}
-                  </h3>
-                )
-              }
-              if (paragraph.startsWith("```")) {
-                return null // Skip code block markers for this example
-              }
-              if (paragraph.trim() === "") {
-                return null
-              }
-              return (
-                <p key={index} className="text-muted-foreground leading-relaxed mb-6">
-                  {paragraph}
-                </p>
-              )
-            })}
+              
+              return elements
+            })()}
           </div>
         </div>
       </article>
