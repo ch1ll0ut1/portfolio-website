@@ -9,19 +9,24 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
+  /* Brand colors: Dark Gray #1F2937, Warm Orange #F59E0B, Electric Blue #2563EB */
+  --primary: oklch(0.27 0.02 249); /* Dark Gray #1F2937 - authority, headings */
+  --primary-foreground: oklch(1 0 0);
   --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
+  --secondary-foreground: oklch(0.27 0.02 249);
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  /* Warm Orange for accents/highlights */
+  --accent: oklch(0.73 0.15 65); /* Warm Orange #F59E0B - prestige, highlights */
+  --accent-foreground: oklch(0.27 0.02 249);
+  /* Electric Blue for CTAs/actions */
+  --action: oklch(0.52 0.19 252); /* Electric Blue #2563EB - innovation, CTAs */
+  --action-foreground: oklch(1 0 0);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.577 0.245 27.325);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --ring: oklch(0.52 0.19 252); /* Electric Blue for focus rings */
   --radius: 0.625rem;
 }
 
@@ -62,6 +67,8 @@
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+  --color-action: var(--action);
+  --color-action-foreground: var(--action-foreground);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);

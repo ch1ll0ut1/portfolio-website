@@ -5,9 +5,9 @@ import { GeistMono } from "geist/font/mono"
 import "./globals.css"
 
 export const metadata: Metadata = {
-  title: "Stefan - Software Developer & Technology Consultant",
+  title: "Stefan Knoch - From Vision to Reality | Software Developer & Technology Consultant",
   description:
-    "Full-stack developer, project manager, and technology consultant with 15+ years experience. I help businesses build great software and lead high-performing teams.",
+    "I help businesses transform ambitious ideas into powerful, real-world applications. Combining creativity, strategic insight, and leadership to guide projects from concept to launch.",
   generator: "v0.dev",
 }
 

@@ -9,24 +9,24 @@ export default function Portfolio() {
       {/* Header */}
       <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="font-bold text-xl text-slate-900">Stefan Knoch</div>
+          <div className="font-bold text-xl text-primary">Stefan Knoch</div>
           <nav className="hidden md:flex items-center gap-8">
-            <a href="#about" className="text-slate-600 hover:text-slate-900 transition-colors">
+            <a href="#about" className="text-muted-foreground hover:text-primary transition-colors">
               About
             </a>
-            <a href="#services" className="text-slate-600 hover:text-slate-900 transition-colors">
+            <a href="#services" className="text-muted-foreground hover:text-primary transition-colors">
               Services
             </a>
-            <a href="#portfolio" className="text-slate-600 hover:text-slate-900 transition-colors">
+            <a href="#portfolio" className="text-muted-foreground hover:text-primary transition-colors">
               Portfolio
             </a>
-            <a href="#experience" className="text-slate-600 hover:text-slate-900 transition-colors">
+            <a href="#experience" className="text-muted-foreground hover:text-primary transition-colors">
               Experience
             </a>
-            <a href="/blog" className="text-slate-600 hover:text-slate-900 transition-colors">
+            <a href="/blog" className="text-muted-foreground hover:text-primary transition-colors">
               Blog
             </a>
-            <Button className="bg-blue-600 hover:bg-blue-700">Book Consultation</Button>
+            <Button className="bg-action text-action-foreground hover:bg-action/90">Book Consultation</Button>
           </nav>
         </div>
       </header>
@@ -34,17 +34,17 @@ export default function Portfolio() {
       {/* Hero Section */}
       <section className="py-20 px-6">
         <div className="max-w-6xl mx-auto text-center">
-          <h1 className="text-5xl md:text-6xl font-bold text-slate-900 mb-6 leading-tight">
-            From Idea to Impact —<br />
-            <span className="text-blue-600">I Help Businesses Build, Lead, and Deliver Great Software</span>
+          <h1 className="text-5xl md:text-6xl font-bold text-primary mb-6 leading-tight">
+            From Vision to Reality —<br />
+            <span className="text-action">I Turn Complex Ideas Into Working Solutions</span>
           </h1>
-          <p className="text-xl text-slate-600 mb-8 max-w-3xl mx-auto leading-relaxed">
-            I'm Stefan Knoch — a software developer, project manager, and technology consultant. I help companies create
-            world-class apps, assemble high-performing teams, and design strategies that make technology work for the
-            business — not the other way around.
+          <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
+            I help businesses transform ambitious ideas into powerful, real-world applications. With a unique blend of 
+            creativity, strategic insight, and leadership, I guide projects from concept to launch — building not just 
+            software, but the teams, systems, and strategies that make it thrive.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-lg px-8 py-3">
+            <Button size="lg" className="bg-action text-action-foreground hover:bg-action/90 text-lg px-8 py-3">
               Book a Free Consultation
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
@@ -61,8 +61,8 @@ export default function Portfolio() {
       {/* About Section */}
       <section id="about" className="py-20 px-6 bg-white">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-4xl font-bold text-slate-900 mb-8 text-center">About Me</h2>
-          <div className="prose prose-lg max-w-none text-slate-600 leading-relaxed">
+          <h2 className="text-4xl font-bold text-primary mb-8 text-center">About Me</h2>
+          <div className="prose prose-lg max-w-none text-muted-foreground leading-relaxed">
             <p className="text-xl mb-6">
               I've spent my career working across the full spectrum of software delivery — from hands-on coding to
               leading teams and shaping the entire technology function of a company. I bridge the gap between technical
@@ -81,7 +81,7 @@ export default function Portfolio() {
             </p>
           </div>
           <div className="text-center mt-8">
-            <Button className="bg-blue-600 hover:bg-blue-700">
+            <Button className="bg-action text-action-foreground hover:bg-action/90">
               Let's talk about your project
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
@@ -92,8 +92,8 @@ export default function Portfolio() {
       {/* Services Section */}
       <section id="services" className="py-20 px-6 bg-slate-50">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl font-bold text-slate-900 mb-4 text-center">Services</h2>
-          <p className="text-xl text-slate-600 mb-12 text-center max-w-3xl mx-auto">
+          <h2 className="text-4xl font-bold text-primary mb-4 text-center">Services</h2>
+          <p className="text-xl text-muted-foreground mb-12 text-center max-w-3xl mx-auto">
             I help businesses turn ideas into working products, define their tech strategy, and keep their systems
             running smoothly. Depending on the scope, I either deliver the work myself or assemble and lead the right
             team to get it done.
@@ -103,8 +103,8 @@ export default function Portfolio() {
             {/* Service 1 */}
             <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow">
               <CardHeader>
-                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-                  <Code className="h-6 w-6 text-blue-600" />
+                <div className="w-12 h-12 bg-action/10 rounded-lg flex items-center justify-center mb-4">
+                  <Code className="h-6 w-6 text-action" />
                 </div>
                 <CardTitle className="text-xl">Full App Development</CardTitle>
                 <CardDescription>
@@ -113,7 +113,7 @@ export default function Portfolio() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <ul className="text-sm text-slate-600 space-y-2">
+                <ul className="text-sm text-muted-foreground space-y-2">
                   <li>• Requirements gathering & specifications</li>
                   <li>• Architecture design & tech stack selection</li>
                   <li>• UI/UX design coordination</li>
@@ -126,8 +126,8 @@ export default function Portfolio() {
             {/* Service 2 */}
             <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow">
               <CardHeader>
-                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
-                  <Users className="h-6 w-6 text-green-600" />
+                <div className="w-12 h-12 bg-action/10 rounded-lg flex items-center justify-center mb-4">
+                  <Users className="h-6 w-6 text-action" />
                 </div>
                 <CardTitle className="text-xl">Team Assembly & Leadership</CardTitle>
                 <CardDescription>
@@ -136,7 +136,7 @@ export default function Portfolio() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <ul className="text-sm text-slate-600 space-y-2">
+                <ul className="text-sm text-muted-foreground space-y-2">
                   <li>• Project managers & UX/UI designers</li>
                   <li>• Frontend & backend developers</li>
                   <li>• DevOps engineers & QA testers</li>
@@ -149,8 +149,8 @@ export default function Portfolio() {
             {/* Service 3 */}
             <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow">
               <CardHeader>
-                <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
-                  <Lightbulb className="h-6 w-6 text-purple-600" />
+                <div className="w-12 h-12 bg-action/10 rounded-lg flex items-center justify-center mb-4">
+                  <Lightbulb className="h-6 w-6 text-action" />
                 </div>
                 <CardTitle className="text-xl">Technology Strategy</CardTitle>
                 <CardDescription>
@@ -158,7 +158,7 @@ export default function Portfolio() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <ul className="text-sm text-slate-600 space-y-2">
+                <ul className="text-sm text-muted-foreground space-y-2">
                   <li>• System & workflow reviews</li>
                   <li>• Technology roadmap creation</li>
                   <li>• Tool & process recommendations</li>
@@ -171,8 +171,8 @@ export default function Portfolio() {
             {/* Service 4 */}
             <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow">
               <CardHeader>
-                <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
-                  <Zap className="h-6 w-6 text-orange-600" />
+                <div className="w-12 h-12 bg-action/10 rounded-lg flex items-center justify-center mb-4">
+                  <Zap className="h-6 w-6 text-action" />
                 </div>
                 <CardTitle className="text-xl">AI Consulting & Coaching</CardTitle>
                 <CardDescription>
@@ -180,7 +180,7 @@ export default function Portfolio() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <ul className="text-sm text-slate-600 space-y-2">
+                <ul className="text-sm text-muted-foreground space-y-2">
                   <li>• AI opportunity identification</li>
                   <li>• Custom AI solution design</li>
                   <li>• Team training on AI tools</li>
@@ -193,8 +193,8 @@ export default function Portfolio() {
             {/* Service 5 */}
             <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow">
               <CardHeader>
-                <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mb-4">
-                  <Shield className="h-6 w-6 text-red-600" />
+                <div className="w-12 h-12 bg-action/10 rounded-lg flex items-center justify-center mb-4">
+                  <Shield className="h-6 w-6 text-action" />
                 </div>
                 <CardTitle className="text-xl">Deployment & Maintenance</CardTitle>
                 <CardDescription>
@@ -202,7 +202,7 @@ export default function Portfolio() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <ul className="text-sm text-slate-600 space-y-2">
+                <ul className="text-sm text-muted-foreground space-y-2">
                   <li>• Hosting setup & CI/CD pipelines</li>
                   <li>• Security hardening & compliance</li>
                   <li>• Performance optimization</li>
@@ -215,8 +215,8 @@ export default function Portfolio() {
             {/* Service 6 */}
             <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow">
               <CardHeader>
-                <div className="w-12 h-12 bg-teal-100 rounded-lg flex items-center justify-center mb-4">
-                  <Settings className="h-6 w-6 text-teal-600" />
+                <div className="w-12 h-12 bg-action/10 rounded-lg flex items-center justify-center mb-4">
+                  <Settings className="h-6 w-6 text-action" />
                 </div>
                 <CardTitle className="text-xl">System Integration & Automation</CardTitle>
                 <CardDescription>
@@ -224,7 +224,7 @@ export default function Portfolio() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <ul className="text-sm text-slate-600 space-y-2">
+                <ul className="text-sm text-muted-foreground space-y-2">
                   <li>• CRM, ERP, analytics integration</li>
                   <li>• Workflow automation</li>
                   <li>• API implementation</li>
@@ -240,8 +240,8 @@ export default function Portfolio() {
       {/* Portfolio Section */}
       <section id="portfolio" className="py-20 px-6 bg-white">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl font-bold text-slate-900 mb-4 text-center">Portfolio</h2>
-          <p className="text-xl text-slate-600 mb-12 text-center max-w-3xl mx-auto">
+          <h2 className="text-4xl font-bold text-primary mb-4 text-center">Portfolio</h2>
+          <p className="text-xl text-muted-foreground mb-12 text-center max-w-3xl mx-auto">
             A selection of projects that showcase my expertise in full-stack development, team leadership, and
             technology strategy.
           </p>
@@ -321,14 +321,14 @@ export default function Portfolio() {
       {/* Experience & Skills */}
       <section id="experience" className="py-20 px-6 bg-white">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl font-bold text-slate-900 mb-12 text-center">Experience & Expertise</h2>
+          <h2 className="text-4xl font-bold text-primary mb-12 text-center">Experience & Expertise</h2>
 
           <div className="grid md:grid-cols-2 gap-12">
             <div>
-              <h3 className="text-2xl font-semibold text-slate-900 mb-6">Technical Skills</h3>
+              <h3 className="text-2xl font-semibold text-primary mb-6">Technical Skills</h3>
               <div className="space-y-4">
                 <div>
-                  <h4 className="font-medium text-slate-900 mb-2">Languages & Frameworks</h4>
+                  <h4 className="font-medium text-primary mb-2">Languages & Frameworks</h4>
                   <div className="flex flex-wrap gap-2">
                     <Badge variant="secondary">JavaScript/TypeScript</Badge>
                     <Badge variant="secondary">React/Next.js</Badge>
@@ -339,7 +339,7 @@ export default function Portfolio() {
                   </div>
                 </div>
                 <div>
-                  <h4 className="font-medium text-slate-900 mb-2">Cloud & DevOps</h4>
+                  <h4 className="font-medium text-primary mb-2">Cloud & DevOps</h4>
                   <div className="flex flex-wrap gap-2">
                     <Badge variant="secondary">AWS</Badge>
                     <Badge variant="secondary">Azure</Badge>
@@ -350,7 +350,7 @@ export default function Portfolio() {
                   </div>
                 </div>
                 <div>
-                  <h4 className="font-medium text-slate-900 mb-2">Databases</h4>
+                  <h4 className="font-medium text-primary mb-2">Databases</h4>
                   <div className="flex flex-wrap gap-2">
                     <Badge variant="secondary">PostgreSQL</Badge>
                     <Badge variant="secondary">MongoDB</Badge>
@@ -362,34 +362,34 @@ export default function Portfolio() {
             </div>
 
             <div>
-              <h3 className="text-2xl font-semibold text-slate-900 mb-6">Leadership & Management</h3>
+              <h3 className="text-2xl font-semibold text-primary mb-6">Leadership & Management</h3>
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
-                  <div className="w-2 h-2 bg-blue-600 rounded-full mt-2"></div>
+                  <div className="w-2 h-2 bg-action rounded-full mt-2"></div>
                   <div>
-                    <h4 className="font-medium text-slate-900">15+ Years Experience</h4>
-                    <p className="text-slate-600">Full-stack development and technical leadership</p>
+                    <h4 className="font-medium text-primary">15+ Years Experience</h4>
+                    <p className="text-muted-foreground">Full-stack development and technical leadership</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="w-2 h-2 bg-blue-600 rounded-full mt-2"></div>
+                  <div className="w-2 h-2 bg-action rounded-full mt-2"></div>
                   <div>
-                    <h4 className="font-medium text-slate-900">Team Leadership</h4>
-                    <p className="text-slate-600">Led teams of 5-20 developers and designers</p>
+                    <h4 className="font-medium text-primary">Team Leadership</h4>
+                    <p className="text-muted-foreground">Led teams of 5-20 developers and designers</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="w-2 h-2 bg-blue-600 rounded-full mt-2"></div>
+                  <div className="w-2 h-2 bg-action rounded-full mt-2"></div>
                   <div>
-                    <h4 className="font-medium text-slate-900">Project Management</h4>
-                    <p className="text-slate-600">Agile, Scrum, and custom delivery methodologies</p>
+                    <h4 className="font-medium text-primary">Project Management</h4>
+                    <p className="text-muted-foreground">Agile, Scrum, and custom delivery methodologies</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="w-2 h-2 bg-blue-600 rounded-full mt-2"></div>
+                  <div className="w-2 h-2 bg-action rounded-full mt-2"></div>
                   <div>
-                    <h4 className="font-medium text-slate-900">Strategic Planning</h4>
-                    <p className="text-slate-600">Technology roadmaps and digital transformation</p>
+                    <h4 className="font-medium text-primary">Strategic Planning</h4>
+                    <p className="text-muted-foreground">Technology roadmaps and digital transformation</p>
                   </div>
                 </div>
               </div>
@@ -399,14 +399,14 @@ export default function Portfolio() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-6 bg-slate-900 text-white">
+      <section className="py-20 px-6 bg-primary text-white">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-4xl font-bold mb-6">Let's Talk</h2>
           <p className="text-xl text-slate-300 mb-8 max-w-2xl mx-auto">
             If you need a hands-on developer, a project leader, or a strategic tech partner, I can help you plan, build,
             and deliver the right solution — on time and to the highest standard.
           </p>
-          <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-lg px-8 py-3">
+          <Button size="lg" className="bg-action text-action-foreground hover:bg-action/90 text-lg px-8 py-3">
             Book a Free Consultation
             <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
@@ -417,7 +417,7 @@ export default function Portfolio() {
       <footer className="py-8 px-6 bg-white border-t">
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col md:flex-row items-center justify-between">
-            <div className="text-slate-600 mb-4 md:mb-0">
+            <div className="text-muted-foreground mb-4 md:mb-0">
               <p>&copy; 2024 Stefan Knoch. All rights reserved.</p>
             </div>
             <div className="flex items-center gap-4">
@@ -425,7 +425,7 @@ export default function Portfolio() {
                 href="https://github.com/stefan-knoch"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-slate-600 hover:text-slate-900 transition-colors"
+                className="text-muted-foreground hover:text-primary transition-colors"
               >
                 <Github className="h-5 w-5" />
               </a>
@@ -433,7 +433,7 @@ export default function Portfolio() {
                 href="https://linkedin.com/in/stefan-knoch"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-slate-600 hover:text-slate-900 transition-colors"
+                className="text-muted-foreground hover:text-primary transition-colors"
               >
                 <Linkedin className="h-5 w-5" />
               </a>

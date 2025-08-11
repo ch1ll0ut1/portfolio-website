@@ -1,5 +1,3 @@
-"use client"
-
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { ArrowLeft, Calendar, Clock, User, Github, Linkedin } from "lucide-react"
@@ -89,7 +87,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-white flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-4xl font-bold text-slate-900 mb-4">Post Not Found</h1>
+          <h1 className="text-4xl font-bold text-primary mb-4">Post Not Found</h1>
           <Link href="/blog">
             <Button>Back to Blog</Button>
           </Link>
@@ -103,15 +101,15 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
       {/* Header */}
       <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="font-bold text-xl text-slate-900">Stefan Knoch</div>
+          <div className="font-bold text-xl text-primary">Stefan Knoch</div>
           <nav className="hidden md:flex items-center gap-8">
-            <Link href="/" className="text-slate-600 hover:text-slate-900 transition-colors">
+            <Link href="/" className="text-muted-foreground hover:text-primary transition-colors">
               Home
             </Link>
-            <Link href="/blog" className="text-slate-600 hover:text-slate-900 transition-colors">
+            <Link href="/blog" className="text-muted-foreground hover:text-primary transition-colors">
               Blog
             </Link>
-            <Button className="bg-blue-600 hover:bg-blue-700">Book Consultation</Button>
+            <Button className="bg-action text-action-foreground hover:bg-action/90">Book Consultation</Button>
           </nav>
         </div>
       </header>
@@ -121,14 +119,14 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
         <div className="max-w-4xl mx-auto">
           <Link
             href="/blog"
-            className="inline-flex items-center text-slate-600 hover:text-slate-900 transition-colors mb-8"
+            className="inline-flex items-center text-muted-foreground hover:text-primary transition-colors mb-8"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Blog
           </Link>
 
           <header className="mb-12">
-            <div className="flex items-center gap-4 text-sm text-slate-500 mb-6">
+            <div className="flex items-center gap-4 text-sm text-muted-foreground mb-6">
               <div className="flex items-center gap-1">
                 <Calendar className="h-4 w-4" />
                 {new Date(post.date).toLocaleDateString("en-US", {
@@ -147,7 +145,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
               </div>
             </div>
 
-            <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 leading-tight">{post.title}</h1>
+            <h1 className="text-4xl md:text-5xl font-bold text-primary mb-6 leading-tight">{post.title}</h1>
 
             <div className="flex flex-wrap gap-2">
               {post.tags.map((tag) => (
@@ -162,14 +160,14 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
             {post.content.split("\n").map((paragraph, index) => {
               if (paragraph.startsWith("## ")) {
                 return (
-                  <h2 key={index} className="text-2xl font-bold text-slate-900 mt-12 mb-6">
+                  <h2 key={index} className="text-2xl font-bold text-primary mt-12 mb-6">
                     {paragraph.replace("## ", "")}
                   </h2>
                 )
               }
               if (paragraph.startsWith("### ")) {
                 return (
-                  <h3 key={index} className="text-xl font-semibold text-slate-900 mt-8 mb-4">
+                  <h3 key={index} className="text-xl font-semibold text-primary mt-8 mb-4">
                     {paragraph.replace("### ", "")}
                   </h3>
                 )
@@ -181,7 +179,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
                 return null
               }
               return (
-                <p key={index} className="text-slate-600 leading-relaxed mb-6">
+                <p key={index} className="text-muted-foreground leading-relaxed mb-6">
                   {paragraph}
                 </p>
               )
@@ -194,7 +192,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
       <footer className="py-8 px-6 bg-white border-t">
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col md:flex-row items-center justify-between">
-            <div className="text-slate-600 mb-4 md:mb-0">
+            <div className="text-muted-foreground mb-4 md:mb-0">
               <p>&copy; 2024 Stefan Knoch. All rights reserved.</p>
             </div>
             <div className="flex items-center gap-4">
@@ -202,7 +200,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
                 href="https://github.com/stefan-knoch"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-slate-600 hover:text-slate-900 transition-colors"
+                className="text-muted-foreground hover:text-primary transition-colors"
               >
                 <Github className="h-5 w-5" />
               </a>
@@ -210,7 +208,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
                 href="https://linkedin.com/in/stefan-knoch"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-slate-600 hover:text-slate-900 transition-colors"
+                className="text-muted-foreground hover:text-primary transition-colors"
               >
                 <Linkedin className="h-5 w-5" />
               </a>
