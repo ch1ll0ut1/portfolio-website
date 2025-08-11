@@ -81,8 +81,9 @@ The applications that stand the test of time are those built with these principl
   return posts[slug as keyof typeof posts] || null
 }
 
-export default function BlogPost({ params }: { params: { slug: string } }) {
-  const post = getBlogPost(params.slug)
+export default async function BlogPost({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
+  const post = getBlogPost(slug)
 
   if (!post) {
     return (
