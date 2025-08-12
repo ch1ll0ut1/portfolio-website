@@ -23,8 +23,7 @@ export function readMarkdownFile(fileName: string): string | null {
         return content.trim();
     }
     catch (error) {
-        console.error(`Error reading markdown file ${fileName}:`, error);
-        return null;
+        throw new Error(`Error reading markdown file ${fileName}: ${error}`);
     }
 }
 
