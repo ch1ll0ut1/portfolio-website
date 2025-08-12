@@ -25,33 +25,49 @@ export const experience: ExperienceData = {
     technicalSkills: [
         {
             name: 'Languages & Frameworks',
-            skills: ['JavaScript/TypeScript', 'React/Next.js', 'Node.js', 'Python', 'Java', 'C#/.NET'],
+            skills: ['TypeScript', 'JavaScript', 'React', 'Node.js', 'GraphQL', 'Next.js', 'HTML5', 'CSS', 'SASS'],
         },
         {
             name: 'Cloud & DevOps',
-            skills: ['AWS', 'Azure', 'Docker', 'Kubernetes', 'CI/CD', 'Terraform'],
+            skills: ['AWS (EC2, S3, CDK, ECS)', 'Docker', 'CircleCi', 'Git', 'Nginx', 'Apache', 'Ubuntu', 'Debian'],
         },
         {
             name: 'Databases',
-            skills: ['PostgreSQL', 'MongoDB', 'Redis', 'MySQL'],
+            skills: ['MySQL', 'MongoDB', 'Redis', 'Elasticsearch', 'PostgreSQL', 'InfluxDB'],
+        },
+        {
+            name: 'Tools & Libraries',
+            skills: ['Slate.js', 'Redux', 'Zustand', 'Vitest', 'Jest', 'Parcel', 'Webpack', 'Babel', 'StyledComponents', 'TailwindCSS', 'MaterialUI', 'Socket.io', 'MeteorJS', 'Express.js', 'Koa', 'TypedORM', 'Sequilize'],
+        },
+        {
+            name: 'Project Management',
+            skills: ['Agile', 'Scrum', 'Kanban', 'Jira', 'Trello'],
         },
     ],
     leadershipItems: [
         {
             title: '15+ Years Experience',
-            description: 'Full-stack development and technical leadership',
+            description: 'Full-stack development and technical leadership across multiple industries',
         },
         {
             title: 'Team Leadership',
-            description: 'Led teams of 5-20 developers and designers',
+            description: 'Led teams of 4-12 developers, mentoring and coaching junior developers',
+        },
+        {
+            title: 'Startup Experience',
+            description: 'CTO roles, co-founder experience, and startup accelerator participation',
+        },
+        {
+            title: 'Technical Architecture',
+            description: 'Built systems from ground up, designed scalable architectures, and implemented automation pipelines',
         },
         {
             title: 'Project Management',
-            description: 'Agile, Scrum, and custom delivery methodologies',
+            description: 'Agile methodologies, process improvement, and cross-functional team coordination',
         },
         {
-            title: 'Strategic Planning',
-            description: 'Technology roadmaps and digital transformation',
+            title: 'Government & Enterprise',
+            description: 'Worked with government projects, healthcare compliance (HIPAA), and enterprise solutions',
         },
     ],
 };
