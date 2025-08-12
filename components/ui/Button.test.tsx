@@ -178,7 +178,7 @@ describe('Button Component', () => {
             render(
                 <Button asChild>
                     <a href="/test">Link Button</a>
-                </Button>
+                </Button>,
             );
 
             // Assert

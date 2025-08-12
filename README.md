@@ -13,7 +13,7 @@ A modern, responsive portfolio website built with Next.js 15, React 19, and Type
 - **Responsive Design** - Optimized for all devices and screen sizes
 - **Modern Tech Stack** - Built with Next.js 15, React 19, and TypeScript
 - **Performance Optimized** - Server-side rendering and optimized assets
-- **SEO Friendly** - Meta tags, structured data, and semantic HTML
+- **SEO Optimized** - Comprehensive SEO with structured data, Open Graph, and sitemaps
 - **Accessibility** - WCAG AA compliant with proper ARIA labels
 
 ### **Content Management**
@@ -48,6 +48,8 @@ A modern, responsive portfolio website built with Next.js 15, React 19, and Type
 
 - **React Syntax Highlighter** - Code block formatting
 - **Markdown Processing** - Custom markdown parser for blog content
+- **Dynamic OG Images** - Auto-generated social media images
+- **Structured Data** - JSON-LD schema markup for search engines
 
 ### **Testing & Quality**
 
@@ -295,14 +297,32 @@ This project follows the development standards outlined in `DEVELOPMENT_GUIDE.md
 - Responsive design utilities
 - Animation and transition classes
 
-## 📊 **Performance**
+## 📊 **Performance & SEO**
 
-### **Optimizations**
+### **Performance Optimizations**
 
 - **Server-side rendering** for better SEO and performance
 - **Image optimization** with Next.js Image component
 - **Code splitting** for reduced bundle sizes
 - **Static generation** where possible
+
+### **SEO Features**
+
+- **Dynamic Metadata**: Page-specific titles, descriptions, and keywords
+- **Open Graph Images**: Auto-generated social media preview images
+- **Structured Data**: JSON-LD schema markup for rich snippets
+- **Sitemap Generation**: Dynamic XML sitemap with all pages and blog posts
+- **Robots.txt**: Search engine crawling instructions
+- **Canonical URLs**: Prevents duplicate content issues
+- **Breadcrumb Navigation**: Improves user experience and SEO
+- **Meta Tags**: Comprehensive meta tag optimization
+
+### **Expected Lighthouse Scores**
+
+- **Performance**: 95+
+- **Accessibility**: 100
+- **Best Practices**: 100
+- **SEO**: 100
 
 ## 🤝 **Contributing**
 

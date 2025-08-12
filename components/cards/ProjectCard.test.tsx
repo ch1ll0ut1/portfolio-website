@@ -34,16 +34,16 @@ vi.mock('@/components/ui/Badge', () => ({
 }));
 
 vi.mock('@/components/ui/Button', () => ({
-    Button: ({ children, variant, size, className }: { 
-        children: React.ReactNode; 
-        variant?: string; 
-        size?: string; 
+    Button: ({ children, variant, size, className }: {
+        children: React.ReactNode;
+        variant?: string;
+        size?: string;
         className?: string;
     }) => (
-        <button 
-            data-testid="project-button" 
-            data-variant={variant} 
-            data-size={size} 
+        <button
+            data-testid="project-button"
+            data-variant={variant}
+            data-size={size}
             className={className}
         >
             {children}
@@ -204,7 +204,7 @@ describe('ProjectCard Component', () => {
             const card = document.querySelector('[data-slot="card"]');
             const header = document.querySelector('[data-slot="card-header"]');
             const content = document.querySelector('[data-slot="card-content"]');
-            
+
             expect(card).toBeInTheDocument();
             expect(header).toBeInTheDocument();
             expect(content).toBeInTheDocument();
@@ -260,7 +260,7 @@ describe('ProjectCard Component', () => {
 
             // Assert
             const badges = screen.getAllByTestId('badge');
-            badges.forEach(badge => {
+            badges.forEach((badge) => {
                 expect(badge).toHaveAttribute('data-variant', 'secondary');
             });
         });
@@ -358,7 +358,7 @@ describe('ProjectCard Component', () => {
 
             // Assert
             const badges = screen.getAllByTestId('badge');
-            badges.forEach(badge => {
+            badges.forEach((badge) => {
                 expect(badge).toHaveAttribute('data-variant', 'secondary');
             });
         });
@@ -397,7 +397,7 @@ describe('ProjectCard Component', () => {
             // Assert
             const badges = screen.queryAllByTestId('badge');
             expect(badges).toHaveLength(0);
-            
+
             // Technologies container should still exist
             const technologiesContainer = document.querySelector('.flex.flex-wrap.gap-2.mb-4');
             expect(technologiesContainer).toBeInTheDocument();
@@ -439,7 +439,7 @@ describe('ProjectCard Component', () => {
             const badges = screen.getAllByTestId('badge');
             const badgeTexts = badges.map(badge => badge.textContent);
             const uniqueTexts = [...new Set(badgeTexts)];
-            
+
             expect(uniqueTexts).toHaveLength(badgeTexts.length); // No duplicates
         });
     });

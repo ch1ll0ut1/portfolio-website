@@ -5,14 +5,14 @@
 
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { 
-    Card, 
-    CardHeader, 
-    CardTitle, 
-    CardDescription, 
-    CardContent, 
-    CardAction, 
-    CardFooter 
+import {
+    Card,
+    CardHeader,
+    CardTitle,
+    CardDescription,
+    CardContent,
+    CardAction,
+    CardFooter,
 } from './Card';
 
 describe('Card Components', () => {
@@ -42,7 +42,7 @@ describe('Card Components', () => {
                 'rounded-xl',
                 'border',
                 'py-6',
-                'shadow-sm'
+                'shadow-sm',
             );
         });
 
@@ -79,7 +79,7 @@ describe('Card Components', () => {
                 'grid-rows-[auto_auto]',
                 'items-start',
                 'gap-1.5',
-                'px-6'
+                'px-6',
             );
         });
     });
@@ -178,7 +178,7 @@ describe('Card Components', () => {
                 'row-span-2',
                 'row-start-1',
                 'self-start',
-                'justify-self-end'
+                'justify-self-end',
             );
         });
     });
@@ -222,7 +222,7 @@ describe('Card Components', () => {
                     <CardFooter>
                         <span>Footer information</span>
                     </CardFooter>
-                </Card>
+                </Card>,
             );
 
             // Assert
@@ -246,7 +246,7 @@ describe('Card Components', () => {
                     <CardFooter>
                         <a href="/learn-more">Learn More</a>
                     </CardFooter>
-                </Card>
+                </Card>,
             );
 
             // Assert
@@ -261,7 +261,7 @@ describe('Card Components', () => {
             render(
                 <Card role="article" aria-label="Service card">
                     <CardTitle>Accessible Card</CardTitle>
-                </Card>
+                </Card>,
             );
 
             // Assert
@@ -280,7 +280,7 @@ describe('Card Components', () => {
                     <CardContent>
                         <p>Content follows semantic HTML patterns</p>
                     </CardContent>
-                </Card>
+                </Card>,
             );
 
             // Assert
@@ -306,7 +306,7 @@ describe('Card Components', () => {
                     <CardContent id="test-content">Content</CardContent>
                     <CardAction id="test-action">Action</CardAction>
                     <CardFooter id="test-footer">Footer</CardFooter>
-                </div>
+                </div>,
             );
 
             // Assert

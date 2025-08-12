@@ -161,12 +161,12 @@ describe('ExperienceSection Component', () => {
             // Assert
             const technicalTitle = screen.getByText('Technical Skills');
             const leadershipTitle = screen.getByText('Leadership & Management');
-            
+
             expect(technicalTitle).toHaveClass('text-2xl');
             expect(technicalTitle).toHaveClass('font-semibold');
             expect(technicalTitle).toHaveClass('text-primary');
             expect(technicalTitle).toHaveClass('mb-6');
-            
+
             expect(leadershipTitle).toHaveClass('text-2xl');
             expect(leadershipTitle).toHaveClass('font-semibold');
             expect(leadershipTitle).toHaveClass('text-primary');
@@ -240,7 +240,7 @@ describe('ExperienceSection Component', () => {
 
             // Assert
             const badges = screen.getAllByTestId('badge');
-            badges.forEach(badge => {
+            badges.forEach((badge) => {
                 expect(badge).toHaveAttribute('data-variant', 'secondary');
             });
         });
@@ -289,7 +289,7 @@ describe('ExperienceSection Component', () => {
 
             // Assert
             const badges = screen.getAllByTestId('badge');
-            badges.forEach(badge => {
+            badges.forEach((badge) => {
                 expect(badge).toHaveAttribute('data-variant', 'secondary');
             });
         });

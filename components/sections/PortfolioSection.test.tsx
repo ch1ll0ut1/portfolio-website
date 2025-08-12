@@ -199,7 +199,7 @@ describe('PortfolioSection Component', () => {
             // Assert
             const title = screen.getByRole('heading', { level: 2 });
             const description = screen.getByText(/A selection of projects that showcase my expertise/);
-            
+
             expect(title).toBeInTheDocument();
             expect(description.tagName.toLowerCase()).toBe('p');
         });
@@ -251,7 +251,7 @@ describe('PortfolioSection Component', () => {
 
             // Assert
             const projectCards = screen.getAllByTestId('project-card');
-            
+
             expect(projectCards[0]).toHaveAttribute('data-project-id', 'test-project-1');
             expect(projectCards[1]).toHaveAttribute('data-project-id', 'test-project-2');
             expect(projectCards[2]).toHaveAttribute('data-project-id', 'test-project-3');
@@ -299,11 +299,11 @@ describe('PortfolioSection Component', () => {
             // Assert
             const grid = document.querySelector('.grid.md\\:grid-cols-2.lg\\:grid-cols-3.gap-8');
             const projectCards = screen.getAllByTestId('project-card');
-            
+
             expect(grid).toBeInTheDocument();
             expect(projectCards).toHaveLength(3);
             // All project cards should be descendants of the grid
-            projectCards.forEach(card => {
+            projectCards.forEach((card) => {
                 expect(grid).toContainElement(card);
             });
         });
@@ -317,7 +317,7 @@ describe('PortfolioSection Component', () => {
             // Assert
             const technologyContainers = screen.getAllByTestId('technologies');
             expect(technologyContainers).toHaveLength(3);
-            
+
             // Check that each project has its technologies rendered
             const technologies = screen.getAllByTestId('technology');
             expect(technologies.length).toBeGreaterThan(0);
@@ -341,7 +341,7 @@ describe('PortfolioSection Component', () => {
             const projectCards = screen.getAllByTestId('project-card');
             const projectIds = projectCards.map(card => card.getAttribute('data-project-id'));
             const uniqueIds = [...new Set(projectIds)];
-            
+
             expect(uniqueIds).toHaveLength(projectIds.length); // No duplicate IDs
         });
     });
@@ -355,7 +355,7 @@ describe('PortfolioSection Component', () => {
             const headerDiv = document.querySelector('.text-center.mb-12');
             const title = screen.getByText('Portfolio');
             const description = screen.getByText(/A selection of projects that showcase my expertise/);
-            
+
             expect(headerDiv).toBeInTheDocument();
             expect(headerDiv).toContainElement(title);
             expect(headerDiv).toContainElement(description);

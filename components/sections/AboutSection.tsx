@@ -43,7 +43,7 @@ const AboutContent: FC = () => {
     return (
         <div className="prose prose-lg max-w-none text-muted-foreground leading-relaxed">
             <p className="text-xl mb-6">
-                I've spent my career working across the full spectrum of software delivery — from hands-on coding to
+                I&apos;ve spent my career working across the full spectrum of software delivery — from hands-on coding to
                 leading teams and shaping the entire technology function of a company. I bridge the gap between technical
                 detail and business goals, ensuring projects are delivered on time, on budget, and with measurable
                 results.
@@ -69,7 +69,7 @@ const AboutCTA: FC = () => {
     return (
         <div className="text-center mt-8">
             <Button className="bg-action text-action-foreground hover:bg-action/90">
-                Let's talk about your project
+                Let&apos;s talk about your project
                 <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
         </div>

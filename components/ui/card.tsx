@@ -80,4 +80,3 @@ export const CardFooter: FC<React.ComponentProps<'div'>> = ({ className, ...prop
         />
     );
 };
-

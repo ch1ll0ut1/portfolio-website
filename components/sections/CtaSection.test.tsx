@@ -16,7 +16,7 @@ describe('CtaSection Component', () => {
             // Assert
             const title = screen.getByRole('heading', { level: 2 });
             expect(title).toBeInTheDocument();
-            expect(title).toHaveTextContent("Let's Talk");
+            expect(title).toHaveTextContent('Let\'s Talk');
         });
 
         it('should display descriptive text about services', () => {
@@ -27,7 +27,7 @@ describe('CtaSection Component', () => {
             const description = screen.getByText(/If you need a hands-on developer/i);
             expect(description).toBeInTheDocument();
             expect(description).toHaveTextContent(
-                'If you need a hands-on developer, a project leader, or a strategic tech partner, I can help you plan, build, and deliver the right solution — on time and to the highest standard.'
+                'If you need a hands-on developer, a project leader, or a strategic tech partner, I can help you plan, build, and deliver the right solution — on time and to the highest standard.',
             );
         });
 
@@ -112,7 +112,7 @@ describe('CtaSection Component', () => {
                 'hover:bg-action/90',
                 'text-lg',
                 'px-8',
-                'py-3'
+                'py-3',
             );
         });
     });
@@ -148,8 +148,8 @@ describe('CtaSection Component', () => {
 
             // Check that elements appear in DOM in correct order
             const container = title.closest('.text-center');
-            const children = Array.from(container!.children);
-            
+            const children = Array.from(container?.children ?? []);
+
             expect(children.indexOf(title)).toBeLessThan(children.indexOf(description));
             expect(children.indexOf(description)).toBeLessThan(children.indexOf(button));
         });
@@ -163,7 +163,7 @@ describe('CtaSection Component', () => {
             // Assert
             const heading = screen.getByRole('heading', { level: 2 });
             expect(heading).toBeInTheDocument();
-            expect(heading).toHaveAccessibleName("Let's Talk");
+            expect(heading).toHaveAccessibleName('Let\'s Talk');
         });
 
         it('should have accessible button with clear action', () => {
@@ -193,7 +193,7 @@ describe('CtaSection Component', () => {
             // Assert
             const section = document.querySelector('section');
             const description = screen.getByText(/If you need a hands-on developer/i);
-            
+
             expect(section).toHaveClass('bg-primary', 'text-white');
             expect(description).toHaveClass('text-slate-300'); // Should provide sufficient contrast
         });
@@ -214,7 +214,7 @@ describe('CtaSection Component', () => {
             render(
                 <main>
                     <CtaSection />
-                </main>
+                </main>,
             );
 
             // Assert
@@ -229,16 +229,16 @@ describe('CtaSection Component', () => {
                 <div>
                     <CtaSection className="first-cta" />
                     <CtaSection className="second-cta" />
-                </div>
+                </div>,
             );
 
             // Assert
             const firstSection = document.querySelector('.first-cta');
             const secondSection = document.querySelector('.second-cta');
-            
+
             expect(firstSection).toBeInTheDocument();
             expect(secondSection).toBeInTheDocument();
-            expect(screen.getAllByText("Let's Talk")).toHaveLength(2);
+            expect(screen.getAllByText('Let\'s Talk')).toHaveLength(2);
         });
     });
 });

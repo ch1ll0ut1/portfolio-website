@@ -32,6 +32,9 @@ export default tseslint.config(
                 },
                 node: true,
             },
+            react: {
+                version: 'detect',
+            },
         },
     },
     {

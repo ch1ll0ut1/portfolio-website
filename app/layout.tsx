@@ -7,10 +7,75 @@ import { GeistMono } from 'geist/font/mono';
 import './globals.css';
 
 export const metadata: Metadata = {
-    title: 'Stefan Knoch - From Vision to Reality | Software Developer & Technology Consultant',
-    description:
-    'I help businesses transform ambitious ideas into powerful, real-world applications. Combining creativity, strategic insight, and leadership to guide projects from concept to launch.',
-    generator: 'v0.dev',
+    title: {
+        default: 'Stefan Knoch - From Vision to Reality | Software Developer & Technology Consultant',
+        template: '%s | Stefan Knoch',
+    },
+    description: 'I help businesses transform ambitious ideas into powerful, real-world applications. Combining creativity, strategic insight, and leadership to guide projects from concept to launch.',
+    keywords: [
+        'software developer',
+        'technology consultant',
+        'full-stack development',
+        'React',
+        'TypeScript',
+        'Next.js',
+        'tech leadership',
+        'AI implementation',
+        'software architecture',
+        'team leadership',
+    ],
+    authors: [{ name: 'Stefan Knoch' }],
+    creator: 'Stefan Knoch',
+    publisher: 'Stefan Knoch',
+    formatDetection: {
+        email: false,
+        address: false,
+        telephone: false,
+    },
+    metadataBase: new URL('https://stefanknoch.dev'),
+    alternates: {
+        canonical: '/',
+    },
+    openGraph: {
+        type: 'website',
+        locale: 'en_US',
+        url: 'https://stefanknoch.dev',
+        title: 'Stefan Knoch - From Vision to Reality | Software Developer & Technology Consultant',
+        description: 'I help businesses transform ambitious ideas into powerful, real-world applications. Combining creativity, strategic insight, and leadership to guide projects from concept to launch.',
+        siteName: 'Stefan Knoch Portfolio',
+        images: [
+            {
+                url: '/og-image.jpg',
+                width: 1200,
+                height: 630,
+                alt: 'Stefan Knoch - Software Developer & Technology Consultant',
+            },
+        ],
+    },
+    twitter: {
+        card: 'summary_large_image',
+        title: 'Stefan Knoch - From Vision to Reality | Software Developer & Technology Consultant',
+        description: 'I help businesses transform ambitious ideas into powerful, real-world applications. Combining creativity, strategic insight, and leadership to guide projects from concept to launch.',
+        images: ['/og-image.jpg'],
+        creator: '@stefanknoch',
+    },
+    robots: {
+        index: true,
+        follow: true,
+        googleBot: {
+            'index': true,
+            'follow': true,
+            'max-video-preview': -1,
+            'max-image-preview': 'large',
+            'max-snippet': -1,
+        },
+    },
+    verification: {
+        google: 'your-google-verification-code',
+        yandex: 'your-yandex-verification-code',
+        yahoo: 'your-yahoo-verification-code',
+    },
+    generator: 'Next.js',
 };
 
 const RootLayout: FC<{ children: React.ReactNode }> = ({ children }) => {

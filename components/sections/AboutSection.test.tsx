@@ -27,7 +27,7 @@ describe('AboutSection Component', () => {
             const intro = screen.getByText(/I've spent my career working across/i);
             expect(intro).toBeInTheDocument();
             expect(intro).toHaveTextContent(
-                'I\'ve spent my career working across the full spectrum of software delivery — from hands-on coding to leading teams and shaping the entire technology function of a company.'
+                'I\'ve spent my career working across the full spectrum of software delivery — from hands-on coding to leading teams and shaping the entire technology function of a company.',
             );
         });
 
@@ -58,7 +58,7 @@ describe('AboutSection Component', () => {
             const closing = screen.getByText(/Whether you need a project delivered/i);
             expect(closing).toBeInTheDocument();
             expect(closing).toHaveTextContent(
-                'Whether you need a project delivered end-to-end or strategic guidance for your tech department, I bring both the technical depth and the leadership experience to make it happen.'
+                'Whether you need a project delivered end-to-end or strategic guidance for your tech department, I bring both the technical depth and the leadership experience to make it happen.',
             );
         });
 
@@ -222,7 +222,7 @@ describe('AboutSection Component', () => {
             // Elements should appear in DOM in logical order
             const section = headline.closest('section');
             const allElements = [headline, intro, list, button];
-            
+
             for (let i = 0; i < allElements.length - 1; i++) {
                 const current = allElements[i];
                 const next = allElements[i + 1];
@@ -239,7 +239,7 @@ describe('AboutSection Component', () => {
             // Assert
             const heading = screen.getByRole('heading', { level: 2 });
             const section = document.querySelector('section');
-            
+
             expect(heading).toHaveAccessibleName('About Me');
             expect(section).toHaveAttribute('id', 'about'); // Allows anchor linking
         });
@@ -251,10 +251,10 @@ describe('AboutSection Component', () => {
             // Assert
             const list = screen.getByRole('list');
             const listItems = screen.getAllByRole('listitem');
-            
+
             expect(list).toBeInTheDocument();
             expect(listItems).toHaveLength(3);
-            listItems.forEach(item => {
+            listItems.forEach((item) => {
                 expect(item).toBeInTheDocument();
             });
         });
@@ -300,10 +300,10 @@ describe('AboutSection Component', () => {
             const capabilities = [
                 'I can build and deploy an app myself.',
                 'I can recruit and manage an entire product team.',
-                'I can step into a leadership role to define your long-term technology roadmap.'
+                'I can step into a leadership role to define your long-term technology roadmap.',
             ];
 
-            capabilities.forEach(capability => {
+            capabilities.forEach((capability) => {
                 expect(screen.getByText(new RegExp(capability.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i'))).toBeInTheDocument();
             });
         });
@@ -324,7 +324,7 @@ describe('AboutSection Component', () => {
             render(
                 <main>
                     <AboutSection />
-                </main>
+                </main>,
             );
 
             // Assert

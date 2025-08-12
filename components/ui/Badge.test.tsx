@@ -52,7 +52,7 @@ describe('Badge Component', () => {
                 'px-2',
                 'py-0.5',
                 'text-xs',
-                'font-medium'
+                'font-medium',
             );
         });
     });
@@ -146,7 +146,7 @@ describe('Badge Component', () => {
             render(
                 <Badge asChild>
                     <a href="/category">Category Badge</a>
-                </Badge>
+                </Badge>,
             );
 
             // Assert
@@ -162,7 +162,7 @@ describe('Badge Component', () => {
             render(
                 <Badge asChild>
                     <button type="button">Interactive Badge</button>
-                </Badge>
+                </Badge>,
             );
 
             // Assert
@@ -191,7 +191,7 @@ describe('Badge Component', () => {
                     <Badge variant="default">Primary</Badge>
                     <Badge variant="secondary">Secondary</Badge>
                     <Badge variant="outline">Outline</Badge>
-                </div>
+                </div>,
             );
 
             // Assert
@@ -217,7 +217,7 @@ describe('Badge Component', () => {
             render(
                 <Badge asChild>
                     <button>Clickable Badge</button>
-                </Badge>
+                </Badge>,
             );
 
             // Assert

@@ -32,7 +32,7 @@ export const CtaSection: FC<Props> = ({ className = '' }) => {
  */
 const CtaTitle: FC = () => {
     return (
-        <h2 className="text-4xl font-bold mb-6">Let's Talk</h2>
+        <h2 className="text-4xl font-bold mb-6">Let&apos;s Talk</h2>
     );
 };
 

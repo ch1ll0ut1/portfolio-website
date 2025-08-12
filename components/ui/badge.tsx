@@ -45,4 +45,3 @@ export const Badge: FC<Props> = ({
         />
     );
 };
-
