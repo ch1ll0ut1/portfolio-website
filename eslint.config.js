@@ -54,7 +54,7 @@ export default tseslint.config(
             'import/no-default-export': 'error',
 
             // React Stylistic rules
-            'eslint@stylistic/jsx-indent-props': ['error', 4],
+            '@stylistic/jsx-indent-props': ['error', 4],
             '@typescript-eslint/naming-convention': [
                 'error',
                 {
