@@ -1,6 +1,8 @@
 import stylistic from '@stylistic/eslint-plugin';
 import importPlugin from 'eslint-plugin-import';
 import tseslint from 'typescript-eslint';
+import react from 'eslint-plugin-react';
+import reactHooks from 'eslint-plugin-react-hooks';
 
 export default tseslint.config(
     { 
@@ -19,6 +21,8 @@ export default tseslint.config(
     stylistic.configs.recommended,
     importPlugin.flatConfigs.recommended,
     importPlugin.flatConfigs.typescript,
+    react.configs.flat.recommended,
+    react.configs.flat['jsx-runtime'],
     {
         settings: {
             'import/resolver': {
@@ -41,6 +45,7 @@ export default tseslint.config(
     {
         plugins: {
             '@stylistic': stylistic,
+            'react-hooks': reactHooks,
         },
         rules: {
             // Stylistic rules
@@ -51,7 +56,6 @@ export default tseslint.config(
                 multiline: { delimiter: 'semi', requireLast: true },
                 singleline: { delimiter: 'semi', requireLast: false },
             }],
-            'import/no-default-export': 'error',
 
             // React Stylistic rules
             '@stylistic/jsx-indent-props': ['error', 4],
@@ -86,7 +90,15 @@ export default tseslint.config(
             '@typescript-eslint/no-loss-of-precision': 'off',
 
             // Next.js requires default exports for pages
-            'import/no-default-export': 'off'
+            'import/no-default-export': 'off',
+            
+            // React hooks rules
+            'react-hooks/rules-of-hooks': 'error',
+            'react-hooks/exhaustive-deps': 'warn',
+            
+            // React rules
+            'react/prop-types': 'off', // We use TypeScript
+            'react/react-in-jsx-scope': 'off' // Not needed with new JSX transform
         }
     },
     {
