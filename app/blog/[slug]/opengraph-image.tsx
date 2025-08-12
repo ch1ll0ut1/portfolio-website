@@ -32,7 +32,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
                     <h1 style={{ fontSize: '48px', fontWeight: 'bold' }}>Post Not Found</h1>
                 </div>
             ),
-            { ...size }
+            { ...size },
         );
     }
 
@@ -181,6 +181,6 @@ export default async function Image({ params }: { params: Promise<{ slug: string
         ),
         {
             ...size,
-        }
+        },
     );
 }
