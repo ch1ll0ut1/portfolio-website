@@ -5,6 +5,7 @@ import { GeistSans } from 'geist/font/sans';
 // eslint-disable-next-line import/no-unresolved
 import { GeistMono } from 'geist/font/mono';
 import './globals.css';
+import { Analytics } from '@vercel/analytics/next';
 
 export const metadata: Metadata = {
     title: {
@@ -92,7 +93,10 @@ html {
         `}
                 </style>
             </head>
-            <body>{children}</body>
+            <body>
+                {children}
+                <Analytics />
+            </body>
         </html>
     );
 };
