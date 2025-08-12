@@ -70,6 +70,7 @@ const ServiceFeature: FC<{ feature: string }> = ({ feature }) => {
     return (
         <li>
             •
+            {' '}
             {feature}
         </li>
     );
