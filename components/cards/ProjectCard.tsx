@@ -53,6 +53,10 @@ const ProjectTechnologies: FC<{ technologies: string[] }> = ({ technologies }) =
  * Project call-to-action button.
  */
 const ProjectCta: FC<{ project: PortfolioProject }> = ({ project }) => {
+    if (!project.caseStudyUrl) {
+        return null;
+    }
+
     return (
         <Button variant="outline" size="sm" className="w-full bg-transparent">
             View Case Study
