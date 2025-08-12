@@ -6,6 +6,7 @@
 
 import React, { FC } from 'react';
 import { Github, Linkedin } from 'lucide-react';
+import { getCurrentYear } from '@/lib/date';
 
 interface Props {
     className?: string;
@@ -32,7 +33,7 @@ export const Footer: FC<Props> = ({ className = '' }) => {
  * Copyright notice component.
  */
 const CopyrightNotice: FC = () => {
-    const currentYear = new Date().getFullYear();
+    const currentYear = getCurrentYear();
 
     return (
         <div className="text-muted-foreground mb-4 md:mb-0">

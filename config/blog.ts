@@ -3,6 +3,8 @@
  * Self-contained module for all blog-related configuration.
  */
 
+import { sortByDate } from '@/lib/date';
+
 export interface BlogPost {
     id: string;
     title: string;
@@ -14,9 +16,9 @@ export interface BlogPost {
 }
 
 /**
- * Blog posts sorted by date (newest first).
+ * Raw blog posts data.
  */
-export const blogPosts: BlogPost[] = [
+const rawBlogPosts: BlogPost[] = [
     {
         id: '1',
         title: 'Building Scalable React Applications: Lessons from 15 Years of Development',
@@ -44,4 +46,9 @@ export const blogPosts: BlogPost[] = [
         tags: ['Leadership', 'Career', 'Management'],
         slug: 'developer-to-tech-lead',
     },
-].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+];
+
+/**
+ * Blog posts sorted by date (newest first).
+ */
+export const blogPosts: BlogPost[] = sortByDate([...rawBlogPosts]);

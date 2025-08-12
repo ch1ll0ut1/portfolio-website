@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 import { Badge } from '@/components/ui/Badge';
 import { Calendar, Clock, User } from 'lucide-react';
 import { BlogPost } from '@/config/blog';
+import { formatDate } from '@/lib/date';
 
 interface Props {
     post: BlogPost;
@@ -18,11 +19,7 @@ export const BlogPostHeader: FC<Props> = ({ post, className = '' }) => {
             <div className="flex items-center gap-4 text-sm text-muted-foreground mb-6">
                 <div className="flex items-center gap-1">
                     <Calendar className="h-4 w-4" />
-                    {new Date(post.date).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                    })}
+                    {formatDate(post.date)}
                 </div>
                 <div className="flex items-center gap-1">
                     <Clock className="h-4 w-4" />
