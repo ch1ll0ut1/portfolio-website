@@ -1,9 +1,6 @@
 import React, { FC } from 'react';
 import type { Metadata } from 'next';
-import { Header } from '@/components/layout/Header';
-import { Footer } from '@/components/layout/Footer';
-import { BlogHero } from '@/components/blog/BlogHero';
-import { BlogPostList } from '@/components/blog/BlogPostList';
+import BlogPage from '../components/BlogPage';
 import { blogPosts } from '@/config/blog';
 
 export const metadata: Metadata = {
@@ -35,8 +32,6 @@ export const metadata: Metadata = {
 };
 
 const Blog: FC = () => {
-    const posts = blogPosts;
-
     return (
         <>
             <script
@@ -52,7 +47,7 @@ const Blog: FC = () => {
                             '@type': 'Person',
                             'name': 'Stefan Knoch',
                         },
-                        'blogPost': posts.map(post => ({
+                        'blogPost': blogPosts.map(post => ({
                             '@type': 'BlogPosting',
                             'headline': post.title,
                             'description': post.excerpt,
@@ -70,12 +65,7 @@ const Blog: FC = () => {
                     }),
                 }}
             />
-            <div className="min-h-screen bg-gradient-to-br from-slate-50 to-white">
-                <Header currentPage="blog" />
-                <BlogHero />
-                <BlogPostList posts={posts} />
-                <Footer className="mt-16" />
-            </div>
+            <BlogPage />
         </>
     );
 };

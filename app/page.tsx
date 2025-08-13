@@ -1,13 +1,6 @@
 import React, { FC } from 'react';
 import type { Metadata } from 'next';
-import { Header } from '@/components/layout/Header';
-import { Footer } from '@/components/layout/Footer';
-import { HeroSection } from '@/components/sections/HeroSection';
-import { AboutSection } from '@/components/sections/AboutSection';
-import { ServicesSection } from '@/components/sections/ServicesSection';
-import { PortfolioSection } from '@/components/sections/PortfolioSection';
-import { ExperienceSection } from '@/components/sections/ExperienceSection';
-import { CtaSection } from '@/components/sections/CtaSection';
+import PortfolioPage from './components/PortfolioPage';
 
 export const metadata: Metadata = {
     title: 'From Vision to Reality | Software Developer & Technology Consultant',
@@ -73,18 +66,7 @@ const Portfolio: FC = () => {
                     }),
                 }}
             />
-            <div className="min-h-screen bg-gradient-to-br from-slate-50 to-white">
-                <Header currentPage="home" />
-
-                <HeroSection />
-                <AboutSection />
-                <ServicesSection className="bg-slate-50" />
-                <PortfolioSection />
-                <ExperienceSection />
-                <CtaSection />
-
-                <Footer />
-            </div>
+            <PortfolioPage />
         </>
     );
 };
