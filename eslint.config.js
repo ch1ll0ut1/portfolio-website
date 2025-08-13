@@ -1,3 +1,4 @@
+import storybook from "eslint-plugin-storybook";
 import stylistic from '@stylistic/eslint-plugin';
 import importPlugin from 'eslint-plugin-import';
 import tseslint from 'typescript-eslint';
@@ -5,16 +6,16 @@ import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 
 export default tseslint.config(
-    { 
+    {
         ignores: [
-            "dist", 
-            "node_modules", 
+            "dist",
+            "node_modules",
             ".next",
-            "eslint.config.js", 
-            "next.config.mjs", 
+            "eslint.config.js",
+            "next.config.mjs",
             "postcss.config.mjs",
             "tailwind.config.js"
-        ] 
+        ]
     },
     tseslint.configs.strictTypeChecked,
     tseslint.configs.stylisticTypeChecked,
@@ -23,6 +24,7 @@ export default tseslint.config(
     importPlugin.flatConfigs.typescript,
     react.configs.flat.recommended,
     react.configs.flat['jsx-runtime'],
+    ...storybook.configs["flat/recommended"],
     {
         settings: {
             'import/resolver': {
@@ -80,7 +82,7 @@ export default tseslint.config(
 
             // Developer Experience
             '@typescript-eslint/restrict-template-expressions': [
-                'error', 
+                'error',
                 { allowNumber: true, allowNever: true, allowNullish: true, allowAny: true }
             ],
             '@typescript-eslint/require-await': 'off',
@@ -94,11 +96,11 @@ export default tseslint.config(
 
             // Next.js requires default exports for pages
             'import/no-default-export': 'off',
-            
+
             // React hooks rules
             'react-hooks/rules-of-hooks': 'error',
             'react-hooks/exhaustive-deps': 'warn',
-            
+
             // React rules
             'react/prop-types': 'off', // We use TypeScript
             'react/react-in-jsx-scope': 'off' // Not needed with new JSX transform
@@ -116,6 +118,13 @@ export default tseslint.config(
             '@typescript-eslint/no-unsafe-call': 'off',
             '@typescript-eslint/no-unsafe-argument': 'off',
             '@typescript-eslint/no-empty-function': 'off',
+        },
+    },
+    {
+        files: ['**/*.stories.ts'],
+        rules: {
+            '@typescript-eslint/naming-convention': 'off',
+            'import/no-default-export': 'off',
         },
     }
 );
