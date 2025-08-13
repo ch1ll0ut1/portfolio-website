@@ -1,6 +1,6 @@
 /**
  * Tests for AboutSection component.
- * Tests behavior and public API, focusing on content display and value proposition.
+ * Tests behavior, accessibility, and structure without content-specific assertions.
  */
 
 import { describe, it, expect } from 'vitest';
@@ -8,83 +8,88 @@ import { render, screen } from '@testing-library/react';
 import { AboutSection } from './AboutSection';
 
 describe('AboutSection Component', () => {
-    describe('Content Display', () => {
-        it('should render section headline', () => {
+    describe('Semantic Structure', () => {
+        it('should render as a semantic section with proper id', () => {
             // Act
             render(<AboutSection />);
 
             // Assert
-            const headline = screen.getByRole('heading', { level: 2 });
-            expect(headline).toBeInTheDocument();
-            expect(headline).toHaveTextContent('About Me');
+            const section = document.querySelector('section');
+            expect(section).toBeInTheDocument();
+            expect(section).toHaveAttribute('id', 'about');
         });
 
-        it('should display main introduction paragraph', () => {
+        it('should maintain proper heading hierarchy', () => {
             // Act
             render(<AboutSection />);
 
             // Assert
-            const intro = screen.getByText(/I've spent my career working across/i);
-            expect(intro).toBeInTheDocument();
-            expect(intro).toHaveTextContent(
-                'I\'ve spent my career working across the full spectrum of software delivery — from hands-on coding to leading teams and shaping the entire technology function of a company.',
-            );
+            const heading = screen.getByRole('heading', { level: 2 });
+            expect(heading).toBeInTheDocument();
+            expect(heading.tagName).toBe('H2');
         });
 
-        it('should show what sets me apart statement', () => {
+        it('should contain multiple text paragraphs', () => {
             // Act
             render(<AboutSection />);
 
             // Assert
-            const statement = screen.getByText('What sets me apart is the range I bring:');
-            expect(statement).toBeInTheDocument();
+            const paragraphs = document.querySelectorAll('p');
+            expect(paragraphs.length).toBeGreaterThan(1);
+
+            // Verify paragraphs have content
+            paragraphs.forEach((p) => {
+                expect(p.textContent.trim().length).toBeGreaterThan(0);
+            });
         });
 
-        it('should display key capabilities list', () => {
+        it('should include an unordered list with multiple items', () => {
             // Act
             render(<AboutSection />);
 
             // Assert
-            expect(screen.getByText('• I can build and deploy an app myself.')).toBeInTheDocument();
-            expect(screen.getByText('• I can recruit and manage an entire product team.')).toBeInTheDocument();
-            expect(screen.getByText('• I can step into a leadership role to define your long-term technology roadmap.')).toBeInTheDocument();
+            const list = screen.getByRole('list');
+            expect(list).toBeInTheDocument();
+            expect(list.tagName).toBe('UL');
+
+            const listItems = screen.getAllByRole('listitem');
+            expect(listItems.length).toBeGreaterThanOrEqual(3);
         });
 
-        it('should display closing value proposition', () => {
+        it('should include a call-to-action button', () => {
             // Act
             render(<AboutSection />);
 
             // Assert
-            const closing = screen.getByText(/Whether you need a project delivered/i);
-            expect(closing).toBeInTheDocument();
-            expect(closing).toHaveTextContent(
-                'Whether you need a project delivered end-to-end or strategic guidance for your tech department, I bring both the technical depth and the leadership experience to make it happen.',
-            );
-        });
+            const buttons = screen.getAllByRole('button');
+            expect(buttons.length).toBe(1);
 
-        it('should render call-to-action button', () => {
-            // Act
-            render(<AboutSection />);
-
-            // Assert
-            const button = screen.getByRole('button', { name: /let's talk about your project/i });
+            const button = buttons[0];
             expect(button).toBeInTheDocument();
-            expect(button).toHaveTextContent('Let\'s talk about your project');
+            expect(button.textContent.trim().length).toBeGreaterThan(0);
         });
 
-        it('should display arrow icon in CTA button', () => {
+        it('should structure content in logical reading order', () => {
             // Act
             render(<AboutSection />);
 
             // Assert
-            const button = screen.getByRole('button', { name: /let's talk about your project/i });
-            const icon = button.querySelector('svg');
-            expect(icon).toBeInTheDocument();
-            expect(icon).toHaveClass('ml-2', 'h-4', 'w-4');
+            const heading = screen.getByRole('heading', { level: 2 });
+            const list = screen.getByRole('list');
+            const button = screen.getByRole('button');
+
+            // Elements should appear in DOM in logical order
+            const allElements = [heading, list, button];
+
+            for (let i = 0; i < allElements.length - 1; i++) {
+                const current = allElements[i];
+                const next = allElements[i + 1];
+                expect(current.compareDocumentPosition(next) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+            }
         });
     });
 
-    describe('Styling and Layout', () => {
+    describe('Layout and Styling', () => {
         it('should apply section styling with proper spacing', () => {
             // Act
             render(<AboutSection />);
@@ -92,7 +97,6 @@ describe('AboutSection Component', () => {
             // Assert
             const section = document.querySelector('section');
             expect(section).toHaveClass('py-20', 'px-6', 'bg-white');
-            expect(section).toHaveAttribute('id', 'about');
         });
 
         it('should use max-width container for content', () => {
@@ -132,26 +136,12 @@ describe('AboutSection Component', () => {
             expect(proseContainer).toHaveClass('prose', 'prose-lg', 'max-w-none', 'text-muted-foreground', 'leading-relaxed');
         });
 
-        it('should style paragraphs with appropriate text sizes', () => {
-            // Act
-            render(<AboutSection />);
-
-            // Assert
-            const introParagraph = screen.getByText(/I've spent my career working across/i);
-            const statementParagraph = screen.getByText('What sets me apart is the range I bring:');
-            const closingParagraph = screen.getByText(/Whether you need a project delivered/i);
-
-            expect(introParagraph).toHaveClass('text-xl', 'mb-6');
-            expect(statementParagraph).toHaveClass('text-lg', 'mb-6');
-            expect(closingParagraph).toHaveClass('text-lg');
-        });
-
         it('should style capabilities list appropriately', () => {
             // Act
             render(<AboutSection />);
 
             // Assert
-            const list = document.querySelector('ul');
+            const list = screen.getByRole('list');
             expect(list).toHaveClass('text-lg', 'space-y-2', 'mb-8');
         });
 
@@ -170,64 +160,34 @@ describe('AboutSection Component', () => {
             render(<AboutSection />);
 
             // Assert
-            const button = screen.getByRole('button', { name: /let's talk about your project/i });
+            const button = screen.getByRole('button');
             expect(button).toHaveClass('bg-action', 'text-action-foreground', 'hover:bg-action/90');
         });
     });
 
-    describe('Semantic Structure', () => {
-        it('should use semantic section element with id', () => {
+    describe('Responsive Design', () => {
+        it('should apply responsive padding and layout classes', () => {
             // Act
             render(<AboutSection />);
 
             // Assert
             const section = document.querySelector('section');
-            expect(section).toBeInTheDocument();
-            expect(section).toHaveAttribute('id', 'about');
+            expect(section).toHaveClass('py-20', 'px-6');
+
+            const container = document.querySelector('.max-w-4xl');
+            expect(container).toHaveClass('mx-auto');
         });
 
-        it('should maintain proper heading hierarchy', () => {
+        it('should use responsive typography classes', () => {
             // Act
             render(<AboutSection />);
 
             // Assert
             const heading = screen.getByRole('heading', { level: 2 });
-            expect(heading).toBeInTheDocument();
-            expect(heading.tagName).toBe('H2');
-        });
+            expect(heading).toHaveClass('text-4xl');
 
-        it('should use unordered list for capabilities', () => {
-            // Act
-            render(<AboutSection />);
-
-            // Assert
-            const list = screen.getByRole('list');
-            expect(list).toBeInTheDocument();
-            expect(list.tagName).toBe('UL');
-
-            const listItems = screen.getAllByRole('listitem');
-            expect(listItems).toHaveLength(3);
-        });
-
-        it('should structure content in logical reading order', () => {
-            // Act
-            render(<AboutSection />);
-
-            // Assert
-            const headline = screen.getByRole('heading', { level: 2 });
-            const intro = screen.getByText(/I've spent my career working across/i);
-            const list = screen.getByRole('list');
-            const button = screen.getByRole('button', { name: /let's talk about your project/i });
-
-            // Elements should appear in DOM in logical order
-            const section = headline.closest('section');
-            const allElements = [headline, intro, list, button];
-
-            for (let i = 0; i < allElements.length - 1; i++) {
-                const current = allElements[i];
-                const next = allElements[i + 1];
-                expect(current.compareDocumentPosition(next) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
-            }
+            const proseContainer = document.querySelector('.prose');
+            expect(proseContainer).toHaveClass('prose-lg');
         });
     });
 
@@ -240,7 +200,8 @@ describe('AboutSection Component', () => {
             const heading = screen.getByRole('heading', { level: 2 });
             const section = document.querySelector('section');
 
-            expect(heading).toHaveAccessibleName('About Me');
+            expect(heading).toHaveAccessibleName();
+            expect(heading.textContent.trim().length).toBeGreaterThan(0);
             expect(section).toHaveAttribute('id', 'about'); // Allows anchor linking
         });
 
@@ -253,9 +214,10 @@ describe('AboutSection Component', () => {
             const listItems = screen.getAllByRole('listitem');
 
             expect(list).toBeInTheDocument();
-            expect(listItems).toHaveLength(3);
+            expect(listItems.length).toBeGreaterThanOrEqual(3);
             listItems.forEach((item) => {
                 expect(item).toBeInTheDocument();
+                expect(item.textContent.trim().length).toBeGreaterThan(0);
             });
         });
 
@@ -264,8 +226,9 @@ describe('AboutSection Component', () => {
             render(<AboutSection />);
 
             // Assert
-            const button = screen.getByRole('button', { name: /let's talk about your project/i });
-            expect(button).toHaveAccessibleName('Let\'s talk about your project');
+            const button = screen.getByRole('button');
+            expect(button).toHaveAccessibleName();
+            expect(button.textContent.trim().length).toBeGreaterThan(0);
         });
 
         it('should maintain focus management', () => {
@@ -273,39 +236,18 @@ describe('AboutSection Component', () => {
             render(<AboutSection />);
 
             // Assert
-            const button = screen.getByRole('button', { name: /let's talk about your project/i });
+            const button = screen.getByRole('button');
             button.focus();
             expect(button).toHaveFocus();
         });
-    });
 
-    describe('Content Quality', () => {
-        it('should present a complete value proposition', () => {
+        it('should support keyboard navigation', () => {
             // Act
             render(<AboutSection />);
 
             // Assert
-            // Check for key value proposition elements
-            expect(screen.getByText(/full spectrum of software delivery/i)).toBeInTheDocument();
-            expect(screen.getByText(/bridge the gap between technical detail and business goals/i)).toBeInTheDocument();
-            expect(screen.getByText(/on time, on budget/i)).toBeInTheDocument();
-            expect(screen.getByText(/both the technical depth and the leadership experience/i)).toBeInTheDocument();
-        });
-
-        it('should highlight specific capabilities clearly', () => {
-            // Act
-            render(<AboutSection />);
-
-            // Assert
-            const capabilities = [
-                'I can build and deploy an app myself.',
-                'I can recruit and manage an entire product team.',
-                'I can step into a leadership role to define your long-term technology roadmap.',
-            ];
-
-            capabilities.forEach((capability) => {
-                expect(screen.getByText(new RegExp(capability.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i'))).toBeInTheDocument();
-            });
+            const button = screen.getByRole('button');
+            expect(button).not.toHaveAttribute('tabindex', '-1');
         });
     });
 
@@ -315,7 +257,7 @@ describe('AboutSection Component', () => {
             render(<AboutSection />);
 
             // Assert
-            const button = screen.getByRole('button', { name: /let's talk about your project/i });
+            const button = screen.getByRole('button');
             expect(button).toHaveAttribute('data-slot', 'button'); // From Button component
         });
 
@@ -331,6 +273,94 @@ describe('AboutSection Component', () => {
             const main = screen.getByRole('main');
             const section = document.querySelector('section');
             expect(main).toContainElement(section);
+        });
+
+        it('should handle nested components correctly', () => {
+            // Act
+            render(<AboutSection />);
+
+            // Assert
+            const section = document.querySelector('section');
+            const container = section?.querySelector('.max-w-4xl');
+            const proseContainer = container?.querySelector('.prose');
+
+            expect(section).toContainElement(container as HTMLElement);
+            expect(container).toContainElement(proseContainer as HTMLElement);
+        });
+    });
+
+    describe('Edge Cases and Props Handling', () => {
+        it('should handle missing className prop gracefully', () => {
+            // Act
+            render(<AboutSection />);
+
+            // Assert
+            const section = document.querySelector('section');
+            expect(section).toBeInTheDocument();
+            // Should still have default classes
+            expect(section).toHaveClass('py-20', 'px-6', 'bg-white');
+        });
+
+        it('should render consistently on multiple renders', () => {
+            // Act
+            const { rerender } = render(<AboutSection />);
+
+            const firstRenderSection = document.querySelector('section');
+            const firstRenderHeading = screen.getByRole('heading', { level: 2 });
+            const firstRenderButton = screen.getByRole('button');
+
+            rerender(<AboutSection />);
+
+            // Assert
+            const secondRenderSection = document.querySelector('section');
+            const secondRenderHeading = screen.getByRole('heading', { level: 2 });
+            const secondRenderButton = screen.getByRole('button');
+
+            expect(secondRenderSection).toHaveAttribute('id', 'about');
+            expect(secondRenderHeading.tagName).toBe(firstRenderHeading.tagName);
+            expect(secondRenderButton).toBeInTheDocument();
+        });
+
+        it('should handle button interaction states', () => {
+            // Act
+            render(<AboutSection />);
+
+            // Assert
+            const button = screen.getByRole('button');
+
+            // Test hover state classes are present
+            expect(button).toHaveClass('hover:bg-action/90');
+
+            // Test button is not disabled by default
+            expect(button).not.toBeDisabled();
+        });
+    });
+
+    describe('Visual Elements', () => {
+        it('should include icon in CTA button', () => {
+            // Act
+            render(<AboutSection />);
+
+            // Assert
+            const button = screen.getByRole('button');
+            const icon = button.querySelector('svg');
+            expect(icon).toBeInTheDocument();
+            expect(icon).toHaveClass('ml-2', 'h-4', 'w-4');
+        });
+
+        it('should maintain proper visual hierarchy with typography', () => {
+            // Act
+            render(<AboutSection />);
+
+            // Assert
+            const heading = screen.getByRole('heading', { level: 2 });
+            const list = screen.getByRole('list');
+
+            // Heading should have largest text size
+            expect(heading).toHaveClass('text-4xl');
+
+            // List should have readable text size
+            expect(list).toHaveClass('text-lg');
         });
     });
 });

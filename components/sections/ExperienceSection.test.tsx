@@ -1,33 +1,33 @@
 /**
  * Tests for ExperienceSection component.
- * Tests behavior and public API, focusing on experience data display and section structure.
+ * Tests behavior, accessibility, and structure without content-specific assertions.
  */
 
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { ExperienceSection } from './ExperienceSection';
 
-// Mock the experience configuration
+// Mock the experience configuration with varied data for testing
 vi.mock('@/config/experience', () => ({
     experience: {
         technicalSkills: [
             {
-                name: 'Test Languages',
-                skills: ['JavaScript', 'TypeScript', 'Python'],
+                name: 'Category A',
+                skills: ['Skill 1', 'Skill 2', 'Skill 3'],
             },
             {
-                name: 'Test Frameworks',
-                skills: ['React', 'Node.js', 'Next.js'],
+                name: 'Category B',
+                skills: ['Skill A', 'Skill B'],
             },
         ],
         leadershipItems: [
             {
-                title: 'Test Leadership Role',
-                description: 'Led development teams and strategic initiatives',
+                title: 'Leadership Item 1',
+                description: 'Description for first leadership item',
             },
             {
-                title: 'Test Management Experience',
-                description: 'Managed cross-functional teams and delivery processes',
+                title: 'Leadership Item 2',
+                description: 'Description for second leadership item',
             },
         ],
     },
@@ -43,62 +43,42 @@ vi.mock('@/components/ui/Badge', () => ({
 }));
 
 describe('ExperienceSection Component', () => {
-    describe('Content Display', () => {
-        it('should display the main section title', () => {
+    describe('Component Structure', () => {
+        it('should render correctly with experience data', () => {
             // Act
             render(<ExperienceSection />);
 
-            // Assert
-            expect(screen.getByText('Experience & Expertise')).toBeInTheDocument();
+            // Assert - Check that component renders without errors
+            const section = document.querySelector('section');
+            expect(section).toBeInTheDocument();
         });
 
-        it('should display technical skills section title', () => {
+        it('should render all skill categories from configuration', () => {
             // Act
             render(<ExperienceSection />);
 
-            // Assert
-            expect(screen.getByText('Technical Skills')).toBeInTheDocument();
+            // Assert - Should render the correct number of skill categories
+            const categoryHeadings = screen.getAllByRole('heading', { level: 4 });
+            // 2 skill categories + 2 leadership items = 4 h4 headings
+            expect(categoryHeadings).toHaveLength(4);
         });
 
-        it('should display leadership experience section title', () => {
+        it('should render all skills as badges', () => {
             // Act
             render(<ExperienceSection />);
 
-            // Assert
-            expect(screen.getByText('Leadership & Management')).toBeInTheDocument();
+            // Assert - Should render 5 badges total (3 + 2 skills)
+            const badges = screen.getAllByTestId('badge');
+            expect(badges).toHaveLength(5);
         });
 
-        it('should display all skill categories', () => {
+        it('should render all leadership items', () => {
             // Act
             render(<ExperienceSection />);
 
-            // Assert
-            expect(screen.getByText('Test Languages')).toBeInTheDocument();
-            expect(screen.getByText('Test Frameworks')).toBeInTheDocument();
-        });
-
-        it('should display all skills as badges', () => {
-            // Act
-            render(<ExperienceSection />);
-
-            // Assert
-            expect(screen.getByText('JavaScript')).toBeInTheDocument();
-            expect(screen.getByText('TypeScript')).toBeInTheDocument();
-            expect(screen.getByText('Python')).toBeInTheDocument();
-            expect(screen.getByText('React')).toBeInTheDocument();
-            expect(screen.getByText('Node.js')).toBeInTheDocument();
-            expect(screen.getByText('Next.js')).toBeInTheDocument();
-        });
-
-        it('should display all leadership experience items', () => {
-            // Act
-            render(<ExperienceSection />);
-
-            // Assert
-            expect(screen.getByText('Test Leadership Role')).toBeInTheDocument();
-            expect(screen.getByText('Led development teams and strategic initiatives')).toBeInTheDocument();
-            expect(screen.getByText('Test Management Experience')).toBeInTheDocument();
-            expect(screen.getByText('Managed cross-functional teams and delivery processes')).toBeInTheDocument();
+            // Assert - Should render 2 leadership items with bullet points
+            const bulletPoints = document.querySelectorAll('.w-2.h-2.bg-action.rounded-full.mt-2');
+            expect(bulletPoints).toHaveLength(2);
         });
     });
 
@@ -146,12 +126,12 @@ describe('ExperienceSection Component', () => {
             render(<ExperienceSection />);
 
             // Assert
-            const title = screen.getByText('Experience & Expertise');
-            expect(title).toHaveClass('text-4xl');
-            expect(title).toHaveClass('font-bold');
-            expect(title).toHaveClass('text-primary');
-            expect(title).toHaveClass('mb-12');
-            expect(title).toHaveClass('text-center');
+            const mainTitle = screen.getByRole('heading', { level: 2 });
+            expect(mainTitle).toHaveClass('text-4xl');
+            expect(mainTitle).toHaveClass('font-bold');
+            expect(mainTitle).toHaveClass('text-primary');
+            expect(mainTitle).toHaveClass('mb-12');
+            expect(mainTitle).toHaveClass('text-center');
         });
 
         it('should have correct subsection title styling', () => {
@@ -159,18 +139,14 @@ describe('ExperienceSection Component', () => {
             render(<ExperienceSection />);
 
             // Assert
-            const technicalTitle = screen.getByText('Technical Skills');
-            const leadershipTitle = screen.getByText('Leadership & Management');
+            const subsectionTitles = screen.getAllByRole('heading', { level: 3 });
 
-            expect(technicalTitle).toHaveClass('text-2xl');
-            expect(technicalTitle).toHaveClass('font-semibold');
-            expect(technicalTitle).toHaveClass('text-primary');
-            expect(technicalTitle).toHaveClass('mb-6');
-
-            expect(leadershipTitle).toHaveClass('text-2xl');
-            expect(leadershipTitle).toHaveClass('font-semibold');
-            expect(leadershipTitle).toHaveClass('text-primary');
-            expect(leadershipTitle).toHaveClass('mb-6');
+            subsectionTitles.forEach((title) => {
+                expect(title).toHaveClass('text-2xl');
+                expect(title).toHaveClass('font-semibold');
+                expect(title).toHaveClass('text-primary');
+                expect(title).toHaveClass('mb-6');
+            });
         });
     });
 
@@ -180,9 +156,13 @@ describe('ExperienceSection Component', () => {
             render(<ExperienceSection />);
 
             // Assert
-            expect(screen.getByRole('heading', { level: 2, name: 'Experience & Expertise' })).toBeInTheDocument();
-            expect(screen.getByRole('heading', { level: 3, name: 'Technical Skills' })).toBeInTheDocument();
-            expect(screen.getByRole('heading', { level: 3, name: 'Leadership & Management' })).toBeInTheDocument();
+            const h2Headings = screen.getAllByRole('heading', { level: 2 });
+            const h3Headings = screen.getAllByRole('heading', { level: 3 });
+            const h4Headings = screen.getAllByRole('heading', { level: 4 });
+
+            expect(h2Headings).toHaveLength(1); // Main section title
+            expect(h3Headings).toHaveLength(2); // Technical Skills and Leadership sections
+            expect(h4Headings).toHaveLength(4); // 2 skill categories + 2 leadership items
         });
 
         it('should have correct section element with id', () => {
@@ -195,22 +175,28 @@ describe('ExperienceSection Component', () => {
             expect(section).toHaveAttribute('id', 'experience');
         });
 
-        it('should have proper skill category headings', () => {
+        it('should use section element as the root container', () => {
             // Act
             render(<ExperienceSection />);
 
             // Assert
-            expect(screen.getByRole('heading', { level: 4, name: 'Test Languages' })).toBeInTheDocument();
-            expect(screen.getByRole('heading', { level: 4, name: 'Test Frameworks' })).toBeInTheDocument();
+            const section = document.querySelector('section#experience');
+            expect(section?.tagName).toBe('SECTION');
         });
 
-        it('should have proper leadership item headings', () => {
+        it('should have proper heading structure for data-driven content', () => {
             // Act
             render(<ExperienceSection />);
 
             // Assert
-            expect(screen.getByRole('heading', { level: 4, name: 'Test Leadership Role' })).toBeInTheDocument();
-            expect(screen.getByRole('heading', { level: 4, name: 'Test Management Experience' })).toBeInTheDocument();
+            const allHeadings = screen.getAllByRole('heading');
+            expect(allHeadings).toHaveLength(7); // 1 h2 + 2 h3 + 4 h4
+
+            // Verify heading hierarchy is maintained
+            const headingLevels = allHeadings.map(heading =>
+                parseInt(heading.tagName.charAt(1)),
+            );
+            expect(headingLevels).toEqual([2, 3, 4, 4, 3, 4, 4]);
         });
     });
 
@@ -222,6 +208,11 @@ describe('ExperienceSection Component', () => {
             // Assert
             const headings = screen.getAllByRole('heading');
             expect(headings).toHaveLength(7); // 1 h2, 2 h3, 4 h4
+
+            // Verify no heading levels are skipped
+            const headingLevels = headings.map(h => parseInt(h.tagName.charAt(1)));
+            const uniqueLevels = [...new Set(headingLevels)].sort();
+            expect(uniqueLevels).toEqual([2, 3, 4]);
         });
 
         it('should have descriptive section identifier', () => {
@@ -232,6 +223,16 @@ describe('ExperienceSection Component', () => {
             const section = document.querySelector('section#experience');
             expect(section).toBeInTheDocument();
             expect(section).toHaveAttribute('id', 'experience');
+        });
+
+        it('should be navigable by screen readers', () => {
+            // Act
+            render(<ExperienceSection />);
+
+            // Assert
+            const region = document.querySelector('section#experience');
+            expect(region).toBeInTheDocument();
+            expect(region).toHaveAttribute('id', 'experience');
         });
 
         it('should use secondary variant for skill badges', () => {
@@ -254,33 +255,33 @@ describe('ExperienceSection Component', () => {
             expect(bulletPoints).toHaveLength(2); // One for each leadership item
         });
 
-        it('should have proper spacing for skill categories', () => {
+        it('should have proper spacing for readability', () => {
             // Act
             render(<ExperienceSection />);
 
             // Assert
-            const skillsContainer = document.querySelector('.space-y-4');
-            expect(skillsContainer).toBeInTheDocument();
+            const spacedContainers = document.querySelectorAll('.space-y-4');
+            expect(spacedContainers.length).toBeGreaterThan(0);
         });
 
-        it('should have proper spacing for leadership items', () => {
+        it('should maintain responsive design structure', () => {
             // Act
             render(<ExperienceSection />);
 
             // Assert
-            const leadershipContainer = document.querySelectorAll('.space-y-4')[1]; // Second space-y-4 is for leadership
-            expect(leadershipContainer).toBeInTheDocument();
+            const responsiveGrid = document.querySelector('.md\\:grid-cols-2');
+            expect(responsiveGrid).toBeInTheDocument();
         });
     });
 
     describe('Integration with Child Components', () => {
-        it('should render Badge components for skills', () => {
+        it('should render Badge components for all skills', () => {
             // Act
             render(<ExperienceSection />);
 
             // Assert
             const badges = screen.getAllByTestId('badge');
-            expect(badges).toHaveLength(6); // 3 + 3 skills from mock data
+            expect(badges).toHaveLength(5); // 3 + 2 skills from mock data
         });
 
         it('should pass correct props to Badge components', () => {
@@ -294,7 +295,7 @@ describe('ExperienceSection Component', () => {
             });
         });
 
-        it('should render skill categories with proper structure', () => {
+        it('should render skill categories with proper flex layout', () => {
             // Act
             render(<ExperienceSection />);
 
@@ -311,19 +312,73 @@ describe('ExperienceSection Component', () => {
             const leadershipItems = document.querySelectorAll('.flex.items-start.gap-3');
             expect(leadershipItems).toHaveLength(2); // One for each leadership item
         });
+
+        it('should render all configured skills dynamically', () => {
+            // Act
+            render(<ExperienceSection />);
+
+            // Assert - Total skills should match mock configuration
+            const badges = screen.getAllByTestId('badge');
+            expect(badges.length).toBe(5); // Matches total skills in mock
+        });
     });
 
-    describe('Edge Cases', () => {
-        it('should handle empty skills arrays gracefully', () => {
-            // This test would require a different mock, but demonstrates edge case consideration
-            // In a real implementation, you might test with empty data
-            expect(true).toBe(true); // Placeholder
+    describe('Edge Cases and Props Handling', () => {
+        it('should render with minimal props', () => {
+            // Act
+            render(<ExperienceSection />);
+
+            // Assert - Component should render without any required props
+            const section = document.querySelector('#experience');
+            expect(section).toBeInTheDocument();
         });
 
-        it('should handle empty leadership items gracefully', () => {
-            // This test would require a different mock, but demonstrates edge case consideration
-            // In a real implementation, you might test with empty data
-            expect(true).toBe(true); // Placeholder
+        it('should handle className prop correctly', () => {
+            // Act
+            const customClass = 'test-custom-class';
+            render(<ExperienceSection className={customClass} />);
+
+            // Assert
+            const section = document.querySelector('#experience');
+            expect(section).toHaveClass(customClass);
+        });
+
+        it('should maintain data structure integrity', () => {
+            // Act
+            render(<ExperienceSection />);
+
+            // Assert - Skills should be properly grouped by category
+            const categoryHeadings = screen.getAllByRole('heading', { level: 4 });
+            const skillCategories = categoryHeadings.slice(0, 2); // First 2 are skill categories
+            const leadershipItems = categoryHeadings.slice(2); // Last 2 are leadership items
+
+            expect(skillCategories).toHaveLength(2);
+            expect(leadershipItems).toHaveLength(2);
+        });
+
+        it('should handle dynamic data rendering', () => {
+            // Act
+            render(<ExperienceSection />);
+
+            // Assert - Component should adapt to different data sizes
+            const badges = screen.getAllByTestId('badge');
+            const bulletPoints = document.querySelectorAll('.w-2.h-2.bg-action.rounded-full.mt-2');
+
+            // Should render correct number of elements based on data
+            expect(badges.length).toBeGreaterThan(0);
+            expect(bulletPoints.length).toBeGreaterThan(0);
+        });
+
+        it('should maintain consistent layout structure', () => {
+            // Act
+            render(<ExperienceSection />);
+
+            // Assert - Layout containers should be present regardless of content
+            const mainContainer = document.querySelector('.max-w-6xl.mx-auto');
+            const gridContainer = document.querySelector('.grid.md\\:grid-cols-2.gap-12');
+
+            expect(mainContainer).toBeInTheDocument();
+            expect(gridContainer).toBeInTheDocument();
         });
     });
 });

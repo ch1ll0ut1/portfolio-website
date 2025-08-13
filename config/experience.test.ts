@@ -26,14 +26,14 @@ describe('Experience Configuration', () => {
             });
         });
 
-        it('should have exactly 3 technical skill categories', () => {
+        it('should have technical skill categories', () => {
             // Assert
-            expect(experience.technicalSkills).toHaveLength(3);
+            expect(experience.technicalSkills.length).toBeGreaterThan(0);
         });
 
-        it('should have exactly 4 leadership items', () => {
+        it('should have leadership items', () => {
             // Assert
-            expect(experience.leadershipItems).toHaveLength(4);
+            expect(experience.leadershipItems.length).toBeGreaterThan(0);
         });
 
         it('should have non-empty skill category names', () => {
@@ -62,27 +62,6 @@ describe('Experience Configuration', () => {
                 expect(item.title.length).toBeGreaterThan(0);
                 expect(item.description.length).toBeGreaterThan(0);
             });
-        });
-
-        it('should include expected skill categories', () => {
-            // Act
-            const categoryNames = experience.technicalSkills.map(c => c.name);
-
-            // Assert
-            expect(categoryNames).toContain('Languages & Frameworks');
-            expect(categoryNames).toContain('Cloud & DevOps');
-            expect(categoryNames).toContain('Databases');
-        });
-
-        it('should include expected leadership items', () => {
-            // Act
-            const leadershipTitles = experience.leadershipItems.map(i => i.title);
-
-            // Assert
-            expect(leadershipTitles).toContain('15+ Years Experience');
-            expect(leadershipTitles).toContain('Team Leadership');
-            expect(leadershipTitles).toContain('Project Management');
-            expect(leadershipTitles).toContain('Strategic Planning');
         });
     });
 });

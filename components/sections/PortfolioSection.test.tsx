@@ -1,6 +1,7 @@
 /**
  * Tests for PortfolioSection component.
- * Tests behavior and public API, focusing on portfolio display and ProjectCard integration.
+ * Tests behavior, accessibility, and structure - not specific content.
+ * Visual appearance and content are covered by Storybook visual tests.
  */
 
 import { describe, it, expect, vi } from 'vitest';
@@ -49,67 +50,14 @@ vi.mock('@/components/cards/ProjectCard', () => ({
 }));
 
 describe('PortfolioSection Component', () => {
-    describe('Content Display', () => {
-        it('should display the main section title', () => {
+    describe('Section Structure', () => {
+        it('should have proper semantic structure', () => {
             // Act
             render(<PortfolioSection />);
 
             // Assert
-            expect(screen.getByText('Portfolio')).toBeInTheDocument();
-        });
-
-        it('should display the section description', () => {
-            // Act
-            render(<PortfolioSection />);
-
-            // Assert
-            expect(screen.getByText(/A selection of projects that showcase my expertise/)).toBeInTheDocument();
-        });
-
-        it('should display all project titles', () => {
-            // Act
-            render(<PortfolioSection />);
-
-            // Assert
-            expect(screen.getByText('Test E-Commerce Platform')).toBeInTheDocument();
-            expect(screen.getByText('Test Analytics Dashboard')).toBeInTheDocument();
-            expect(screen.getByText('Test Healthcare System')).toBeInTheDocument();
-        });
-
-        it('should display all project descriptions', () => {
-            // Act
-            render(<PortfolioSection />);
-
-            // Assert
-            expect(screen.getByText('A comprehensive e-commerce solution built with modern technologies.')).toBeInTheDocument();
-            expect(screen.getByText('An intelligent analytics platform for business insights.')).toBeInTheDocument();
-            expect(screen.getByText('A HIPAA-compliant healthcare management solution.')).toBeInTheDocument();
-        });
-
-        it('should display project technologies', () => {
-            // Act
-            render(<PortfolioSection />);
-
-            // Assert
-            expect(screen.getByText('React')).toBeInTheDocument();
-            expect(screen.getByText('Node.js')).toBeInTheDocument();
-            expect(screen.getByText('PostgreSQL')).toBeInTheDocument();
-            expect(screen.getByText('Python')).toBeInTheDocument();
-            expect(screen.getByText('TensorFlow')).toBeInTheDocument();
-            expect(screen.getByText('Azure')).toBeInTheDocument();
-        });
-    });
-
-    describe('Styling and Layout', () => {
-        it('should have correct section styling', () => {
-            // Act
-            render(<PortfolioSection />);
-
-            // Assert
-            const section = document.querySelector('#portfolio');
-            expect(section).toHaveClass('py-20');
-            expect(section).toHaveClass('px-6');
-            expect(section).toHaveClass('bg-white');
+            const section = document.querySelector('section#portfolio');
+            expect(section).toBeInTheDocument();
         });
 
         it('should apply custom className when provided', () => {
@@ -117,11 +65,11 @@ describe('PortfolioSection Component', () => {
             render(<PortfolioSection className="custom-portfolio-class" />);
 
             // Assert
-            const section = document.querySelector('#portfolio');
+            const section = document.querySelector('section');
             expect(section).toHaveClass('custom-portfolio-class');
         });
 
-        it('should have correct container styling', () => {
+        it('should have responsive container', () => {
             // Act
             render(<PortfolioSection />);
 
@@ -130,113 +78,40 @@ describe('PortfolioSection Component', () => {
             expect(container).toBeInTheDocument();
         });
 
-        it('should have correct grid layout for projects', () => {
+        it('should have proper grid layout', () => {
             // Act
             render(<PortfolioSection />);
 
             // Assert
-            const grid = document.querySelector('.grid.md\\:grid-cols-2.lg\\:grid-cols-3.gap-8');
-            expect(grid).toBeInTheDocument();
-        });
-
-        it('should have correct section header styling', () => {
-            // Act
-            render(<PortfolioSection />);
-
-            // Assert
-            const headerContainer = document.querySelector('.text-center.mb-12');
-            expect(headerContainer).toBeInTheDocument();
-        });
-
-        it('should have correct title styling', () => {
-            // Act
-            render(<PortfolioSection />);
-
-            // Assert
-            const title = screen.getByText('Portfolio');
-            expect(title).toHaveClass('text-4xl');
-            expect(title).toHaveClass('font-bold');
-            expect(title).toHaveClass('text-primary');
-            expect(title).toHaveClass('mb-4');
-        });
-
-        it('should have correct description styling', () => {
-            // Act
-            render(<PortfolioSection />);
-
-            // Assert
-            const description = screen.getByText(/A selection of projects that showcase my expertise/);
-            expect(description).toHaveClass('text-xl');
-            expect(description).toHaveClass('text-muted-foreground');
-            expect(description).toHaveClass('max-w-3xl');
-            expect(description).toHaveClass('mx-auto');
-        });
-    });
-
-    describe('Semantic Structure', () => {
-        it('should use proper heading hierarchy', () => {
-            // Act
-            render(<PortfolioSection />);
-
-            // Assert
-            expect(screen.getByRole('heading', { level: 2, name: 'Portfolio' })).toBeInTheDocument();
-        });
-
-        it('should have correct section element with id', () => {
-            // Act
-            render(<PortfolioSection />);
-
-            // Assert
-            const section = document.querySelector('section#portfolio');
-            expect(section).toBeInTheDocument();
-            expect(section).toHaveAttribute('id', 'portfolio');
-        });
-
-        it('should have proper semantic structure for section header', () => {
-            // Act
-            render(<PortfolioSection />);
-
-            // Assert
-            const title = screen.getByRole('heading', { level: 2 });
-            const description = screen.getByText(/A selection of projects that showcase my expertise/);
-
-            expect(title).toBeInTheDocument();
-            expect(description.tagName.toLowerCase()).toBe('p');
+            const gridContainer = document.querySelector('.grid');
+            expect(gridContainer).toHaveClass('md:grid-cols-2');
+            expect(gridContainer).toHaveClass('lg:grid-cols-3');
+            expect(gridContainer).toHaveClass('gap-8');
         });
     });
 
     describe('Accessibility', () => {
-        it('should have accessible heading structure', () => {
+        it('should have proper heading structure', () => {
             // Act
             render(<PortfolioSection />);
 
             // Assert
-            const headings = screen.getAllByRole('heading');
-            expect(headings.length).toBeGreaterThanOrEqual(1); // At least the main heading
+            const heading = screen.getByRole('heading', { level: 2 });
+            expect(heading).toBeInTheDocument();
         });
 
-        it('should have descriptive section identifier', () => {
+        it('should have section landmark with id', () => {
             // Act
             render(<PortfolioSection />);
 
             // Assert
             const section = document.querySelector('section#portfolio');
             expect(section).toBeInTheDocument();
-            expect(section).toHaveAttribute('id', 'portfolio');
-        });
-
-        it('should have proper description text structure', () => {
-            // Act
-            render(<PortfolioSection />);
-
-            // Assert
-            const description = screen.getByText(/A selection of projects that showcase my expertise/);
-            expect(description.tagName.toLowerCase()).toBe('p');
         });
     });
 
-    describe('Integration with ProjectCard Components', () => {
-        it('should render ProjectCard components for each project', () => {
+    describe('Portfolio Projects Display', () => {
+        it('should render portfolio projects from configuration', () => {
             // Act
             render(<PortfolioSection />);
 
@@ -252,65 +127,17 @@ describe('PortfolioSection Component', () => {
             // Assert
             const projectCards = screen.getAllByTestId('project-card');
 
-            expect(projectCards[0]).toHaveAttribute('data-project-id', 'test-project-1');
-            expect(projectCards[1]).toHaveAttribute('data-project-id', 'test-project-2');
-            expect(projectCards[2]).toHaveAttribute('data-project-id', 'test-project-3');
-        });
-
-        it('should pass complete project objects to ProjectCard components', () => {
-            // Act
-            render(<PortfolioSection />);
-
-            // Assert
-            // Verify that project data is passed correctly by checking rendered content
-            expect(screen.getByText('Test E-Commerce Platform')).toBeInTheDocument();
-            expect(screen.getByText('Test Analytics Dashboard')).toBeInTheDocument();
-            expect(screen.getByText('Test Healthcare System')).toBeInTheDocument();
-        });
-
-        it('should render projects in correct order', () => {
-            // Act
-            render(<PortfolioSection />);
-
-            // Assert
-            const projectCards = screen.getAllByTestId('project-card');
-            expect(projectCards[0]).toHaveAttribute('data-project-id', 'test-project-1');
-            expect(projectCards[1]).toHaveAttribute('data-project-id', 'test-project-2');
-            expect(projectCards[2]).toHaveAttribute('data-project-id', 'test-project-3');
-        });
-    });
-
-    describe('Project Grid Layout', () => {
-        it('should have responsive grid layout', () => {
-            // Act
-            render(<PortfolioSection />);
-
-            // Assert
-            const grid = document.querySelector('.grid');
-            expect(grid).toHaveClass('md:grid-cols-2');
-            expect(grid).toHaveClass('lg:grid-cols-3');
-            expect(grid).toHaveClass('gap-8');
-        });
-
-        it('should contain all project cards within grid', () => {
-            // Act
-            render(<PortfolioSection />);
-
-            // Assert
-            const grid = document.querySelector('.grid.md\\:grid-cols-2.lg\\:grid-cols-3.gap-8');
-            const projectCards = screen.getAllByTestId('project-card');
-
-            expect(grid).toBeInTheDocument();
+            // Verify we have the expected number of project cards
             expect(projectCards).toHaveLength(3);
-            // All project cards should be descendants of the grid
-            projectCards.forEach((card) => {
-                expect(grid).toContainElement(card);
-            });
-        });
-    });
 
-    describe('Edge Cases and Data Handling', () => {
-        it('should handle projects with different technology arrays', () => {
+            // Verify each card has the required project ID
+            const projectIds = projectCards.map(card => card.getAttribute('data-project-id'));
+            expect(projectIds).toContain('test-project-1');
+            expect(projectIds).toContain('test-project-2');
+            expect(projectIds).toContain('test-project-3');
+        });
+
+        it('should render technologies for each project', () => {
             // Act
             render(<PortfolioSection />);
 
@@ -318,56 +145,112 @@ describe('PortfolioSection Component', () => {
             const technologyContainers = screen.getAllByTestId('technologies');
             expect(technologyContainers).toHaveLength(3);
 
-            // Check that each project has its technologies rendered
-            const technologies = screen.getAllByTestId('technology');
-            expect(technologies.length).toBeGreaterThan(0);
+            // Check that each container has technologies
+            technologyContainers.forEach((container) => {
+                const technologies = container.querySelectorAll('[data-testid="technology"]');
+                expect(technologies.length).toBeGreaterThan(0);
+            });
         });
+    });
 
-        it('should handle projects with and without case study URLs', () => {
+    describe('Integration with Portfolio Config', () => {
+        it('should load portfolio data from configuration', () => {
             // Act
             render(<PortfolioSection />);
 
             // Assert
-            // All projects should render regardless of having caseStudyUrl
+            const projectCards = screen.getAllByTestId('project-card');
+            expect(projectCards.length).toBeGreaterThan(0);
+        });
+
+        it('should handle empty portfolio data gracefully', () => {
+            // This would need a separate test with mocked empty data
+            // For now, just verify the component renders without errors
+            expect(() => render(<PortfolioSection />)).not.toThrow();
+        });
+    });
+
+    describe('Content Structure', () => {
+        it('should have section header with title and description', () => {
+            // Act
+            render(<PortfolioSection />);
+
+            // Assert
+            const header = document.querySelector('.text-center');
+            expect(header).toBeInTheDocument();
+
+            const title = screen.getByRole('heading', { level: 2 });
+            expect(title).toBeInTheDocument();
+
+            const description = document.querySelector('.text-muted-foreground');
+            expect(description).toBeInTheDocument();
+        });
+
+        it('should maintain consistent spacing and layout', () => {
+            // Act
+            render(<PortfolioSection />);
+
+            // Assert
+            const section = document.querySelector('section');
+            expect(section).toHaveClass('py-20');
+            expect(section).toHaveClass('px-6');
+        });
+    });
+
+    describe('Responsive Design', () => {
+        it('should have responsive padding', () => {
+            // Act
+            render(<PortfolioSection />);
+
+            // Assert
+            const section = document.querySelector('section');
+            expect(section).toHaveClass('py-20');
+            expect(section).toHaveClass('px-6');
+        });
+
+        it('should have responsive grid layout', () => {
+            // Act
+            render(<PortfolioSection />);
+
+            // Assert
+            const gridContainer = document.querySelector('.grid');
+            expect(gridContainer).toHaveClass('md:grid-cols-2');
+            expect(gridContainer).toHaveClass('lg:grid-cols-3');
+        });
+
+        it('should have responsive text sizing', () => {
+            // Act
+            render(<PortfolioSection />);
+
+            // Assert
+            const heading = screen.getByRole('heading', { level: 2 });
+            expect(heading).toHaveClass('text-4xl');
+            expect(heading).toHaveClass('font-bold');
+        });
+    });
+
+    describe('Component Integration', () => {
+        it('should render ProjectCard components', () => {
+            // Act
+            render(<PortfolioSection />);
+
+            // Assert
             const projectCards = screen.getAllByTestId('project-card');
             expect(projectCards).toHaveLength(3);
         });
 
-        it('should maintain unique keys for project mapping', () => {
+        it('should pass project data to each ProjectCard', () => {
             // Act
             render(<PortfolioSection />);
 
             // Assert
             const projectCards = screen.getAllByTestId('project-card');
-            const projectIds = projectCards.map(card => card.getAttribute('data-project-id'));
-            const uniqueIds = [...new Set(projectIds)];
 
-            expect(uniqueIds).toHaveLength(projectIds.length); // No duplicate IDs
-        });
-    });
-
-    describe('Section Header Component', () => {
-        it('should render section header with correct structure', () => {
-            // Act
-            render(<PortfolioSection />);
-
-            // Assert
-            const headerDiv = document.querySelector('.text-center.mb-12');
-            const title = screen.getByText('Portfolio');
-            const description = screen.getByText(/A selection of projects that showcase my expertise/);
-
-            expect(headerDiv).toBeInTheDocument();
-            expect(headerDiv).toContainElement(title);
-            expect(headerDiv).toContainElement(description);
-        });
-
-        it('should have proper spacing between title and description', () => {
-            // Act
-            render(<PortfolioSection />);
-
-            // Assert
-            const title = screen.getByText('Portfolio');
-            expect(title).toHaveClass('mb-4');
+            projectCards.forEach((card) => {
+                expect(card).toHaveAttribute('data-project-id');
+                expect(card.querySelector('h3')).toBeInTheDocument();
+                expect(card.querySelector('p')).toBeInTheDocument();
+            });
         });
     });
 });

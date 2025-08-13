@@ -1,6 +1,7 @@
 /**
  * Tests for ProjectCard component.
- * Tests behavior and public API, focusing on project data display and card functionality.
+ * Tests behavior, accessibility, and edge cases - not content or styling.
+ * Visual appearance is covered by Storybook visual tests.
  */
 
 import { describe, it, expect, vi } from 'vitest';
@@ -64,7 +65,7 @@ vi.mock('lucide-react', () => ({
 const mockProject: PortfolioProject = {
     id: 'test-project',
     title: 'Test E-Commerce Platform',
-    description: 'A comprehensive e-commerce solution built with modern technologies for scalable online retail.',
+    description: 'A comprehensive e-commerce solution built with modern technologies.',
     technologies: ['React', 'Node.js', 'PostgreSQL', 'AWS'],
     caseStudyUrl: 'https://example.com/case-study',
 };
@@ -77,106 +78,6 @@ const mockProjectWithoutCaseStudy: PortfolioProject = {
 };
 
 describe('ProjectCard Component', () => {
-    describe('Content Display', () => {
-        it('should display project title', () => {
-            // Act
-            render(<ProjectCard project={mockProject} />);
-
-            // Assert
-            expect(screen.getByText('Test E-Commerce Platform')).toBeInTheDocument();
-        });
-
-        it('should display project description', () => {
-            // Act
-            render(<ProjectCard project={mockProject} />);
-
-            // Assert
-            expect(screen.getByText('A comprehensive e-commerce solution built with modern technologies for scalable online retail.')).toBeInTheDocument();
-        });
-
-        it('should display all project technologies as badges', () => {
-            // Act
-            render(<ProjectCard project={mockProject} />);
-
-            // Assert
-            expect(screen.getByText('React')).toBeInTheDocument();
-            expect(screen.getByText('Node.js')).toBeInTheDocument();
-            expect(screen.getByText('PostgreSQL')).toBeInTheDocument();
-            expect(screen.getByText('AWS')).toBeInTheDocument();
-        });
-
-        it('should display CTA button with correct text', () => {
-            // Act
-            render(<ProjectCard project={mockProject} />);
-
-            // Assert
-            expect(screen.getByText('View Case Study')).toBeInTheDocument();
-        });
-
-        it('should display external link icon', () => {
-            // Act
-            render(<ProjectCard project={mockProject} />);
-
-            // Assert
-            expect(screen.getByTestId('external-link-icon')).toBeInTheDocument();
-        });
-    });
-
-    describe('Styling and Layout', () => {
-        it('should have correct card styling classes', () => {
-            // Act
-            render(<ProjectCard project={mockProject} />);
-
-            // Assert
-            const card = document.querySelector('[data-slot="card"]');
-            expect(card).toHaveClass('border-0');
-            expect(card).toHaveClass('shadow-lg');
-            expect(card).toHaveClass('hover:shadow-xl');
-            expect(card).toHaveClass('transition-shadow');
-        });
-
-        it('should apply custom className when provided', () => {
-            // Act
-            render(<ProjectCard project={mockProject} className="custom-project-class" />);
-
-            // Assert
-            const card = document.querySelector('[data-slot="card"]');
-            expect(card).toHaveClass('custom-project-class');
-        });
-
-        it('should have correct title styling', () => {
-            // Act
-            render(<ProjectCard project={mockProject} />);
-
-            // Assert
-            const title = document.querySelector('[data-slot="card-title"]');
-            expect(title).toHaveClass('text-xl');
-        });
-
-        it('should have correct button styling', () => {
-            // Act
-            render(<ProjectCard project={mockProject} />);
-
-            // Assert
-            const button = screen.getByTestId('project-button');
-            expect(button).toHaveAttribute('data-variant', 'outline');
-            expect(button).toHaveAttribute('data-size', 'sm');
-            expect(button).toHaveClass('w-full');
-            expect(button).toHaveClass('bg-transparent');
-        });
-
-        it('should have correct icon styling', () => {
-            // Act
-            render(<ProjectCard project={mockProject} />);
-
-            // Assert
-            const icon = screen.getByTestId('external-link-icon');
-            expect(icon).toHaveClass('ml-2');
-            expect(icon).toHaveClass('h-4');
-            expect(icon).toHaveClass('w-4');
-        });
-    });
-
     describe('Semantic Structure', () => {
         it('should use proper heading for project title', () => {
             // Act
@@ -185,7 +86,6 @@ describe('ProjectCard Component', () => {
             // Assert
             const title = document.querySelector('[data-slot="card-title"]');
             expect(title?.tagName.toLowerCase()).toBe('h3');
-            expect(title).toHaveTextContent('Test E-Commerce Platform');
         });
 
         it('should use paragraph for project description', () => {
@@ -221,7 +121,7 @@ describe('ProjectCard Component', () => {
 
             // Assert
             const title = screen.getByRole('heading', { level: 3 });
-            expect(title).toHaveTextContent('Test E-Commerce Platform');
+            expect(title).toBeInTheDocument();
         });
 
         it('should have accessible button', () => {
@@ -229,7 +129,7 @@ describe('ProjectCard Component', () => {
             render(<ProjectCard project={mockProject} />);
 
             // Assert
-            const button = screen.getByRole('button', { name: /View Case Study/ });
+            const button = screen.getByRole('button');
             expect(button).toBeInTheDocument();
         });
 
@@ -255,26 +155,6 @@ describe('ProjectCard Component', () => {
             expect(badges).toHaveLength(4);
         });
 
-        it('should use secondary variant for technology badges', () => {
-            // Act
-            render(<ProjectCard project={mockProject} />);
-
-            // Assert
-            const badges = screen.getAllByTestId('badge');
-            badges.forEach((badge) => {
-                expect(badge).toHaveAttribute('data-variant', 'secondary');
-            });
-        });
-
-        it('should have proper spacing for technologies', () => {
-            // Act
-            render(<ProjectCard project={mockProject} />);
-
-            // Assert
-            const technologiesContainer = document.querySelector('.flex.flex-wrap.gap-2.mb-4');
-            expect(technologiesContainer).toBeInTheDocument();
-        });
-
         it('should handle single technology', () => {
             // Arrange
             const singleTechProject: PortfolioProject = {
@@ -288,7 +168,6 @@ describe('ProjectCard Component', () => {
             // Assert
             const badges = screen.getAllByTestId('badge');
             expect(badges).toHaveLength(1);
-            expect(screen.getByText('React')).toBeInTheDocument();
         });
 
         it('should handle many technologies', () => {
@@ -308,13 +187,13 @@ describe('ProjectCard Component', () => {
     });
 
     describe('CTA Button Functionality', () => {
-        it('should render CTA button with correct text', () => {
+        it('should render CTA button', () => {
             // Act
             render(<ProjectCard project={mockProject} />);
 
             // Assert
             const button = screen.getByRole('button');
-            expect(button).toHaveTextContent('View Case Study');
+            expect(button).toBeInTheDocument();
         });
 
         it('should include external link icon in button', () => {
@@ -325,18 +204,6 @@ describe('ProjectCard Component', () => {
             const button = screen.getByRole('button');
             const icon = screen.getByTestId('external-link-icon');
             expect(button).toContainElement(icon);
-        });
-
-        it('should have correct button styling properties', () => {
-            // Act
-            render(<ProjectCard project={mockProject} />);
-
-            // Assert
-            const button = screen.getByTestId('project-button');
-            expect(button).toHaveAttribute('data-variant', 'outline');
-            expect(button).toHaveAttribute('data-size', 'sm');
-            expect(button).toHaveClass('w-full');
-            expect(button).toHaveClass('bg-transparent');
         });
     });
 
@@ -352,37 +219,16 @@ describe('ProjectCard Component', () => {
             expect(document.querySelector('[data-slot="card-title"]')).toBeInTheDocument();
             expect(document.querySelector('[data-slot="card-description"]')).toBeInTheDocument();
         });
-
-        it('should pass correct props to Badge components', () => {
-            // Act
-            render(<ProjectCard project={mockProject} />);
-
-            // Assert
-            const badges = screen.getAllByTestId('badge');
-            badges.forEach((badge) => {
-                expect(badge).toHaveAttribute('data-variant', 'secondary');
-            });
-        });
-
-        it('should pass correct props to Button component', () => {
-            // Act
-            render(<ProjectCard project={mockProject} />);
-
-            // Assert
-            const button = screen.getByTestId('project-button');
-            expect(button).toHaveAttribute('data-variant', 'outline');
-            expect(button).toHaveAttribute('data-size', 'sm');
-        });
     });
 
     describe('Edge Cases and Props Handling', () => {
         it('should handle project without caseStudyUrl', () => {
-            // Act
-            render(<ProjectCard project={mockProjectWithoutCaseStudy} />);
+            // Act & Assert - should render without errors
+            expect(() => render(<ProjectCard project={mockProjectWithoutCaseStudy} />)).not.toThrow();
 
-            // Assert
-            expect(screen.getByText('Test Analytics Dashboard')).toBeInTheDocument();
-            expect(screen.getByText('View Case Study')).toBeInTheDocument(); // Button still shows
+            // Should still render the card structure
+            const card = document.querySelector('[data-slot="card"]');
+            expect(card).toBeInTheDocument();
         });
 
         it('should handle empty technologies array', () => {
@@ -398,10 +244,6 @@ describe('ProjectCard Component', () => {
             // Assert
             const badges = screen.queryAllByTestId('badge');
             expect(badges).toHaveLength(0);
-
-            // Technologies container should still exist
-            const technologiesContainer = document.querySelector('.flex.flex-wrap.gap-2.mb-4');
-            expect(technologiesContainer).toBeInTheDocument();
         });
 
         it('should handle very long project title', () => {
@@ -411,11 +253,8 @@ describe('ProjectCard Component', () => {
                 title: 'This is a very long project title that might wrap to multiple lines and test layout handling',
             };
 
-            // Act
-            render(<ProjectCard project={longTitleProject} />);
-
-            // Assert
-            expect(screen.getByText('This is a very long project title that might wrap to multiple lines and test layout handling')).toBeInTheDocument();
+            // Act & Assert
+            expect(() => render(<ProjectCard project={longTitleProject} />)).not.toThrow();
         });
 
         it('should handle very long description', () => {
@@ -425,11 +264,8 @@ describe('ProjectCard Component', () => {
                 description: 'This is a very long project description that contains many details about the project implementation, technologies used, challenges faced, and solutions implemented to test how the card handles extensive content.',
             };
 
-            // Act
-            render(<ProjectCard project={longDescProject} />);
-
-            // Assert
-            expect(screen.getByText(/This is a very long project description that contains many details/)).toBeInTheDocument();
+            // Act & Assert
+            expect(() => render(<ProjectCard project={longDescProject} />)).not.toThrow();
         });
 
         it('should maintain unique keys for technology mapping', () => {
@@ -442,6 +278,15 @@ describe('ProjectCard Component', () => {
             const uniqueTexts = [...new Set(badgeTexts)];
 
             expect(uniqueTexts).toHaveLength(badgeTexts.length); // No duplicates
+        });
+
+        it('should handle custom className prop', () => {
+            // Act
+            render(<ProjectCard project={mockProject} className="custom-project-class" />);
+
+            // Assert
+            const card = document.querySelector('[data-slot="card"]');
+            expect(card).toHaveClass('custom-project-class');
         });
     });
 });

@@ -1,162 +1,279 @@
 /**
  * Tests for ServiceCard component.
- * Tests behavior and public API, focusing on service data display.
+ * Tests behavior, accessibility, and structure without content-specific assertions.
  */
 
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { Code } from 'lucide-react';
+import { Code, Star, Globe } from 'lucide-react';
 import { ServiceCard, type ServiceData } from './ServiceCard';
 
-const mockService: ServiceData = {
+const createMockService = (overrides: Partial<ServiceData> = {}): ServiceData => ({
     id: 'test-service',
     title: 'Test Service',
-    description: 'This is a test service description for testing purposes.',
-    features: [
-        'Feature one',
-        'Feature two',
-        'Feature three',
-    ],
+    description: 'Test description',
+    features: ['Feature 1', 'Feature 2', 'Feature 3'],
     icon: Code,
-};
+    ...overrides,
+});
 
 describe('ServiceCard Component', () => {
-    describe('Service Content', () => {
-        it('should display service title', () => {
+    describe('Props Handling', () => {
+        it('should render with required props', () => {
+            // Arrange
+            const service = createMockService();
+
             // Act
-            render(<ServiceCard service={mockService} />);
+            render(<ServiceCard service={service} />);
 
             // Assert
-            expect(screen.getByText('Test Service')).toBeInTheDocument();
+            expect(screen.getByRole('list')).toBeInTheDocument();
         });
 
-        it('should display service description', () => {
+        it('should handle different icon types', () => {
+            // Arrange
+            const serviceWithStarIcon = createMockService({ icon: Star });
+            const serviceWithGlobeIcon = createMockService({ icon: Globe });
+
             // Act
-            render(<ServiceCard service={mockService} />);
-
-            // Assert
-            expect(screen.getByText('This is a test service description for testing purposes.')).toBeInTheDocument();
-        });
-
-        it('should display all service features', () => {
-            // Act
-            render(<ServiceCard service={mockService} />);
-
-            // Assert
-            expect(screen.getByText(/Feature one/)).toBeInTheDocument();
-            expect(screen.getByText(/Feature two/)).toBeInTheDocument();
-            expect(screen.getByText(/Feature three/)).toBeInTheDocument();
-        });
-    });
-
-    describe('Service Icon', () => {
-        it('should render the provided icon', () => {
-            // Act
-            render(<ServiceCard service={mockService} />);
+            render(<ServiceCard service={serviceWithStarIcon} />);
+            render(<ServiceCard service={serviceWithGlobeIcon} />);
 
             // Assert
             const icons = document.querySelectorAll('svg');
-            expect(icons.length).toBeGreaterThan(0);
-            expect(icons[0]).toHaveClass('text-action');
+            expect(icons.length).toBeGreaterThanOrEqual(2);
         });
 
-        it('should have correct icon styling', () => {
+        it('should apply custom className when provided', () => {
+            // Arrange
+            const service = createMockService();
+            const customClass = 'custom-service-class';
+
             // Act
-            render(<ServiceCard service={mockService} />);
+            render(<ServiceCard service={service} className={customClass} />);
+
+            // Assert
+            const card = document.querySelector('[data-slot="card"]');
+            expect(card).toHaveClass(customClass);
+        });
+
+        it('should handle edge case props', () => {
+            // Arrange
+            const serviceWithEdgeCases = createMockService({
+                id: '',
+                title: '',
+                description: '',
+            });
+
+            // Act & Assert - Should not throw
+            expect(() => render(<ServiceCard service={serviceWithEdgeCases} />)).not.toThrow();
+        });
+    });
+
+    describe('Component Structure', () => {
+        it('should render icon container with proper structure', () => {
+            // Arrange
+            const service = createMockService();
+
+            // Act
+            render(<ServiceCard service={service} />);
 
             // Assert
             const iconContainer = document.querySelector('.w-12.h-12.bg-action\\/10');
             expect(iconContainer).toBeInTheDocument();
-            expect(iconContainer).toHaveClass('rounded-lg');
-            expect(iconContainer).toHaveClass('flex');
-            expect(iconContainer).toHaveClass('items-center');
-            expect(iconContainer).toHaveClass('justify-center');
-        });
-    });
-
-    describe('Card Styling', () => {
-        it('should have correct card styling classes', () => {
-            // Act
-            render(<ServiceCard service={mockService} />);
-
-            // Assert
-            const card = document.querySelector('[data-slot="card"]');
-            expect(card).toHaveClass('border-0');
-            expect(card).toHaveClass('shadow-lg');
-            expect(card).toHaveClass('hover:shadow-xl');
-            expect(card).toHaveClass('transition-shadow');
+            expect(iconContainer).toHaveClass('rounded-lg', 'flex', 'items-center', 'justify-center');
         });
 
-        it('should apply custom className when provided', () => {
-            // Act
-            render(<ServiceCard service={mockService} className="custom-service-class" />);
-
-            // Assert
-            const card = document.querySelector('[data-slot="card"]');
-            expect(card).toHaveClass('custom-service-class');
-        });
-    });
-
-    describe('Features List', () => {
-        it('should render features as an unordered list', () => {
-            // Act
-            render(<ServiceCard service={mockService} />);
-
-            // Assert
-            const featuresList = screen.getByRole('list');
-            expect(featuresList).toBeInTheDocument();
-            expect(featuresList).toHaveClass('text-sm');
-            expect(featuresList).toHaveClass('text-muted-foreground');
-            expect(featuresList).toHaveClass('space-y-2');
-        });
-
-        it('should handle empty features array', () => {
+        it('should render icon with correct styling', () => {
             // Arrange
-            const serviceWithoutFeatures: ServiceData = {
-                ...mockService,
-                features: [],
-            };
+            const service = createMockService();
 
             // Act
-            render(<ServiceCard service={serviceWithoutFeatures} />);
+            render(<ServiceCard service={service} />);
 
             // Assert
-            const featuresList = screen.getByRole('list');
-            expect(featuresList).toBeInTheDocument();
-            expect(featuresList).toBeEmptyDOMElement();
+            const icon = document.querySelector('svg');
+            expect(icon).toBeInTheDocument();
+            expect(icon).toHaveClass('text-action');
         });
 
-        it('should format features with bullet points', () => {
+        it('should have card with proper styling structure', () => {
+            // Arrange
+            const service = createMockService();
+
             // Act
-            render(<ServiceCard service={mockService} />);
+            render(<ServiceCard service={service} />);
 
             // Assert
-            const features = screen.getAllByText(/Feature/);
-            expect(features).toHaveLength(3);
+            const card = document.querySelector('[data-slot="card"]');
+            expect(card).toBeInTheDocument();
+            expect(card).toHaveClass('border-0', 'shadow-lg', 'hover:shadow-xl', 'transition-shadow');
         });
-    });
 
-    describe('Accessibility', () => {
-        it('should have proper heading hierarchy', () => {
+        it('should contain title element with proper styling', () => {
+            // Arrange
+            const service = createMockService();
+
             // Act
-            render(<ServiceCard service={mockService} />);
+            render(<ServiceCard service={service} />);
 
             // Assert
             const title = document.querySelector('[data-slot="card-title"]');
             expect(title).toBeInTheDocument();
             expect(title).toHaveClass('text-xl');
-            expect(title).toHaveTextContent('Test Service');
+        });
+    });
+
+    describe('Features List Behavior', () => {
+        it('should render features as semantic list', () => {
+            // Arrange
+            const service = createMockService();
+
+            // Act
+            render(<ServiceCard service={service} />);
+
+            // Assert
+            const list = screen.getByRole('list');
+            expect(list).toBeInTheDocument();
+            expect(list).toHaveClass('text-sm', 'text-muted-foreground', 'space-y-2');
         });
 
-        it('should have semantic list structure for features', () => {
+        it('should render correct number of list items', () => {
+            // Arrange
+            const service = createMockService({ features: ['A', 'B', 'C', 'D'] });
+
             // Act
-            render(<ServiceCard service={mockService} />);
+            render(<ServiceCard service={service} />);
+
+            // Assert
+            const listItems = screen.getAllByRole('listitem');
+            expect(listItems).toHaveLength(4);
+        });
+
+        it('should handle empty features array gracefully', () => {
+            // Arrange
+            const serviceWithoutFeatures = createMockService({ features: [] });
+
+            // Act
+            render(<ServiceCard service={serviceWithoutFeatures} />);
+
+            // Assert
+            const list = screen.getByRole('list');
+            expect(list).toBeInTheDocument();
+            expect(list).toBeEmptyDOMElement();
+        });
+
+        it('should handle single feature', () => {
+            // Arrange
+            const serviceWithSingleFeature = createMockService({ features: ['Single feature'] });
+
+            // Act
+            render(<ServiceCard service={serviceWithSingleFeature} />);
+
+            // Assert
+            const listItems = screen.getAllByRole('listitem');
+            expect(listItems).toHaveLength(1);
+        });
+
+        it('should handle many features', () => {
+            // Arrange
+            const manyFeatures = Array.from({ length: 10 }, (_, i) => `Feature ${i + 1}`);
+            const serviceWithManyFeatures = createMockService({ features: manyFeatures });
+
+            // Act
+            render(<ServiceCard service={serviceWithManyFeatures} />);
+
+            // Assert
+            const listItems = screen.getAllByRole('listitem');
+            expect(listItems).toHaveLength(10);
+        });
+    });
+
+    describe('Accessibility', () => {
+        it('should have title element with proper structure', () => {
+            // Arrange
+            const service = createMockService();
+
+            // Act
+            render(<ServiceCard service={service} />);
+
+            // Assert
+            const title = document.querySelector('[data-slot="card-title"]');
+            expect(title).toBeInTheDocument();
+            expect(title).toHaveClass('font-semibold', 'text-xl');
+        });
+
+        it('should have proper list semantics', () => {
+            // Arrange
+            const service = createMockService();
+
+            // Act
+            render(<ServiceCard service={service} />);
 
             // Assert
             const list = screen.getByRole('list');
             const listItems = screen.getAllByRole('listitem');
             expect(list).toBeInTheDocument();
-            expect(listItems).toHaveLength(3);
+            expect(listItems.length).toBeGreaterThan(0);
+        });
+
+        it('should maintain accessibility with empty features', () => {
+            // Arrange
+            const serviceWithoutFeatures = createMockService({ features: [] });
+
+            // Act
+            render(<ServiceCard service={serviceWithoutFeatures} />);
+
+            // Assert
+            const list = screen.getByRole('list');
+            expect(list).toBeInTheDocument();
+            expect(screen.queryAllByRole('listitem')).toHaveLength(0);
+        });
+
+        it('should have accessible icon presentation', () => {
+            // Arrange
+            const service = createMockService();
+
+            // Act
+            render(<ServiceCard service={service} />);
+
+            // Assert
+            const icon = document.querySelector('svg');
+            expect(icon).toBeInTheDocument();
+            // Icon should be decorative (no alt text or aria-label required for decorative icons)
+        });
+    });
+
+    describe('Component Integration', () => {
+        it('should integrate icon, title, description, and features', () => {
+            // Arrange
+            const service = createMockService();
+
+            // Act
+            render(<ServiceCard service={service} />);
+
+            // Assert
+            expect(document.querySelector('svg')).toBeInTheDocument(); // Icon
+            expect(document.querySelector('[data-slot="card-title"]')).toBeInTheDocument(); // Title
+            expect(screen.getByRole('list')).toBeInTheDocument(); // Features list
+        });
+
+        it('should maintain layout structure with varying content lengths', () => {
+            // Arrange
+            const shortContent = createMockService({
+                title: 'A',
+                description: 'B',
+                features: ['C'],
+            });
+            const longContent = createMockService({
+                title: 'Very long title that might wrap to multiple lines',
+                description: 'Very long description that definitely will wrap to multiple lines and test layout behavior',
+                features: Array.from({ length: 8 }, (_, i) => `Very long feature description ${i + 1}`),
+            });
+
+            // Act & Assert - Should render without layout issues
+            expect(() => render(<ServiceCard service={shortContent} />)).not.toThrow();
+            expect(() => render(<ServiceCard service={longContent} />)).not.toThrow();
         });
     });
 });

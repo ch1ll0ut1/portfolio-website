@@ -340,6 +340,130 @@ export default tseslint.config(
 - **Use realistic test scenarios**
 - **Maintain test independence**
 
+### Unit Test Responsibilities
+
+Unit tests should focus on component behavior, logic, and integration - NOT visual appearance or specific content. This separation ensures maintainable tests that don't break when content or styling changes.
+
+#### What Unit Tests SHOULD Test:
+
+##### Component Behavior & Logic
+- State changes and updates
+- Event handling and user interactions
+- Conditional rendering logic
+- Component lifecycle behavior
+- Error boundary functionality
+
+##### Props Handling & Integration
+- Required vs optional props
+- Props validation and type safety
+- Default prop values
+- Props passing to child components
+- Custom className handling
+
+##### Accessibility & Semantic Structure
+- ARIA labels and roles
+- Keyboard navigation support
+- Semantic HTML structure (headings, lists, sections)
+- Focus management
+- Screen reader compatibility
+
+##### Edge Cases & Error Handling
+- Empty or missing data states
+- Null/undefined prop handling
+- Loading and error states
+- Boundary conditions (min/max values)
+- Network failure scenarios
+
+##### Data Flow & Integration
+- API integration behavior
+- State management integration
+- Context provider/consumer behavior
+- Custom hooks functionality
+- Component composition patterns
+
+#### What Unit Tests SHOULD NOT Test:
+
+##### Visual Appearance & Styling
+```typescript
+// ❌ DON'T: Test specific styling or visual appearance
+expect(button).toHaveClass('bg-blue-500 text-white rounded-lg');
+expect(element).toHaveStyle('color: rgb(59, 130, 246)');
+
+// ✅ DO: Test behavioral aspects of styling
+expect(button).toHaveAttribute('disabled');
+expect(element).toHaveClass('sr-only'); // For accessibility
+```
+
+##### Specific Text Content
+```typescript
+// ❌ DON'T: Test exact text content
+expect(screen.getByText('Welcome to Our Amazing Platform')).toBeInTheDocument();
+expect(element).toHaveTextContent('Click here to get started today!');
+
+// ✅ DO: Test that content exists and has proper structure
+expect(screen.getByRole('heading', { level: 1 })).toBeInTheDocument();
+expect(element.textContent?.trim().length).toBeGreaterThan(0);
+```
+
+##### Layout & Responsive Design
+```typescript
+// ❌ DON'T: Test specific CSS classes for layout
+expect(container).toHaveClass('grid-cols-3 gap-4 px-6 py-8');
+
+// ✅ DO: Test that layout containers exist
+expect(document.querySelector('.grid')).toBeInTheDocument();
+expect(container).toHaveClass('responsive-container');
+```
+
+##### Design System Compliance
+```typescript
+// ❌ DON'T: Test specific design token values
+expect(button).toHaveClass('text-action bg-primary border-secondary');
+
+// ✅ DO: Test that design system components are used
+expect(screen.getByTestId('design-system-button')).toBeInTheDocument();
+```
+
+#### Testing Strategy by Component Type
+
+##### UI Components (Buttons, Cards, Badges)
+- Focus on props handling and variants
+- Test interactive states (disabled, loading)
+- Verify accessibility attributes
+- Test custom event handlers
+
+##### Layout Components (Header, Footer, Sections)
+- Test navigation behavior
+- Verify semantic structure
+- Test responsive container logic
+- Check accessibility landmarks
+
+##### Content Components (Blog, Portfolio Items)
+- Test data rendering logic
+- Verify link generation
+- Test empty/loading states
+- Check content structure
+
+##### Form Components
+- Test validation logic
+- Verify form submission behavior
+- Test error handling
+- Check accessibility attributes
+
+#### Visual Testing Responsibility
+
+Visual aspects should be tested through:
+- **Storybook Stories** - Component variations and states
+- **Chromatic** - Visual regression testing
+- **Manual Testing** - Cross-browser compatibility
+- **Design System Tools** - Consistency validation
+
+This separation ensures:
+- **Maintainable tests** that don't break with content changes
+- **Faster test execution** without visual rendering overhead
+- **Clear responsibilities** between different testing approaches
+- **Better developer experience** with focused, reliable tests
+
 ### Test Structure Pattern
 
 ```typescript

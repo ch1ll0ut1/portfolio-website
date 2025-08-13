@@ -1,6 +1,6 @@
 /**
  * Tests for Footer component.
- * Tests behavior and public API, focusing on social links and copyright.
+ * Tests behavior, accessibility, and structure without content-specific assertions.
  */
 
 import { describe, it, expect, vi } from 'vitest';
@@ -12,68 +12,16 @@ const mockDate = new Date('2024-01-01');
 vi.setSystemTime(mockDate);
 
 describe('Footer Component', () => {
-    describe('Copyright Notice', () => {
-        it('should display current year in copyright', () => {
+    describe('Semantic Structure', () => {
+        it('should render as a semantic footer element', () => {
             // Act
             render(<Footer />);
 
             // Assert
-            expect(screen.getByText(/2024/)).toBeInTheDocument();
-            expect(screen.getByText(/Stefan Knoch. All rights reserved./)).toBeInTheDocument();
+            expect(screen.getByRole('contentinfo')).toBeInTheDocument();
         });
 
-        it('should have correct styling classes', () => {
-            // Act
-            render(<Footer />);
-
-            // Assert
-            const copyrightElement = screen.getByText(/2024/);
-            expect(copyrightElement.closest('.text-muted-foreground')).toBeInTheDocument();
-        });
-    });
-
-    describe('Social Links', () => {
-        it('should render GitHub link with correct attributes', () => {
-            // Act
-            render(<Footer />);
-
-            // Assert
-            const githubLink = screen.getByLabelText('Visit Stefan\'s GitHub profile');
-            expect(githubLink).toBeInTheDocument();
-            expect(githubLink).toHaveAttribute('href', 'https://github.com/stefan-knoch');
-            expect(githubLink).toHaveAttribute('target', '_blank');
-            expect(githubLink).toHaveAttribute('rel', 'noopener noreferrer');
-        });
-
-        it('should render LinkedIn link with correct attributes', () => {
-            // Act
-            render(<Footer />);
-
-            // Assert
-            const linkedinLink = screen.getByLabelText('Visit Stefan\'s LinkedIn profile');
-            expect(linkedinLink).toBeInTheDocument();
-            expect(linkedinLink).toHaveAttribute('href', 'https://linkedin.com/in/stefan-knoch');
-            expect(linkedinLink).toHaveAttribute('target', '_blank');
-            expect(linkedinLink).toHaveAttribute('rel', 'noopener noreferrer');
-        });
-
-        it('should have proper hover styling classes', () => {
-            // Act
-            render(<Footer />);
-
-            // Assert
-            const githubLink = screen.getByLabelText('Visit Stefan\'s GitHub profile');
-            const linkedinLink = screen.getByLabelText('Visit Stefan\'s LinkedIn profile');
-
-            expect(githubLink).toHaveClass('text-muted-foreground');
-            expect(githubLink).toHaveClass('hover:text-primary');
-            expect(linkedinLink).toHaveClass('text-muted-foreground');
-            expect(linkedinLink).toHaveClass('hover:text-primary');
-        });
-    });
-
-    describe('Layout and Structure', () => {
-        it('should have correct footer structure', () => {
+        it('should have proper footer styling and layout', () => {
             // Act
             render(<Footer />);
 
@@ -93,8 +41,10 @@ describe('Footer Component', () => {
             const footer = screen.getByRole('contentinfo');
             expect(footer).toHaveClass('custom-footer-class');
         });
+    });
 
-        it('should have responsive layout classes', () => {
+    describe('Responsive Layout', () => {
+        it('should have responsive layout structure', () => {
             // Act
             render(<Footer />);
 
@@ -108,19 +58,96 @@ describe('Footer Component', () => {
         });
     });
 
-    describe('Icons', () => {
-        it('should render social media icons', () => {
+    describe('Copyright Section', () => {
+        it('should render copyright text with current year', () => {
             // Act
             render(<Footer />);
 
             // Assert
-            const githubIcon = screen.getByLabelText('Visit Stefan\'s GitHub profile').querySelector('svg');
-            const linkedinIcon = screen.getByLabelText('Visit Stefan\'s LinkedIn profile').querySelector('svg');
+            expect(screen.getByText(/2024/)).toBeInTheDocument();
+        });
 
-            expect(githubIcon).toBeInTheDocument();
-            expect(linkedinIcon).toBeInTheDocument();
-            expect(githubIcon).toHaveClass('h-5', 'w-5');
-            expect(linkedinIcon).toHaveClass('h-5', 'w-5');
+        it('should have muted styling for copyright text', () => {
+            // Act
+            render(<Footer />);
+
+            // Assert
+            const copyrightElement = screen.getByText(/2024/);
+            const copyrightContainer = copyrightElement.closest('div');
+            expect(copyrightContainer).toHaveClass('text-muted-foreground');
+        });
+    });
+
+    describe('Social Links Accessibility', () => {
+        it('should render social links with proper external link attributes', () => {
+            // Act
+            render(<Footer />);
+
+            // Assert
+            const links = screen.getAllByRole('link');
+            const externalLinks = links.filter(link =>
+                link.hasAttribute('target') && link.getAttribute('target') === '_blank',
+            );
+
+            externalLinks.forEach((link) => {
+                expect(link).toHaveAttribute('target', '_blank');
+                expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+            });
+        });
+
+        it('should have accessible labels for social links', () => {
+            // Act
+            render(<Footer />);
+
+            // Assert
+            const links = screen.getAllByRole('link');
+            const socialLinks = links.filter(link =>
+                link.hasAttribute('aria-label')
+                && link.getAttribute('aria-label')?.includes('profile'),
+            );
+
+            expect(socialLinks.length).toBeGreaterThan(0);
+            socialLinks.forEach((link) => {
+                expect(link).toHaveAttribute('aria-label');
+                expect(link.getAttribute('aria-label')).toMatch(/profile/i);
+            });
+        });
+
+        it('should have proper hover styling for social links', () => {
+            // Act
+            render(<Footer />);
+
+            // Assert
+            const links = screen.getAllByRole('link');
+            const socialLinks = links.filter(link =>
+                link.hasAttribute('aria-label')
+                && link.getAttribute('aria-label')?.includes('profile'),
+            );
+
+            socialLinks.forEach((link) => {
+                expect(link).toHaveClass('text-muted-foreground');
+                expect(link).toHaveClass('hover:text-primary');
+            });
+        });
+    });
+
+    describe('Icon Integration', () => {
+        it('should render icons within social links', () => {
+            // Act
+            render(<Footer />);
+
+            // Assert
+            const links = screen.getAllByRole('link');
+            const socialLinks = links.filter(link =>
+                link.hasAttribute('aria-label')
+                && link.getAttribute('aria-label')?.includes('profile'),
+            );
+
+            socialLinks.forEach((link) => {
+                const icon = link.querySelector('svg');
+                expect(icon).toBeInTheDocument();
+                expect(icon).toHaveClass('h-5', 'w-5');
+            });
         });
     });
 });
