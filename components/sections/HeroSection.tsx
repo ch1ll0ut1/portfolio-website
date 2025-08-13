@@ -4,7 +4,7 @@
  */
 
 import React, { FC } from 'react';
-import { Button } from '@/components/ui/zButton';
+import { Button } from '@/components/ui/Button';
 
 interface Props {
     className?: string;

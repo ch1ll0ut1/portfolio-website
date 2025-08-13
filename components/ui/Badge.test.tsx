@@ -5,7 +5,7 @@
 
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { Badge } from './zBadge';
+import { Badge } from './Badge';
 
 describe('Badge Component', () => {
     describe('Basic Rendering', () => {
