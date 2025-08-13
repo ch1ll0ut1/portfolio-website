@@ -5,37 +5,38 @@
 
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { ProjectCard } from './ProjectCard';
 import type { PortfolioProject } from '@/config/portfolio';
+import { ReactNode } from 'react';
+import { ProjectCard } from './ProjectCard';
 
 // Mock UI components
 vi.mock('@/components/ui/Card', () => ({
-    Card: ({ children, className }: { children: React.ReactNode; className?: string }) => (
+    Card: ({ children, className }: { children: ReactNode; className?: string }) => (
         <div data-slot="card" className={className}>{children}</div>
     ),
-    CardHeader: ({ children }: { children: React.ReactNode }) => (
+    CardHeader: ({ children }: { children: ReactNode }) => (
         <div data-slot="card-header">{children}</div>
     ),
-    CardTitle: ({ children, className }: { children: React.ReactNode; className?: string }) => (
+    CardTitle: ({ children, className }: { children: ReactNode; className?: string }) => (
         <h3 data-slot="card-title" className={className}>{children}</h3>
     ),
-    CardDescription: ({ children }: { children: React.ReactNode }) => (
+    CardDescription: ({ children }: { children: ReactNode }) => (
         <p data-slot="card-description">{children}</p>
     ),
-    CardContent: ({ children }: { children: React.ReactNode }) => (
+    CardContent: ({ children }: { children: ReactNode }) => (
         <div data-slot="card-content">{children}</div>
     ),
 }));
 
 vi.mock('@/components/ui/Badge', () => ({
-    Badge: ({ children, variant }: { children: React.ReactNode; variant?: string }) => (
+    Badge: ({ children, variant }: { children: ReactNode; variant?: string }) => (
         <span data-testid="badge" data-variant={variant}>{children}</span>
     ),
 }));
 
 vi.mock('@/components/ui/Button', () => ({
     Button: ({ children, variant, size, className }: {
-        children: React.ReactNode;
+        children: ReactNode;
         variant?: string;
         size?: string;
         className?: string;
@@ -208,8 +209,8 @@ describe('ProjectCard Component', () => {
             expect(card).toBeInTheDocument();
             expect(header).toBeInTheDocument();
             expect(content).toBeInTheDocument();
-            expect(card).toContainElement(header);
-            expect(card).toContainElement(content);
+            expect(card).toContainElement(header as HTMLElement);
+            expect(card).toContainElement(content as HTMLElement);
         });
     });
 
