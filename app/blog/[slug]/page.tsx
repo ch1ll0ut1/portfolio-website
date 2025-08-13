@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import type { Metadata } from 'next';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/zButton';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { Header } from '@/components/layout/Header';

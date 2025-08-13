@@ -4,7 +4,7 @@
  */
 
 import React, { FC } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/zCard';
 import { LucideIcon } from 'lucide-react';
 
 export interface ServiceData {

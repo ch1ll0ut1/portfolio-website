@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { Badge } from '@/components/ui/Badge';
+import { Badge } from '@/components/ui/zBadge';
 import { Calendar, Clock, User } from 'lucide-react';
 import { BlogPost } from '@/config/blog';
 import { formatDate } from '@/lib/date';

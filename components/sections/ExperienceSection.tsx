@@ -4,7 +4,7 @@
  */
 
 import React, { FC } from 'react';
-import { Badge } from '@/components/ui/Badge';
+import { Badge } from '@/components/ui/zBadge';
 import { experience } from '@/config/experience';
 
 interface Props {

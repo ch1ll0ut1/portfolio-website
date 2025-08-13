@@ -5,7 +5,7 @@
 
 import React, { FC } from 'react';
 import Link from 'next/link';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/zButton';
 
 interface Props {
     currentPage?: 'home' | 'blog';

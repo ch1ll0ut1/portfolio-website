@@ -4,7 +4,7 @@
  */
 
 import React, { FC } from 'react';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/zButton';
 import { ArrowRight } from 'lucide-react';
 
 interface Props {

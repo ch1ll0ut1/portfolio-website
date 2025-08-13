@@ -4,9 +4,9 @@
  */
 
 import React, { FC } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
-import { Badge } from '@/components/ui/Badge';
-import { Button } from '@/components/ui/Button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/zCard';
+import { Badge } from '@/components/ui/zBadge';
+import { Button } from '@/components/ui/zButton';
 import { ExternalLink } from 'lucide-react';
 import { PortfolioProject } from '@/config/portfolio';
 

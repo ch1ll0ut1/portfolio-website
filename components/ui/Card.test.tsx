@@ -13,7 +13,7 @@ import {
     CardContent,
     CardAction,
     CardFooter,
-} from './Card';
+} from './zCard';
 
 describe('Card Components', () => {
     describe('Card', () => {
