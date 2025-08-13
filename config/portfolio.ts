@@ -24,11 +24,18 @@ export const portfolio: PortfolioProject[] = [
         year: '2023 - Present',
     },
     {
+        id: 'social-bee',
+        title: 'Social-Bee.de - Immigrant Support Platform',
+        description: 'Web platform for immigrants in Germany to find resources, courses, and information about German bureaucracy. Designed product features, architected technical infrastructure, and built complete tech department from ground up.',
+        technologies: ['TypeScript', 'React', 'Node.js', 'PostgreSQL', 'AWS'],
+        year: '2022 - 2023',
+    },
+    {
         id: 'directmail',
         title: 'DirectMail - Email Content Editor',
         description: 'Rich text web editor for structured layout text content for emails. Used by 1000s of users for streamlined email content creation with advanced layout management.',
         technologies: ['TypeScript', 'React', 'Slate.js'],
-        year: '2022 - 2023',
+        year: '2021 - 2022',
     },
     {
         id: 'bluereceipt',
