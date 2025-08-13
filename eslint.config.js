@@ -14,7 +14,8 @@ export default tseslint.config(
             "eslint.config.js",
             "next.config.mjs",
             "postcss.config.mjs",
-            "tailwind.config.js"
+            "tailwind.config.js",
+            'vitest.shims.d.ts'
         ]
     },
     tseslint.configs.strictTypeChecked,
