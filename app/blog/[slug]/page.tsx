@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import type { Metadata } from 'next';
 import { Button } from '@/components/ui/Button';
 import Link from 'next/link';
-import BlogPostPage from '../../components/BlogPostPage';
+import BlogPostPage from '../../../components/blog/BlogPostPage';
 import { blogPosts } from '@/config/blog';
 import { readMarkdownFile } from '@/lib/markdownProcessor';
 

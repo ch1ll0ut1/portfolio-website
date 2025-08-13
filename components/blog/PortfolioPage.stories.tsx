@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import PortfolioPage from './PortfolioPage';
-import RootLayout from '../layout';
+import RootLayout from '../../app/layout';
 
 /**
  * Storybook configuration for the PortfolioPage component.
@@ -14,6 +14,19 @@ const meta = {
         docs: {
             description: {
                 component: 'The main portfolio page component showcasing all sections including hero, about, services, portfolio, experience, and CTA.',
+            },
+        },
+        chromatic: {
+            modes: {
+                desktop: {
+                    viewport: 'desktop',
+                },
+                mobile: {
+                    viewport: 'mobile',
+                },
+                tablet: {
+                    viewport: 'tablet',
+                },
             },
         },
     },
@@ -36,36 +49,3 @@ type Story = StoryObj<typeof meta>;
  * Default portfolio page story showing the complete layout.
  */
 export const Default: Story = {};
-
-/**
- * Portfolio page with mobile viewport for responsive testing.
- */
-export const Mobile: Story = {
-    parameters: {
-        viewport: {
-            defaultViewport: 'mobile1',
-        },
-    },
-};
-
-/**
- * Portfolio page with tablet viewport for responsive testing.
- */
-export const Tablet: Story = {
-    parameters: {
-        viewport: {
-            defaultViewport: 'tablet',
-        },
-    },
-};
-
-/**
- * Portfolio page with desktop viewport for responsive testing.
- */
-export const Desktop: Story = {
-    parameters: {
-        viewport: {
-            defaultViewport: 'desktop',
-        },
-    },
-};

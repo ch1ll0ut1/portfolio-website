@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import type { Metadata } from 'next';
-import PortfolioPage from './components/PortfolioPage';
+import PortfolioPage from '../components/blog/PortfolioPage';
 
 export const metadata: Metadata = {
     title: 'From Vision to Reality | Software Developer & Technology Consultant',

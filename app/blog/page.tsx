@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import type { Metadata } from 'next';
-import BlogPage from '../components/BlogPage';
+import BlogPage from '../../components/blog/BlogPage';
 import { blogPosts } from '@/config/blog';
 
 export const metadata: Metadata = {
