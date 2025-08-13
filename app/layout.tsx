@@ -6,6 +6,7 @@ import { GeistSans } from 'geist/font/sans';
 import { GeistMono } from 'geist/font/mono';
 import './globals.css';
 import { Analytics } from '@vercel/analytics/next';
+import { Geist } from 'next/font/google';
 
 export const metadata: Metadata = {
     title: {
@@ -79,19 +80,17 @@ export const metadata: Metadata = {
     generator: 'Next.js',
 };
 
+// Note: This is a workaround to avoid the font import issues that occur when using the main layout in Storybook.
+// See: https://github.com/vercel/geist-font/issues/59
+// 'import { GeistSans } from 'geist/font/sans';' needs to remain or else storybook will break (magic)
+const geist = Geist({
+    subsets: ['latin'],
+});
+
 const RootLayout: FC<{ children: React.ReactNode }> = ({ children }) => {
     return (
-        <html lang="en">
+        <html lang="en" className={geist.className}>
             <head>
-                <style>
-                    {`
-html {
-  font-family: ${GeistSans.style.fontFamily};
-  --font-sans: ${GeistSans.variable};
-  --font-mono: ${GeistMono.variable};
-}
-        `}
-                </style>
             </head>
             <body>
                 {children}
