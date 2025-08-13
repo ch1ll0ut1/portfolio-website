@@ -15,6 +15,14 @@ const preview: Preview = {
             // 'off' - skip a11y checks entirely
             test: 'todo',
         },
+
+        viewport: {
+            options: {
+                desktop: { name: 'Desktop', styles: { width: '1440px', height: '900px' } },
+                tablet: { name: 'Tablet', styles: { width: '1024px', height: '768px' } },
+                mobile: { name: 'Mobile', styles: { width: '640px', height: '480px' } },
+            },
+        },
     },
 };
 
