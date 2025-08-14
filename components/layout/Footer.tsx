@@ -59,13 +59,13 @@ const SocialLinks: FC = () => {
     }[] = [
         {
             name: 'GitHub',
-            url: 'https://github.com/stefan-knoch',
+            url: 'https://github.com/ch1ll0ut1',
             icon: Github,
             ariaLabel: 'Visit Stefan\'s GitHub profile',
         },
         {
             name: 'LinkedIn',
-            url: 'https://linkedin.com/in/stefan-knoch',
+            url: 'https://www.linkedin.com/in/skdevde/',
             icon: Linkedin,
             ariaLabel: 'Visit Stefan\'s LinkedIn profile',
         },

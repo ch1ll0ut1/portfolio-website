@@ -46,8 +46,8 @@ const Portfolio: FC = () => {
                         'description': 'I help businesses transform ambitious ideas into powerful, real-world applications.',
                         'url': 'https://stefanknoch.dev',
                         'sameAs': [
-                            'https://linkedin.com/in/stefan-knoch',
-                            'https://github.com/stefan-knoch',
+                            'https://www.linkedin.com/in/skdevde/',
+                            'https://github.com/ch1ll0ut1',
                         ],
                         'knowsAbout': [
                             'Software Development',
