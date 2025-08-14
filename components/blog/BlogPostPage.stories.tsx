@@ -2,7 +2,6 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import BlogPostPage from './BlogPostPage';
 import RootLayout from '../../app/layout';
 import { blogPosts, type BlogPost } from '@/config/blog';
-import { readMarkdownFile } from '@/lib/markdownProcessor';
 
 /**
  * Storybook configuration for the BlogPostPage component.
@@ -46,42 +45,17 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 /**
- * Helper function to get blog post data with content.
+ * Loads markdown content for Storybook stories via fetch.
+ * This works in the browser environment by accessing static files.
  */
-async function getBlogPostData(slug: string) {
-    const postMetadata = blogPosts.find(p => p.slug === slug);
-    if (!postMetadata) return null;
-
-    // Try to fetch from static files in Storybook
-    try {
-        const response = await fetch(`/content/blog/${slug}.md`);
-        if (response.ok) {
-            const content = await response.text();
-            return {
-                ...postMetadata,
-                content: content.trim(),
-            };
-        }
-    }
-    catch {
-        // Ignore error
+async function loadMarkdownContent(slug: string): Promise<string> {
+    const response = await fetch(`/content/blog/${slug}.md`);
+    if (!response.ok) {
+        throw new Error(`Failed to load markdown file: ${slug} = ${response.status}`);
     }
 
-    // Fallback to Node.js file reading (for Next.js)
-    try {
-        const markdownContent = readMarkdownFile(slug);
-        if (markdownContent) {
-            return {
-                ...postMetadata,
-                content: markdownContent,
-            };
-        }
-    }
-    catch {
-        // Ignore error
-    }
-
-    return null;
+    const content = await response.text();
+    return content.trim();
 }
 
 /**
@@ -93,18 +67,23 @@ function createBlogStory(slug: string, additionalParams?: Record<string, unknown
 
     return {
         args: {
-            post: { ...postMetadata, content: '' },
+            post: {
+                ...postMetadata,
+                content: '', // Will be loaded by loader
+            } as BlogPost & { content: string },
         },
         loaders: [
-            async () => ({
-                post: await getBlogPostData(slug),
-            }),
+            async () => {
+                const content = await loadMarkdownContent(slug);
+                return {
+                    post: {
+                        ...postMetadata,
+                        content,
+                    },
+                };
+            },
         ],
         render: (_args, { loaded: { post } }) => {
-            if (!post) {
-                throw new Error(`Failed to load content for ${slug}`);
-            }
-
             return <BlogPostPage post={post as BlogPost & { content: string }} />;
         },
         ...additionalParams,

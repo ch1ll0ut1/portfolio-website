@@ -110,7 +110,7 @@ interface ExperienceItemProps {
 const ExperienceItem: FC<ExperienceItemProps> = ({ item }) => {
     return (
         <div className="flex items-start gap-3">
-            <div className="w-2 h-2 bg-action rounded-full mt-2"></div>
+            <div className="w-2 h-2 bg-action rounded-full mt-2 flex-shrink-0"></div>
             <div>
                 <h4 className="font-medium text-primary">{item.title}</h4>
                 <p className="text-muted-foreground">{item.description}</p>

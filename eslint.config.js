@@ -11,6 +11,7 @@ export default tseslint.config(
             "dist",
             "node_modules",
             ".next",
+            "storybook-static",
             "eslint.config.js",
             "next.config.mjs",
             "postcss.config.mjs",
