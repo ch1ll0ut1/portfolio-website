@@ -17,6 +17,7 @@ export interface HeadingElement {
 export interface ParagraphElement {
     type: 'paragraph';
     content: string;
+    hasFormatting?: boolean;
 }
 
 export interface CodeBlockElement {
@@ -83,9 +84,11 @@ export function processMarkdownContent(content: string): MarkdownElement[] {
             i = listResult.nextIndex - 1; // -1 because loop will increment
         }
         else if (line.trim() !== '') {
+            const hasFormatting = /\*\*.*?\*\*|\*.*?\*/.test(line);
             elements.push({
                 type: 'paragraph',
                 content: line.trim(),
+                hasFormatting,
             });
         }
 
@@ -93,6 +96,62 @@ export function processMarkdownContent(content: string): MarkdownElement[] {
     }
 
     return elements;
+}
+
+/**
+ * Processes inline formatting (bold, italic) in text content.
+ * Returns an array of text segments with formatting information.
+ */
+export interface InlineSegment {
+    text: string;
+    isBold?: boolean;
+    isItalic?: boolean;
+}
+
+export function processInlineFormatting(content: string): InlineSegment[] {
+    const segments: InlineSegment[] = [];
+    let currentIndex = 0;
+
+    // Process bold (**text**) and italic (*text*) formatting
+    const formatRegex = /(\*\*(.+?)\*\*|\*(.+?)\*)/g;
+    let match;
+
+    while ((match = formatRegex.exec(content)) !== null) {
+        // Add text before the match as plain text
+        if (match.index > currentIndex) {
+            const plainText = content.substring(currentIndex, match.index);
+            if (plainText) {
+                segments.push({ text: plainText });
+            }
+        }
+
+        // Add the formatted text
+        if (match[2]) {
+            // Bold text (**text**)
+            segments.push({ text: match[2], isBold: true });
+        }
+        else if (match[3]) {
+            // Italic text (*text*)
+            segments.push({ text: match[3], isItalic: true });
+        }
+
+        currentIndex = match.index + match[0].length;
+    }
+
+    // Add remaining text as plain text
+    if (currentIndex < content.length) {
+        const remainingText = content.substring(currentIndex);
+        if (remainingText) {
+            segments.push({ text: remainingText });
+        }
+    }
+
+    // If no formatting found, return the whole content as plain text
+    if (segments.length === 0) {
+        segments.push({ text: content });
+    }
+
+    return segments;
 }
 
 /**

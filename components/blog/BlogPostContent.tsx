@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { processMarkdownContent, type MarkdownElement } from '@/lib/markdownProcessor';
+import { processMarkdownContent, processInlineFormatting, type MarkdownElement } from '@/lib/markdownProcessor';
 
 interface Props {
     content: string;
@@ -81,6 +81,24 @@ export const BlogPostContent: FC<Props> = ({ content, className = '' }) => {
                         if (!element.content.trim()) {
                             return <div key={index} className="h-4" />;
                         }
+
+                        if (element.hasFormatting) {
+                            const segments = processInlineFormatting(element.content);
+                            return (
+                                <p key={index} className="text-muted-foreground leading-relaxed mb-4">
+                                    {segments.map((segment, segmentIndex) => {
+                                        if (segment.isBold) {
+                                            return <strong key={segmentIndex} className="font-semibold text-primary">{segment.text}</strong>;
+                                        }
+                                        if (segment.isItalic) {
+                                            return <em key={segmentIndex} className="italic">{segment.text}</em>;
+                                        }
+                                        return <span key={segmentIndex}>{segment.text}</span>;
+                                    })}
+                                </p>
+                            );
+                        }
+
                         return (
                             <p key={index} className="text-muted-foreground leading-relaxed mb-4">
                                 {element.content}
