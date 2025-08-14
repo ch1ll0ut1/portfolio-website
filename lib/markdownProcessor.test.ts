@@ -78,6 +78,50 @@ describe('processMarkdownContent', () => {
             items: ['Item 1', 'Item 2', 'Item 3'],
         });
     });
+
+    it('should process separators correctly', () => {
+        const content = 'Before separator\n---\nAfter separator';
+        const result = processMarkdownContent(content);
+
+        expect(result).toHaveLength(3);
+        expect(result[0]).toEqual({
+            type: 'paragraph',
+            content: 'Before separator',
+            hasFormatting: false,
+        });
+        expect(result[1]).toEqual({
+            type: 'separator',
+        });
+        expect(result[2]).toEqual({
+            type: 'paragraph',
+            content: 'After separator',
+            hasFormatting: false,
+        });
+    });
+
+    it('should process quotes correctly', () => {
+        const content = '> This is a quote\n> with multiple lines';
+        const result = processMarkdownContent(content);
+
+        expect(result).toHaveLength(1);
+        expect(result[0]).toEqual({
+            type: 'quote',
+            content: 'This is a quote with multiple lines',
+            hasFormatting: false,
+        });
+    });
+
+    it('should process quotes with formatting correctly', () => {
+        const content = '> This is a **bold** quote with *italic* text';
+        const result = processMarkdownContent(content);
+
+        expect(result).toHaveLength(1);
+        expect(result[0]).toEqual({
+            type: 'quote',
+            content: 'This is a **bold** quote with *italic* text',
+            hasFormatting: true,
+        });
+    });
 });
 
 describe('processInlineFormatting', () => {

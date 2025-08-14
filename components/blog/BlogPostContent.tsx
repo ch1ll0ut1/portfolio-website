@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { processMarkdownContent, processInlineFormatting, type MarkdownElement } from '@/lib/markdownProcessor';
+import { processMarkdownContent, processInlineFormatting, type MarkdownElement, type QuoteElement, type InlineSegment } from '@/lib/markdownProcessor';
 
 interface Props {
     content: string;
@@ -70,11 +70,59 @@ export const BlogPostContent: FC<Props> = ({ content, className = '' }) => {
                     case 'list':
                         return (
                             <ul key={index} className="list-disc list-inside space-y-2 my-4 text-muted-foreground">
-                                {element.items.map((item, itemIndex) => (
-                                    <li key={itemIndex}>{item}</li>
-                                ))}
+                                {element.items.map((item, itemIndex) => {
+                                    const hasFormatting = /\*\*.*?\*\*|\*.*?\*/.test(item);
+                                    if (hasFormatting) {
+                                        const segments = processInlineFormatting(item);
+                                        return (
+                                            <li key={itemIndex}>
+                                                { }
+                                                {segments.map((segment: InlineSegment, segmentIndex: number) => {
+                                                    if (segment.isBold) {
+                                                        return <strong key={segmentIndex} className="font-semibold text-primary">{segment.text}</strong>;
+                                                    }
+                                                    if (segment.isItalic) {
+                                                        return <em key={segmentIndex} className="italic">{segment.text}</em>;
+                                                    }
+                                                    return <span key={segmentIndex}>{segment.text}</span>;
+                                                })}
+                                            </li>
+                                        );
+                                    }
+                                    return <li key={itemIndex}>{item}</li>;
+                                })}
                             </ul>
                         );
+
+                    case 'quote':
+                        if ((element).hasFormatting) {
+                            const segments = processInlineFormatting(element.content);
+                            return (
+                                <blockquote key={index} className="border-l-2 border-slate-300 pl-6 my-6 text-slate-600">
+                                    <p className="italic leading-relaxed text-lg">
+                                        {segments.map((segment: InlineSegment, segmentIndex: number) => {
+                                            if (segment.isBold) {
+                                                return <strong key={segmentIndex} className="font-semibold">{segment.text}</strong>;
+                                            }
+                                            if (segment.isItalic) {
+                                                return <em key={segmentIndex} className="italic">{segment.text}</em>;
+                                            }
+                                            return <span key={segmentIndex}>{segment.text}</span>;
+                                        })}
+                                    </p>
+                                </blockquote>
+                            );
+                        }
+                        return (
+                            <blockquote key={index} className="border-l-2 border-slate-300 pl-6 my-6 text-slate-600">
+                                <p className="italic leading-relaxed text-lg">
+                                    {element.content}
+                                </p>
+                            </blockquote>
+                        );
+
+                    case 'separator':
+                        return <hr key={index} className="border-t border-slate-300 my-8" />;
 
                     case 'paragraph':
                     default:

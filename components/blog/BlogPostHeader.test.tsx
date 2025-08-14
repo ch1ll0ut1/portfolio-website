@@ -15,6 +15,7 @@ const mockPost = {
     readTime: '8 min read',
     tags: ['React', 'Testing', 'TypeScript'],
     slug: 'test-post-header',
+    published: true,
 };
 
 describe('BlogPostHeader Component', () => {

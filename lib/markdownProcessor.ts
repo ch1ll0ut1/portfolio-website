@@ -6,7 +6,7 @@
 import fs from 'fs';
 import path from 'path';
 
-export type MarkdownElement = HeadingElement | ParagraphElement | CodeBlockElement | ListElement;
+export type MarkdownElement = HeadingElement | ParagraphElement | CodeBlockElement | ListElement | QuoteElement | SeparatorElement;
 
 export interface HeadingElement {
     type: 'heading';
@@ -29,6 +29,16 @@ export interface CodeBlockElement {
 export interface ListElement {
     type: 'list';
     items: string[];
+}
+
+export interface QuoteElement {
+    type: 'quote';
+    content: string;
+    hasFormatting?: boolean;
+}
+
+export interface SeparatorElement {
+    type: 'separator';
 }
 
 /**
@@ -82,6 +92,16 @@ export function processMarkdownContent(content: string): MarkdownElement[] {
             const listResult = processListBlock(lines, i);
             elements.push(listResult.element);
             i = listResult.nextIndex - 1; // -1 because loop will increment
+        }
+        else if (line.startsWith('>')) {
+            const quoteResult = processQuoteBlock(lines, i);
+            elements.push(quoteResult.element);
+            i = quoteResult.nextIndex - 1; // -1 because loop will increment
+        }
+        else if (line.trim() === '---') {
+            elements.push({
+                type: 'separator',
+            });
         }
         else if (line.trim() !== '') {
             const hasFormatting = /\*\*.*?\*\*|\*.*?\*/.test(line);
@@ -216,6 +236,53 @@ function processListBlock(lines: string[], startIndex: number): { element: ListE
         element: {
             type: 'list',
             items,
+        },
+        nextIndex: i,
+    };
+}
+
+/**
+ * Processes a quote block starting at the given line index.
+ * Returns the quote element and the next line index to process.
+ */
+function processQuoteBlock(lines: string[], startIndex: number): { element: QuoteElement; nextIndex: number } {
+    const quoteLines: string[] = [];
+    let i = startIndex;
+
+    while (i < lines.length) {
+        const line = lines[i];
+
+        if (line.startsWith('>')) {
+            // Remove the '>' and optional space
+            const content = line.replace(/^>\s?/, '');
+            quoteLines.push(content);
+        }
+        else if (line.trim() === '') {
+            // Empty line might continue the quote or end it
+            if (i + 1 < lines.length && lines[i + 1].startsWith('>')) {
+                quoteLines.push(''); // Add empty line to quote
+            }
+            else {
+                // End of quote
+                break;
+            }
+        }
+        else {
+            // Non-quote line, end of quote
+            break;
+        }
+
+        i++;
+    }
+
+    const content = quoteLines.join(' ').trim();
+    const hasFormatting = /\*\*.*?\*\*|\*.*?\*/.test(content);
+
+    return {
+        element: {
+            type: 'quote',
+            content,
+            hasFormatting,
         },
         nextIndex: i,
     };

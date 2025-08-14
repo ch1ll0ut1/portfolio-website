@@ -15,6 +15,7 @@ const mockPost = {
     readTime: '5 min read',
     tags: ['React', 'Testing'],
     slug: 'test-blog-post',
+    published: true,
 };
 
 describe('BlogPostCard Component', () => {

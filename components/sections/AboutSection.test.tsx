@@ -53,10 +53,13 @@ describe('AboutSection Component', () => {
         expect(listItems.length).toBeGreaterThan(0);
     });
 
-    it('should include call-to-action button', () => {
+    it('should include call-to-action link', () => {
         render(<AboutSection />);
 
-        const ctaButton = screen.getByRole('button');
-        expect(ctaButton).toBeInTheDocument();
+        const ctaLink = screen.getByRole('link');
+        expect(ctaLink).toBeInTheDocument();
+        expect(ctaLink).toHaveAttribute('href', 'https://calendly.com/st3ve-knoch/1-on-1-meeting');
+        expect(ctaLink).toHaveAttribute('target', '_blank');
+        expect(ctaLink).toHaveAttribute('rel', 'noopener noreferrer');
     });
 });

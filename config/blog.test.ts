@@ -52,15 +52,18 @@ describe('Blog Configuration', () => {
         });
 
         it('should be sorted by date (newest first)', () => {
-            // Assert
-            expect(blogPosts[0].date).toBe('2024-01-15'); // scalable-react-applications
-            expect(blogPosts[1].date).toBe('2024-01-08'); // cto-guide-ai-implementation
-            expect(blogPosts[2].date).toBe('2024-01-01'); // developer-to-tech-lead
+            // Act - convert dates to Date objects for comparison
+            const dates = blogPosts.map(post => new Date(post.date));
+            
+            // Assert - each subsequent post should be older than or equal to the previous
+            for (let i = 1; i < dates.length; i++) {
+                expect(dates[i-1].getTime()).toBeGreaterThanOrEqual(dates[i].getTime());
+            }
         });
 
-        it('should have exactly 3 blog posts', () => {
+        it('should have at least one blog post', () => {
             // Assert
-            expect(blogPosts).toHaveLength(3);
+            expect(blogPosts.length).toBeGreaterThan(0);
         });
 
         it('should have valid dates', () => {

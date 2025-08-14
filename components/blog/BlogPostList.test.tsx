@@ -16,6 +16,7 @@ const mockPosts = [
         readTime: '5 min read',
         tags: ['React'],
         slug: 'test-post-1',
+        published: true,
     },
     {
         id: 'post-2',
@@ -25,6 +26,7 @@ const mockPosts = [
         readTime: '3 min read',
         tags: ['TypeScript'],
         slug: 'test-post-2',
+        published: true,
     },
 ];
 
