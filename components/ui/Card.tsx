@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/cssUtils';
 
 export const Card: FC<React.ComponentProps<'div'>> = ({ className, ...props }) => {
     return (

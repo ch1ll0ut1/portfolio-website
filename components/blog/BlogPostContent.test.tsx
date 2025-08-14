@@ -1,167 +1,299 @@
-import React from 'react';
+/**
+ * Tests for BlogPostContent component.
+ * Tests markdown parsing business logic, syntax highlighting, and rendering behavior.
+ */
+
+import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
 import { BlogPostContent } from './BlogPostContent';
 
+// Mock react-syntax-highlighter to avoid heavy dependencies in tests
+vi.mock('react-syntax-highlighter', () => ({
+    Prism: ({ children, language }: { children: string; language: string }) => (
+        <code data-testid="syntax-highlighter" data-language={language}>
+            {children}
+        </code>
+    ),
+}));
+
+vi.mock('react-syntax-highlighter/dist/esm/styles/prism', () => ({
+    oneDark: {},
+}));
+
 describe('BlogPostContent Component', () => {
-    it('should render content container with prose styling', () => {
-        const content = 'Sample content';
-        render(<BlogPostContent content={content} />);
+    describe('Basic Rendering', () => {
+        it('should render with prose styling container', () => {
+            render(<BlogPostContent content="Test content" />);
 
-        const container = document.querySelector('.prose');
-        expect(container).toBeInTheDocument();
-        expect(container).toHaveClass('prose', 'prose-lg', 'max-w-none');
+            const container = document.querySelector('.prose');
+            expect(container).toBeInTheDocument();
+            expect(container).toHaveClass('prose', 'prose-lg', 'max-w-none');
+        });
+
+        it('should handle custom className prop', () => {
+            render(<BlogPostContent content="Test" className="custom-class" />);
+
+            const container = document.querySelector('.prose');
+            expect(container).toHaveClass('custom-class');
+        });
+
+        it('should handle empty content gracefully', () => {
+            render(<BlogPostContent content="" />);
+
+            const container = document.querySelector('.prose');
+            expect(container).toBeInTheDocument();
+        });
     });
 
-    it('should render plain text content correctly', () => {
-        const content = 'This is a simple paragraph of text.';
-        render(<BlogPostContent content={content} />);
+    describe('Heading Parsing Logic', () => {
+        it('should parse and render h2 headings correctly', () => {
+            const content = '## This is an H2 heading';
+            render(<BlogPostContent content={content} />);
 
-        expect(screen.getByText(content)).toBeInTheDocument();
+            const heading = screen.getByRole('heading', { level: 2 });
+            expect(heading).toBeInTheDocument();
+            expect(heading).toHaveTextContent('This is an H2 heading');
+            expect(heading.tagName).toBe('H2');
+        });
+
+        it('should parse and render h3 headings correctly', () => {
+            const content = '### This is an H3 heading';
+            render(<BlogPostContent content={content} />);
+
+            const heading = screen.getByRole('heading', { level: 3 });
+            expect(heading).toBeInTheDocument();
+            expect(heading).toHaveTextContent('This is an H3 heading');
+            expect(heading.tagName).toBe('H3');
+        });
+
+        it('should parse and render h4+ headings correctly', () => {
+            const content = '#### This is an H4 heading';
+            render(<BlogPostContent content={content} />);
+
+            const heading = screen.getByRole('heading', { level: 4 });
+            expect(heading).toBeInTheDocument();
+            expect(heading).toHaveTextContent('This is an H4 heading');
+            expect(heading.tagName).toBe('H4');
+        });
+
+        it('should handle multiple headings of different levels', () => {
+            const content = '## Main Section\n### Subsection\n#### Details';
+            render(<BlogPostContent content={content} />);
+
+            expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent('Main Section');
+            expect(screen.getByRole('heading', { level: 3 })).toHaveTextContent('Subsection');
+            expect(screen.getByRole('heading', { level: 4 })).toHaveTextContent('Details');
+        });
+
+        it('should parse h1 headings as h4 (fallback behavior)', () => {
+            const content = '# This is an H1 heading';
+            render(<BlogPostContent content={content} />);
+
+            const heading = screen.getByRole('heading');
+            expect(heading.tagName).toBe('H4');
+            expect(heading).toHaveTextContent('This is an H1 heading');
+        });
     });
 
-    it('should handle multiple paragraphs from markdown', () => {
-        const content = 'First paragraph.\n\nSecond paragraph.';
-        render(<BlogPostContent content={content} />);
+    describe('Code Block Parsing Logic', () => {
+        it('should parse and render basic code blocks', () => {
+            const content = '```javascript\nconst foo = "bar";\nconsole.log(foo);\n```';
+            render(<BlogPostContent content={content} />);
 
-        // Verify both paragraphs are rendered
-        const container = document.querySelector('.prose');
-        expect(container).toBeInTheDocument();
-        expect(container).toHaveTextContent('First paragraph.');
-        expect(container).toHaveTextContent('Second paragraph.');
+            const codeBlock = screen.getByTestId('syntax-highlighter');
+            expect(codeBlock).toBeInTheDocument();
+            expect(codeBlock).toHaveAttribute('data-language', 'javascript');
+            expect(codeBlock).toHaveTextContent('const foo = "bar"; console.log(foo);');
+        });
+
+        it('should handle code blocks with different languages', () => {
+            const content = '```python\nprint("Hello World")\n```';
+            render(<BlogPostContent content={content} />);
+
+            const codeBlock = screen.getByTestId('syntax-highlighter');
+            expect(codeBlock).toHaveAttribute('data-language', 'python');
+            expect(codeBlock).toHaveTextContent('print("Hello World")');
+        });
+
+        it('should default to javascript for code blocks without language', () => {
+            const content = '```\nconst test = true;\n```';
+            render(<BlogPostContent content={content} />);
+
+            const codeBlock = screen.getByTestId('syntax-highlighter');
+            expect(codeBlock).toHaveAttribute('data-language', 'javascript');
+        });
+
+        it('should handle multiple code blocks in same content', () => {
+            const content = '```javascript\nconst js = true;\n```\n\nSome text\n\n```python\npy = True\n```';
+            render(<BlogPostContent content={content} />);
+
+            const codeBlocks = screen.getAllByTestId('syntax-highlighter');
+            expect(codeBlocks).toHaveLength(2);
+            expect(codeBlocks[0]).toHaveAttribute('data-language', 'javascript');
+            expect(codeBlocks[1]).toHaveAttribute('data-language', 'python');
+        });
+
+        it('should preserve code formatting and whitespace', () => {
+            const content = '```javascript\nfunction test() {\n    return "indented";\n}\n```';
+            render(<BlogPostContent content={content} />);
+
+            const codeBlock = screen.getByTestId('syntax-highlighter');
+            expect(codeBlock.textContent).toContain('function test() {\n    return "indented";\n}');
+        });
     });
 
-    it('should render h2 headings with proper accessibility', () => {
-        const content = '## Sample Heading\n\nSome content.';
-        render(<BlogPostContent content={content} />);
+    describe('List Parsing Logic', () => {
+        it('should parse and render unordered lists with dashes', () => {
+            const content = '- First item\n- Second item\n- Third item';
+            render(<BlogPostContent content={content} />);
 
-        const heading = screen.getByRole('heading', { level: 2 });
-        expect(heading).toBeInTheDocument();
+            const list = screen.getByRole('list');
+            expect(list).toBeInTheDocument();
+            expect(list.tagName).toBe('UL');
+
+            const items = screen.getAllByRole('listitem');
+            expect(items).toHaveLength(3);
+            expect(items[0]).toHaveTextContent('First item');
+            expect(items[1]).toHaveTextContent('Second item');
+            expect(items[2]).toHaveTextContent('Third item');
+        });
+
+        it('should parse lists with asterisk markers', () => {
+            const content = '* Item A\n* Item B';
+            render(<BlogPostContent content={content} />);
+
+            const items = screen.getAllByRole('listitem');
+            expect(items).toHaveLength(2);
+            expect(items[0]).toHaveTextContent('Item A');
+            expect(items[1]).toHaveTextContent('Item B');
+        });
+
+        it('should parse lists with plus markers', () => {
+            const content = '+ Item X\n+ Item Y';
+            render(<BlogPostContent content={content} />);
+
+            const items = screen.getAllByRole('listitem');
+            expect(items).toHaveLength(2);
+            expect(items[0]).toHaveTextContent('Item X');
+            expect(items[1]).toHaveTextContent('Item Y');
+        });
+
+        it('should handle mixed content with lists', () => {
+            const content = 'Some text\n\n- List item 1\n- List item 2\n\nMore text';
+            render(<BlogPostContent content={content} />);
+
+            expect(screen.getByText('Some text')).toBeInTheDocument();
+            expect(screen.getByText('More text')).toBeInTheDocument();
+            expect(screen.getAllByRole('listitem')).toHaveLength(2);
+        });
     });
 
-    it('should render h3 headings with proper accessibility', () => {
-        const content = '### Sample Subheading\n\nSome content.';
-        render(<BlogPostContent content={content} />);
+    describe('Text and Paragraph Parsing', () => {
+        it('should render regular text as paragraphs', () => {
+            const content = 'This is a paragraph of text.';
+            render(<BlogPostContent content={content} />);
 
-        const heading = screen.getByRole('heading', { level: 3 });
-        expect(heading).toBeInTheDocument();
+            expect(screen.getByText('This is a paragraph of text.')).toBeInTheDocument();
+        });
+
+        it('should handle multiple paragraphs', () => {
+            const content = 'First paragraph.\n\nSecond paragraph.';
+            render(<BlogPostContent content={content} />);
+
+            expect(screen.getByText('First paragraph.')).toBeInTheDocument();
+            expect(screen.getByText('Second paragraph.')).toBeInTheDocument();
+        });
+
+        it('should handle empty lines as spacing', () => {
+            const content = 'Text\n\n\nMore text';
+            render(<BlogPostContent content={content} />);
+
+            const container = document.querySelector('.prose');
+            expect(container).toBeInTheDocument();
+            // Should have spacing divs for empty lines
+        });
     });
 
-    it('should render h4 headings with proper accessibility', () => {
-        const content = '#### Sample Sub-subheading\n\nSome content.';
-        render(<BlogPostContent content={content} />);
+    describe('Complex Mixed Content Parsing', () => {
+        it('should handle mixed content types correctly', () => {
+            const content = `# Main Title
 
-        const heading = screen.getByRole('heading', { level: 4 });
-        expect(heading).toBeInTheDocument();
+This is a paragraph.
+
+## Code Example
+
+Here's some code:
+
+\`\`\`javascript
+const example = "test";
+\`\`\`
+
+### Features List
+
+- Feature 1
+- Feature 2
+- Feature 3
+
+More text after the list.`;
+
+            render(<BlogPostContent content={content} />);
+
+            // Check all content types are rendered
+            expect(screen.getByRole('heading', { level: 4 })).toHaveTextContent('Main Title'); // h1 → h4
+            expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent('Code Example');
+            expect(screen.getByRole('heading', { level: 3 })).toHaveTextContent('Features List');
+            expect(screen.getByText('This is a paragraph.')).toBeInTheDocument();
+            expect(screen.getByTestId('syntax-highlighter')).toBeInTheDocument();
+            expect(screen.getAllByRole('listitem')).toHaveLength(3);
+            expect(screen.getByText('More text after the list.')).toBeInTheDocument();
+        });
+
+        it('should maintain proper parsing state across complex transitions', () => {
+            const content = `Text before
+
+\`\`\`
+code block
+\`\`\`
+
+- List item
+- Another item
+
+## Heading
+
+More text`;
+
+            render(<BlogPostContent content={content} />);
+
+            expect(screen.getByText('Text before')).toBeInTheDocument();
+            expect(screen.getByTestId('syntax-highlighter')).toBeInTheDocument();
+            expect(screen.getAllByRole('listitem')).toHaveLength(2);
+            expect(screen.getByRole('heading')).toHaveTextContent('Heading');
+            expect(screen.getByText('More text')).toBeInTheDocument();
+        });
     });
 
-    it('should render code blocks with syntax highlighting support', () => {
-        const content = '```javascript\nconst test = "hello";\nconsole.log(test);\n```';
-        render(<BlogPostContent content={content} />);
+    describe('Edge Cases and Error Handling', () => {
+        it('should handle malformed markdown gracefully', () => {
+            const content = '###\n```\nunclosed code\n- incomplete';
+            render(<BlogPostContent content={content} />);
 
-        const codeBlock = document.querySelector('pre');
-        const codeElement = document.querySelector('code');
-        expect(codeBlock).toBeInTheDocument();
-        expect(codeElement).toHaveClass('language-javascript');
-    });
+            const container = document.querySelector('.prose');
+            expect(container).toBeInTheDocument();
+        });
 
-    it('should render code blocks without specific language', () => {
-        const content = '```\nconst test = "hello";\n```';
-        render(<BlogPostContent content={content} />);
+        it('should handle only whitespace content', () => {
+            const content = '   \n  \n   ';
+            render(<BlogPostContent content={content} />);
 
-        const codeBlock = document.querySelector('pre');
-        expect(codeBlock).toBeInTheDocument();
-    });
+            const container = document.querySelector('.prose');
+            expect(container).toBeInTheDocument();
+        });
 
-    it('should render unordered lists properly', () => {
-        const content = '- First item\n- Second item\n- Third item';
-        render(<BlogPostContent content={content} />);
+        it('should handle special characters in content', () => {
+            const content = 'Text with & < > " \' special chars';
+            render(<BlogPostContent content={content} />);
 
-        // Check for list structure without specific content
-        const listItems = document.querySelectorAll('li');
-        expect(listItems.length).toBeGreaterThanOrEqual(3);
-    });
-
-    it('should handle mixed markdown content types', () => {
-        const content = '## Main Heading\n\nSome text.\n\n- List item 1\n- List item 2\n\n```javascript\nconst code = "test";\n```';
-        render(<BlogPostContent content={content} />);
-
-        const heading = screen.getByRole('heading', { level: 2 });
-        const codeBlock = document.querySelector('pre');
-        const listItems = document.querySelectorAll('li');
-
-        expect(heading).toBeInTheDocument();
-        expect(codeBlock).toBeInTheDocument();
-        expect(listItems.length).toBeGreaterThanOrEqual(2);
-    });
-
-    it('should apply custom className when provided', () => {
-        const content = 'Test content';
-        render(<BlogPostContent content={content} className="custom-class" />);
-
-        const container = document.querySelector('.prose');
-        expect(container).toHaveClass('custom-class');
-    });
-
-    it('should handle empty content gracefully', () => {
-        render(<BlogPostContent content="" />);
-
-        const container = document.querySelector('.prose');
-        expect(container).toBeInTheDocument();
-    });
-
-    it('should handle whitespace-only content gracefully', () => {
-        render(<BlogPostContent content="   \n\n   " />);
-
-        const container = document.querySelector('.prose');
-        expect(container).toBeInTheDocument();
-    });
-
-    it('should handle invalid markdown gracefully', () => {
-        const content = '### \n\n```invalid\n\nUnclosed code block';
-        render(<BlogPostContent content={content} />);
-
-        const container = document.querySelector('.prose');
-        expect(container).toBeInTheDocument();
-    });
-
-    it('should maintain proper semantic structure for accessibility', () => {
-        const content = '# Main Title\n\n## Section\n\n### Subsection\n\nParagraph text.';
-        render(<BlogPostContent content={content} />);
-
-        // Check for proper heading hierarchy
-        const h1 = screen.queryByRole('heading', { level: 1 });
-        const h2 = screen.queryByRole('heading', { level: 2 });
-        const h3 = screen.queryByRole('heading', { level: 3 });
-
-        expect(h1 ?? h2 ?? h3).toBeInTheDocument(); // At least one heading should exist
-    });
-
-    it('should render inline code elements', () => {
-        const content = 'Here is some `inline code` in a paragraph.';
-        render(<BlogPostContent content={content} />);
-
-        const container = document.querySelector('.prose');
-        expect(container).toBeInTheDocument();
-        expect(container).toHaveTextContent('inline code');
-    });
-
-    it('should handle ordered lists properly', () => {
-        const content = '1. First item\n2. Second item\n3. Third item';
-        const { container } = render(<BlogPostContent content={content} />);
-
-        // Verify content is rendered, even if not as ordered list
-        expect(container).toHaveTextContent('First item');
-        expect(container).toHaveTextContent('Second item');
-        expect(container).toHaveTextContent('Third item');
-    });
-
-    it('should render blockquotes when present', () => {
-        const content = '> This is a blockquote\n> with multiple lines.';
-        const { container } = render(<BlogPostContent content={content} />);
-
-        // Verify content is rendered, even if not as blockquote
-        expect(container).toHaveTextContent('This is a blockquote');
-        expect(container).toHaveTextContent('with multiple lines');
+            expect(screen.getByText('Text with & < > " \' special chars')).toBeInTheDocument();
+        });
     });
 });

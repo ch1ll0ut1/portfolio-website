@@ -26,11 +26,12 @@ This is a Next.js 15 portfolio website built with TypeScript, React 19, and Tail
 ### Key Technical Stack
 - **Framework**: Next.js 15 with App Router
 - **Language**: TypeScript with strict configuration
-- **Styling**: Tailwind CSS with custom design system
+- **Styling**: Tailwind CSS v4 with PostCSS integration
 - **UI Components**: Radix UI primitives with custom variants
 - **Testing**: Vitest with jsdom environment
 - **Code Quality**: ESLint with TypeScript, stylistic, and import rules
 - **Fonts**: Geist Sans and Geist Mono
+- **Deployment**: Vercel with automatic optimization
 
 ### Project Structure
 
@@ -44,7 +45,7 @@ app/                    # Next.js app router pages
 components/            # React components organized by domain
 ├── blog/             # Blog-specific components
 ├── cards/            # Card components (Project, Service)
-├── layout/           # Layout components (Header, Footer)  
+├── layout/           # Layout components (Header, Footer, Navigation)  
 ├── sections/         # Page sections (Hero, About, etc.)
 └── ui/               # Reusable UI primitives
 
@@ -94,15 +95,16 @@ The project enforces strict coding standards:
 - **Vitest** as test runner with jsdom environment
 - **Testing Library** for React component testing  
 - **Co-located tests** alongside source files
+- **Behavior-focused testing**: Tests focus on component behavior vs implementation details
 - **Coverage reporting** with v8 provider
 - **Test-specific ESLint rules** that relax strict typing for testing
 
 ### Build Configuration
 
 - **Strict ESLint** runs before build
-- **TypeScript errors ignored** during build (handled by ESLint)
-- **Unoptimized images** for static deployment
-- **Type checking** via ESLint with project service
+- **TypeScript checking** enforced during build
+- **Next.js optimizations**: Compression, React strict mode, no powered-by header
+- **Vercel deployment** with automatic image optimization and static generation
 
 ### Development Philosophy
 
@@ -116,7 +118,9 @@ Based on the comprehensive DEVELOPMENT_GUIDE.md, this project follows:
 ## Important Notes
 
 - Build process includes linting, so code must pass ESLint to build successfully
-- All components should have accompanying tests
+- All components should have accompanying tests focused on behavior
+- Navigation logic is separated into dedicated Navigation component
 - Markdown content processing uses custom implementation, not external libraries
 - Font loading is handled through Next.js with Geist font family
 - The project uses pnpm as package manager, not npm or yarn
+- Components use consolidated structure to reduce over-decomposition

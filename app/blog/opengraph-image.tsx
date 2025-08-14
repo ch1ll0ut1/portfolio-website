@@ -1,63 +1,13 @@
-import { ImageResponse } from 'next/og';
+import { ogImageConfig, createOgImage, BrandComponent } from '@/lib/opengraphUtils';
 
-export const size = {
-    width: 1200,
-    height: 630,
-};
-
-export const contentType = 'image/png';
+export const size = ogImageConfig.size;
+export const contentType = ogImageConfig.contentType;
 
 export default async function Image() {
-    return new ImageResponse(
-        (
-            <div
-                style={{
-                    background: 'linear-gradient(135deg, #1F2937 0%, #374151 100%)',
-                    width: '100%',
-                    height: '100%',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    padding: '60px',
-                    color: 'white',
-                    fontFamily: 'Inter, system-ui, sans-serif',
-                }}
-            >
-                {/* Logo/Brand */}
-                <div
-                    style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        marginBottom: '40px',
-                    }}
-                >
-                    <div
-                        style={{
-                            width: '60px',
-                            height: '60px',
-                            background: '#2563EB',
-                            borderRadius: '12px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            marginRight: '20px',
-                            fontSize: '24px',
-                            fontWeight: 'bold',
-                        }}
-                    >
-                        SK
-                    </div>
-                    <div
-                        style={{
-                            fontSize: '24px',
-                            fontWeight: '600',
-                            color: '#2563EB',
-                        }}
-                    >
-                        Stefan Knoch
-                    </div>
-                </div>
+    return createOgImage({
+        children: (
+            <>
+                <BrandComponent />
 
                 {/* Main Title */}
                 <h1
@@ -107,22 +57,7 @@ export default async function Image() {
                     <span>•</span>
                     <span>Leadership</span>
                 </div>
-
-                {/* Bottom accent */}
-                <div
-                    style={{
-                        position: 'absolute',
-                        bottom: '0',
-                        left: '0',
-                        right: '0',
-                        height: '8px',
-                        background: 'linear-gradient(90deg, #2563EB 0%, #1F2937 100%)',
-                    }}
-                />
-            </div>
+            </>
         ),
-        {
-            ...size,
-        },
-    );
+    });
 }

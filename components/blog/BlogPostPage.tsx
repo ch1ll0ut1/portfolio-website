@@ -8,7 +8,7 @@ import { BlogPostHeader } from '@/components/blog/BlogPostHeader';
 import { BlogPostContent } from '@/components/blog/BlogPostContent';
 import { BlogPost } from '@/config/blog';
 
-interface BlogPostPageProps {
+interface Props {
     post: BlogPost & { content: string };
 }
 
@@ -16,7 +16,7 @@ interface BlogPostPageProps {
  * Individual blog post page component containing post content and navigation.
  * Extracted from the blog post page.tsx file for better component isolation.
  */
-const BlogPostPage: FC<BlogPostPageProps> = ({ post }) => {
+const BlogPostPage: FC<Props> = ({ post }) => {
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-50 to-white">
             <Header currentPage="blog" />
