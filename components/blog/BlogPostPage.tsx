@@ -41,14 +41,6 @@ const BlogPostPage: FC<Props> = ({ post }) => {
                         </ol>
                     </nav>
 
-                    <Link
-                        href="/blog"
-                        className="inline-flex items-center text-muted-foreground hover:text-primary transition-colors mb-8"
-                    >
-                        <ArrowLeft className="mr-2 h-4 w-4" />
-                        Back to Blog
-                    </Link>
-
                     <BlogPostHeader post={post} />
                     <BlogPostContent content={post.content} />
                 </div>
