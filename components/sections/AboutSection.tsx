@@ -68,9 +68,11 @@ const AboutContent: FC = () => {
 const AboutCTA: FC = () => {
     return (
         <div className="text-center mt-8">
-            <Button className="bg-action text-action-foreground hover:bg-action/90">
-                Let&apos;s talk about your project
-                <ArrowRight className="ml-2 h-4 w-4" />
+            <Button asChild className="bg-action text-action-foreground hover:bg-action/90">
+                <a href="https://calendly.com/st3ve-knoch/1-on-1-meeting" target="_blank" rel="noopener noreferrer">
+                    Let&apos;s talk about your project
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                </a>
             </Button>
         </div>
     );

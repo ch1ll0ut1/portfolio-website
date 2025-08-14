@@ -18,13 +18,13 @@ export const HeroSection: FC<Props> = ({ className = '' }) => {
     const actions = [
         {
             label: 'Start a Project',
-            href: '#contact',
+            href: 'https://calendly.com/st3ve-knoch/1-on-1-meeting',
             isPrimary: true,
+            isExternal: true,
         },
         {
             label: 'View My Work',
             href: '#portfolio',
-            isPrimary: false,
         },
     ];
 
@@ -56,7 +56,13 @@ export const HeroSection: FC<Props> = ({ className = '' }) => {
                             className={action.isPrimary ? 'bg-action text-action-foreground hover:bg-action/90' : ''}
                             variant={action.isPrimary ? 'default' : 'outline'}
                         >
-                            <a href={action.href}>{action.label}</a>
+                            <a
+                                href={action.href}
+                                target={action.isExternal ? '_blank' : undefined}
+                                rel={action.isExternal ? 'noopener noreferrer' : undefined}
+                            >
+                                {action.label}
+                            </a>
                         </Button>
                     ))}
                 </div>

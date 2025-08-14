@@ -41,8 +41,9 @@ describe('CtaSection Component', () => {
     it('should contain call-to-action button', () => {
         render(<CtaSection />);
 
-        const ctaButton = screen.getByRole('button');
+        const ctaButton = screen.getByRole('link', { name: /Book a Free Consultation/i });
         expect(ctaButton).toBeInTheDocument();
+        expect(ctaButton).toHaveAttribute('href', 'https://calendly.com/st3ve-knoch/1-on-1-meeting');
     });
 
     it('should have descriptive text content', () => {
