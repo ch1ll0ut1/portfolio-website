@@ -50,9 +50,12 @@ export const Navigation: FC<Props> = ({ currentPage = 'home' }) => {
             >
                 Home
             </Link>
-            {isBlogPage && (
-                <span className="text-action font-medium">Blog</span>
-            )}
+            <Link
+                href="/blog"
+                className="text-action font-medium hover:text-action/90 transition-colors"
+            >
+                Blog
+            </Link>
         </>
     );
 };
