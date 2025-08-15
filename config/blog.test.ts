@@ -54,10 +54,10 @@ describe('Blog Configuration', () => {
         it('should be sorted by date (newest first)', () => {
             // Act - convert dates to Date objects for comparison
             const dates = blogPosts.map(post => new Date(post.date));
-            
+
             // Assert - each subsequent post should be older than or equal to the previous
             for (let i = 1; i < dates.length; i++) {
-                expect(dates[i-1].getTime()).toBeGreaterThanOrEqual(dates[i].getTime());
+                expect(dates[i - 1].getTime()).toBeGreaterThanOrEqual(dates[i].getTime());
             }
         });
 
