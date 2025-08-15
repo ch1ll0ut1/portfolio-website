@@ -90,8 +90,6 @@ function createBlogStory(slug: string, additionalParams?: Record<string, unknown
     };
 }
 
-export const ScalableReactApplications = createBlogStory('scalable-react-applications');
+export const NodeJSvsPythonFrameworkMagic = createBlogStory('nodejs-vs-python-framework-magic');
 
-export const AIImplementationGuide = createBlogStory('cto-guide-ai-implementation');
-
-export const DeveloperToTechLead = createBlogStory('developer-to-tech-lead');
+export const HowToUseAITOBuildAppsAt10xSpeed = createBlogStory('how-to-use-ai-to-build-apps-10x-speed');
