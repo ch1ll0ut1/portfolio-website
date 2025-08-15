@@ -70,6 +70,16 @@ const rawBlogPosts: BlogPost[] = [
         slug: 'how-to-use-ai-to-build-apps-10x-speed',
         published: true,
     },
+    {
+        id: '6',
+        title: 'Node.js vs Python: When Framework Magic Stops Feeling Magical',
+        excerpt: 'A seasoned TypeScript developer compares Node.js and Python, exploring why explicit, modular code often beats hidden framework magic for long-term maintainability.',
+        date: '2025-08-15',
+        readTime: '5 min read',
+        tags: ['Node.js', 'Python', 'TypeScript', 'FastAPI', 'Django', 'Clean Code', 'Framework Magic', 'Backend Development'],
+        slug: 'nodejs-vs-python-framework-magic',
+        published: true,
+    },
 ];
 
 /**
