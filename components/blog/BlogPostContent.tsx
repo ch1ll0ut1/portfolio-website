@@ -130,6 +130,60 @@ export const BlogPostContent: FC<Props> = ({ content, className = '' }) => {
                     case 'separator':
                         return <hr key={index} className="border-t border-slate-300 my-8" />;
 
+                    case 'table':
+                        return (
+                            <div key={index} className="my-6 overflow-x-auto">
+                                <table className="w-full border-collapse border border-slate-300 rounded-lg">
+                                    <thead>
+                                        <tr className="bg-slate-50">
+                                            {element.headers.map((header, headerIndex) => (
+                                                <th
+                                                    key={headerIndex}
+                                                    className="border border-slate-300 px-4 py-3 text-left font-semibold text-primary"
+                                                >
+                                                    {header}
+                                                </th>
+                                            ))}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {element.rows.map((row, rowIndex) => (
+                                            <tr key={rowIndex} className="hover:bg-slate-50 transition-colors">
+                                                {row.map((cell, cellIndex) => {
+                                                    const hasFormatting = /\[([^\]]+)\]\(([^)]+)\)|\*\*.*?\*\*|\*.*?\*/.test(cell);
+                                                    return (
+                                                        <td
+                                                            key={cellIndex}
+                                                            className="border border-slate-300 px-4 py-3 text-muted-foreground"
+                                                        >
+                                                            {hasFormatting
+                                                                ? (
+                                                                    processInlineFormatting(cell).map((segment: InlineSegment, segmentIndex: number) => {
+                                                                        if (segment.isBold) {
+                                                                            return <strong key={segmentIndex} className="font-semibold text-primary">{segment.text}</strong>;
+                                                                        }
+                                                                        if (segment.isItalic) {
+                                                                            return <em key={segmentIndex} className="italic">{segment.text}</em>;
+                                                                        }
+                                                                        if (segment.isLink && segment.href) {
+                                                                            return <a key={segmentIndex} href={segment.href} className="text-action hover:text-action/90 underline transition-colors" target="_blank" rel="noopener noreferrer">{segment.text}</a>;
+                                                                        }
+                                                                        return <span key={segmentIndex}>{segment.text}</span>;
+                                                                    })
+                                                                )
+                                                                : (
+                                                                    cell
+                                                                )}
+                                                        </td>
+                                                    );
+                                                })}
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        );
+
                     case 'paragraph':
                     default:
                         if (!element.content.trim()) {

@@ -6,7 +6,7 @@
 import fs from 'fs';
 import path from 'path';
 
-export type MarkdownElement = HeadingElement | ParagraphElement | CodeBlockElement | ListElement | QuoteElement | SeparatorElement;
+export type MarkdownElement = HeadingElement | ParagraphElement | CodeBlockElement | ListElement | QuoteElement | SeparatorElement | TableElement;
 
 export interface HeadingElement {
     type: 'heading';
@@ -39,6 +39,12 @@ export interface QuoteElement {
 
 export interface SeparatorElement {
     type: 'separator';
+}
+
+export interface TableElement {
+    type: 'table';
+    headers: string[];
+    rows: string[][];
 }
 
 /**
@@ -97,6 +103,11 @@ export function processMarkdownContent(content: string): MarkdownElement[] {
             const quoteResult = processQuoteBlock(lines, i);
             elements.push(quoteResult.element);
             i = quoteResult.nextIndex - 1; // -1 because loop will increment
+        }
+        else if (line.includes('|') && i + 1 < lines.length && lines[i + 1].includes('|') && /^[\s|:-]+$/.test(lines[i + 1])) {
+            const tableResult = processTableBlock(lines, i);
+            elements.push(tableResult.element);
+            i = tableResult.nextIndex - 1; // -1 because loop will increment
         }
         else if (line.trim() === '---') {
             elements.push({
@@ -293,6 +304,71 @@ function processQuoteBlock(lines: string[], startIndex: number): { element: Quot
             type: 'quote',
             content,
             hasFormatting,
+        },
+        nextIndex: i,
+    };
+}
+
+/**
+ * Processes a table block starting at the given line index.
+ * Returns the table element and the next line index to process.
+ */
+function processTableBlock(lines: string[], startIndex: number): { element: TableElement; nextIndex: number } {
+    const headerLine = lines[startIndex];
+    const separatorLine = lines[startIndex + 1];
+
+    // Parse headers from the first line
+    const headers = headerLine
+        .split('|')
+        .map(cell => cell.trim())
+        .filter(cell => cell !== '');
+
+    // Start processing rows from the line after the separator
+    let i = startIndex + 2;
+    const rows: string[][] = [];
+
+    while (i < lines.length) {
+        const line = lines[i];
+
+        // Check if this line is a table row (contains pipes)
+        if (line.includes('|')) {
+            const cells = line
+                .split('|')
+                .map(cell => cell.trim())
+                .filter(cell => cell !== '');
+
+            // Only add if we have the right number of cells
+            if (cells.length === headers.length) {
+                rows.push(cells);
+            }
+            else {
+                // Malformed table row, end table processing
+                break;
+            }
+        }
+        else if (line.trim() === '') {
+            // Empty line might end the table or continue it
+            if (i + 1 < lines.length && lines[i + 1].includes('|')) {
+                // Continue to next row
+            }
+            else {
+                // End of table
+                break;
+            }
+        }
+        else {
+            // Non-table line, end of table
+            break;
+        }
+
+        i++;
+    }
+
+    return {
+        element: {
+            type: 'table',
+            headers,
+            rows,
         },
         nextIndex: i,
     };
