@@ -18,26 +18,36 @@ export const Navigation: FC<Props> = ({ currentPage = 'home' }) => {
     const isHomePage = currentPage === 'home';
     const isBlogPage = currentPage === 'blog';
 
-    const homeNavItems = [
+    const sectionNavItems = [
         { href: '#about', label: 'About' },
         { href: '#services', label: 'Services' },
         { href: '#portfolio', label: 'Portfolio' },
         { href: '#experience', label: 'Experience' },
-        { href: '/blog', label: 'Blog' },
     ];
+
+    const blogNavItem = { href: '/blog', label: 'Blog' };
 
     if (isHomePage) {
         return (
             <>
-                {homeNavItems.map(item => (
+                {/* Section links - hidden on mobile */}
+                {sectionNavItems.map(item => (
                     <Link
                         key={item.href}
                         href={item.href}
-                        className="text-muted-foreground hover:text-primary transition-colors"
+                        className="hidden md:block text-muted-foreground hover:text-primary transition-colors"
                     >
                         {item.label}
                     </Link>
                 ))}
+
+                {/* Blog link - always visible */}
+                <Link
+                    href={blogNavItem.href}
+                    className="text-muted-foreground hover:text-primary transition-colors"
+                >
+                    {blogNavItem.label}
+                </Link>
             </>
         );
     }
