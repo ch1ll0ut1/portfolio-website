@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { BlogPostHeader } from '@/components/blog/BlogPostHeader';
-import { BlogPostContent } from '@/components/blog/BlogPostContent';
+import { Markdown } from '@/components/markdown/Markdown';
 import { BlogPost } from '@/config/blog';
 
 interface Props {
@@ -42,7 +42,7 @@ const BlogPostPage: FC<Props> = ({ post }) => {
                     </nav>
 
                     <BlogPostHeader post={post} />
-                    <BlogPostContent content={post.content} />
+                    <Markdown content={post.content} />
                 </div>
             </article>
 

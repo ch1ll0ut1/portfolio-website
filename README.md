@@ -18,9 +18,9 @@ A modern, responsive portfolio website built with Next.js 15, React 19, and Type
 
 ### **Content Management**
 
-- **Blog System** - Markdown-based blog with syntax highlighting
+- **Blog System** - Markdown-based blog with comprehensive syntax support
 - **Dynamic Content** - Centralized configuration files for easy updates
-- **Code Highlighting** - Syntax highlighting for code blocks in blog posts
+- **Rich Markdown** - Full markdown support including tables, quotes, and code highlighting
 - **Tag System** - Categorized blog posts and portfolio projects
 
 ### **Brand Integration**
@@ -47,7 +47,7 @@ A modern, responsive portfolio website built with Next.js 15, React 19, and Type
 ### **Content & Code**
 
 - **React Syntax Highlighter** - Code block formatting
-- **Markdown Processing** - Custom markdown parser for blog content
+- **Markdown Processing** - Custom markdown parser with table and formatting support
 - **Dynamic OG Images** - Auto-generated social media images
 - **Structured Data** - JSON-LD schema markup for search engines
 
@@ -81,9 +81,19 @@ portfolio-website/
 │   ├── blog/                    # Blog-specific components
 │   │   ├── BlogHero.tsx         # Blog page hero section
 │   │   ├── BlogPostCard.tsx     # Blog post preview card
-│   │   ├── BlogPostContent.tsx  # Markdown content renderer
 │   │   ├── BlogPostHeader.tsx   # Blog post header
-│   │   └── BlogPostList.tsx     # Blog post list container
+│   │   ├── BlogPostList.tsx     # Blog post list container
+│   │   └── BlogPostPage.tsx     # Individual blog post page
+│   ├── markdown/                # Markdown processing components
+│   │   ├── Markdown.tsx         # Main markdown renderer
+│   │   ├── InlineContent.tsx    # Inline formatting component
+│   │   ├── markdownProcessor.ts # Markdown parsing logic
+│   │   └── elements/            # Individual markdown element components
+│   │       ├── MarkdownHeading.tsx
+│   │       ├── MarkdownCodeBlock.tsx
+│   │       ├── MarkdownList.tsx
+│   │       ├── MarkdownTable.tsx
+│   │       └── ... (other elements)
 │   ├── cards/                   # Card components
 │   │   ├── ProjectCard.tsx      # Portfolio project card
 │   │   └── ServiceCard.tsx      # Service offering card
@@ -115,13 +125,13 @@ portfolio-website/
 ├── lib/                         # Utility functions
 │   ├── cssUtils.ts              # CSS utility functions
 │   ├── date.ts                  # Date formatting utilities
-│   ├── markdownProcessor.ts     # Markdown processing utilities
 │   └── opengraphUtils.tsx       # Open Graph image generation utilities
 ├── public/                      # Static assets
 ├── test/                        # Test configuration
 │   └── setup.ts                 # Test setup file
 ├── BRAND.md                     # Brand guidelines and identity
 ├── DEVELOPMENT_GUIDE.md         # Comprehensive development standards and testing guidelines
+├── MARKDOWN.md                  # Markdown features and syntax documentation
 ├── package.json                 # Project dependencies and scripts
 ├── tsconfig.json                # TypeScript configuration
 ├── vitest.config.ts             # Vitest configuration
@@ -346,22 +356,9 @@ Chromatic runs **automatically via GitHub Actions** on every push and pull reque
 
 ### **Blog Posts**
 
-Blog posts are written in Markdown and stored in `content/blog/`:
+Blog posts are written in Markdown and stored in `content/blog/` with comprehensive syntax support including tables, quotes, code highlighting, and inline formatting.
 
-```markdown
-# Blog Post Title
-
-This is a blog post written in Markdown with support for:
-- **Bold text**
-- *Italic text*
-- `Code snippets`
-- [Links](https://example.com)
-
-## Code Blocks
-```javascript
-const example = "Code with syntax highlighting";
-console.log(example);
-```
+> 📖 **For complete markdown syntax documentation and examples**, see [`MARKDOWN.md`](./MARKDOWN.md)
 
 ### **Configuration Files**
 

@@ -95,3 +95,5 @@ export const NodeJSvsPythonFrameworkMagic = createBlogStory('nodejs-vs-python-fr
 export const HowToUseAITOBuildAppsAt10xSpeed = createBlogStory('how-to-use-ai-to-build-apps-10x-speed');
 
 export const HowToHireYourFirstDeveloper = createBlogStory('how-to-hire-your-first-developer');
+
+export const WhyStartupsDontNeedProductOwners = createBlogStory('why-startups-dont-need-product-owners');

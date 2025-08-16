@@ -16,8 +16,7 @@ export interface HeadingElement {
 
 export interface ParagraphElement {
     type: 'paragraph';
-    content: string;
-    hasFormatting?: boolean;
+    segments: InlineSegment[];
 }
 
 export interface CodeBlockElement {
@@ -28,13 +27,12 @@ export interface CodeBlockElement {
 
 export interface ListElement {
     type: 'list';
-    items: string[];
+    items: InlineSegment[][];
 }
 
 export interface QuoteElement {
     type: 'quote';
-    content: string;
-    hasFormatting?: boolean;
+    segments: InlineSegment[];
 }
 
 export interface SeparatorElement {
@@ -43,8 +41,8 @@ export interface SeparatorElement {
 
 export interface TableElement {
     type: 'table';
-    headers: string[];
-    rows: string[][];
+    headers: InlineSegment[][];
+    rows: InlineSegment[][][];
 }
 
 /**
@@ -115,11 +113,9 @@ export function processMarkdownContent(content: string): MarkdownElement[] {
             });
         }
         else if (line.trim() !== '') {
-            const hasFormatting = /\[([^\]]+)\]\(([^)]+)\)|\*\*.*?\*\*|\*.*?\*/.test(line);
             elements.push({
                 type: 'paragraph',
-                content: line.trim(),
-                hasFormatting,
+                segments: processInlineFormatting(line.trim()),
             });
         }
 
@@ -141,7 +137,7 @@ export interface InlineSegment {
     href?: string;
 }
 
-export function processInlineFormatting(content: string): InlineSegment[] {
+function processInlineFormatting(content: string): InlineSegment[] {
     const segments: InlineSegment[] = [];
     let currentIndex = 0;
 
@@ -225,7 +221,7 @@ function processCodeBlock(lines: string[], startIndex: number): { element: CodeB
  * Returns the list element and the next line index to process.
  */
 function processListBlock(lines: string[], startIndex: number): { element: ListElement; nextIndex: number } {
-    const items: string[] = [];
+    const items: InlineSegment[][] = [];
     let i = startIndex;
 
     while (i < lines.length) {
@@ -233,7 +229,7 @@ function processListBlock(lines: string[], startIndex: number): { element: ListE
         const listMatch = /^[-*+]\s+(.+)$/.exec(line);
 
         if (listMatch) {
-            items.push(listMatch[1]);
+            items.push(processInlineFormatting(listMatch[1]));
         }
         else if (line.trim() === '') {
             // Empty line might continue the list or end it
@@ -297,13 +293,11 @@ function processQuoteBlock(lines: string[], startIndex: number): { element: Quot
     }
 
     const content = quoteLines.join(' ').trim();
-    const hasFormatting = /\[([^\]]+)\]\(([^)]+)\)|\*\*.*?\*\*|\*.*?\*/.test(content);
 
     return {
         element: {
             type: 'quote',
-            content,
-            hasFormatting,
+            segments: processInlineFormatting(content),
         },
         nextIndex: i,
     };
@@ -315,17 +309,17 @@ function processQuoteBlock(lines: string[], startIndex: number): { element: Quot
  */
 function processTableBlock(lines: string[], startIndex: number): { element: TableElement; nextIndex: number } {
     const headerLine = lines[startIndex];
-    const separatorLine = lines[startIndex + 1];
 
     // Parse headers from the first line
     const headers = headerLine
         .split('|')
         .map(cell => cell.trim())
-        .filter(cell => cell !== '');
+        .filter(cell => cell !== '')
+        .map(cell => processInlineFormatting(cell));
 
     // Start processing rows from the line after the separator
     let i = startIndex + 2;
-    const rows: string[][] = [];
+    const rows: InlineSegment[][][] = [];
 
     while (i < lines.length) {
         const line = lines[i];
@@ -335,7 +329,8 @@ function processTableBlock(lines: string[], startIndex: number): { element: Tabl
             const cells = line
                 .split('|')
                 .map(cell => cell.trim())
-                .filter(cell => cell !== '');
+                .filter(cell => cell !== '')
+                .map(cell => processInlineFormatting(cell));
 
             // Only add if we have the right number of cells
             if (cells.length === headers.length) {

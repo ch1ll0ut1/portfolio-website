@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/Button';
 import Link from 'next/link';
 import BlogPostPage from '../../../components/blog/BlogPostPage';
 import { blogPosts } from '@/config/blog';
-import { readMarkdownFile } from '@/lib/markdownProcessor';
+import { readMarkdownFile } from '@/components/markdown/markdownProcessor';
 
 /**
  * Gets blog post data and content from configuration and markdown files.
