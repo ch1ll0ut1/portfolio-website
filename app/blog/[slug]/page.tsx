@@ -7,6 +7,13 @@ import { blogPosts } from '@/config/blog';
 import { readMarkdownFile } from '@/components/markdown/markdownProcessor';
 
 /**
+ * Generates static params for all blog posts to enable static generation.
+ */
+export async function generateStaticParams() {
+    return blogPosts.map(post => ({ slug: post.slug }));
+}
+
+/**
  * Gets blog post data and content from configuration and markdown files.
  * Returns post metadata and parsed markdown content.
  */
