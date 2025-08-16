@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 import { blogPosts } from '@/config/blog';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-    const baseUrl = 'https://stefanknoch.dev';
+    const baseUrl = 'https://stefanknoch.com';
 
     // Static pages
     const staticPages = [

@@ -49,7 +49,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
         openGraph: {
             title: post.title,
             description: post.excerpt,
-            url: `https://stefanknoch.dev/blog/${slug}`,
+            url: `https://stefanknoch.com/blog/${slug}`,
             type: 'article',
             publishedTime: post.date,
             authors: ['Stefan Knoch'],
@@ -96,23 +96,23 @@ const BlogPost: FC<{ params: Promise<{ slug: string }> }> = async ({ params }) =
                         'author': {
                             '@type': 'Person',
                             'name': 'Stefan Knoch',
-                            'url': 'https://stefanknoch.dev',
+                            'url': 'https://stefanknoch.com',
                         },
                         'publisher': {
                             '@type': 'Organization',
                             'name': 'Stefan Knoch',
                             'logo': {
                                 '@type': 'ImageObject',
-                                'url': 'https://stefanknoch.dev/logo.png',
+                                'url': 'https://stefanknoch.com/logo.png',
                             },
                         },
                         'datePublished': post.date,
                         'dateModified': post.date,
                         'mainEntityOfPage': {
                             '@type': 'WebPage',
-                            '@id': `https://stefanknoch.dev/blog/${slug}`,
+                            '@id': `https://stefanknoch.com/blog/${slug}`,
                         },
-                        'url': `https://stefanknoch.dev/blog/${slug}`,
+                        'url': `https://stefanknoch.com/blog/${slug}`,
                         'articleSection': 'Technology',
                         'keywords': post.tags.join(', '),
                         'inLanguage': 'en-US',

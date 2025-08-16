@@ -35,14 +35,14 @@ export const metadata: Metadata = {
         address: false,
         telephone: false,
     },
-    metadataBase: new URL('https://stefanknoch.dev'),
+    metadataBase: new URL('https://stefanknoch.com'),
     alternates: {
         canonical: '/',
     },
     openGraph: {
         type: 'website',
         locale: 'en_US',
-        url: 'https://stefanknoch.dev',
+        url: 'https://stefanknoch.com',
         title: 'Stefan Knoch - From Vision to Reality | Software Developer & Technology Consultant',
         description: 'I help businesses transform ambitious ideas into powerful, real-world applications. Combining creativity, strategic insight, and leadership to guide projects from concept to launch.',
         siteName: 'Stefan Knoch Portfolio',

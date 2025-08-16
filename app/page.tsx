@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     openGraph: {
         title: 'From Vision to Reality | Software Developer & Technology Consultant',
         description: 'I help businesses transform ambitious ideas into powerful, real-world applications. Combining creativity, strategic insight, and leadership to guide projects from concept to launch.',
-        url: 'https://stefanknoch.dev',
+        url: 'https://stefanknoch.com',
         type: 'website',
     },
     twitter: {
@@ -44,7 +44,7 @@ const Portfolio: FC = () => {
                         'name': 'Stefan Knoch',
                         'jobTitle': 'Software Developer & Technology Consultant',
                         'description': 'I help businesses transform ambitious ideas into powerful, real-world applications.',
-                        'url': 'https://stefanknoch.dev',
+                        'url': 'https://stefanknoch.com',
                         'sameAs': [
                             'https://www.linkedin.com/in/skdevde/',
                             'https://github.com/ch1ll0ut1',

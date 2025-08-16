@@ -4,7 +4,7 @@ A modern, responsive portfolio website built with Next.js 15, React 19, and Type
 
 ## 🚀 **Live Demo**
 
-[Portfolio Website](https://stefanknoch.dev) *(Coming Soon)*
+[Portfolio Website](https://stefanknoch.com) *(Coming Soon)*
 
 ## ✨ **Features**
 

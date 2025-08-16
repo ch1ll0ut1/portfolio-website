@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     openGraph: {
         title: 'Blog | Software Development & Technology Insights',
         description: 'Insights on software development, technology leadership, AI implementation, and building scalable applications.',
-        url: 'https://stefanknoch.dev/blog',
+        url: 'https://stefanknoch.com/blog',
         type: 'website',
     },
     twitter: {
@@ -42,7 +42,7 @@ const Blog: FC = () => {
                         '@type': 'Blog',
                         'name': 'Stefan Knoch Blog',
                         'description': 'Insights on software development, technology leadership, and AI implementation',
-                        'url': 'https://stefanknoch.dev/blog',
+                        'url': 'https://stefanknoch.com/blog',
                         'author': {
                             '@type': 'Person',
                             'name': 'Stefan Knoch',
@@ -56,10 +56,10 @@ const Blog: FC = () => {
                                 'name': 'Stefan Knoch',
                             },
                             'datePublished': post.date,
-                            'url': `https://stefanknoch.dev/blog/${post.slug}`,
+                            'url': `https://stefanknoch.com/blog/${post.slug}`,
                             'mainEntityOfPage': {
                                 '@type': 'WebPage',
-                                '@id': `https://stefanknoch.dev/blog/${post.slug}`,
+                                '@id': `https://stefanknoch.com/blog/${post.slug}`,
                             },
                         })),
                     }),

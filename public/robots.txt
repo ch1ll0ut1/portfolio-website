@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap location
-Sitemap: https://stefanknoch.dev/sitemap.xml
+Sitemap: https://stefanknoch.com/sitemap.xml
 
 # Crawl-delay for respectful crawling
 Crawl-delay: 1
