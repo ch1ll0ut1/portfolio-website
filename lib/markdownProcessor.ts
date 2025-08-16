@@ -104,7 +104,7 @@ export function processMarkdownContent(content: string): MarkdownElement[] {
             });
         }
         else if (line.trim() !== '') {
-            const hasFormatting = /\*\*.*?\*\*|\*.*?\*/.test(line);
+            const hasFormatting = /\[([^\]]+)\]\(([^)]+)\)|\*\*.*?\*\*|\*.*?\*/.test(line);
             elements.push({
                 type: 'paragraph',
                 content: line.trim(),
@@ -126,14 +126,16 @@ export interface InlineSegment {
     text: string;
     isBold?: boolean;
     isItalic?: boolean;
+    isLink?: boolean;
+    href?: string;
 }
 
 export function processInlineFormatting(content: string): InlineSegment[] {
     const segments: InlineSegment[] = [];
     let currentIndex = 0;
 
-    // Process bold (**text**) and italic (*text*) formatting
-    const formatRegex = /(\*\*(.+?)\*\*|\*(.+?)\*)/g;
+    // Process links [text](url), bold (**text**) and italic (*text*) formatting
+    const formatRegex = /(\[([^\]]+)\]\(([^)]+)\)|\*\*(.+?)\*\*|\*(.+?)\*)/g;
     let match;
 
     while ((match = formatRegex.exec(content)) !== null) {
@@ -146,13 +148,21 @@ export function processInlineFormatting(content: string): InlineSegment[] {
         }
 
         // Add the formatted text
-        if (match[2]) {
-            // Bold text (**text**)
-            segments.push({ text: match[2], isBold: true });
+        if (match[2] && match[3]) {
+            // Link [text](url)
+            segments.push({
+                text: match[2],
+                isLink: true,
+                href: match[3],
+            });
         }
-        else if (match[3]) {
+        else if (match[4]) {
+            // Bold text (**text**)
+            segments.push({ text: match[4], isBold: true });
+        }
+        else if (match[5]) {
             // Italic text (*text*)
-            segments.push({ text: match[3], isItalic: true });
+            segments.push({ text: match[5], isItalic: true });
         }
 
         currentIndex = match.index + match[0].length;
@@ -276,7 +286,7 @@ function processQuoteBlock(lines: string[], startIndex: number): { element: Quot
     }
 
     const content = quoteLines.join(' ').trim();
-    const hasFormatting = /\*\*.*?\*\*|\*.*?\*/.test(content);
+    const hasFormatting = /\[([^\]]+)\]\(([^)]+)\)|\*\*.*?\*\*|\*.*?\*/.test(content);
 
     return {
         element: {

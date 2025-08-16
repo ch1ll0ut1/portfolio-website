@@ -71,7 +71,7 @@ export const BlogPostContent: FC<Props> = ({ content, className = '' }) => {
                         return (
                             <ul key={index} className="list-disc list-inside space-y-2 my-4 text-muted-foreground">
                                 {element.items.map((item, itemIndex) => {
-                                    const hasFormatting = /\*\*.*?\*\*|\*.*?\*/.test(item);
+                                    const hasFormatting = /\[([^\]]+)\]\(([^)]+)\)|\*\*.*?\*\*|\*.*?\*/.test(item);
                                     if (hasFormatting) {
                                         const segments = processInlineFormatting(item);
                                         return (
@@ -83,6 +83,9 @@ export const BlogPostContent: FC<Props> = ({ content, className = '' }) => {
                                                     }
                                                     if (segment.isItalic) {
                                                         return <em key={segmentIndex} className="italic">{segment.text}</em>;
+                                                    }
+                                                    if (segment.isLink && segment.href) {
+                                                        return <a key={segmentIndex} href={segment.href} className="text-action hover:text-action/90 underline transition-colors" target="_blank" rel="noopener noreferrer">{segment.text}</a>;
                                                     }
                                                     return <span key={segmentIndex}>{segment.text}</span>;
                                                 })}
@@ -106,6 +109,9 @@ export const BlogPostContent: FC<Props> = ({ content, className = '' }) => {
                                             }
                                             if (segment.isItalic) {
                                                 return <em key={segmentIndex} className="italic">{segment.text}</em>;
+                                            }
+                                            if (segment.isLink && segment.href) {
+                                                return <a key={segmentIndex} href={segment.href} className="text-action hover:text-action/90 underline transition-colors" target="_blank" rel="noopener noreferrer">{segment.text}</a>;
                                             }
                                             return <span key={segmentIndex}>{segment.text}</span>;
                                         })}
@@ -140,6 +146,9 @@ export const BlogPostContent: FC<Props> = ({ content, className = '' }) => {
                                         }
                                         if (segment.isItalic) {
                                             return <em key={segmentIndex} className="italic">{segment.text}</em>;
+                                        }
+                                        if (segment.isLink && segment.href) {
+                                            return <a key={segmentIndex} href={segment.href} className="text-action hover:text-action/90 underline transition-colors" target="_blank" rel="noopener noreferrer">{segment.text}</a>;
                                         }
                                         return <span key={segmentIndex}>{segment.text}</span>;
                                     })}

@@ -296,4 +296,77 @@ More text`;
             expect(screen.getByText('Text with & < > " \' special chars')).toBeInTheDocument();
         });
     });
+
+    describe('Link Rendering', () => {
+        it('should render links in paragraphs as clickable elements', () => {
+            const content = 'Check out [Google](https://google.com) for search.';
+            render(<BlogPostContent content={content} />);
+
+            const link = screen.getByRole('link', { name: 'Google' });
+            expect(link).toBeInTheDocument();
+            expect(link).toHaveAttribute('href', 'https://google.com');
+            expect(link).toHaveAttribute('target', '_blank');
+            expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+            expect(link).toHaveClass('text-action', 'hover:text-action/90', 'underline', 'transition-colors');
+        });
+
+        it('should render multiple links in same paragraph', () => {
+            const content = 'Visit [Google](https://google.com) or [GitHub](https://github.com) today.';
+            render(<BlogPostContent content={content} />);
+
+            const googleLink = screen.getByRole('link', { name: 'Google' });
+            const githubLink = screen.getByRole('link', { name: 'GitHub' });
+
+            expect(googleLink).toHaveAttribute('href', 'https://google.com');
+            expect(githubLink).toHaveAttribute('href', 'https://github.com');
+        });
+
+        it('should render links mixed with bold and italic formatting', () => {
+            const content = '**Bold** text and [a link](https://example.com) plus *italic* text.';
+            render(<BlogPostContent content={content} />);
+
+            const link = screen.getByRole('link', { name: 'a link' });
+            const boldText = screen.getByText('Bold');
+            const italicText = screen.getByText('italic');
+
+            expect(link).toHaveAttribute('href', 'https://example.com');
+            expect(boldText.tagName).toBe('STRONG');
+            expect(italicText.tagName).toBe('EM');
+        });
+
+        it('should render links in list items', () => {
+            const content = '- Check [Google](https://google.com)\n- Visit [GitHub](https://github.com)';
+            render(<BlogPostContent content={content} />);
+
+            const googleLink = screen.getByRole('link', { name: 'Google' });
+            const githubLink = screen.getByRole('link', { name: 'GitHub' });
+
+            expect(googleLink).toHaveAttribute('href', 'https://google.com');
+            expect(githubLink).toHaveAttribute('href', 'https://github.com');
+        });
+
+        it('should render links in quotes', () => {
+            const content = '> Check out [this link](https://example.com) for more info';
+            render(<BlogPostContent content={content} />);
+
+            const link = screen.getByRole('link', { name: 'this link' });
+            expect(link).toHaveAttribute('href', 'https://example.com');
+        });
+
+        it('should handle links with special characters in URL', () => {
+            const content = 'Visit [search](https://google.com/search?q=test&lang=en) now.';
+            render(<BlogPostContent content={content} />);
+
+            const link = screen.getByRole('link', { name: 'search' });
+            expect(link).toHaveAttribute('href', 'https://google.com/search?q=test&lang=en');
+        });
+
+        it('should handle links with complex text content', () => {
+            const content = 'Check [My Awesome Project!!!](https://github.com/user/project) out.';
+            render(<BlogPostContent content={content} />);
+
+            const link = screen.getByRole('link', { name: 'My Awesome Project!!!' });
+            expect(link).toHaveAttribute('href', 'https://github.com/user/project');
+        });
+    });
 });

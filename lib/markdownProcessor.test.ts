@@ -30,10 +30,10 @@ describe('processMarkdownContent', () => {
     });
 
     it('should detect paragraphs with formatting', () => {
-        const content = 'Regular text\n**Bold text**\n*Italic text*\n**Bold** and *italic* mixed';
+        const content = 'Regular text\n**Bold text**\n*Italic text*\n**Bold** and *italic* mixed\n[Link text](https://example.com)';
         const result = processMarkdownContent(content);
 
-        expect(result).toHaveLength(4);
+        expect(result).toHaveLength(5);
         expect(result[0]).toEqual({
             type: 'paragraph',
             content: 'Regular text',
@@ -52,6 +52,11 @@ describe('processMarkdownContent', () => {
         expect(result[3]).toEqual({
             type: 'paragraph',
             content: '**Bold** and *italic* mixed',
+            hasFormatting: true,
+        });
+        expect(result[4]).toEqual({
+            type: 'paragraph',
+            content: '[Link text](https://example.com)',
             hasFormatting: true,
         });
     });
@@ -119,6 +124,18 @@ describe('processMarkdownContent', () => {
         expect(result[0]).toEqual({
             type: 'quote',
             content: 'This is a **bold** quote with *italic* text',
+            hasFormatting: true,
+        });
+    });
+
+    it('should process quotes with links correctly', () => {
+        const content = '> Check out [this link](https://example.com) for more info';
+        const result = processMarkdownContent(content);
+
+        expect(result).toHaveLength(1);
+        expect(result[0]).toEqual({
+            type: 'quote',
+            content: 'Check out [this link](https://example.com) for more info',
             hasFormatting: true,
         });
     });
@@ -208,6 +225,65 @@ describe('processInlineFormatting', () => {
         expect(result).toEqual([
             { text: 'Bold', isBold: true },
             { text: 'italic', isItalic: true },
+        ]);
+    });
+
+    it('should process links correctly', () => {
+        const result = processInlineFormatting('Check out [this link](https://example.com) for more info');
+
+        expect(result).toEqual([
+            { text: 'Check out ' },
+            { text: 'this link', isLink: true, href: 'https://example.com' },
+            { text: ' for more info' },
+        ]);
+    });
+
+    it('should process multiple links correctly', () => {
+        const result = processInlineFormatting('Visit [Google](https://google.com) or [GitHub](https://github.com)');
+
+        expect(result).toEqual([
+            { text: 'Visit ' },
+            { text: 'Google', isLink: true, href: 'https://google.com' },
+            { text: ' or ' },
+            { text: 'GitHub', isLink: true, href: 'https://github.com' },
+        ]);
+    });
+
+    it('should process mixed formatting with links', () => {
+        const result = processInlineFormatting('**Bold** text and [a link](https://example.com) plus *italic*');
+
+        expect(result).toEqual([
+            { text: 'Bold', isBold: true },
+            { text: ' text and ' },
+            { text: 'a link', isLink: true, href: 'https://example.com' },
+            { text: ' plus ' },
+            { text: 'italic', isItalic: true },
+        ]);
+    });
+
+    it('should handle link at the beginning', () => {
+        const result = processInlineFormatting('[Link](https://example.com) at the start');
+
+        expect(result).toEqual([
+            { text: 'Link', isLink: true, href: 'https://example.com' },
+            { text: ' at the start' },
+        ]);
+    });
+
+    it('should handle link at the end', () => {
+        const result = processInlineFormatting('Text ending with [a link](https://example.com)');
+
+        expect(result).toEqual([
+            { text: 'Text ending with ' },
+            { text: 'a link', isLink: true, href: 'https://example.com' },
+        ]);
+    });
+
+    it('should handle only a link', () => {
+        const result = processInlineFormatting('[Only link](https://example.com)');
+
+        expect(result).toEqual([
+            { text: 'Only link', isLink: true, href: 'https://example.com' },
         ]);
     });
 });
