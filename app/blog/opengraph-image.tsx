@@ -1,4 +1,4 @@
-import { ogImageConfig, createOgImage, BrandComponent } from '@/lib/opengraphUtils';
+import { ogImageConfig, createOgImage, OgLayout, AccentDot } from '@/lib/opengraphUtils';
 
 export const size = ogImageConfig.size;
 export const contentType = ogImageConfig.contentType;
@@ -6,9 +6,7 @@ export const contentType = ogImageConfig.contentType;
 export default async function Image() {
     return createOgImage({
         children: (
-            <>
-                <BrandComponent />
-
+            <OgLayout>
                 {/* Main Title */}
                 <h1
                     style={{
@@ -18,6 +16,8 @@ export default async function Image() {
                         margin: '0 0 20px 0',
                         lineHeight: '1.1',
                         maxWidth: '900px',
+                        color: '#FFFFFF',
+                        textShadow: '0 2px 8px rgba(245, 158, 11, 0.3)',
                     }}
                 >
                     Blog
@@ -29,9 +29,10 @@ export default async function Image() {
                         fontSize: '36px',
                         textAlign: 'center',
                         margin: '0 0 40px 0',
-                        color: '#D1D5DB',
+                        color: '#E5E7EB',
                         maxWidth: '800px',
                         lineHeight: '1.3',
+                        fontWeight: '500',
                     }}
                 >
                     Software Development & Technology Insights
@@ -42,22 +43,25 @@ export default async function Image() {
                     style={{
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '20px',
+                        gap: '8px',
                         fontSize: '22px',
-                        color: '#9CA3AF',
+                        color: '#F59E0B',
                         flexWrap: 'wrap',
                         justifyContent: 'center',
+                        fontWeight: '600',
                     }}
                 >
                     <span>React</span>
-                    <span>•</span>
+                    <AccentDot />
+                    <span>Node.js</span>
+                    <AccentDot />
                     <span>TypeScript</span>
-                    <span>•</span>
+                    <AccentDot />
                     <span>AI</span>
-                    <span>•</span>
+                    <AccentDot />
                     <span>Leadership</span>
                 </div>
-            </>
+            </OgLayout>
         ),
     });
 }

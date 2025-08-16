@@ -1,4 +1,4 @@
-import { ogImageConfig, createOgImage, BrandComponent } from '@/lib/opengraphUtils';
+import { ogImageConfig, createOgImage, OgLayout } from '@/lib/opengraphUtils';
 import { blogPosts } from '@/config/blog';
 
 export const size = ogImageConfig.size;
@@ -11,29 +11,25 @@ export default async function Image({ params }: { params: Promise<{ slug: string
     if (!post) {
         return createOgImage({
             children: (
-                <h1 style={{ fontSize: '48px', fontWeight: 'bold' }}>Post Not Found</h1>
+                <h1 style={{ fontSize: '48px', fontWeight: 'bold', color: '#FFFFFF' }}>Post Not Found</h1>
             ),
         });
     }
 
     return createOgImage({
         children: (
-            <>
-                <BrandComponent size="small" />
-
+            <OgLayout brandSize="small">
                 {/* Blog Post Title */}
                 <h1
                     style={{
-                        fontSize: '56px',
+                        fontSize: '48px',
                         fontWeight: 'bold',
                         textAlign: 'center',
-                        margin: '0 0 30px 0',
-                        lineHeight: '1.2',
+                        margin: '0 0 20px 0',
+                        lineHeight: '1.1',
                         maxWidth: '1000px',
-                        display: '-webkit-box',
-                        WebkitLineClamp: '3',
-                        WebkitBoxOrient: 'vertical',
-                        overflow: 'hidden',
+                        color: '#FFFFFF',
+                        textShadow: '0 2px 8px rgba(245, 158, 11, 0.3)',
                     }}
                 >
                     {post.title}
@@ -42,19 +38,16 @@ export default async function Image({ params }: { params: Promise<{ slug: string
                 {/* Excerpt */}
                 <p
                     style={{
-                        fontSize: '24px',
+                        fontSize: '20px',
                         textAlign: 'center',
-                        margin: '0 0 40px 0',
-                        color: '#D1D5DB',
+                        margin: '0 0 30px 0',
+                        color: '#E5E7EB',
                         maxWidth: '900px',
                         lineHeight: '1.4',
-                        display: '-webkit-box',
-                        WebkitLineClamp: '2',
-                        WebkitBoxOrient: 'vertical',
-                        overflow: 'hidden',
+                        fontWeight: '500',
                     }}
                 >
-                    {post.excerpt}
+                    {post.excerpt.length > 120 ? post.excerpt.substring(0, 120) + '...' : post.excerpt}
                 </p>
 
                 {/* Tags */}
@@ -65,19 +58,20 @@ export default async function Image({ params }: { params: Promise<{ slug: string
                         gap: '12px',
                         flexWrap: 'wrap',
                         justifyContent: 'center',
-                        marginBottom: '30px',
+                        marginBottom: '20px',
                     }}
                 >
-                    {post.tags.slice(0, 4).map((tag, index) => (
+                    {post.tags.map((tag, index) => (
                         <span
                             key={index}
                             style={{
-                                background: '#2563EB',
-                                color: '#ffffff',
-                                padding: '8px 16px',
-                                borderRadius: '20px',
-                                fontSize: '16px',
+                                background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
+                                color: '#1F2937',
+                                padding: '6px 14px',
+                                borderRadius: '16px',
+                                fontSize: '14px',
                                 fontWeight: '600',
+                                boxShadow: '0 2px 8px rgba(245, 158, 11, 0.3)',
                             }}
                         >
                             {tag}
@@ -88,9 +82,9 @@ export default async function Image({ params }: { params: Promise<{ slug: string
                 {/* Date */}
                 <div
                     style={{
-                        fontSize: '18px',
-                        color: '#9CA3AF',
-                        marginBottom: '20px',
+                        fontSize: '16px',
+                        color: '#F59E0B',
+                        fontWeight: '600',
                     }}
                 >
                     {new Date(post.date).toLocaleDateString('en-US', {
@@ -99,7 +93,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
                         day: 'numeric',
                     })}
                 </div>
-            </>
+            </OgLayout>
         ),
     });
 }
