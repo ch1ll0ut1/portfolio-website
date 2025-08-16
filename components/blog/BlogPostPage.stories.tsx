@@ -93,3 +93,5 @@ function createBlogStory(slug: string, additionalParams?: Record<string, unknown
 export const NodeJSvsPythonFrameworkMagic = createBlogStory('nodejs-vs-python-framework-magic');
 
 export const HowToUseAITOBuildAppsAt10xSpeed = createBlogStory('how-to-use-ai-to-build-apps-10x-speed');
+
+export const HowToHireYourFirstDeveloper = createBlogStory('how-to-hire-your-first-developer');

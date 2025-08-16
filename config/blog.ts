@@ -40,6 +40,16 @@ const rawBlogPosts: BlogPost[] = [
         slug: 'nodejs-vs-python-framework-magic',
         published: true,
     },
+    {
+        id: '7',
+        title: 'How to Hire Your First Developer (Without Making the Classic Mistakes)',
+        excerpt: 'A practical guide for non-technical founders and managers on hiring their first developer the right way — with clear steps, realistic tests, and expert advice.',
+        date: '2025-08-16',
+        readTime: '8 min read',
+        tags: ['Hiring', 'Developers', 'Startup', 'Fractional CTO', 'Consulting', 'Technical Leadership'],
+        slug: 'how-to-hire-your-first-developer',
+        published: true,
+    },
 ];
 
 /**
