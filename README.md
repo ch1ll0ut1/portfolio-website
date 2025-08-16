@@ -4,7 +4,7 @@ A modern, responsive portfolio website built with Next.js 15, React 19, and Type
 
 ## 🚀 **Live Demo**
 
-[Portfolio Website](https://stefanknoch.com) *(Coming Soon)*
+[Portfolio Website](https://stefanknoch.com)
 
 ## ✨ **Features**
 
@@ -89,7 +89,8 @@ portfolio-website/
 │   │   └── ServiceCard.tsx      # Service offering card
 │   ├── layout/                  # Layout components
 │   │   ├── Footer.tsx           # Site footer
-│   │   └── Header.tsx           # Site header with navigation
+│   │   ├── Header.tsx           # Site header
+│   │   └── Navigation.tsx       # Navigation component
 │   ├── sections/                # Page section components
 │   │   ├── AboutSection.tsx     # About section
 │   │   ├── CtaSection.tsx       # Call-to-action section
@@ -108,13 +109,14 @@ portfolio-website/
 │   └── services.ts              # Services data
 ├── content/                     # Content files
 │   └── blog/                    # Markdown blog posts
-│       ├── developer-to-tech-lead.md
-│       ├── cto-guide-ai-implementation.md
-│       └── scalable-react-applications.md
+│       ├── how-to-hire-your-first-developer.md
+│       ├── how-to-use-ai-to-build-apps-10x-speed.md
+│       └── nodejs-vs-python-framework-magic.md
 ├── lib/                         # Utility functions
+│   ├── cssUtils.ts              # CSS utility functions
 │   ├── date.ts                  # Date formatting utilities
 │   ├── markdownProcessor.ts     # Markdown processing utilities
-│   └── utils.ts                 # General utilities
+│   └── opengraphUtils.tsx       # Open Graph image generation utilities
 ├── public/                      # Static assets
 ├── test/                        # Test configuration
 │   └── setup.ts                 # Test setup file
@@ -160,8 +162,8 @@ This project follows the brand guidelines defined in `BRAND.md`:
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/ch1ll0ut1/portfolio-website-v0.git
-   cd portfolio-website-v0
+   git clone https://github.com/ch1ll0ut1/portfolio-website.git
+   cd portfolio-website
    ```
 
 2. **Install dependencies**
@@ -303,6 +305,7 @@ Chromatic runs **automatically via GitHub Actions** on every push and pull reque
 #### **Chromatic Integration**
 
 **Fully automated setup:**
+
 - **GitHub Actions Trigger** - Runs on every push and PR automatically
 - **Zero Manual Setup** - No local Chromatic commands needed
 - **PR Status Checks** - Visual regression results visible in GitHub PR interface
@@ -322,6 +325,7 @@ Chromatic runs **automatically via GitHub Actions** on every push and pull reque
 ### **Component Testing Guidelines**
 
 #### **Unit Tests Should Cover:**
+
 - Component behavior and state changes
 - Props handling and validation
 - Accessibility (ARIA labels, keyboard navigation)
@@ -329,6 +333,7 @@ Chromatic runs **automatically via GitHub Actions** on every push and pull reque
 - Integration with child components
 
 #### **Visual Tests Should Cover:**
+
 - Component appearance and styling
 - Responsive design across breakpoints
 - Design system consistency
