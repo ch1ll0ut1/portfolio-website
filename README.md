@@ -460,7 +460,7 @@ This is a personal portfolio project, but contributions are welcome for:
 
 ## 📄 **License**
 
-This project is private and proprietary. All rights reserved.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ----
 
