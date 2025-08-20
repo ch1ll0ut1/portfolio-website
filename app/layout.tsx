@@ -8,6 +8,9 @@ import './globals.css';
 import { Analytics } from '@vercel/analytics/next';
 import { Geist } from 'next/font/google';
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import Script from 'next/script';
+import { ConsentProvider } from '@/components/consent/ConsentContext';
+import { CookieConsent } from '@/components/consent/CookieConsent';
 
 export const metadata: Metadata = {
     title: {
@@ -89,14 +92,59 @@ const geist = Geist({
 });
 
 const RootLayout: FC<{ children: React.ReactNode }> = ({ children }) => {
+    const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+
     return (
         <html lang="en" className={geist.className}>
             <head>
+                {/* Google Consent Mode V2 - Load before GA4 */}
+                <Script id="google-consent-mode" strategy="beforeInteractive">
+                    {`
+                        window.dataLayer = window.dataLayer || [];
+                        function gtag(){dataLayer.push(arguments);}
+                        
+                        // Initialize consent mode with default settings
+                        gtag('consent', 'default', {
+                            'analytics_storage': 'denied',
+                            'ad_storage': 'denied',
+                            'ad_user_data': 'denied',
+                            'ad_personalization': 'denied',
+                            'personalization_storage': 'denied',
+                            'functionality_storage': 'granted',
+                            'security_storage': 'granted',
+                            'wait_for_update': 500
+                        });
+                    `}
+                </Script>
+
+                {/* Google Analytics 4 */}
+                {GA_MEASUREMENT_ID && (
+                    <>
+                        <Script
+                            src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+                            strategy="afterInteractive"
+                        />
+                        <Script id="google-analytics" strategy="afterInteractive">
+                            {`
+                                window.dataLayer = window.dataLayer || [];
+                                function gtag(){dataLayer.push(arguments);}
+                                gtag('js', new Date());
+                                gtag('config', '${GA_MEASUREMENT_ID}', {
+                                    page_title: document.title,
+                                    page_location: window.location.href,
+                                });
+                            `}
+                        </Script>
+                    </>
+                )}
             </head>
             <body>
-                {children}
-                <Analytics />
-                <SpeedInsights />
+                <ConsentProvider>
+                    {children}
+                    <CookieConsent />
+                    <Analytics />
+                    <SpeedInsights />
+                </ConsentProvider>
             </body>
         </html>
     );

@@ -4,8 +4,9 @@
  */
 
 import React, { FC } from 'react';
-import { Button } from '@/components/ui/Button';
 import { ArrowRight } from 'lucide-react';
+import { TrackedConversionButton } from '@/components/analytics/TrackedConversionButton';
+import { links } from '@/config/links';
 
 interface Props {
     className?: string;
@@ -53,11 +54,15 @@ const CtaDescription: FC = () => {
  */
 const CtaButton: FC = () => {
     return (
-        <Button asChild size="lg" className="bg-action text-action-foreground hover:bg-action/90 text-lg px-8 py-3">
-            <a href="https://calendly.com/st3ve-knoch/1-on-1-meeting" target="_blank" rel="noopener noreferrer">
-                Book a Free Consultation
-                <ArrowRight className="ml-2 h-5 w-5" />
-            </a>
-        </Button>
+        <TrackedConversionButton
+            href={links.calendly}
+            conversionType="footer"
+            location="cta_section"
+            size="lg"
+            className="bg-action text-action-foreground hover:bg-action/90 text-lg px-8 py-3"
+        >
+            Book a Free Consultation
+            <ArrowRight className="ml-2 h-5 w-5" />
+        </TrackedConversionButton>
     );
 };

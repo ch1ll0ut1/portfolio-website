@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-deprecated */
 /**
  * Site footer component.
  * Provides copyright information and social media links.
@@ -8,6 +7,8 @@ import React, { FC } from 'react';
 import { Github, Linkedin } from 'lucide-react';
 import Link from 'next/link';
 import { getCurrentYear } from '@/lib/date';
+import { TrackedSocialLink } from '@/components/analytics/TrackedSocialLink';
+import { links } from '@/config/links';
 
 interface Props {
     className?: string;
@@ -55,45 +56,27 @@ const CopyrightNotice: FC = () => {
  * Social media links component.
  */
 const SocialLinks: FC = () => {
-    const socialPlatforms: {
-        name: string;
-        url: string;
-        icon: React.ComponentType<{ className?: string }>;
-        ariaLabel: string;
-    }[] = [
-        {
-            name: 'GitHub',
-            url: 'https://github.com/ch1ll0ut1',
-            icon: Github,
-            ariaLabel: 'Visit Stefan\'s GitHub profile',
-        },
-        {
-            name: 'LinkedIn',
-            url: 'https://www.linkedin.com/in/skdevde/',
-            icon: Linkedin,
-            ariaLabel: 'Visit Stefan\'s LinkedIn profile',
-        },
-    ];
-
     return (
         <div className="flex items-center gap-4">
-            {socialPlatforms.map(platform => (
-                <SocialLink
-                    key={platform.name}
-                    url={platform.url}
-                    icon={platform.icon}
-                    ariaLabel={platform.ariaLabel}
-                />
-            ))}
+            <TrackedSocialLink
+                href={links.social.github}
+                platform="github"
+                className="text-muted-foreground hover:text-primary transition-colors"
+                ariaLabel="Visit Stefan's GitHub profile"
+            >
+                <Github className="h-5 w-5" />
+            </TrackedSocialLink>
+            <TrackedSocialLink
+                href={links.social.linkedin}
+                platform="linkedin"
+                className="text-muted-foreground hover:text-primary transition-colors"
+                ariaLabel="Visit Stefan's LinkedIn profile"
+            >
+                <Linkedin className="h-5 w-5" />
+            </TrackedSocialLink>
         </div>
     );
 };
-
-interface SocialLinkProps {
-    url: string;
-    icon: React.ComponentType<{ className?: string }>;
-    ariaLabel: string;
-}
 
 /**
  * Legal links component.
@@ -108,26 +91,5 @@ const LegalLinks: FC = () => {
                 Privacy Policy
             </Link>
         </div>
-    );
-};
-
-/**
- * Individual social media link component.
- */
-const SocialLink: FC<SocialLinkProps> = ({
-    url,
-    icon: Icon,
-    ariaLabel,
-}) => {
-    return (
-        <a
-            href={url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-muted-foreground hover:text-primary transition-colors"
-            aria-label={ariaLabel}
-        >
-            <Icon className="h-5 w-5" />
-        </a>
     );
 };

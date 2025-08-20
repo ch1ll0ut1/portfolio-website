@@ -6,9 +6,9 @@
 import React, { FC } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
-import { Button } from '@/components/ui/Button';
 import { ExternalLink } from 'lucide-react';
 import { PortfolioProject } from '@/config/portfolio';
+import { TrackedExternalButton } from '@/components/analytics/TrackedExternalButton';
 
 interface Props {
     project: PortfolioProject;
@@ -58,9 +58,15 @@ const ProjectCta: FC<{ project: PortfolioProject }> = ({ project }) => {
     }
 
     return (
-        <Button variant="outline" size="sm" className="w-full bg-transparent">
+        <TrackedExternalButton
+            href={project.caseStudyUrl}
+            linkText={`${project.title} - Case Study`}
+            variant="outline"
+            size="sm"
+            className="w-full bg-transparent"
+        >
             View Case Study
             <ExternalLink className="ml-2 h-4 w-4" />
-        </Button>
+        </TrackedExternalButton>
     );
 };

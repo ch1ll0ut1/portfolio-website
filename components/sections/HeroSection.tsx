@@ -5,6 +5,8 @@
 
 import React, { FC } from 'react';
 import { Button } from '@/components/ui/Button';
+import { TrackedConversionButton } from '@/components/analytics/TrackedConversionButton';
+import { links } from '@/config/links';
 
 interface Props {
     className?: string;
@@ -15,19 +17,6 @@ interface Props {
  * Uses brand guidelines for typography hierarchy and action colors.
  */
 export const HeroSection: FC<Props> = ({ className = '' }) => {
-    const actions = [
-        {
-            label: 'Start a Project',
-            href: 'https://calendly.com/st3ve-knoch/1-on-1-meeting',
-            isPrimary: true,
-            isExternal: true,
-        },
-        {
-            label: 'View My Work',
-            href: '#portfolio',
-        },
-    ];
-
     return (
         <section className={`py-20 px-6 ${className}`}>
             <div className="max-w-4xl mx-auto text-center">
@@ -48,23 +37,21 @@ export const HeroSection: FC<Props> = ({ className = '' }) => {
 
                 {/* Action Buttons */}
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                    {actions.map(action => (
-                        <Button
-                            key={action.label}
-                            asChild
-                            size="lg"
-                            className={action.isPrimary ? 'bg-action text-action-foreground hover:bg-action/90' : ''}
-                            variant={action.isPrimary ? 'default' : 'outline'}
-                        >
-                            <a
-                                href={action.href}
-                                target={action.isExternal ? '_blank' : undefined}
-                                rel={action.isExternal ? 'noopener noreferrer' : undefined}
-                            >
-                                {action.label}
-                            </a>
-                        </Button>
-                    ))}
+                    <TrackedConversionButton
+                        href={links.calendly}
+                        conversionType="header"
+                        location="hero_section"
+                        size="lg"
+                        className="bg-action text-action-foreground hover:bg-action/90"
+                        variant="default"
+                    >
+                        Start a Project
+                    </TrackedConversionButton>
+                    <Button asChild size="lg" variant="outline">
+                        <a href="#portfolio">
+                            View My Work
+                        </a>
+                    </Button>
                 </div>
             </div>
         </section>

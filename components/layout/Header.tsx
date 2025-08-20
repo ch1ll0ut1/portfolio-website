@@ -5,11 +5,12 @@
 
 import React, { FC } from 'react';
 import Link from 'next/link';
-import { Button } from '@/components/ui/Button';
 import { Navigation } from './Navigation';
+import { TrackedConversionButton } from '@/components/analytics/TrackedConversionButton';
+import { links } from '@/config/links';
 
 interface Props {
-    currentPage?: 'home' | 'blog';
+    currentPage?: 'home' | 'blog' | 'privacy';
     className?: string;
 }
 
@@ -31,11 +32,14 @@ export const Header: FC<Props> = ({ currentPage = 'home', className = '' }) => {
                     <Navigation currentPage={currentPage} />
 
                     {/* CTA Button */}
-                    <Button asChild className="bg-action text-action-foreground hover:bg-action/90">
-                        <a href="https://calendly.com/st3ve-knoch/1-on-1-meeting" target="_blank" rel="noopener noreferrer">
-                            Book Consultation
-                        </a>
-                    </Button>
+                    <TrackedConversionButton
+                        href={links.calendly}
+                        conversionType="header"
+                        location="header_navigation"
+                        className="bg-action text-action-foreground hover:bg-action/90"
+                    >
+                        Book Consultation
+                    </TrackedConversionButton>
                 </nav>
             </div>
 
