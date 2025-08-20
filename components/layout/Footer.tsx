@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-deprecated */
 /**
  * Site footer component.
  * Provides copyright information and social media links.
