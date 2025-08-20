@@ -141,9 +141,22 @@ function processInlineFormatting(content: string): InlineSegment[] {
     const segments: InlineSegment[] = [];
     let currentIndex = 0;
 
-    // Process links [text](url), bold (**text**) and italic (*text*) formatting
-    const formatRegex = /(\[([^\]]+)\]\(([^)]+)\)|\*\*(.+?)\*\*|\*(.+?)\*)/g;
+    // First pass: find all links and process them
+    const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
+    const links: { start: number; end: number; text: string; href: string }[] = [];
     let match;
+
+    while ((match = linkRegex.exec(content)) !== null) {
+        links.push({
+            start: match.index,
+            end: match.index + match[0].length,
+            text: match[1],
+            href: match[2],
+        });
+    }
+
+    // Second pass: process all formatting including links
+    const formatRegex = /(\[([^\]]+)\]\(([^)]+)\)|\*\*(.+?)\*\*|\*(.+?)\*)/g;
 
     while ((match = formatRegex.exec(content)) !== null) {
         // Add text before the match as plain text
@@ -154,7 +167,7 @@ function processInlineFormatting(content: string): InlineSegment[] {
             }
         }
 
-        // Add the formatted text
+        // Check if this is a link
         if (match[2] && match[3]) {
             // Link [text](url)
             segments.push({
@@ -165,11 +178,17 @@ function processInlineFormatting(content: string): InlineSegment[] {
         }
         else if (match[4]) {
             // Bold text (**text**)
-            segments.push({ text: match[4], isBold: true });
+            // Check if there are any links inside the bold text
+            const boldContent = match[4];
+            const innerSegments = processInnerFormatting(boldContent, links, match.index + 2);
+            segments.push(...innerSegments.map(seg => ({ ...seg, isBold: true })));
         }
         else if (match[5]) {
             // Italic text (*text*)
-            segments.push({ text: match[5], isItalic: true });
+            // Check if there are any links inside the italic text
+            const italicContent = match[5];
+            const innerSegments = processInnerFormatting(italicContent, links, match.index + 1);
+            segments.push(...innerSegments.map(seg => ({ ...seg, isItalic: true })));
         }
 
         currentIndex = match.index + match[0].length;
@@ -186,6 +205,62 @@ function processInlineFormatting(content: string): InlineSegment[] {
     // If no formatting found, return the whole content as plain text
     if (segments.length === 0) {
         segments.push({ text: content });
+    }
+
+    return segments;
+}
+
+/**
+ * Process formatting inside bold or italic text, checking for nested links
+ */
+function processInnerFormatting(
+    content: string,
+    links: { start: number; end: number; text: string; href: string }[],
+    contentOffset: number,
+): InlineSegment[] {
+    const segments: InlineSegment[] = [];
+    let currentIndex = 0;
+
+    // Find links that fall within this content
+    const innerLinks = links.filter(link =>
+        link.start >= contentOffset
+        && link.end <= contentOffset + content.length,
+    );
+
+    if (innerLinks.length === 0) {
+        // No links inside, return plain text
+        return [{ text: content }];
+    }
+
+    // Process content with links
+    for (const link of innerLinks) {
+        const linkStartInContent = link.start - contentOffset;
+        const linkEndInContent = link.end - contentOffset;
+
+        // Add text before link
+        if (linkStartInContent > currentIndex) {
+            const plainText = content.substring(currentIndex, linkStartInContent);
+            if (plainText) {
+                segments.push({ text: plainText });
+            }
+        }
+
+        // Add link
+        segments.push({
+            text: link.text,
+            isLink: true,
+            href: link.href,
+        });
+
+        currentIndex = linkEndInContent;
+    }
+
+    // Add remaining text
+    if (currentIndex < content.length) {
+        const remainingText = content.substring(currentIndex);
+        if (remainingText) {
+            segments.push({ text: remainingText });
+        }
     }
 
     return segments;

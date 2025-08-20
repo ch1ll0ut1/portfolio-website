@@ -82,8 +82,8 @@ describe('InlineContent Component', () => {
         expect(screen.getByText('italic')).toHaveClass('italic');
         expect(screen.getByText('link')).toHaveAttribute('href', 'https://example.com');
 
-        // Check that the full content is rendered by checking the container
-        const container = screen.getByText('Bold').closest('span');
+        // Check that the full content is rendered by checking the parent container
+        const container = screen.getByText('Bold').closest('span')?.parentElement;
         expect(container?.textContent).toContain('Bold and italic plus link');
     });
 

@@ -149,6 +149,71 @@ describe('processMarkdownContent', () => {
         });
     });
 
+    it('should process quotes with italic text containing links correctly', () => {
+        const content = '> *And if you want to know more, check out [this link](https://example.com) for info.*';
+        const result = processMarkdownContent(content);
+
+        expect(result).toHaveLength(1);
+        expect(result[0]).toEqual({
+            type: 'quote',
+            segments: [
+                { text: 'And if you want to know more, check out ', isItalic: true },
+                { text: 'this link', isItalic: true, isLink: true, href: 'https://example.com' },
+                { text: ' for info.', isItalic: true },
+            ],
+        });
+    });
+
+    it('should process quotes with bold text containing links correctly', () => {
+        const content = '> **Check this out: [awesome link](https://example.com) is here**';
+        const result = processMarkdownContent(content);
+
+        expect(result).toHaveLength(1);
+        expect(result[0]).toEqual({
+            type: 'quote',
+            segments: [
+                { text: 'Check this out: ', isBold: true },
+                { text: 'awesome link', isBold: true, isLink: true, href: 'https://example.com' },
+                { text: ' is here', isBold: true },
+            ],
+        });
+    });
+
+    it('should process quotes with multiple links in formatted text', () => {
+        const content = '> *Visit [Google](https://google.com) or [GitHub](https://github.com) for more.*';
+        const result = processMarkdownContent(content);
+
+        expect(result).toHaveLength(1);
+        expect(result[0]).toEqual({
+            type: 'quote',
+            segments: [
+                { text: 'Visit ', isItalic: true },
+                { text: 'Google', isItalic: true, isLink: true, href: 'https://google.com' },
+                { text: ' or ', isItalic: true },
+                { text: 'GitHub', isItalic: true, isLink: true, href: 'https://github.com' },
+                { text: ' for more.', isItalic: true },
+            ],
+        });
+    });
+
+    it('should process quotes with mixed formatting and links', () => {
+        const content = '> **Bold text** with *italic [link](https://example.com) here* and more';
+        const result = processMarkdownContent(content);
+
+        expect(result).toHaveLength(1);
+        expect(result[0]).toEqual({
+            type: 'quote',
+            segments: [
+                { text: 'Bold text', isBold: true },
+                { text: ' with ' },
+                { text: 'italic ', isItalic: true },
+                { text: 'link', isItalic: true, isLink: true, href: 'https://example.com' },
+                { text: ' here', isItalic: true },
+                { text: ' and more' },
+            ],
+        });
+    });
+
     it('should process tables correctly', () => {
         const content = '| Header 1 | Header 2 |\n|----------|----------|\n| Cell 1   | Cell 2   |\n| Cell 3   | Cell 4   |';
         const result = processMarkdownContent(content);
@@ -356,6 +421,61 @@ describe('processMarkdownContent - Inline Formatting', () => {
         expect(result[0]).toEqual({
             type: 'paragraph',
             segments: [{ text: 'Plain text without any formatting' }],
+        });
+    });
+
+    it('should process nested formatting in paragraphs correctly', () => {
+        const content = '*This is italic with [a link](https://example.com) inside* and **bold with [another link](https://test.com) here**';
+        const result = processMarkdownContent(content);
+
+        expect(result).toHaveLength(1);
+        expect(result[0]).toEqual({
+            type: 'paragraph',
+            segments: [
+                { text: 'This is italic with ', isItalic: true },
+                { text: 'a link', isItalic: true, isLink: true, href: 'https://example.com' },
+                { text: ' inside', isItalic: true },
+                { text: ' and ' },
+                { text: 'bold with ', isBold: true },
+                { text: 'another link', isBold: true, isLink: true, href: 'https://test.com' },
+                { text: ' here', isBold: true },
+            ],
+        });
+    });
+
+    it('should process list items with nested formatting correctly', () => {
+        const content = '- *Item with [link](https://example.com) in italic*\n- **Bold item with [link](https://test.com)**';
+        const result = processMarkdownContent(content);
+
+        expect(result).toHaveLength(1);
+        expect(result[0]).toEqual({
+            type: 'list',
+            items: [
+                [
+                    { text: 'Item with ', isItalic: true },
+                    { text: 'link', isItalic: true, isLink: true, href: 'https://example.com' },
+                    { text: ' in italic', isItalic: true },
+                ],
+                [
+                    { text: 'Bold item with ', isBold: true },
+                    { text: 'link', isBold: true, isLink: true, href: 'https://test.com' },
+                ],
+            ],
+        });
+    });
+
+    it('should handle edge case with adjacent formatting', () => {
+        const content = '**Bold**[link](https://example.com)*italic*';
+        const result = processMarkdownContent(content);
+
+        expect(result).toHaveLength(1);
+        expect(result[0]).toEqual({
+            type: 'paragraph',
+            segments: [
+                { text: 'Bold', isBold: true },
+                { text: 'link', isLink: true, href: 'https://example.com' },
+                { text: 'italic', isItalic: true },
+            ],
         });
     });
 });
