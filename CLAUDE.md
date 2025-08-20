@@ -87,6 +87,7 @@ The project enforces strict coding standards:
 - **4-space indentation**
 - **Semicolons required**
 - **No default exports** (except Next.js pages which require them)
+- **One React component per file** with matching filename
 - **Strict TypeScript** with type checking
 - **Import organization** with typescript resolver
 
@@ -114,6 +115,32 @@ Based on the comprehensive DEVELOPMENT_GUIDE.md, this project follows:
 - **Test-driven development**: Tests co-located with components
 - **Modular design**: Self-contained, focused modules
 - **Performance-conscious**: Optimized builds and careful dependency management
+
+## Development Guidelines
+
+This project follows the comprehensive development standards outlined in DEVELOPMENT_GUIDE.md. Key guidelines include:
+
+### Component Standards
+- **One React component per file** with matching filename (e.g., `UserCard.tsx` contains `UserCard` component)
+- **Arrow function components**: Use `FC<Props>` pattern with arrow functions
+- **Simple Props interface**: Name component props interface as `Props`
+- **Co-located tests**: Each component should have a `.test.tsx` file alongside it
+- **Domain organization**: Group components by feature/domain rather than by technical type
+
+### File Organization
+- **Keep files under 300 lines** for maintainability
+- **Tests co-located** with source code using `.test.tsx` extension
+- **Private methods at the end** of each file
+- **Export at definition**: Use `export const ComponentName` instead of separate export statements
+
+### TypeScript Standards
+- **Let TypeScript infer types** when obvious (e.g., return types)
+- **Explicitly type** complex objects and function parameters
+- **No default exports** except for Next.js pages that require them
+- **Avoid `any`, `as`, `!`** assertions in production code
+- **Use interfaces for data models**, classes for behavior
+
+For complete development standards, testing strategies, and architectural patterns, refer to DEVELOPMENT_GUIDE.md.
 
 ## Important Notes
 
