@@ -60,6 +60,17 @@ const rawBlogPosts: BlogPost[] = [
         slug: 'why-startups-dont-need-product-owners',
         published: true,
     },
+    {
+        id: '5',
+        title: 'How to Build a Startup Dev Team for Real-World Success',
+        excerpt: 'Smartest isn\'t always best. Learn how to hire developers for a startup by balancing archetypes, technical skills, and soft skills for real-world success.',
+        date: '2025-08-19',
+        readTime: '11 min read',
+        tags: ['Startups', 'Team Building', 'Hiring Developers', 'Leadership', 'Software Teams'],
+        slug: 'how-to-build-a-startup-dev-team-for-real-world-success',
+        published: true,
+    },
+
 ];
 
 /**
