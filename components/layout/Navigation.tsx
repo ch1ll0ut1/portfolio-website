@@ -7,7 +7,7 @@ import React, { FC } from 'react';
 import Link from 'next/link';
 
 interface Props {
-    currentPage?: 'home' | 'blog';
+    currentPage?: 'home' | 'blog' | 'privacy';
 }
 
 /**
@@ -17,6 +17,7 @@ interface Props {
 export const Navigation: FC<Props> = ({ currentPage = 'home' }) => {
     const isHomePage = currentPage === 'home';
     const isBlogPage = currentPage === 'blog';
+    const isPrivacyPage = currentPage === 'privacy';
 
     const sectionNavItems = [
         { href: '#about', label: 'About' },
@@ -52,6 +53,7 @@ export const Navigation: FC<Props> = ({ currentPage = 'home' }) => {
         );
     }
 
+    // For blog and privacy pages, show standard navigation
     return (
         <>
             <Link
@@ -62,7 +64,7 @@ export const Navigation: FC<Props> = ({ currentPage = 'home' }) => {
             </Link>
             <Link
                 href="/blog"
-                className="text-action font-medium hover:text-action/90 transition-colors"
+                className={isBlogPage ? 'text-action font-medium hover:text-action/90 transition-colors' : 'text-muted-foreground hover:text-primary transition-colors'}
             >
                 Blog
             </Link>

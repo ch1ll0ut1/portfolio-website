@@ -6,6 +6,7 @@
 
 import React, { FC } from 'react';
 import { Github, Linkedin } from 'lucide-react';
+import Link from 'next/link';
 import { getCurrentYear } from '@/lib/date';
 
 interface Props {
@@ -20,9 +21,12 @@ export const Footer: FC<Props> = ({ className = '' }) => {
     return (
         <footer className={`py-8 px-6 bg-white border-t ${className}`}>
             <div className="max-w-6xl mx-auto">
-                <div className="flex flex-col md:flex-row items-center justify-between">
+                <div className="flex flex-col md:flex-row items-center justify-between gap-4">
                     <CopyrightNotice />
-                    <SocialLinks />
+                    <div className="flex flex-col md:flex-row items-center gap-6">
+                        <LegalLinks />
+                        <SocialLinks />
+                    </div>
                 </div>
             </div>
         </footer>
@@ -90,6 +94,22 @@ interface SocialLinkProps {
     icon: React.ComponentType<{ className?: string }>;
     ariaLabel: string;
 }
+
+/**
+ * Legal links component.
+ */
+const LegalLinks: FC = () => {
+    return (
+        <div className="flex items-center gap-4 text-sm">
+            <Link
+                href="/privacy"
+                className="text-muted-foreground hover:text-primary transition-colors"
+            >
+                Privacy Policy
+            </Link>
+        </div>
+    );
+};
 
 /**
  * Individual social media link component.
