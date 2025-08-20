@@ -4,6 +4,13 @@ import { blogPosts } from '@/config/blog';
 export const size = ogImageConfig.size;
 export const contentType = ogImageConfig.contentType;
 
+/**
+ * Generates static params for all blog posts to enable static generation.
+ */
+export async function generateStaticParams() {
+    return blogPosts.map(post => ({ slug: post.slug }));
+}
+
 export default async function Image({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
     const post = blogPosts.find(p => p.slug === slug);
