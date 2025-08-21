@@ -97,3 +97,7 @@ export const HowToUseAITOBuildAppsAt10xSpeed = createBlogStory('how-to-use-ai-to
 export const HowToHireYourFirstDeveloper = createBlogStory('how-to-hire-your-first-developer');
 
 export const WhyStartupsDontNeedProductOwners = createBlogStory('why-startups-dont-need-product-owners');
+
+export const HowToBuildAStartupDevTeamForRealWorldSuccess = createBlogStory('how-to-build-a-startup-dev-team-for-real-world-success');
+
+export const StartupBurnoutTrap = createBlogStory('startup-burnout-trap');

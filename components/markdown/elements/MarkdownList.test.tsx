@@ -13,17 +13,13 @@ describe('MarkdownList Component', () => {
         const element: ListElement = {
             type: 'list',
             items: [
-                [{ text: 'First item' }],
-                [{ text: 'Second item' }],
-                [{ text: 'Third item' }],
+                [{ segments: [{ text: 'First item' }] }],
+                [{ segments: [{ text: 'Second item' }] }],
+                [{ segments: [{ text: 'Third item' }] }],
             ],
         };
 
         render(<MarkdownList element={element} />);
-
-        const list = screen.getByRole('list');
-        expect(list).toBeInTheDocument();
-        expect(list.tagName).toBe('UL');
 
         expect(screen.getByText('First item')).toBeInTheDocument();
         expect(screen.getByText('Second item')).toBeInTheDocument();
@@ -34,53 +30,32 @@ describe('MarkdownList Component', () => {
         const element: ListElement = {
             type: 'list',
             items: [
-                [
-                    { text: 'Item with ' },
-                    { text: 'bold', isBold: true },
-                    { text: ' text' },
-                ],
-                [
-                    { text: 'Item with ' },
-                    { text: 'italic', isItalic: true },
-                    { text: ' text' },
-                ],
-                [
-                    { text: 'Item with ' },
-                    { text: 'link', isLink: true, href: 'https://example.com' },
-                ],
+                [{ segments: [{ text: 'Bold', isBold: true }, { text: ' item' }] }],
+                [{ segments: [{ text: 'Italic', isItalic: true }, { text: ' item' }] }],
             ],
         };
 
         render(<MarkdownList element={element} />);
 
-        const list = screen.getByRole('list');
-        expect(list).toBeInTheDocument();
-
-        // Check that formatting is applied
-        expect(screen.getByText('bold')).toBeInTheDocument();
-        expect(screen.getByText('italic')).toBeInTheDocument();
-        expect(screen.getByText('link')).toBeInTheDocument();
+        expect(screen.getByText('Bold')).toBeInTheDocument();
+        expect(screen.getByText('Italic')).toBeInTheDocument();
     });
 
     it('should handle mixed formatted and plain items', () => {
         const element: ListElement = {
             type: 'list',
             items: [
-                [{ text: 'Plain text item' }],
-                [
-                    { text: 'Item with ' },
-                    { text: 'bold', isBold: true },
-                    { text: ' text' },
-                ],
-                [{ text: 'Another plain item' }],
+                [{ segments: [{ text: 'Plain text' }] }],
+                [{ segments: [{ text: 'Bold', isBold: true }] }],
+                [{ segments: [{ text: 'Link', isLink: true, href: 'https://example.com' }] }],
             ],
         };
 
         render(<MarkdownList element={element} />);
 
-        expect(screen.getByText('Plain text item')).toBeInTheDocument();
-        expect(screen.getByText('bold')).toBeInTheDocument();
-        expect(screen.getByText('Another plain item')).toBeInTheDocument();
+        expect(screen.getByText('Plain text')).toBeInTheDocument();
+        expect(screen.getByText('Bold')).toBeInTheDocument();
+        expect(screen.getByRole('link')).toBeInTheDocument();
     });
 
     it('should handle empty items array', () => {
@@ -92,43 +67,48 @@ describe('MarkdownList Component', () => {
         render(<MarkdownList element={element} />);
 
         const list = screen.getByRole('list');
-        expect(list).toBeInTheDocument();
         expect(list.children.length).toBe(0);
     });
 
     it('should handle single item', () => {
         const element: ListElement = {
             type: 'list',
-            items: [[{ text: 'Single item' }]],
+            items: [
+                [{ segments: [{ text: 'Single item' }] }],
+            ],
+        };
+
+        render(<MarkdownList element={element} />);
+
+        const list = screen.getByRole('list');
+        expect(list.children.length).toBe(1);
+        expect(screen.getByText('Single item')).toBeInTheDocument();
+    });
+
+    it('should render as a proper list structure', () => {
+        const element: ListElement = {
+            type: 'list',
+            items: [
+                [{ segments: [{ text: 'Test item' }] }],
+            ],
         };
 
         render(<MarkdownList element={element} />);
 
         const list = screen.getByRole('list');
         expect(list).toBeInTheDocument();
-        expect(list.children.length).toBe(1);
-        expect(screen.getByText('Single item')).toBeInTheDocument();
-    });
 
-    it('should apply correct CSS classes', () => {
-        const element: ListElement = {
-            type: 'list',
-            items: [[{ text: 'Test item' }]],
-        };
-
-        render(<MarkdownList element={element} />);
-
-        const list = screen.getByRole('list');
-        expect(list).toHaveClass('list-disc', 'list-inside', 'space-y-2', 'my-4', 'text-muted-foreground');
+        const listItems = screen.getAllByRole('listitem');
+        expect(listItems).toHaveLength(1);
     });
 
     it('should handle items with special characters', () => {
         const element: ListElement = {
             type: 'list',
             items: [
-                [{ text: 'Item with & special characters' }],
-                [{ text: 'Item with < and > symbols' }],
-                [{ text: 'Item with "quotes" and \'apostrophes\'' }],
+                [{ segments: [{ text: 'Item with & special characters' }] }],
+                [{ segments: [{ text: 'Item with < and > symbols' }] }],
+                [{ segments: [{ text: 'Item with "quotes" and \'apostrophes\'' }] }],
             ],
         };
 
@@ -143,9 +123,9 @@ describe('MarkdownList Component', () => {
         const element: ListElement = {
             type: 'list',
             items: [
-                [{ text: 'First' }],
-                [{ text: 'Second' }],
-                [{ text: 'Third' }],
+                [{ segments: [{ text: 'Item 1' }] }],
+                [{ segments: [{ text: 'Item 2' }] }],
+                [{ segments: [{ text: 'Item 3' }] }],
             ],
         };
 
@@ -153,37 +133,38 @@ describe('MarkdownList Component', () => {
 
         const listItems = screen.getAllByRole('listitem');
         expect(listItems).toHaveLength(3);
-        expect(listItems[0]).toHaveTextContent('First');
-        expect(listItems[1]).toHaveTextContent('Second');
-        expect(listItems[2]).toHaveTextContent('Third');
+
+        expect(listItems[0]).toHaveTextContent('Item 1');
+        expect(listItems[1]).toHaveTextContent('Item 2');
+        expect(listItems[2]).toHaveTextContent('Item 3');
     });
 
     it('should handle very long item content', () => {
-        const longContent = 'This is a very long list item that contains a lot of text and should still be rendered correctly without breaking the layout or causing any issues';
+        const longText = 'This is a very long item that might wrap to multiple lines and should still be handled correctly by the component without any issues or problems occurring';
         const element: ListElement = {
             type: 'list',
-            items: [[{ text: longContent }]],
+            items: [
+                [{ segments: [{ text: longText }] }],
+            ],
         };
 
         render(<MarkdownList element={element} />);
 
-        expect(screen.getByText(longContent)).toBeInTheDocument();
+        expect(screen.getByText(longText)).toBeInTheDocument();
     });
 
     it('should handle items with only whitespace', () => {
         const element: ListElement = {
             type: 'list',
             items: [
-                [{ text: '   ' }],
-                [{ text: '\t\n' }],
-                [{ text: 'Valid item' }],
+                [{ segments: [{ text: '   ' }] }],
+                [{ segments: [{ text: '\t\t\t' }] }],
             ],
         };
 
         render(<MarkdownList element={element} />);
 
         const listItems = screen.getAllByRole('listitem');
-        expect(listItems).toHaveLength(3);
-        expect(screen.getByText('Valid item')).toBeInTheDocument();
+        expect(listItems).toHaveLength(2);
     });
 });

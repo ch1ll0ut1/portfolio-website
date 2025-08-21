@@ -1,11 +1,34 @@
 /**
- * Markdown processing utilities for blog content.
- * Self-contained module for all markdown-related operations.
+ * Advanced Markdown Processing Engine
+ *
+ * A custom, feature-rich markdown processor designed specifically for blog content.
+ * Supports complex structures including:
+ * - Nested content within list items
+ * - Indented blockquotes
+ * - Mixed block types (quotes, paragraphs, empty lines)
+ * - Inline formatting (bold, italic, links)
+ * - Tables with formatting
+ * - Code blocks with syntax highlighting
+ *
+ * Architecture:
+ * - Block-level parsing: Processes markdown into structured elements
+ * - Inline formatting: Handles bold, italic, and links within text
+ * - Hierarchical structure: Lists contain blocks, blocks contain inline segments
+ *
+ * Key Features:
+ * - Smart list processing with continuation text detection
+ * - Indented blockquote support within lists
+ * - Empty line preservation for proper spacing
+ * - Type-safe element structure with comprehensive interfaces
  */
 
 import fs from 'fs';
 import path from 'path';
 
+/**
+ * Union type representing all possible markdown block elements
+ * Each element type corresponds to a major markdown structure
+ */
 export type MarkdownElement = HeadingElement | ParagraphElement | CodeBlockElement | ListElement | QuoteElement | SeparatorElement | TableElement;
 
 export interface HeadingElement {
@@ -25,9 +48,40 @@ export interface CodeBlockElement {
     content: string;
 }
 
+/**
+ * Represents a markdown list (ordered or unordered)
+ *
+ * Structure:
+ * - items: Array of list items, where each item is an array of BlockSegments
+ * - Each BlockSegment can be a paragraph, quote, or empty line
+ * - Supports complex nested content within list items
+ *
+ * Example:
+ * ```
+ * 1. **Main point**
+ *    Additional explanation
+ *
+ *    > "Quote within list item"
+ * ```
+ */
 export interface ListElement {
     type: 'list';
-    items: InlineSegment[][];
+    items: BlockSegment[][];
+    ordered?: boolean;
+}
+
+/**
+ * Represents a block of content within a list item
+ *
+ * Types:
+ * - 'quote': Blockquote content (renders with border and italic styling)
+ * - undefined: Regular paragraph content
+ *
+ * Each block contains an array of InlineSegments for formatted text
+ */
+export interface BlockSegment {
+    type?: 'quote' | 'paragraph';
+    segments: InlineSegment[];
 }
 
 export interface QuoteElement {
@@ -67,8 +121,27 @@ export function readMarkdownFile(fileName: string): string | null {
 }
 
 /**
- * Processes markdown content into structured elements.
- * Handles headings, paragraphs, code blocks, and lists.
+ * Main entry point for markdown processing
+ *
+ * Processes a raw markdown string into an array of structured, type-safe elements.
+ * Uses a multi-pass parsing strategy:
+ *
+ * 1. **Block Detection**: Identifies major markdown structures (headings, lists, quotes, etc.)
+ * 2. **Content Processing**: Processes continuation text, indented content, and nested structures
+ * 3. **Inline Formatting**: Handles bold, italic, and links within text content
+ *
+ * Parsing Rules:
+ * - Lines starting with # = Headings (1-6 levels)
+ * - Lines starting with ``` = Code blocks
+ * - Lines matching /^[-*+]\s/ = Unordered lists
+ * - Lines matching /^\d+\.\s/ = Ordered lists
+ * - Lines matching /^\s*>\s/ = Blockquotes (including indented)
+ * - Lines with | and separator row = Tables
+ * - Lines with only --- = Horizontal separators
+ * - All other non-empty lines = Paragraphs
+ *
+ * @param content Raw markdown string
+ * @returns Array of processed MarkdownElement objects
  */
 export function processMarkdownContent(content: string): MarkdownElement[] {
     const lines = content.split('\n');
@@ -93,7 +166,12 @@ export function processMarkdownContent(content: string): MarkdownElement[] {
             i = codeBlock.nextIndex - 1; // -1 because loop will increment
         }
         else if (/^[-*+]\s+(.+)$/.test(line)) {
-            const listResult = processListBlock(lines, i);
+            const listResult = processListBlock(lines, i, false);
+            elements.push(listResult.element);
+            i = listResult.nextIndex - 1; // -1 because loop will increment
+        }
+        else if (/^\d+\.\s+(.+)$/.test(line)) {
+            const listResult = processListBlock(lines, i, true);
             elements.push(listResult.element);
             i = listResult.nextIndex - 1; // -1 because loop will increment
         }
@@ -292,23 +370,123 @@ function processCodeBlock(lines: string[], startIndex: number): { element: CodeB
 }
 
 /**
- * Processes a list block starting at the given line index.
- * Returns the list element and the next line index to process.
+ * Advanced list processing with smart continuation detection
+ *
+ * Handles complex list structures including:
+ * - Multi-line list items with indented continuation text
+ * - Nested blockquotes within list items
+ * - Empty lines for spacing (preserved as empty blocks)
+ * - Mixed content types within single list items
+ *
+ * Processing Algorithm:
+ * 1. **Item Detection**: Identifies list item markers (-, *, +, or 1., 2., etc.)
+ * 2. **Continuation Scanning**: Uses lookahead to find indented continuation text
+ * 3. **Empty Line Handling**: Preserves empty lines if followed by more content
+ * 4. **Block Processing**: Converts each line into appropriate BlockSegment type
+ *
+ * Examples of supported structures:
+ * ```markdown
+ * 1. **Main point**
+ *    Continuation text
+ *
+ *    > "Quote within item"
+ *
+ *    Final paragraph
+ *
+ * 2. **Next item**
+ * ```
+ *
+ * @param lines Array of markdown lines
+ * @param startIndex Starting line index for list processing
+ * @param ordered Whether this is an ordered (numbered) or unordered list
+ * @returns Object containing the processed ListElement and next line index
  */
-function processListBlock(lines: string[], startIndex: number): { element: ListElement; nextIndex: number } {
-    const items: InlineSegment[][] = [];
+function processListBlock(lines: string[], startIndex: number, ordered = false): { element: ListElement; nextIndex: number } {
+    const items: BlockSegment[][] = [];
     let i = startIndex;
+    const listPattern = ordered ? /^\d+\.\s+(.+)$/ : /^[-*+]\s+(.+)$/;
+    const nextLinePattern = ordered ? /^\d+\.\s+/ : /^[-*+]\s+/;
 
     while (i < lines.length) {
         const line = lines[i];
-        const listMatch = /^[-*+]\s+(.+)$/.exec(line);
+        const listMatch = listPattern.exec(line);
 
         if (listMatch) {
-            items.push(processInlineFormatting(listMatch[1]));
+            // Start a new list item
+            const itemLines = [listMatch[1]];
+
+            // Look ahead for indented continuation text
+            let j = i + 1;
+            while (j < lines.length) {
+                const nextLine = lines[j];
+
+                // If it's an indented line (starts with spaces/tabs), add to current item
+                if (/^\s+\S/.test(nextLine)) {
+                    itemLines.push(nextLine.trim());
+                    j++;
+                }
+                // If it's empty, add as empty line and keep looking
+                else if (nextLine.trim() === '') {
+                    // Check if this empty line is followed by more list content
+                    let k = j + 1;
+                    let hasMoreContent = false;
+                    while (k < lines.length) {
+                        const lookAhead = lines[k];
+                        if (/^\s+\S/.test(lookAhead)) {
+                            hasMoreContent = true;
+                            break;
+                        }
+                        else if (lookAhead.trim() === '') {
+                            k++;
+                        }
+                        else {
+                            break;
+                        }
+                    }
+
+                    if (hasMoreContent) {
+                        itemLines.push(''); // Add empty line as part of this list item
+                        j++;
+                    }
+                    else {
+                        break; // End of list item
+                    }
+                }
+                // If it's the next list item or other content, stop
+                else {
+                    break;
+                }
+            }
+
+            // Process each line as a separate block segment
+            const blocks: BlockSegment[] = [];
+            for (const line of itemLines) {
+                // Check if this line is empty
+                if (line === '') {
+                    // Add empty text block
+                    blocks.push({ segments: [{ text: '' }] });
+                }
+                // Check if this line is a blockquote
+                else if (/^\s*>\s/.test(line)) {
+                    // Extract quote content and process as quote
+                    const quoteContent = line.replace(/^\s*>\s?/, '');
+                    blocks.push({
+                        type: 'quote',
+                        segments: processInlineFormatting(quoteContent),
+                    });
+                }
+                else {
+                    // Regular paragraph
+                    blocks.push({ segments: processInlineFormatting(line) });
+                }
+            }
+
+            items.push(blocks);
+            i = j - 1; // Will be incremented at end of loop
         }
         else if (line.trim() === '') {
             // Empty line might continue the list or end it
-            if (i + 1 < lines.length && /^[-*+]\s+/.test(lines[i + 1])) {
+            if (i + 1 < lines.length && nextLinePattern.test(lines[i + 1])) {
                 // Continue to next item
             }
             else {
@@ -328,6 +506,7 @@ function processListBlock(lines: string[], startIndex: number): { element: ListE
         element: {
             type: 'list',
             items,
+            ordered,
         },
         nextIndex: i,
     };

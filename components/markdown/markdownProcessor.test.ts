@@ -81,10 +81,93 @@ describe('processMarkdownContent', () => {
         expect(result[0]).toEqual({
             type: 'list',
             items: [
-                [{ text: 'Item 1' }],
-                [{ text: 'Item 2' }],
-                [{ text: 'Item 3' }],
+                [{ segments: [{ text: 'Item 1' }] }],
+                [{ segments: [{ text: 'Item 2' }] }],
+                [{ segments: [{ text: 'Item 3' }] }],
             ],
+            ordered: false,
+        });
+    });
+
+    it('should process ordered lists correctly', () => {
+        const content = '1. First item\n2. Second item\n3. Third item';
+        const result = processMarkdownContent(content);
+
+        expect(result).toHaveLength(1);
+        expect(result[0]).toEqual({
+            type: 'list',
+            items: [
+                [{ segments: [{ text: 'First item' }] }],
+                [{ segments: [{ text: 'Second item' }] }],
+                [{ segments: [{ text: 'Third item' }] }],
+            ],
+            ordered: true,
+        });
+    });
+
+    it('should process ordered lists with indented continuation text', () => {
+        const content = '1. **Cut scope early**\n   Ruthlessly prioritize the features.\n\n2. **Hire generalists first**\n   A senior engineer will do more.';
+        const result = processMarkdownContent(content);
+
+        expect(result).toHaveLength(1);
+        expect(result[0]).toEqual({
+            type: 'list',
+            items: [
+                [
+                    { segments: [{ text: 'Cut scope early', isBold: true }] },
+                    { segments: [{ text: 'Ruthlessly prioritize the features.' }] },
+                ],
+                [
+                    { segments: [{ text: 'Hire generalists first', isBold: true }] },
+                    { segments: [{ text: 'A senior engineer will do more.' }] },
+                ],
+            ],
+            ordered: true,
+        });
+    });
+
+    it('should process ordered lists with indented quotes', () => {
+        const content = '1. **Communication overhead**\n   Every developer adds costs.\n\n   > "Adding manpower to a late software project makes it later."\n\n2. **Next item**';
+        const result = processMarkdownContent(content);
+
+        expect(result).toHaveLength(1);
+        expect(result[0]).toEqual({
+            type: 'list',
+            items: [
+                [
+                    { segments: [{ text: 'Communication overhead', isBold: true }] },
+                    { segments: [{ text: 'Every developer adds costs.' }] },
+                    { segments: [{ text: '' }] }, // Empty line
+                    { type: 'quote', segments: [{ text: '"Adding manpower to a late software project makes it later."' }] },
+                ],
+                [
+                    { segments: [{ text: 'Next item', isBold: true }] },
+                ],
+            ],
+            ordered: true,
+        });
+    });
+
+    it('should preserve empty lines within list items', () => {
+        const content = '1. **First line**\n\n   Second line after empty\n\n   Third line\n\n2. **Next item**';
+        const result = processMarkdownContent(content);
+
+        expect(result).toHaveLength(1);
+        expect(result[0]).toEqual({
+            type: 'list',
+            items: [
+                [
+                    { segments: [{ text: 'First line', isBold: true }] },
+                    { segments: [{ text: '' }] }, // Empty line
+                    { segments: [{ text: 'Second line after empty' }] },
+                    { segments: [{ text: '' }] }, // Empty line
+                    { segments: [{ text: 'Third line' }] },
+                ],
+                [
+                    { segments: [{ text: 'Next item', isBold: true }] },
+                ],
+            ],
+            ordered: true,
         });
     });
 
@@ -326,19 +409,20 @@ describe('processMarkdownContent - Inline Formatting', () => {
         expect(result[0]).toEqual({
             type: 'list',
             items: [
-                [
+                [{ segments: [
                     { text: 'Bold', isBold: true },
                     { text: ' item' },
-                ],
-                [
+                ] }],
+                [{ segments: [
                     { text: 'Italic', isItalic: true },
                     { text: ' item' },
-                ],
-                [
+                ] }],
+                [{ segments: [
                     { text: 'Link', isLink: true, href: 'https://example.com' },
                     { text: ' item' },
-                ],
+                ] }],
             ],
+            ordered: false,
         });
     });
 
@@ -462,16 +546,17 @@ describe('processMarkdownContent - Inline Formatting', () => {
         expect(result[0]).toEqual({
             type: 'list',
             items: [
-                [
+                [{ segments: [
                     { text: 'Item with ', isItalic: true },
                     { text: 'link', isItalic: true, isLink: true, href: 'https://example.com' },
                     { text: ' in italic', isItalic: true },
-                ],
-                [
+                ] }],
+                [{ segments: [
                     { text: 'Bold item with ', isBold: true },
                     { text: 'link', isBold: true, isLink: true, href: 'https://test.com' },
-                ],
+                ] }],
             ],
+            ordered: false,
         });
     });
 
