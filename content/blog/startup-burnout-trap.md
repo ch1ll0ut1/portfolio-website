@@ -22,7 +22,7 @@ On the surface, it might look like ambition. In reality, it signals chaos, poor 
 
 ## Who They’ll Attract
 
-- **Naïve but hungry juniors**  
+- **Naive but hungry juniors**  
   Young developers, excited by the dream of startup glory, will dive in without knowing the cost. They’ll work themselves into exhaustion, only to burn out within months.  
 
 - **Short-lived talent**  
