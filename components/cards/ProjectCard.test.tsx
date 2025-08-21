@@ -33,17 +33,17 @@ describe('ProjectCard Component', () => {
     it('should render case study button when provided', () => {
         render(<ProjectCard project={mockProject} />);
 
-        const button = screen.getByRole('button');
-        expect(button).toBeInTheDocument();
-        expect(button).toHaveTextContent('View Case Study');
+        const link = screen.getByRole('link');
+        expect(link).toBeInTheDocument();
+        expect(link).toHaveTextContent('View Case Study');
     });
 
     it('should not render case study button when not provided', () => {
         const projectWithoutCase = { ...mockProject, caseStudyUrl: undefined };
         render(<ProjectCard project={projectWithoutCase} />);
 
-        const buttons = screen.queryAllByRole('button');
-        expect(buttons).toHaveLength(0);
+        const links = screen.queryAllByRole('link');
+        expect(links).toHaveLength(0);
     });
 
     it('should handle custom className prop', () => {
