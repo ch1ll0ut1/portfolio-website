@@ -86,8 +86,9 @@ In practice, it often looks like this:
 1. **Communication overhead**  
    Every new developer adds coordination costs. At some point, meetings consume more time than coding.  
 
-   That’s why **Fred Brooks’ law** famously states:  
-   > “Adding manpower to a late software project makes it later.”  
+   That's why **Fred Brooks's law** famously states:  
+
+   > "Adding manpower to a late software project makes it later."  
 
 2. **Exponential development costs**  
    In a debt-ridden codebase, more people just means more collisions and duplicate hacks.  

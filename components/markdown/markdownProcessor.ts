@@ -97,7 +97,7 @@ export function processMarkdownContent(content: string): MarkdownElement[] {
             elements.push(listResult.element);
             i = listResult.nextIndex - 1; // -1 because loop will increment
         }
-        else if (line.startsWith('>')) {
+        else if (/^\s*>\s/.test(line)) {
             const quoteResult = processQuoteBlock(lines, i);
             elements.push(quoteResult.element);
             i = quoteResult.nextIndex - 1; // -1 because loop will increment
@@ -344,14 +344,14 @@ function processQuoteBlock(lines: string[], startIndex: number): { element: Quot
     while (i < lines.length) {
         const line = lines[i];
 
-        if (line.startsWith('>')) {
-            // Remove the '>' and optional space
-            const content = line.replace(/^>\s?/, '');
+        if (/^\s*>\s/.test(line)) {
+            // Remove the leading whitespace, '>' and optional space
+            const content = line.replace(/^\s*>\s?/, '');
             quoteLines.push(content);
         }
         else if (line.trim() === '') {
             // Empty line might continue the quote or end it
-            if (i + 1 < lines.length && lines[i + 1].startsWith('>')) {
+            if (i + 1 < lines.length && /^\s*>\s/.test(lines[i + 1])) {
                 quoteLines.push(''); // Add empty line to quote
             }
             else {

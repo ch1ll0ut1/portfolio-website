@@ -214,6 +214,17 @@ describe('processMarkdownContent', () => {
         });
     });
 
+    it('should process indented quotes correctly', () => {
+        const content = '   > "Adding manpower to a late software project makes it later."';
+        const result = processMarkdownContent(content);
+
+        expect(result).toHaveLength(1);
+        expect(result[0]).toEqual({
+            type: 'quote',
+            segments: [{ text: '"Adding manpower to a late software project makes it later."' }],
+        });
+    });
+
     it('should process tables correctly', () => {
         const content = '| Header 1 | Header 2 |\n|----------|----------|\n| Cell 1   | Cell 2   |\n| Cell 3   | Cell 4   |';
         const result = processMarkdownContent(content);
