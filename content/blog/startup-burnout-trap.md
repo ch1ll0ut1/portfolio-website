@@ -16,7 +16,7 @@ On the surface, it might look like ambition. In reality, it signals chaos, poor 
   Overwork might produce features quickly at first. But it always backfires: technical debt piles up, bugs creep in, and soon velocity slows to a crawl.  
 
 - **Amateur leadership**  
-  Any experienced developer or tech lead will see it for what it is: founders who haven’t learned how to build sustainably. (Related: [How to Build a Startup Dev Team for Real-World Success](/blog/how-to-build-a-startup-dev-team-for-real-world-success))  
+  Any experienced developer or tech lead will see it for what it is: founders who haven’t learned how to build sustainably.
 
 ---
 
@@ -138,7 +138,7 @@ If you want your startup to *last*, here’s how to build pace without burnout:
    Ruthlessly prioritize. Shipping a smaller, solid product beats a bloated, buggy one.  
 
 2. **Hire generalists first**  
-   A senior fullstack engineer and a generalist designer will do more for you than five narrow specialists.  
+   A senior fullstack engineer and a generalist designer will do more for you than five narrow specialists.  (see [How to Build a Startup Dev Team for Real-World Success](/blog/how-to-build-a-startup-dev-team-for-real-world-success))  
 
 3. **Leverage tools, not hours**  
    Use automation, CI/CD, and [AI-assisted workflows](/blog/how-to-use-ai-to-build-apps-10x-speed). These give leverage without draining people.  
