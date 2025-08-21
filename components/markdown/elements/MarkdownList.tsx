@@ -22,6 +22,27 @@ interface Props {
     element: ListElement;
 }
 
+export const MarkdownList: FC<Props> = ({ element }) => {
+    const ListTag = element.ordered ? 'ol' : 'ul';
+
+    return (
+        <ListTag className="space-y-2 my-4 text-muted-foreground">
+            {element.items.map((item, itemIndex) => (
+                <li key={itemIndex} className="flex items-start gap-3">
+                    <span className="min-w-[1.5rem] mt-0.5 font-medium">
+                        {element.ordered ? `${itemIndex + 1}.` : '•'}
+                    </span>
+                    <div className="flex-1 leading-relaxed space-y-1">
+                        {item.map((block, blockIndex) => (
+                            <BlockRenderer key={blockIndex} block={block} />
+                        ))}
+                    </div>
+                </li>
+            ))}
+        </ListTag>
+    );
+};
+
 /**
  * Renders individual content blocks within list items
  *
@@ -51,25 +72,4 @@ const BlockRenderer: FC<{ block: BlockSegment }> = ({ block }) => {
     }
 
     return <InlineContent segments={block.segments} />;
-};
-
-export const MarkdownList: FC<Props> = ({ element }) => {
-    const ListTag = element.ordered ? 'ol' : 'ul';
-
-    return (
-        <ListTag className="space-y-2 my-4 text-muted-foreground">
-            {element.items.map((item, itemIndex) => (
-                <li key={itemIndex} className="flex items-start gap-3">
-                    <span className="min-w-[1.5rem] mt-0.5 font-medium">
-                        {element.ordered ? `${itemIndex + 1}.` : '•'}
-                    </span>
-                    <div className="flex-1 leading-relaxed space-y-1">
-                        {item.map((block, blockIndex) => (
-                            <BlockRenderer key={blockIndex} block={block} />
-                        ))}
-                    </div>
-                </li>
-            ))}
-        </ListTag>
-    );
 };
