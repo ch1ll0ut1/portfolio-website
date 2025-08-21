@@ -70,7 +70,16 @@ const rawBlogPosts: BlogPost[] = [
         slug: 'how-to-build-a-startup-dev-team-for-real-world-success',
         published: true,
     },
-
+    {
+        id: '6',
+        title: 'The Burnout Trap: Why Overworking Founders Destroy Their Own Startups',
+        excerpt: 'Why 13-hour days don’t make startups faster — they cause burnout, tech debt, and wasted talent. Here’s what overwork really signals, who it attracts, and why even 100 developers can’t save a bad culture.',
+        date: '2025-08-20',
+        readTime: '12 min read',
+        tags: ['Startups', 'Tech Leadership', 'Burnout', 'Engineering Culture', 'Hiring'],
+        slug: 'startup-burnout-trap',
+        published: true,
+    },
 ];
 
 /**
