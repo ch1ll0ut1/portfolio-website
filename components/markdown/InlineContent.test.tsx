@@ -45,7 +45,7 @@ describe('InlineContent Component', () => {
 
         const italicElement = screen.getByText('italic');
         expect(italicElement).toBeInTheDocument();
-        expect(italicElement.tagName).toBe('EM');
+        expect(italicElement.tagName).toBe('I');
         expect(italicElement).toHaveClass('italic');
     });
 
@@ -76,15 +76,14 @@ describe('InlineContent Component', () => {
             { text: 'link', isLink: true, href: 'https://example.com' },
         ];
 
-        render(<InlineContent segments={segments} />);
+        const { container } = render(<InlineContent segments={segments} />);
 
         expect(screen.getByText('Bold')).toHaveClass('font-semibold');
         expect(screen.getByText('italic')).toHaveClass('italic');
         expect(screen.getByText('link')).toHaveAttribute('href', 'https://example.com');
 
-        // Check that the full content is rendered by checking the parent container
-        const container = screen.getByText('Bold').closest('span')?.parentElement;
-        expect(container?.textContent).toContain('Bold and italic plus link');
+        // Check that the full content is rendered
+        expect(container.textContent).toContain('Bold and italic plus link');
     });
 
     it('should handle consecutive formatting', () => {
@@ -116,36 +115,35 @@ describe('InlineContent Component', () => {
         expect(githubLink).toHaveAttribute('href', 'https://github.com');
     });
 
-    it('should handle custom className prop', () => {
+    it('should handle plain text content', () => {
         const segments: InlineSegment[] = [
             { text: 'Test content' },
         ];
 
-        render(<InlineContent segments={segments} className="custom-class" />);
+        const { container } = render(<InlineContent segments={segments} />);
 
-        const container = screen.getByText('Test content').parentElement;
-        expect(container).toHaveClass('custom-class');
+        expect(container.textContent).toBe('Test content');
     });
 
-    it('should apply default className when none provided', () => {
+    it('should render fragment without wrapper span', () => {
         const segments: InlineSegment[] = [
             { text: 'Test content' },
         ];
 
-        render(<InlineContent segments={segments} />);
+        const { container } = render(<InlineContent segments={segments} />);
 
-        const container = screen.getByText('Test content').parentElement;
-        expect(container?.tagName).toBe('SPAN');
+        // Should not have any span wrapper
+        const spanElement = container.querySelector('span');
+        expect(spanElement).toBeNull();
+        expect(container.textContent).toBe('Test content');
     });
 
     it('should handle empty segments array', () => {
         const segments: InlineSegment[] = [];
 
-        render(<InlineContent segments={segments} />);
+        const { container } = render(<InlineContent segments={segments} />);
 
-        const span = document.querySelector('span');
-        expect(span).toBeInTheDocument();
-        expect(span?.textContent).toBe('');
+        expect(container.textContent).toBe('');
     });
 
     it('should handle links without href gracefully', () => {

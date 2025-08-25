@@ -8,10 +8,8 @@ interface Props {
 
 export const MarkdownQuote: FC<Props> = ({ element }) => {
     return (
-        <blockquote className="border-l-2 border-slate-300 pl-6 my-6 text-slate-600">
-            <p className="italic leading-relaxed text-lg">
-                <InlineContent segments={element.segments} />
-            </p>
+        <blockquote className="border-l-2 border-slate-300 pl-6 my-6 text-slate-600 italic leading-relaxed text-lg">
+            <InlineContent segments={element.segments} />
         </blockquote>
     );
 };

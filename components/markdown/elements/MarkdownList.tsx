@@ -26,17 +26,21 @@ export const MarkdownList: FC<Props> = ({ element }) => {
     const ListTag = element.ordered ? 'ol' : 'ul';
 
     return (
-        <ListTag className="space-y-2 my-4 text-muted-foreground">
+        <ListTag className={`space-y-2 my-4 text-muted-foreground ${
+            element.ordered ? 'list-decimal list-outside ml-6' : 'list-none'
+        }`}>
             {element.items.map((item, itemIndex) => (
-                <li key={itemIndex} className="flex items-start gap-3">
-                    <span className="min-w-[1.5rem] mt-0.5 font-medium">
-                        {element.ordered ? `${itemIndex + 1}.` : '•'}
-                    </span>
-                    <div className="flex-1 leading-relaxed space-y-1">
-                        {item.map((block, blockIndex) => (
-                            <BlockRenderer key={blockIndex} block={block} />
-                        ))}
-                    </div>
+                <li 
+                    key={itemIndex} 
+                    className={`leading-relaxed space-y-1 ${
+                        element.ordered 
+                            ? ''
+                            : "relative pl-8 before:content-['•'] before:absolute before:left-0 before:font-medium"
+                    }`}
+                >
+                    {item.map((block, blockIndex) => (
+                        <BlockRenderer key={blockIndex} block={block} />
+                    ))}
                 </li>
             ))}
         </ListTag>
@@ -71,5 +75,9 @@ const BlockRenderer: FC<{ block: BlockSegment }> = ({ block }) => {
         return <div className="h-4" />;
     }
 
-    return <InlineContent segments={block.segments} />;
+    return (
+        <p>
+            <InlineContent segments={block.segments} />
+        </p>
+    );
 };
