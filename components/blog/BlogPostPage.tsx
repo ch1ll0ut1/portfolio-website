@@ -20,20 +20,6 @@ const BlogPostPage: FC<Props> = ({ post }) => {
         <div className="min-h-screen bg-gradient-to-br from-slate-50 to-white">
             <Header currentPage="blog" />
 
-            <AnalyticsWrapper
-                pageName={post.title}
-                pageType="blog_post"
-                contentId={post.slug}
-                additionalData={{
-                    reading_time_estimate: post.readTime,
-                }}
-                scrollConfig={{
-                    milestones: [25, 50, 75, 90],
-                    trackCompletion: true,
-                    targetSelector: 'article',
-                }}
-            />
-
             <article className="py-16 px-6" data-scroll-target>
                 <div className="max-w-4xl mx-auto">
                     <nav aria-label="Breadcrumb" className="mb-8">

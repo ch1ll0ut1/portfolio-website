@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 import type { Metadata } from 'next';
 import BlogPage from '../../components/blog/BlogPage';
 import { blogPosts } from '@/config/blog';
+import { PageViewTracker } from '@/components/analytics/ClientAnalytics';
 
 export const metadata: Metadata = {
     title: 'Blog | Software Development & Technology Insights',
@@ -32,6 +33,11 @@ export const metadata: Metadata = {
 };
 
 const Blog: FC = () => {
+    PageViewTracker({
+        pageName: 'Blog',
+        pageType: 'blog',
+    });
+
     return (
         <>
             <script

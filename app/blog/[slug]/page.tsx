@@ -5,6 +5,7 @@ import Link from 'next/link';
 import BlogPostPage from '../../../components/blog/BlogPostPage';
 import { blogPosts } from '@/config/blog';
 import { readMarkdownFile } from '@/components/markdown/markdownProcessor';
+import { AnalyticsWrapper } from '@/components/analytics/AnalyticsWrapper';
 
 /**
  * Generates static params for all blog posts to enable static generation.
@@ -127,6 +128,21 @@ const BlogPost: FC<{ params: Promise<{ slug: string }> }> = async ({ params }) =
                     }),
                 }}
             />
+
+            <AnalyticsWrapper
+                pageName={post.title}
+                pageType="blog_post"
+                contentId={post.slug}
+                additionalData={{
+                    reading_time_estimate: post.readTime,
+                }}
+                scrollConfig={{
+                    milestones: [25, 50, 75, 90],
+                    trackCompletion: true,
+                    targetSelector: 'article',
+                }}
+            />
+
             <BlogPostPage post={post} />
         </>
     );

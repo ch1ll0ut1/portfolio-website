@@ -10,17 +10,17 @@ import dynamic from 'next/dynamic';
 
 // Dynamically import analytics components with no SSR
 const PageViewTracker = dynamic(
-    () => import('./ClientAnalytics').then(mod => ({ default: mod.PageViewTracker })),
+    () => import('./ClientAnalytics').then(mod => mod.PageViewTracker),
     { ssr: false },
 );
 
 const ScrollTracker = dynamic(
-    () => import('./ClientAnalytics').then(mod => ({ default: mod.ScrollTracker })),
+    () => import('./ClientAnalytics').then(mod => mod.ScrollTracker),
     { ssr: false },
 );
 
 const TimeTracker = dynamic(
-    () => import('./ClientAnalytics').then(mod => ({ default: mod.TimeTracker })),
+    () => import('./ClientAnalytics').then(mod => mod.TimeTracker),
     { ssr: false },
 );
 

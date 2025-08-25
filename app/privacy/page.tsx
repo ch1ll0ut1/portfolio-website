@@ -2,6 +2,7 @@ import React from 'react';
 import type { Metadata } from 'next';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
+import { PageViewTracker } from '@/components/analytics/ClientAnalytics';
 
 export const metadata: Metadata = {
     title: 'Privacy Policy',
@@ -17,6 +18,11 @@ export const metadata: Metadata = {
 };
 
 export default function PrivacyPage() {
+    PageViewTracker({
+        pageName: 'Privacy Policy',
+        pageType: 'privacy',
+    });
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-50 to-white">
             <Header currentPage="privacy" />

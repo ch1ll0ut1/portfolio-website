@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 import type { Metadata } from 'next';
 import PortfolioPage from '../components/blog/PortfolioPage';
+import { AnalyticsWrapper } from '@/components/analytics/AnalyticsWrapper';
 
 export const metadata: Metadata = {
     title: 'From Vision to Reality | Software Developer & Technology Consultant',
@@ -66,6 +67,18 @@ const Portfolio: FC = () => {
                     }),
                 }}
             />
+
+            <AnalyticsWrapper
+                pageName="Portfolio Homepage"
+                pageType="home"
+                contentId="homepage"
+                scrollConfig={{
+                    milestones: [25, 50, 75, 90],
+                    trackCompletion: true,
+                    targetSelector: '[data-scroll-target]',
+                }}
+            />
+
             <PortfolioPage />
         </>
     );

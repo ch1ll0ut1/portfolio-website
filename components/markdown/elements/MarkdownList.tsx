@@ -28,14 +28,15 @@ export const MarkdownList: FC<Props> = ({ element }) => {
     return (
         <ListTag className={`space-y-2 my-4 text-muted-foreground ${
             element.ordered ? 'list-decimal list-outside ml-6' : 'list-none'
-        }`}>
+        }`}
+        >
             {element.items.map((item, itemIndex) => (
-                <li 
-                    key={itemIndex} 
+                <li
+                    key={itemIndex}
                     className={`leading-relaxed space-y-1 ${
-                        element.ordered 
+                        element.ordered
                             ? ''
-                            : "relative pl-8 before:content-['•'] before:absolute before:left-0 before:font-medium"
+                            : 'relative pl-8 before:content-[\'•\'] before:absolute before:left-0 before:font-medium'
                     }`}
                 >
                     {item.map((block, blockIndex) => (
