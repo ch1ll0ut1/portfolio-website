@@ -575,3 +575,41 @@ describe('processMarkdownContent - Inline Formatting', () => {
         });
     });
 });
+
+describe('processMarkdownContent - Image Processing', () => {
+    it('should process images correctly', () => {
+        const content = '![Alt text for image](test-image.jpg)';
+        const result = processMarkdownContent(content);
+
+        expect(result).toHaveLength(1);
+        expect(result[0]).toEqual({
+            type: 'image',
+            src: 'test-image.jpg',
+            alt: 'Alt text for image',
+        });
+    });
+
+    it('should process images with empty alt text', () => {
+        const content = '![](image-without-alt.png)';
+        const result = processMarkdownContent(content);
+
+        expect(result).toHaveLength(1);
+        expect(result[0]).toEqual({
+            type: 'image',
+            src: 'image-without-alt.png',
+            alt: '',
+        });
+    });
+
+    it('should process images with absolute paths', () => {
+        const content = '![Custom image](/custom/path/image.webp)';
+        const result = processMarkdownContent(content);
+
+        expect(result).toHaveLength(1);
+        expect(result[0]).toEqual({
+            type: 'image',
+            src: '/custom/path/image.webp',
+            alt: 'Custom image',
+        });
+    });
+});

@@ -29,7 +29,7 @@ import path from 'path';
  * Union type representing all possible markdown block elements
  * Each element type corresponds to a major markdown structure
  */
-export type MarkdownElement = HeadingElement | ParagraphElement | CodeBlockElement | ListElement | QuoteElement | SeparatorElement | TableElement;
+export type MarkdownElement = HeadingElement | ParagraphElement | CodeBlockElement | ListElement | QuoteElement | SeparatorElement | TableElement | ImageElement;
 
 export interface HeadingElement {
     type: 'heading';
@@ -97,6 +97,12 @@ export interface TableElement {
     type: 'table';
     headers: InlineSegment[][];
     rows: InlineSegment[][][];
+}
+
+export interface ImageElement {
+    type: 'image';
+    src: string;
+    alt: string;
 }
 
 /**
@@ -189,6 +195,17 @@ export function processMarkdownContent(content: string): MarkdownElement[] {
             elements.push({
                 type: 'separator',
             });
+        }
+        else if (/^!\[([^\]]*)\]\(([^)]+)\)$/.test(line.trim())) {
+            // Handle image syntax: ![alt text](image_path)
+            const imageMatch = /^!\[([^\]]*)\]\(([^)]+)\)$/.exec(line.trim());
+            if (imageMatch) {
+                elements.push({
+                    type: 'image',
+                    alt: imageMatch[1],
+                    src: imageMatch[2],
+                });
+            }
         }
         else if (line.trim() !== '') {
             elements.push({

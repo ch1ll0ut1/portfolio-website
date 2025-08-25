@@ -153,6 +153,36 @@ Quote blocks with formatting support:
 - Support for inline formatting within quotes
 - Multi-line quote support
 
+### Images
+
+SEO-optimized images with alt text and automatic optimization:
+
+```markdown
+![Alt text description](image-filename.jpg)
+![Cover image for blog post](crypto-trading-cover.jpg)
+![Chart showing results](/custom/path/chart.png)
+```
+
+**Features:**
+- Next.js Image component with automatic optimization
+- Lazy loading for improved performance
+- Responsive sizing with srcset generation
+- WebP format conversion when supported
+- Alt text displayed as caption below image
+- Automatic path resolution for blog images
+
+**File Organization:**
+- Store images in `public/images/blog/` directory
+- Relative paths like `image.jpg` resolve to `/images/blog/image.jpg`
+- Absolute paths like `/custom/path/image.png` remain unchanged
+- Supports all common formats (JPG, PNG, WebP, AVIF)
+
+**SEO Benefits:**
+- Proper alt attributes for screen readers and search engines
+- Optimized file sizes and formats
+- Lazy loading reduces initial page load time
+- Responsive images adapt to device screen sizes
+
 ### Horizontal Rules
 
 Section separators:
@@ -192,6 +222,8 @@ Markdown content can include any combination of supported elements:
 
 This is the introduction paragraph with some **important** information.
 
+![Blog post cover image](cover-image.jpg)
+
 ## Key Points
 
 Here are the main topics:
@@ -210,6 +242,8 @@ function example() {
 }
 ```
 
+![Code example visualization](code-example.png)
+
 ## Comparison Table
 
 | Feature | Supported | Notes |
@@ -217,6 +251,7 @@ function example() {
 | Headings | ✅ | All 6 levels |
 | Tables | ✅ | Full support |
 | Code | ✅ | Syntax highlighting |
+| Images | ✅ | SEO optimized |
 
 ---
 
@@ -238,6 +273,7 @@ The markdown system is built with modular React components:
 - `MarkdownQuote` - Renders blockquotes
 - `MarkdownParagraph` - Renders paragraphs
 - `MarkdownSeparator` - Renders horizontal rules
+- `MarkdownImage` - Renders optimized images with Next.js Image component
 
 ### Usage
 
@@ -266,6 +302,9 @@ All components use Tailwind CSS classes and follow the site's design system:
 3. **Use descriptive link text** - Avoid "click here" or "read more"
 4. **Test code blocks** - Ensure syntax highlighting works for your language
 5. **Break up long content** - Use headings, lists, and tables to improve readability
+6. **Write meaningful alt text** - Describe the image content, not just the filename
+7. **Optimize image sizes** - Use appropriate dimensions (800px width recommended)
+8. **Choose descriptive filenames** - Use `crypto-trading-basics.jpg` not `image1.jpg`
 
 ### Accessibility
 
@@ -275,10 +314,11 @@ The markdown processor ensures:
 - Semantic HTML structure
 - Keyboard navigation support
 - Color contrast compliance
+- Meaningful alt text for images and screen reader compatibility
 
 ### Performance
 
 - Code highlighting is optimized with bundle splitting
 - Tables are responsive and don't break layouts
-- Images and media are handled by Next.js optimization
+- Images are optimized with Next.js Image component (lazy loading, responsive sizes, format conversion)
 - Static generation for improved loading times

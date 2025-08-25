@@ -7,6 +7,7 @@ import { MarkdownQuote } from './elements/MarkdownQuote';
 import { MarkdownTable } from './elements/MarkdownTable';
 import { MarkdownParagraph } from './elements/MarkdownParagraph';
 import { MarkdownSeparator } from './elements/MarkdownSeparator';
+import { MarkdownImage } from './elements/MarkdownImage';
 
 interface Props {
     content: string;
@@ -37,6 +38,9 @@ export const Markdown: FC<Props> = ({ content, className = '' }) => {
 
                     case 'separator':
                         return <MarkdownSeparator key={index} element={element} />;
+
+                    case 'image':
+                        return <MarkdownImage key={index} element={element} />;
 
                     case 'paragraph':
                     default:
