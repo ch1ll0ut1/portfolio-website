@@ -80,6 +80,16 @@ const rawBlogPosts: BlogPost[] = [
         slug: 'startup-burnout-trap',
         published: true,
     },
+    {
+        id: '7',
+        title: 'How to Start with Crypto Trading (For Complete Beginners)',
+        excerpt: 'A step-by-step beginner’s guide to trading crypto safely: from choosing exchanges and risk management to diversification, mental discipline, and simple trading strategies.',
+        date: '2025-08-24',
+        readTime: '14 min read',
+        tags: ['Crypto', 'Trading', 'Risk Management', 'Investing', 'Beginners'],
+        slug: 'how-to-start-with-crypto-trading-for-complete-beginners',
+        published: true,
+    },
 ];
 
 /**
