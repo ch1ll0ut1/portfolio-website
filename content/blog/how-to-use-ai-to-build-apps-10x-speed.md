@@ -1,5 +1,7 @@
 # How to Use AI to Build Apps at 10× Speed
 
+![How to Use AI to Build Apps at 10× Speed](how-to-use-ai-to-build-apps-10x-speed.png)
+
 Building apps today isn’t what it used to be.  
 I remember when a “prototype in a week” felt fast. Now, with the right AI setup, I can get there in a day — **if I use the tools together in the right way**.
 

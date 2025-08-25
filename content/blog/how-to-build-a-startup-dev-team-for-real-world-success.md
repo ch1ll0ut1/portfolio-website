@@ -1,5 +1,7 @@
 # How to Build a Startup Dev Team for Real-World Success
 
+![How to Build a Startup Dev Team for Real-World Success](how-to-build-a-startup-dev-team-for-real-world-success.png)
+
 There’s a common trap founders fall into when hiring developers for a startup: they think they need to hire only the *smartest*. The myth goes something like this: if you stack your team with the brightest people you can find, you’ll automatically win.
 
 But the reality is very different. A team of “the smartest” can implode. They argue endlessly, protect egos, or chase technical perfection while shipping nothing. Being clever isn’t the same as being able to build. And startups live or die by their ability to build.

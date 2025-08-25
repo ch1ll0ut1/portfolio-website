@@ -1,5 +1,7 @@
 # How to Hire Your First Developer (Without Making the Classic Mistakes)
 
+![How to Hire Your First Developer (Without Making the Classic Mistakes)](how-to-hire-your-first-developer.png)
+
 Hiring your first developer can feel overwhelming. You might be a non-technical founder, a manager in a growing company, or simply someone who knows they need tech but doesn’t yet speak the language of frameworks, databases, or cloud hosting.  
 
 I’ve been on both sides of the table: hiring and leading developers, and being the technical person on teams. Along the way, I’ve seen what makes a hire succeed — and what can turn into an expensive mistake.  

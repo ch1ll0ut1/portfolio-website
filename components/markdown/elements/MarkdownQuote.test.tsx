@@ -75,7 +75,7 @@ describe('MarkdownQuote Component', () => {
         expect(blockquote).toHaveClass('border-l-2', 'border-slate-300', 'pl-6', 'my-6', 'text-slate-600');
     });
 
-    it('should apply correct CSS classes to paragraph', () => {
+    it('should apply correct styling classes to blockquote', () => {
         const element: QuoteElement = {
             type: 'quote',
             segments: [{ text: 'Test quote' }],
@@ -83,8 +83,8 @@ describe('MarkdownQuote Component', () => {
 
         render(<MarkdownQuote element={element} />);
 
-        const paragraph = document.querySelector('blockquote p');
-        expect(paragraph).toHaveClass('italic', 'leading-relaxed', 'text-lg');
+        const blockquote = document.querySelector('blockquote');
+        expect(blockquote).toHaveClass('italic', 'leading-relaxed', 'text-lg');
     });
 
     it('should handle empty content', () => {
