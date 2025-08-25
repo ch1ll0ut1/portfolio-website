@@ -33,13 +33,12 @@ export const metadata: Metadata = {
 };
 
 const Blog: FC = () => {
-    PageViewTracker({
-        pageName: 'Blog',
-        pageType: 'blog',
-    });
-
     return (
         <>
+            <PageViewTracker
+                pageName="Blog"
+                pageType="blog"
+            />
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{
