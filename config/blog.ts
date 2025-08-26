@@ -90,6 +90,16 @@ const rawBlogPosts: BlogPost[] = [
         slug: 'how-to-start-with-crypto-trading-for-complete-beginners',
         published: true,
     },
+    {
+        id: '8',
+        title: '10 AI Workflows Every Developer Should Know in 2025',
+        excerpt: 'AI is no longer just autocomplete — it’s a workflow accelerator. These 10 AI workflows will make developers in 2025 work at 3–10× speed.',
+        date: '2025-08-26',
+        readTime: '12 min read',
+        tags: ['AI', 'Developer Productivity', 'Workflows', 'Cursor', 'Claude Code', 'ChatGPT', 'Automation'],
+        slug: '10-ai-workflows-every-developer-should-know-2025',
+        published: true,
+    },
 ];
 
 /**
