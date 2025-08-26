@@ -27,17 +27,13 @@ export const MarkdownList: FC<Props> = ({ element }) => {
 
     return (
         <ListTag className={`space-y-2 my-4 text-muted-foreground ${
-            element.ordered ? 'list-decimal list-outside ml-6' : 'list-none'
+            element.ordered ? 'list-decimal list-outside ml-4' : 'list-disc list-outside ml-4'
         }`}
         >
             {element.items.map((item, itemIndex) => (
                 <li
                     key={itemIndex}
-                    className={`leading-relaxed space-y-1 ${
-                        element.ordered
-                            ? ''
-                            : 'relative pl-8 before:content-[\'•\'] before:absolute before:left-0 before:font-medium'
-                    }`}
+                    className="leading-relaxed space-y-1 pl-2"
                 >
                     {item.map((block, blockIndex) => (
                         <BlockRenderer key={blockIndex} block={block} />
