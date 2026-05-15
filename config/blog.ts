@@ -88,7 +88,7 @@ const rawBlogPosts: BlogPost[] = [
         readTime: '14 min read',
         tags: ['Crypto', 'Trading', 'Risk Management', 'Investing', 'Beginners'],
         slug: 'how-to-start-with-crypto-trading-for-complete-beginners',
-        published: true,
+        published: false,
     },
     {
         id: '8',
