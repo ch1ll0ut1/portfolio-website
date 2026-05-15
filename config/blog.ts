@@ -100,6 +100,16 @@ const rawBlogPosts: BlogPost[] = [
         slug: '10-ai-workflows-every-developer-should-know-2025',
         published: true,
     },
+    {
+        id: '9',
+        title: 'Why Good Software Engineering Is Expensive',
+        excerpt: 'AI can generate code, but it cannot replace engineering judgment. Good software is expensive because bad software becomes even more expensive later — through bugs, rewrites, frustrated users, and technical debt.',
+        date: '2026-05-15',
+        readTime: '14 min read',
+        tags: ['Software Engineering', 'AI', 'Technical Leadership', 'UX', 'Startups', 'Product Development', 'Vibe Coding', 'Technical Debt', 'Engineering Culture'],
+        slug: 'why-good-software-engineering-is-expensive',
+        published: true,
+    },
 ];
 
 /**
