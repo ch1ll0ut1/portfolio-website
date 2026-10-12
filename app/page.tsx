@@ -1,87 +1,107 @@
 import React, { FC } from 'react';
 import type { Metadata } from 'next';
-import PortfolioPage from '../components/blog/PortfolioPage';
 import { AnalyticsWrapper } from '@/components/analytics/AnalyticsWrapper';
+import { GlobalChrome } from '@/components/chrome/GlobalChrome';
+import { Contact } from '@/components/home/contact/Contact';
+import { Experience } from '@/components/home/experience/Experience';
+import { Hero } from '@/components/home/hero/Hero';
+import { Process } from '@/components/home/process/Process';
+import { Proof } from '@/components/home/proof/Proof';
+import { Services } from '@/components/home/services/Services';
+import { Work } from '@/components/home/work/Work';
+import { Writing } from '@/components/home/writing/Writing';
+import { NavTools } from '@/components/nav/NavTools';
+import { SiteNav } from '@/components/nav/SiteNav';
+
+const DESCRIPTION = 'Software architect, hands-on engineer and fractional CTO. Since 2008 I have taken products from the first commit to production, for startups, scale-ups and the Parliament of Iceland.';
 
 export const metadata: Metadata = {
-    title: 'From Vision to Reality | Software Developer & Technology Consultant',
-    description: 'I help businesses transform ambitious ideas into powerful, real-world applications. Combining creativity, strategic insight, and leadership to guide projects from concept to launch.',
+    title: 'Stefan Knoch — Software architect and fractional CTO',
+    description: DESCRIPTION,
     keywords: [
-        'software developer',
-        'technology consultant',
-        'full-stack development',
-        'React',
+        'software architect',
+        'fractional CTO',
+        'founding engineer',
+        'architecture review',
         'TypeScript',
+        'React',
         'Next.js',
-        'tech leadership',
-        'AI implementation',
-        'software architecture',
-        'team leadership',
+        'Node.js',
+        'rich text editors',
+        'technology consultant',
     ],
     openGraph: {
-        title: 'From Vision to Reality | Software Developer & Technology Consultant',
-        description: 'I help businesses transform ambitious ideas into powerful, real-world applications. Combining creativity, strategic insight, and leadership to guide projects from concept to launch.',
+        title: 'Stefan Knoch — Software architect and fractional CTO',
+        description: DESCRIPTION,
         url: 'https://stefanknoch.com',
         type: 'website',
     },
     twitter: {
-        title: 'From Vision to Reality | Software Developer & Technology Consultant',
-        description: 'I help businesses transform ambitious ideas into powerful, real-world applications. Combining creativity, strategic insight, and leadership to guide projects from concept to launch.',
+        title: 'Stefan Knoch — Software architect and fractional CTO',
+        description: DESCRIPTION,
     },
     alternates: {
         canonical: '/',
     },
 };
 
-const Portfolio: FC = () => {
-    return (
-        <>
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{
-                    __html: JSON.stringify({
-                        '@context': 'https://schema.org',
-                        '@type': 'Person',
-                        'name': 'Stefan Knoch',
-                        'jobTitle': 'Software Developer & Technology Consultant',
-                        'description': 'I help businesses transform ambitious ideas into powerful, real-world applications.',
-                        'url': 'https://stefanknoch.com',
-                        'sameAs': [
-                            'https://www.linkedin.com/in/skdevde/',
-                            'https://github.com/ch1ll0ut1',
-                        ],
-                        'knowsAbout': [
-                            'Software Development',
-                            'Full-Stack Development',
-                            'React',
-                            'TypeScript',
-                            'Next.js',
-                            'Team Leadership',
-                            'AI Implementation',
-                            'Software Architecture',
-                        ],
-                        'worksFor': {
-                            '@type': 'Organization',
-                            'name': 'Freelance',
-                        },
-                    }),
-                }}
-            />
-
-            <AnalyticsWrapper
-                pageName="Portfolio Homepage"
-                pageType="home"
-                contentId="homepage"
-                scrollConfig={{
-                    milestones: [25, 50, 75, 90],
-                    trackCompletion: true,
-                    targetSelector: '[data-scroll-target]',
-                }}
-            />
-
-            <PortfolioPage />
-        </>
-    );
+const personSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    'name': 'Stefan Knoch',
+    'jobTitle': 'Software Architect & Fractional CTO',
+    'description': DESCRIPTION,
+    'url': 'https://stefanknoch.com',
+    'sameAs': [
+        'https://www.linkedin.com/in/skdevde/',
+        'https://github.com/ch1ll0ut1',
+    ],
+    'knowsAbout': [
+        'Software Architecture',
+        'Full-Stack Development',
+        'Rich Text Editors',
+        'React',
+        'TypeScript',
+        'Next.js',
+        'Node.js',
+        'Team Leadership',
+        'AI-Augmented Engineering',
+    ],
 };
 
-export default Portfolio;
+const Home: FC = () => (
+    <>
+        <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
+        />
+
+        <AnalyticsWrapper
+            pageName="Homepage"
+            pageType="home"
+            contentId="homepage"
+            scrollConfig={{
+                milestones: [25, 50, 75, 90],
+                trackCompletion: true,
+                targetSelector: '[data-scroll-target]',
+            }}
+        />
+
+        <SiteNav tools={<NavTools />} />
+
+        <main id="main" data-scroll-target>
+            <Hero />
+            <Proof />
+            <Work />
+            <Services />
+            <Process />
+            <Experience />
+            <Writing />
+            <Contact />
+        </main>
+
+        <GlobalChrome />
+    </>
+);
+
+export default Home;
