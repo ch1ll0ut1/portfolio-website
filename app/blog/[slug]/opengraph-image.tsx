@@ -1,4 +1,4 @@
-import { ogImageConfig, createOgImage, OgLayout } from '@/lib/opengraphUtils';
+import { ogImageConfig, createOgImage, OgLayout, ogPalette } from '@/lib/opengraphUtils';
 import { blogPosts } from '@/config/blog';
 
 export const size = ogImageConfig.size;
@@ -18,7 +18,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
     if (!post) {
         return createOgImage({
             children: (
-                <h1 style={{ fontSize: '48px', fontWeight: 'bold', color: '#FFFFFF' }}>Post Not Found</h1>
+                <h1 style={{ fontSize: '48px', fontWeight: 'bold', color: ogPalette.fg }}>Post Not Found</h1>
             ),
         });
     }
@@ -35,8 +35,8 @@ export default async function Image({ params }: { params: Promise<{ slug: string
                         margin: '0 0 20px 0',
                         lineHeight: '1.1',
                         maxWidth: '1000px',
-                        color: '#FFFFFF',
-                        textShadow: '0 2px 8px rgba(245, 158, 11, 0.3)',
+                        color: ogPalette.fg,
+                        textShadow: '0 2px 10px rgba(255, 139, 61, .28)',
                     }}
                 >
                     {post.title}
@@ -48,7 +48,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
                         fontSize: '20px',
                         textAlign: 'center',
                         margin: '0 0 30px 0',
-                        color: '#E5E7EB',
+                        color: ogPalette.fg2,
                         maxWidth: '900px',
                         lineHeight: '1.4',
                         fontWeight: '500',
@@ -72,13 +72,13 @@ export default async function Image({ params }: { params: Promise<{ slug: string
                         <span
                             key={index}
                             style={{
-                                background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
-                                color: '#1F2937',
+                                background: ogPalette.caret,
+                                color: ogPalette.onAccent,
                                 padding: '6px 14px',
                                 borderRadius: '16px',
                                 fontSize: '14px',
                                 fontWeight: '600',
-                                boxShadow: '0 2px 8px rgba(245, 158, 11, 0.3)',
+                                boxShadow: '0 2px 10px rgba(255, 139, 61, .28)',
                             }}
                         >
                             {tag}
@@ -90,7 +90,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
                 <div
                     style={{
                         fontSize: '16px',
-                        color: '#F59E0B',
+                        color: ogPalette.caret,
                         fontWeight: '600',
                     }}
                 >

@@ -1,14 +1,15 @@
 import { MetadataRoute } from 'next';
+import { ogPalette } from '@/lib/opengraphUtils';
 
 export default function manifest(): MetadataRoute.Manifest {
     return {
-        name: 'Stefan Knoch - Portfolio',
+        name: 'Stefan Knoch — Software architect and fractional CTO',
         short_name: 'Stefan Knoch',
-        description: 'Software Developer & Technology Consultant Portfolio',
+        description: 'Software architect, hands-on engineer and fractional CTO.',
         start_url: '/',
         display: 'standalone',
-        background_color: '#ffffff',
-        theme_color: '#1F2937',
+        background_color: ogPalette.bg,
+        theme_color: ogPalette.bg,
         icons: [
             {
                 src: '/icon-192.png',
@@ -21,7 +22,7 @@ export default function manifest(): MetadataRoute.Manifest {
                 type: 'image/png',
             },
             {
-                src: '/icon-192.png',
+                src: '/icon-maskable-192.png',
                 sizes: '192x192',
                 type: 'image/png',
                 purpose: 'maskable',

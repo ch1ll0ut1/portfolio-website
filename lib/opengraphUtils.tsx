@@ -14,9 +14,35 @@ export const ogImageConfig = {
     contentType: 'image/png',
 };
 
+/**
+ * The site's dark palette as literals.
+ *
+ * The OG runtime renders outside the document, so it cannot read the custom
+ * properties in `app/globals.css`. These are the same values as that file's
+ * `:root` block and must be changed together with it.
+ */
+export const ogPalette = {
+    /** basalt — page background */
+    bg: '#0f171d',
+    /** raised band */
+    bg2: '#131e25',
+    /** hairlines */
+    line: '#243540',
+    /** snow — primary text */
+    fg: '#e4ecee',
+    /** secondary text */
+    fg2: '#a9b8bf',
+    /** molten caret — the brand accent */
+    caret: '#ff8b3d',
+    /** editor selection blue */
+    select: '#3d7bff',
+    /** text on an accent fill */
+    onAccent: '#0b1218',
+};
+
 export const ogStyles = {
     container: {
-        background: 'linear-gradient(135deg, #1F2937 0%, #111827 100%)',
+        background: `linear-gradient(135deg, ${ogPalette.bg2} 0%, ${ogPalette.bg} 100%)`,
         width: '100%',
         height: '100%',
         display: 'flex',
@@ -24,7 +50,7 @@ export const ogStyles = {
         alignItems: 'center',
         justifyContent: 'center',
         padding: '60px',
-        color: 'white',
+        color: ogPalette.fg,
         fontFamily: 'Inter, system-ui, sans-serif',
         position: 'relative' as const,
     },
@@ -32,7 +58,7 @@ export const ogStyles = {
     logo: (size: 'small' | 'medium' | 'large' = 'medium') => ({
         width: size === 'small' ? '50px' : '60px',
         height: size === 'small' ? '50px' : '60px',
-        background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
+        background: ogPalette.caret,
         borderRadius: size === 'small' ? '10px' : '12px',
         display: 'flex',
         alignItems: 'center',
@@ -40,14 +66,14 @@ export const ogStyles = {
         marginRight: size === 'small' ? '16px' : '20px',
         fontSize: size === 'small' ? '20px' : '24px',
         fontWeight: 'bold',
-        color: '#1F2937',
-        boxShadow: '0 4px 12px rgba(245, 158, 11, 0.3)',
+        color: ogPalette.onAccent,
+        boxShadow: '0 6px 18px rgba(255, 139, 61, .28)',
     }),
 
     brandText: (size: 'small' | 'medium' | 'large' = 'medium') => ({
         fontSize: size === 'small' ? '20px' : '24px',
         fontWeight: '600',
-        color: '#F59E0B',
+        color: ogPalette.caret,
     }),
 
     bottomAccent: {
@@ -56,7 +82,7 @@ export const ogStyles = {
         left: '0',
         right: '0',
         height: '8px',
-        background: 'linear-gradient(90deg, #F59E0B 0%, #2563EB 50%, #1F2937 100%)',
+        background: `linear-gradient(90deg, ${ogPalette.caret} 0%, ${ogPalette.select} 55%, ${ogPalette.line} 100%)`,
     },
 
     decorativeElement: {
@@ -65,15 +91,15 @@ export const ogStyles = {
         right: '40px',
         width: '120px',
         height: '120px',
-        background: 'linear-gradient(45deg, #2563EB 0%, #3B82F6 100%)',
+        background: ogPalette.select,
         borderRadius: '50%',
-        opacity: '0.1',
+        opacity: '0.12',
     },
 
     accentDot: {
         width: '8px',
         height: '8px',
-        background: '#F59E0B',
+        background: ogPalette.caret,
         borderRadius: '50%',
         margin: '0 12px',
     },

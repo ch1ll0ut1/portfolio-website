@@ -1,4 +1,4 @@
-import { ogImageConfig, createOgImage, OgLayout, AccentDot } from '@/lib/opengraphUtils';
+import { ogImageConfig, createOgImage, OgLayout, AccentDot, ogPalette } from '@/lib/opengraphUtils';
 
 export const size = ogImageConfig.size;
 export const contentType = ogImageConfig.contentType;
@@ -10,17 +10,17 @@ export default async function Image() {
                 {/* Main Title */}
                 <h1
                     style={{
-                        fontSize: '64px',
+                        fontSize: '52px',
                         fontWeight: 'bold',
                         textAlign: 'center',
                         margin: '0 0 20px 0',
                         lineHeight: '1.1',
-                        maxWidth: '900px',
-                        color: '#FFFFFF',
-                        textShadow: '0 2px 8px rgba(245, 158, 11, 0.3)',
+                        maxWidth: '1080px',
+                        color: ogPalette.fg,
+                        textShadow: '0 2px 10px rgba(255, 139, 61, .28)',
                     }}
                 >
-                    From Vision to Reality
+                    Software architect and fractional CTO
                 </h1>
 
                 {/* Subtitle */}
@@ -29,13 +29,13 @@ export default async function Image() {
                         fontSize: '32px',
                         textAlign: 'center',
                         margin: '0 0 40px 0',
-                        color: '#E5E7EB',
-                        maxWidth: '800px',
+                        color: ogPalette.fg2,
+                        maxWidth: '920px',
                         lineHeight: '1.3',
                         fontWeight: '500',
                     }}
                 >
-                    Software Developer & Technology Consultant
+                    From the first commit to production, since 2008.
                 </p>
 
                 {/* Tagline */}
@@ -45,15 +45,15 @@ export default async function Image() {
                         alignItems: 'center',
                         gap: '8px',
                         fontSize: '20px',
-                        color: '#F59E0B',
+                        color: ogPalette.caret,
                         fontWeight: '600',
                     }}
                 >
-                    <span>Innovation</span>
+                    <span>Fractional CTO</span>
                     <AccentDot />
-                    <span>Leadership</span>
+                    <span>Founding engineer</span>
                     <AccentDot />
-                    <span>Excellence</span>
+                    <span>Architecture review</span>
                 </div>
             </OgLayout>
         ),

@@ -1,4 +1,4 @@
-import { ogImageConfig, createOgImage, OgLayout, AccentDot } from '@/lib/opengraphUtils';
+import { ogImageConfig, createOgImage, OgLayout, AccentDot, ogPalette } from '@/lib/opengraphUtils';
 
 export const size = ogImageConfig.size;
 export const contentType = ogImageConfig.contentType;
@@ -16,8 +16,8 @@ export default async function Image() {
                         margin: '0 0 20px 0',
                         lineHeight: '1.1',
                         maxWidth: '900px',
-                        color: '#FFFFFF',
-                        textShadow: '0 2px 8px rgba(245, 158, 11, 0.3)',
+                        color: ogPalette.fg,
+                        textShadow: '0 2px 10px rgba(255, 139, 61, .28)',
                     }}
                 >
                     Blog
@@ -29,7 +29,7 @@ export default async function Image() {
                         fontSize: '36px',
                         textAlign: 'center',
                         margin: '0 0 40px 0',
-                        color: '#E5E7EB',
+                        color: ogPalette.fg2,
                         maxWidth: '800px',
                         lineHeight: '1.3',
                         fontWeight: '500',
@@ -45,7 +45,7 @@ export default async function Image() {
                         alignItems: 'center',
                         gap: '8px',
                         fontSize: '22px',
-                        color: '#F59E0B',
+                        color: ogPalette.caret,
                         flexWrap: 'wrap',
                         justifyContent: 'center',
                         fontWeight: '600',
