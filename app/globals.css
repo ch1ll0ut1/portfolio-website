@@ -264,6 +264,20 @@ pre {
     initial-value: 1;
 }
 
+/* The theme switch grows the new theme in as a circle, which JS drives by
+   animating clip-path on the new snapshot. The default cross-fade would run at
+   the same time and clip the text mid-sweep, so it is turned off here. These
+   pseudo-elements are global by nature and cannot be scoped to a CSS Module. */
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+}
+
+::view-transition-new(root) {
+    z-index: 1;
+}
+
 @keyframes caret-blink {
     0%,
     49% {
