@@ -74,10 +74,26 @@ const checkRoute = async (browser, route, testCase) => {
         errors.push(`pageerror: ${String(error)}`);
     });
 
-    const response = await page.goto(`${BASE}${route}`, { waitUntil: 'networkidle', timeout: 45000 });
+    // 'load' rather than 'networkidle': the dev server holds an HMR socket open,
+    // so networkidle may never settle and simply times out under load.
+    let response = null;
 
-    if (!response?.ok()) {
-        errors.push(`HTTP ${response ? response.status() : 'no response'}`);
+    try {
+        response = await page.goto(`${BASE}${route}`, { waitUntil: 'load', timeout: 60000 });
+    }
+    catch (error) {
+        errors.push(`navigation failed: ${String(error).split('\n')[0]}`);
+    }
+
+    if (response && !response.ok()) {
+        errors.push(`HTTP ${response.status()}`);
+    }
+
+    // Nothing below can run meaningfully if the page never loaded.
+    if (errors.length > 0) {
+        await context.close();
+
+        return { route, testCase: testCase.name, errors, file: null };
     }
 
     // Scroll the whole page first. Entrances are triggered by an observer, so
@@ -162,7 +178,17 @@ const main = async () => {
 
     for (const route of ROUTES) {
         for (const testCase of cases) {
-            results.push(await checkRoute(browser, route, testCase));
+            try {
+                results.push(await checkRoute(browser, route, testCase));
+            }
+            catch (error) {
+                results.push({
+                    route,
+                    testCase: testCase.name,
+                    errors: [`check threw: ${String(error).split('\n')[0]}`],
+                    file: null,
+                });
+            }
         }
     }
 
