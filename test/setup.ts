@@ -16,11 +16,19 @@ expect.extend(matchers);
  *
  * These are inert defaults — no query matches, nothing ever intersects — so a
  * test that cares about the behaviour installs its own (see test/motionEnv.ts)
- * and overrides them. Each is only defined if missing, so a stub installed by
- * an outer scope wins.
+ * and overrides them. Each is only defined if nothing usable is there already,
+ * so a stub installed by an outer scope wins.
+ *
+ * The presence test reads the property rather than asking `in`. Vitest's jsdom
+ * environment mirrors the jsdom window onto `globalThis` with accessors, which
+ * makes `'matchMedia' in window` true while the getter still resolves to
+ * undefined — `in` would skip the default and leave components calling a
+ * non-function. Reading also covers inherited properties for free.
  */
-const defineIfMissing = (target: object, property: string, value: unknown) => {
-    if (!(property in target)) {
+const defineDefault = (target: object, property: string, value: unknown) => {
+    const existing: unknown = Reflect.get(target, property);
+
+    if (existing === undefined || existing === null) {
         Object.defineProperty(target, property, { value, writable: true, configurable: true });
     }
 };
@@ -43,7 +51,7 @@ class InertObserver {
     }
 }
 
-defineIfMissing(window, 'matchMedia', (query: string) => ({
+defineDefault(window, 'matchMedia', (query: string) => ({
     matches: false,
     media: query,
     onchange: null,
@@ -54,11 +62,11 @@ defineIfMissing(window, 'matchMedia', (query: string) => ({
     dispatchEvent: () => false,
 }));
 
-defineIfMissing(globalThis, 'IntersectionObserver', InertObserver);
-defineIfMissing(globalThis, 'ResizeObserver', InertObserver);
+defineDefault(globalThis, 'IntersectionObserver', InertObserver);
+defineDefault(globalThis, 'ResizeObserver', InertObserver);
 
 // The page lifecycle waits on fonts before releasing the intro.
-defineIfMissing(document, 'fonts', {
+defineDefault(document, 'fonts', {
     ready: Promise.resolve(),
     add: () => undefined,
     load: () => Promise.resolve([]),
