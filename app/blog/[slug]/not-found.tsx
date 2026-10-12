@@ -26,6 +26,7 @@ export const metadata: Metadata = {
         follow: true,
     },
 };
+
 const PostNotFound: FC = () => {
     return (
         <>

@@ -19,6 +19,12 @@ pnpm test:watch     # Run tests in watch mode
 pnpm test:coverage  # Run tests with coverage report
 ```
 
+### Visual Check
+```bash
+pnpm visual-check   # Sweep every route type in both themes, 1440px and 390px,
+                    # and with reduced motion, against a running dev server
+```
+
 ## Architecture Overview
 
 This is a Next.js 15 portfolio website built with TypeScript, React 19, and Tailwind CSS. The architecture follows modular design principles with clear separation of concerns.
@@ -26,8 +32,9 @@ This is a Next.js 15 portfolio website built with TypeScript, React 19, and Tail
 ### Key Technical Stack
 - **Framework**: Next.js 15 with App Router
 - **Language**: TypeScript with strict configuration
-- **Styling**: Tailwind CSS v4 with PostCSS integration
-- **UI Components**: Radix UI primitives with custom variants
+- **Styling**: CSS Modules driven by the design tokens in `app/globals.css`, with Tailwind CSS v4 via PostCSS for the global layer
+- **UI Components**: No component library. Global primitive classes (`.wrap`, `.btn`, `.tags`, `.sec-head`) in `app/globals.css`, composed per component in a co-located `.module.css`
+- **Motion**: `lib/motion` — one shared ticker and scroll store behind hooks (`useReveal`, `useScrub`, `useIntro`), all of it inert under reduced motion
 - **Testing**: Vitest with jsdom environment
 - **Code Quality**: ESLint with TypeScript, stylistic, and import rules
 - **Fonts**: Bricolage Grotesque, Schibsted Grotesk and Martian Mono via `next/font/google`
@@ -43,30 +50,37 @@ app/                    # Next.js app router pages
 └── page.tsx           # Homepage
 
 components/            # React components organized by domain
-├── blog/             # Blog-specific components
-├── cards/            # Card components (Project, Service)
-├── layout/           # Layout components (Header, Footer, Navigation)  
-├── sections/         # Page sections (Hero, About, etc.)
-└── ui/               # Reusable UI primitives
+├── analytics/        # Page view, scroll and time tracking wrappers
+├── blog/             # Reading routes: index, article, 404 panel
+├── chrome/           # Site-wide overlay: command palette, theme, cursor, progress
+├── consent/          # Cookie banner and preferences dialog
+├── home/             # One directory per homepage section
+│   ├── hero/         # ... contact, experience, process, proof,
+│   └── ...           #     services, work, writing
+├── markdown/         # Markdown renderer, parser and element components
+└── nav/              # Site nav, brand mark, nav tools
 
-config/               # Configuration files with TypeScript interfaces
-├── blog.ts           # Blog configuration and types
-├── experience.ts     # Experience/career data
-├── portfolio.ts      # Portfolio projects data
-└── services.ts       # Services offered data
+config/               # Section data and types, one file per section
+├── blog.ts           # Blog post metadata (`published` and `featured` live here)
+├── sections.ts       # Section ids and nav order
+└── ...               # career, caseStudies, engagements, proof, processSteps, ...
 
 content/              # Markdown content
 └── blog/             # Blog posts in markdown format
 
 lib/                  # Utilities and shared logic
-├── markdownProcessor.ts  # Custom markdown processing
-└── utils.ts          # Utility functions (includes cn helper)
+├── analytics.ts      # GA4 event helpers
+├── motion/           # Ticker, scroll store and the motion hooks
+└── opengraphUtils.tsx  # OG image helpers and the `ogPalette` literals
+
+scripts/              # Tooling
+└── visual-check.mjs  # Playwright visual sweep
 ```
 
 ### Component Architecture
 
 Components follow a consistent pattern:
-- **Domain-organized**: Components grouped by feature/domain (blog, cards, sections)
+- **Domain-organized**: Components grouped by feature/domain (blog, chrome, consent, home, nav)
 - **Co-located tests**: Each component has a `.test.tsx` file alongside it
 - **TypeScript interfaces**: Props interfaces named simply as `Props`
 - **Arrow function components**: Using `FC<Props>` pattern
@@ -75,7 +89,7 @@ Components follow a consistent pattern:
 
 Blog content is managed through:
 - **Markdown files** in `content/blog/` directory
-- **Custom processor** (`lib/markdownProcessor.ts`) for parsing
+- **Custom processor** (`components/markdown/markdownProcessor.ts`) for parsing
 - **Syntax highlighting** via react-syntax-highlighter
 - **Type-safe configuration** in `config/blog.ts`
 
@@ -98,6 +112,7 @@ The project enforces strict coding standards:
 - **Behavior-focused testing**: Tests focus on component behavior vs implementation details
 - **Coverage reporting** with v8 provider
 - **Test-specific ESLint rules** that relax strict typing for testing
+- **Visual checking** via `pnpm visual-check` (`scripts/visual-check.mjs`), the only visual-regression axis the project has — there is no Storybook and no Chromatic
 
 ### Build Configuration
 
@@ -145,7 +160,7 @@ For complete development standards, testing strategies, and architectural patter
 
 - Build process includes linting, so code must pass ESLint to build successfully
 - All components should have accompanying tests focused on behavior
-- Navigation logic is separated into dedicated Navigation component
+- Navigation lives in `components/nav/SiteNav.tsx`, with the global tools it hosts in `components/chrome`
 - Markdown content processing uses custom implementation, not external libraries
 - Font loading is handled through `next/font/google` (Bricolage Grotesque, Schibsted Grotesk, Martian Mono)
 - The project uses pnpm as package manager, not npm or yarn

@@ -39,10 +39,10 @@ A modern, responsive portfolio website built with Next.js 15, React 19, and Type
 
 ### **Styling & UI**
 
-- **Tailwind CSS 4** - Utility-first CSS framework
-- **Shadcn/ui** - High-quality React components
-- **Lucide React** - Beautiful, customizable icons
+- **CSS Modules** - Component styling driven by the design tokens in `app/globals.css`
+- **Tailwind CSS 4** - Utility-first CSS for the global layer
 - **Bricolage Grotesque / Schibsted Grotesk / Martian Mono** - Display, body and mono typography
+- **Hand-rolled motion** - One shared ticker and scroll store in `lib/motion`, inert under reduced motion
 
 ### **Content & Code**
 
@@ -55,14 +55,15 @@ A modern, responsive portfolio website built with Next.js 15, React 19, and Type
 
 - **Vitest** - Fast unit testing framework
 - **React Testing Library** - Component testing utilities
+- **Visual Check** - `pnpm visual-check` sweeps every route type in both themes, at 1440px and 390px, and with reduced motion
 - **ESLint** - Code quality and style enforcement
 - **TypeScript** - Static type checking
 
 ### **Development Tools**
 
 - **pnpm** - Fast, disk space efficient package manager
-- **PostCSS** - CSS processing and optimization
-- **Autoprefixer** - CSS vendor prefixing
+- **PostCSS** - CSS processing, via Tailwind v4's PostCSS plugin
+- **Playwright** - Drives the visual check
 
 ## 📁 **Project Structure**
 
@@ -76,12 +77,23 @@ portfolio-website/
 │   ├── layout.tsx               # Root layout component
 │   └── page.tsx                 # Home page
 ├── components/                   # Reusable React components
-│   ├── blog/                    # Blog-specific components
-│   │   ├── BlogHero.tsx         # Blog page hero section
-│   │   ├── BlogPostCard.tsx     # Blog post preview card
-│   │   ├── BlogPostHeader.tsx   # Blog post header
-│   │   ├── BlogPostList.tsx     # Blog post list container
-│   │   └── BlogPostPage.tsx     # Individual blog post page
+│   ├── analytics/               # Page view, scroll and time tracking wrappers
+│   ├── blog/                    # Reading routes
+│   │   ├── BlogIndex.tsx        # Writing index
+│   │   ├── Article.tsx          # Article body, header and pager
+│   │   ├── ReadingShell.tsx     # Page frame for the reading routes
+│   │   ├── ReadingProgress.tsx  # Article-scoped reading caret
+│   │   └── NotFoundPanel.tsx    # Shared body of both 404 pages
+│   ├── chrome/                  # Site-wide overlay
+│   │   ├── GlobalChrome.tsx     # Mounts the whole chrome layer
+│   │   ├── CommandPalette.tsx   # Cmd-K palette
+│   │   ├── ThemeToggle.tsx      # Theme switch
+│   │   └── ... (cursor, grain, scroll progress, shortcuts)
+│   ├── consent/                 # Cookie banner and preferences dialog
+│   ├── home/                    # One directory per homepage section
+│   │   ├── hero/                # Headline as a working editor
+│   │   ├── process/             # Pinned stepper and typing terminal
+│   │   └── ... (proof, work, services, experience, writing, contact)
 │   ├── markdown/                # Markdown processing components
 │   │   ├── Markdown.tsx         # Main markdown renderer
 │   │   ├── InlineContent.tsx    # Inline formatting component
@@ -92,37 +104,27 @@ portfolio-website/
 │   │       ├── MarkdownList.tsx
 │   │       ├── MarkdownTable.tsx
 │   │       └── ... (other elements)
-│   ├── cards/                   # Card components
-│   │   ├── ProjectCard.tsx      # Portfolio project card
-│   │   └── ServiceCard.tsx      # Service offering card
-│   ├── layout/                  # Layout components
-│   │   ├── Footer.tsx           # Site footer
-│   │   ├── Header.tsx           # Site header
-│   │   └── Navigation.tsx       # Navigation component
-│   ├── sections/                # Page section components
-│   │   ├── AboutSection.tsx     # About section
-│   │   ├── CtaSection.tsx       # Call-to-action section
-│   │   ├── ExperienceSection.tsx # Experience and skills section
-│   │   ├── HeroSection.tsx      # Hero section
-│   │   ├── PortfolioSection.tsx # Portfolio projects section
-│   │   └── ServicesSection.tsx  # Services section
-│   └── ui/                      # Base UI components (Shadcn/ui)
-│       ├── Badge.tsx            # Badge component
-│       ├── Button.tsx           # Button component
-│       └── Card.tsx             # Card component
-├── config/                      # Configuration and data files
+│   └── nav/                     # Site navigation
+│       ├── SiteNav.tsx          # The nav itself
+│       ├── BrandMark.tsx        # Retyping wordmark
+│       └── NavTools.tsx         # Slot for the chrome's tools
+├── config/                      # Section data and types, one file per section
 │   ├── blog.ts                  # Blog post metadata
-│   ├── experience.ts            # Experience and skills data
-│   ├── portfolio.ts             # Portfolio projects data
-│   └── services.ts              # Services data
+│   ├── sections.ts              # Section ids and nav order
+│   ├── career.ts                # Roles behind the experience section
+│   └── ... (caseStudies, engagements, proof, processSteps, principles, fit)
 ├── content/                     # Content files
 │   └── blog/                    # Markdown blog posts
 │       ├── how-to-hire-your-first-developer.md
 │       ├── how-to-use-ai-to-build-apps-10x-speed.md
-│       └── nodejs-vs-python-framework-magic.md
+│       └── ... (one file per post)
 ├── lib/                         # Utility functions
+│   ├── analytics.ts             # GA4 event helpers
 │   ├── date.ts                  # Date formatting utilities
+│   ├── motion/                  # Ticker, scroll store and the motion hooks
 │   └── opengraphUtils.tsx       # Open Graph image generation utilities
+├── scripts/                     # Tooling
+│   └── visual-check.mjs         # Playwright visual sweep
 ├── public/                      # Static assets
 ├── test/                        # Test configuration
 │   └── setup.ts                 # Test setup file
@@ -274,10 +276,12 @@ Blog posts are written in Markdown and stored in `content/blog/` with comprehens
 
 Content is managed through TypeScript configuration files:
 
-- `config/blog.ts` - Blog post metadata
-- `config/portfolio.ts` - Portfolio projects
-- `config/services.ts` - Service offerings
-- `config/experience.ts` - Experience and skills
+- `config/blog.ts` - Blog post metadata, including `published` and `featured`
+- `config/sections.ts` - Section ids and nav order
+- `config/caseStudies.ts` - Case studies behind the work section
+- `config/engagements.ts` - The three engagement models
+- `config/career.ts` - Roles behind the experience section
+- `config/processSteps.ts` - The process stepper's steps and transcripts
 
 ## 🎯 **Development Standards**
 
