@@ -10,6 +10,13 @@ const VISIBLE_MS = 2200;
 let element: HTMLDivElement | null = null;
 let timer = 0;
 
+/**
+ * Mounts the live region, empty.
+ *
+ * Deliberately does not write the message: a region populated in the same tick
+ * it is appended is never announced, because the text has to change after the
+ * region is already in the accessibility tree.
+ */
 const ensureElement = () => {
     element ??= document.createElement('div');
     element.className = 'toast';
@@ -29,8 +36,9 @@ export const showToast = (message: string) => {
 
     const node = ensureElement();
 
-    node.textContent = message;
+    // A frame later, so the first toast is announced and not just drawn.
     requestAnimationFrame(() => {
+        node.textContent = message;
         node.classList.add('is-on');
     });
     window.clearTimeout(timer);
@@ -39,8 +47,27 @@ export const showToast = (message: string) => {
     }, VISIBLE_MS);
 };
 
+export interface CopyOptions {
+    /** Message for the global toast. */
+    label?: string;
+    /**
+     * Leave the global toast alone. For callers that confirm the copy in their
+     * own UI, which would otherwise confirm it twice. The caller then owns the
+     * failure message too.
+     */
+    silent?: boolean;
+}
+
 /** Copies text, falling back to a hidden textarea where the async API is blocked. */
-export const copyText = async (text: string, label = 'Copied') => {
+export const copyText = async (text: string, options: CopyOptions = {}) => {
+    const { label = 'Copied', silent = false } = options;
+
+    const confirm = (message: string) => {
+        if (!silent) {
+            showToast(message);
+        }
+    };
+
     const fallback = () => {
         const area = document.createElement('textarea');
 
@@ -64,14 +91,14 @@ export const copyText = async (text: string, label = 'Copied') => {
         }
 
         area.remove();
-        showToast(copied ? label : `Select and copy: ${text}`);
+        confirm(copied ? label : `Select and copy: ${text}`);
 
         return copied;
     };
 
     try {
         await navigator.clipboard.writeText(text);
-        showToast(label);
+        confirm(label);
 
         return true;
     }
