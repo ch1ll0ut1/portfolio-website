@@ -1,4 +1,3 @@
-import storybook from "eslint-plugin-storybook";
 import stylistic from '@stylistic/eslint-plugin';
 import importPlugin from 'eslint-plugin-import';
 import tseslint from 'typescript-eslint';
@@ -11,7 +10,6 @@ export default tseslint.config(
             "dist",
             "node_modules",
             ".next",
-            "storybook-static",
             "eslint.config.js",
             "next.config.mjs",
             "postcss.config.mjs",
@@ -26,7 +24,6 @@ export default tseslint.config(
     importPlugin.flatConfigs.typescript,
     react.configs.flat.recommended,
     react.configs.flat['jsx-runtime'],
-    ...storybook.configs["flat/recommended"],
     {
         settings: {
             'import/resolver': {

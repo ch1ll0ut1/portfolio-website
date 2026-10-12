@@ -30,7 +30,7 @@ This is a Next.js 15 portfolio website built with TypeScript, React 19, and Tail
 - **UI Components**: Radix UI primitives with custom variants
 - **Testing**: Vitest with jsdom environment
 - **Code Quality**: ESLint with TypeScript, stylistic, and import rules
-- **Fonts**: Geist Sans and Geist Mono
+- **Fonts**: Bricolage Grotesque, Schibsted Grotesk and Martian Mono via `next/font/google`
 - **Deployment**: Vercel with automatic optimization
 
 ### Project Structure
@@ -70,7 +70,6 @@ Components follow a consistent pattern:
 - **Co-located tests**: Each component has a `.test.tsx` file alongside it
 - **TypeScript interfaces**: Props interfaces named simply as `Props`
 - **Arrow function components**: Using `FC<Props>` pattern
-- **Radix UI integration**: UI primitives use class-variance-authority for variants
 
 ### Content Management
 
@@ -148,6 +147,6 @@ For complete development standards, testing strategies, and architectural patter
 - All components should have accompanying tests focused on behavior
 - Navigation logic is separated into dedicated Navigation component
 - Markdown content processing uses custom implementation, not external libraries
-- Font loading is handled through Next.js with Geist font family
+- Font loading is handled through `next/font/google` (Bricolage Grotesque, Schibsted Grotesk, Martian Mono)
 - The project uses pnpm as package manager, not npm or yarn
 - Components use consolidated structure to reduce over-decomposition

@@ -42,7 +42,7 @@ A modern, responsive portfolio website built with Next.js 15, React 19, and Type
 - **Tailwind CSS 4** - Utility-first CSS framework
 - **Shadcn/ui** - High-quality React components
 - **Lucide React** - Beautiful, customizable icons
-- **Geist Font** - Modern, readable typography
+- **Bricolage Grotesque / Schibsted Grotesk / Martian Mono** - Display, body and mono typography
 
 ### **Content & Code**
 
@@ -55,8 +55,6 @@ A modern, responsive portfolio website built with Next.js 15, React 19, and Type
 
 - **Vitest** - Fast unit testing framework
 - **React Testing Library** - Component testing utilities
-- **Storybook** - Component development and documentation
-- **Chromatic** - Visual regression testing and review
 - **ESLint** - Code quality and style enforcement
 - **TypeScript** - Static type checking
 
@@ -123,7 +121,6 @@ portfolio-website/
 │       ├── how-to-use-ai-to-build-apps-10x-speed.md
 │       └── nodejs-vs-python-framework-magic.md
 ├── lib/                         # Utility functions
-│   ├── cssUtils.ts              # CSS utility functions
 │   ├── date.ts                  # Date formatting utilities
 │   └── opengraphUtils.tsx       # Open Graph image generation utilities
 ├── public/                      # Static assets
@@ -204,10 +201,6 @@ pnpm test             # Run tests
 pnpm test:watch       # Run tests in watch mode
 pnpm test:coverage    # Run tests with coverage
 
-# Storybook
-pnpm storybook        # Start Storybook development server
-pnpm build-storybook  # Build static Storybook
-
 # Code Quality
 pnpm lint             # Run ESLint
 ```
@@ -241,94 +234,11 @@ pnpm test:watch
 pnpm test:coverage
 ```
 
-## 📚 **Storybook & Visual Testing**
-
-This project uses Storybook for component development and documentation, with Chromatic for visual regression testing.
-
-### **Storybook**
-
-Storybook provides an isolated environment for developing and documenting components:
-
-- **Component Development** - Build components in isolation
-- **Documentation** - Auto-generated component docs and props
-- **Interactive Testing** - Test different component states and props
-- **Design System** - Visual component library and guidelines
-
-#### **Running Storybook**
-
-```bash
-# Start Storybook development server
-pnpm storybook
-
-# Build static Storybook for production
-pnpm build-storybook
-```
-
-#### **Writing Stories**
-
-Stories are located alongside components with `.stories.tsx` extension:
-
-```typescript
-// components/ui/Button.stories.tsx
-import type { Meta, StoryObj } from '@storybook/react';
-import { Button } from './Button';
-
-const meta: Meta<typeof Button> = {
-  title: 'UI/Button',
-  component: Button,
-  parameters: {
-    layout: 'centered',
-  },
-  tags: ['autodocs'],
-};
-
-export default meta;
-type Story = StoryObj<typeof meta>;
-
-export const Primary: Story = {
-  args: {
-    variant: 'default',
-    children: 'Button',
-  },
-};
-```
-
-### **Chromatic Visual Testing**
-
-Chromatic provides automated visual regression testing and review workflows:
-
-- **Visual Regression Testing** - Catch unintended visual changes
-- **Cross-browser Testing** - Test across different browsers and devices
-- **Review Workflow** - Approve or reject visual changes
-- **Design Token Validation** - Ensure consistent design system usage
-
-#### **Chromatic Workflow**
-
-Chromatic runs **automatically via GitHub Actions** on every push and pull request:
-
-1. **Automatic Deployment** - Chromatic builds triggered by GitHub Actions CI/CD
-2. **Visual Comparison** - New screenshots automatically compared against baselines
-3. **PR Integration** - Visual changes shown as checks in pull requests
-4. **Review Process** - Changes flagged for manual review and approval
-5. **Baseline Updates** - Approved changes automatically become new baselines
-
-#### **Chromatic Integration**
-
-**Fully automated setup:**
-
-- **GitHub Actions Trigger** - Runs on every push and PR automatically
-- **Zero Manual Setup** - No local Chromatic commands needed
-- **PR Status Checks** - Visual regression results visible in GitHub PR interface
-- **Automatic Baseline Management** - Baselines update on main branch merges
-
-**No manual intervention required** - Chromatic testing happens seamlessly as part of the standard development workflow.
-
 ### **Testing Strategy Overview**
 
 | Test Type | Tool | Purpose | Scope |
 |-----------|------|---------|-------|
 | **Unit Tests** | Vitest + RTL | Component behavior, logic, accessibility | Individual components |
-| **Visual Tests** | Chromatic | Visual appearance, responsive design | Component rendering |
 | **Integration** | Vitest | Component interaction, data flow | Multiple components |
 | **End-to-end** | Manual/Future | User workflows, full application | Complete user journeys |
 

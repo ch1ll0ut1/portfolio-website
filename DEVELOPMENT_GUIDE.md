@@ -453,8 +453,6 @@ expect(screen.getByTestId('design-system-button')).toBeInTheDocument();
 #### Visual Testing Responsibility
 
 Visual aspects should be tested through:
-- **Storybook Stories** - Component variations and states
-- **Chromatic** - Visual regression testing
 - **Manual Testing** - Cross-browser compatibility
 - **Design System Tools** - Consistency validation
 
