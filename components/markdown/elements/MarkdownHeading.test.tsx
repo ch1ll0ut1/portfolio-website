@@ -98,15 +98,15 @@ describe('MarkdownHeading Component', () => {
         expect(heading).toHaveTextContent('Title with & special < characters >');
     });
 
-    it('should apply correct CSS classes for different levels', () => {
+    it('should map each markdown level onto a heading rank below the page title', () => {
         const testCases = [
-            { level: 1 as const, expectedClasses: ['text-lg', 'font-semibold', 'text-primary', 'mt-6', 'mb-3'] },
-            { level: 2 as const, expectedClasses: ['text-2xl', 'font-bold', 'text-primary', 'mt-12', 'mb-6'] },
-            { level: 3 as const, expectedClasses: ['text-xl', 'font-semibold', 'text-primary', 'mt-8', 'mb-4'] },
-            { level: 4 as const, expectedClasses: ['text-lg', 'font-semibold', 'text-primary', 'mt-6', 'mb-3'] },
+            { level: 1 as const, expectedRank: 4 },
+            { level: 2 as const, expectedRank: 2 },
+            { level: 3 as const, expectedRank: 3 },
+            { level: 4 as const, expectedRank: 4 },
         ];
 
-        testCases.forEach(({ level, expectedClasses }) => {
+        testCases.forEach(({ level, expectedRank }) => {
             const element: HeadingElement = {
                 type: 'heading',
                 level,
@@ -115,10 +115,7 @@ describe('MarkdownHeading Component', () => {
 
             const { unmount } = render(<MarkdownHeading element={element} />);
 
-            const heading = screen.getByText(`Level ${level}`);
-            expectedClasses.forEach((className) => {
-                expect(heading).toHaveClass(className);
-            });
+            expect(screen.getByRole('heading', { level: expectedRank })).toHaveTextContent(`Level ${level}`);
 
             unmount();
         });

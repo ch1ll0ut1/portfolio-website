@@ -1,7 +1,8 @@
 import React, { FC } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { type CodeBlockElement } from '../markdownProcessor';
+import { codeLineNumberStyle, codeTheme } from '../codeTheme';
+import styles from '../Markdown.module.css';
 
 interface Props {
     element: CodeBlockElement;
@@ -9,16 +10,15 @@ interface Props {
 
 export const MarkdownCodeBlock: FC<Props> = ({ element }) => {
     return (
-        <div className="my-6">
+        <div className={styles.code}>
+            <div className={styles.codeHead}>{element.language}</div>
             <SyntaxHighlighter
                 language={element.language}
-                style={oneDark}
+                style={codeTheme}
                 showLineNumbers
-                customStyle={{
-                    margin: 0,
-                    borderRadius: '0.5rem',
-                    fontSize: '0.875rem',
-                }}
+                lineNumberStyle={codeLineNumberStyle}
+                className={styles.pre}
+                tabIndex={0}
                 data-testid="syntax-highlighter"
                 data-language={element.language}
             >

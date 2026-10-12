@@ -221,7 +221,7 @@ export function processMarkdownContent(content: string): MarkdownElement[] {
 }
 
 /**
- * Processes inline formatting (bold, italic) in text content.
+ * Processes inline formatting (bold, italic, code) in text content.
  * Returns an array of text segments with formatting information.
  */
 export interface InlineSegment {
@@ -229,6 +229,7 @@ export interface InlineSegment {
     isBold?: boolean;
     isItalic?: boolean;
     isLink?: boolean;
+    isCode?: boolean;
     href?: string;
 }
 
@@ -250,8 +251,9 @@ function processInlineFormatting(content: string): InlineSegment[] {
         });
     }
 
-    // Second pass: process all formatting including links
-    const formatRegex = /(\[([^\]]+)\]\(([^)]+)\)|\*\*(.+?)\*\*|\*(.+?)\*)/g;
+    // Second pass: process all formatting including links.
+    // Code comes last so the existing capture groups keep their numbers.
+    const formatRegex = /(\[([^\]]+)\]\(([^)]+)\)|\*\*(.+?)\*\*|\*(.+?)\*|`([^`]+)`)/g;
 
     while ((match = formatRegex.exec(content)) !== null) {
         // Add text before the match as plain text
@@ -284,6 +286,10 @@ function processInlineFormatting(content: string): InlineSegment[] {
             const italicContent = match[5];
             const innerSegments = processInnerFormatting(italicContent, links, match.index + 1);
             segments.push(...innerSegments.map(seg => ({ ...seg, isItalic: true })));
+        }
+        else if (match[6]) {
+            // Inline code (`text`) — never formatted further
+            segments.push({ text: match[6], isCode: true });
         }
 
         currentIndex = match.index + match[0].length;

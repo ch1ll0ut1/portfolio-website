@@ -99,7 +99,7 @@ describe('MarkdownCodeBlock Component', () => {
         expect(codeBlock.textContent).toContain('special');
     });
 
-    it('should have proper container structure', () => {
+    it('should label the block with its language and keep it keyboard reachable', () => {
         const element: CodeBlockElement = {
             type: 'codeBlock',
             language: 'javascript',
@@ -108,8 +108,25 @@ describe('MarkdownCodeBlock Component', () => {
 
         render(<MarkdownCodeBlock element={element} />);
 
-        const container = screen.getByTestId('syntax-highlighter').parentElement;
-        expect(container).toHaveClass('my-6');
+        const block = screen.getByTestId('syntax-highlighter');
+
+        // The block scrolls horizontally instead of widening the page.
+        expect(block).toHaveAttribute('tabindex', '0');
+        expect(block.parentElement).toHaveTextContent('javascript');
+    });
+
+    it('should colour tokens through custom properties so both themes work', () => {
+        const element: CodeBlockElement = {
+            type: 'codeBlock',
+            language: 'javascript',
+            content: 'const test = "hello";',
+        };
+
+        render(<MarkdownCodeBlock element={element} />);
+
+        const token = screen.getByTestId('syntax-highlighter').querySelector('.token');
+        expect(token).toBeInTheDocument();
+        expect(token?.getAttribute('style')).toContain('var(--code-');
     });
 
     it('should handle unknown language gracefully', () => {

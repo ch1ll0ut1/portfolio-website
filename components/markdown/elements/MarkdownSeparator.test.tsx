@@ -20,17 +20,6 @@ describe('MarkdownSeparator Component', () => {
         expect(hr).toBeInTheDocument();
     });
 
-    it('should apply correct CSS classes', () => {
-        const element: SeparatorElement = {
-            type: 'separator',
-        };
-
-        render(<MarkdownSeparator element={element} />);
-
-        const hr = document.querySelector('hr');
-        expect(hr).toHaveClass('border-t', 'border-slate-300', 'my-8');
-    });
-
     it('should render as self-closing element', () => {
         const element: SeparatorElement = {
             type: 'separator',
@@ -59,9 +48,6 @@ describe('MarkdownSeparator Component', () => {
 
         const hrs = document.querySelectorAll('hr');
         expect(hrs).toHaveLength(3);
-        hrs.forEach((hr) => {
-            expect(hr).toHaveClass('border-t', 'border-slate-300', 'my-8');
-        });
     });
 
     it('should not accept any content or children', () => {

@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 import Image from 'next/image';
 import { ImageElement } from '../markdownProcessor';
+import styles from '../Markdown.module.css';
 
 interface Props {
     element: ImageElement;
@@ -13,26 +14,17 @@ export const MarkdownImage: FC<Props> = ({ element }) => {
     const imagePath = src.startsWith('/') ? src : `/images/blog/${src}`;
 
     return (
-        <div className="my-8">
+        <figure className={styles.figure}>
             <Image
                 src={imagePath}
                 alt={alt}
                 width={800}
                 height={600}
-                className="rounded-lg shadow-lg"
-                style={{
-                    width: '100%',
-                    height: 'auto',
-                }}
-                priority={undefined}
+                className={styles.image}
                 loading="lazy"
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 800px"
             />
-            {alt && (
-                <p className="text-center text-sm text-gray-600 mt-2 italic">
-                    {alt}
-                </p>
-            )}
-        </div>
+            {alt && <figcaption className={styles.caption}>{alt}</figcaption>}
+        </figure>
     );
 };

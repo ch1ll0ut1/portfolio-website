@@ -63,30 +63,6 @@ describe('MarkdownQuote Component', () => {
         expect(link.tagName).toBe('A');
     });
 
-    it('should apply correct CSS classes to blockquote', () => {
-        const element: QuoteElement = {
-            type: 'quote',
-            segments: [{ text: 'Test quote' }],
-        };
-
-        render(<MarkdownQuote element={element} />);
-
-        const blockquote = document.querySelector('blockquote');
-        expect(blockquote).toHaveClass('border-l-2', 'border-slate-300', 'pl-6', 'my-6', 'text-slate-600');
-    });
-
-    it('should apply correct styling classes to blockquote', () => {
-        const element: QuoteElement = {
-            type: 'quote',
-            segments: [{ text: 'Test quote' }],
-        };
-
-        render(<MarkdownQuote element={element} />);
-
-        const blockquote = document.querySelector('blockquote');
-        expect(blockquote).toHaveClass('italic', 'leading-relaxed', 'text-lg');
-    });
-
     it('should handle empty content', () => {
         const element: QuoteElement = {
             type: 'quote',

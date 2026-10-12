@@ -1,10 +1,11 @@
 import React, { FC } from 'react';
 import { type SeparatorElement } from '../markdownProcessor';
+import styles from '../Markdown.module.css';
 
 interface Props {
     element: SeparatorElement;
 }
 
 export const MarkdownSeparator: FC<Props> = () => {
-    return <hr className="border-t border-slate-300 my-8" />;
+    return <hr className={styles.separator} />;
 };

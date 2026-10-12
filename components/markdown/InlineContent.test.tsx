@@ -19,6 +19,19 @@ describe('InlineContent Component', () => {
         expect(screen.getByText('Plain text without formatting')).toBeInTheDocument();
     });
 
+    it('should render inline code as a code element', () => {
+        const segments: InlineSegment[] = [
+            { text: 'Keep a ' },
+            { text: 'CLAUDE.md', isCode: true },
+            { text: ' file nearby' },
+        ];
+
+        render(<InlineContent segments={segments} />);
+
+        const code = screen.getByText('CLAUDE.md');
+        expect(code.tagName).toBe('CODE');
+    });
+
     it('should render bold text with proper styling', () => {
         const segments: InlineSegment[] = [
             { text: 'This is ' },
@@ -31,7 +44,6 @@ describe('InlineContent Component', () => {
         const boldElement = screen.getByText('bold');
         expect(boldElement).toBeInTheDocument();
         expect(boldElement.tagName).toBe('STRONG');
-        expect(boldElement).toHaveClass('font-semibold', 'text-primary');
     });
 
     it('should render italic text with proper styling', () => {
@@ -46,7 +58,6 @@ describe('InlineContent Component', () => {
         const italicElement = screen.getByText('italic');
         expect(italicElement).toBeInTheDocument();
         expect(italicElement.tagName).toBe('I');
-        expect(italicElement).toHaveClass('italic');
     });
 
     it('should render links with proper attributes', () => {
@@ -64,7 +75,6 @@ describe('InlineContent Component', () => {
         expect(linkElement).toHaveAttribute('href', 'https://example.com');
         expect(linkElement).toHaveAttribute('target', '_blank');
         expect(linkElement).toHaveAttribute('rel', 'noopener noreferrer');
-        expect(linkElement).toHaveClass('text-action', 'hover:text-action/90', 'underline', 'transition-colors');
     });
 
     it('should render mixed formatting correctly', () => {
@@ -78,8 +88,8 @@ describe('InlineContent Component', () => {
 
         const { container } = render(<InlineContent segments={segments} />);
 
-        expect(screen.getByText('Bold')).toHaveClass('font-semibold');
-        expect(screen.getByText('italic')).toHaveClass('italic');
+        expect(screen.getByText('Bold').tagName).toBe('STRONG');
+        expect(screen.getByText('italic').tagName).toBe('I');
         expect(screen.getByText('link')).toHaveAttribute('href', 'https://example.com');
 
         // Check that the full content is rendered
@@ -94,8 +104,8 @@ describe('InlineContent Component', () => {
 
         render(<InlineContent segments={segments} />);
 
-        expect(screen.getByText('Bold')).toHaveClass('font-semibold');
-        expect(screen.getByText('italic')).toHaveClass('italic');
+        expect(screen.getByText('Bold').tagName).toBe('STRONG');
+        expect(screen.getByText('italic').tagName).toBe('I');
     });
 
     it('should handle multiple links', () => {

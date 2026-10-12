@@ -92,38 +92,27 @@ describe('Markdown Component', () => {
         expect(screen.getByTestId('syntax-highlighter')).toBeInTheDocument();
     });
 
-    it('should handle custom className prop', () => {
+    it('should pass a custom className through to the container', () => {
         const content = 'Test content';
 
         render(<Markdown content={content} className="custom-class" />);
 
-        const container = screen.getByText('Test content').closest('.prose');
-        expect(container).toHaveClass('custom-class');
-    });
-
-    it('should apply default prose classes', () => {
-        const content = 'Test content';
-
-        render(<Markdown content={content} />);
-
-        const container = screen.getByText('Test content').closest('.prose');
-        expect(container).toHaveClass('prose', 'prose-lg', 'max-w-none');
+        expect(screen.getByTestId('markdown')).toHaveClass('custom-class');
     });
 
     it('should handle empty content', () => {
         render(<Markdown content="" />);
 
-        const container = document.querySelector('.prose');
+        const container = screen.getByTestId('markdown');
         expect(container).toBeInTheDocument();
-        expect(container?.children.length).toBe(0);
+        expect(container.children.length).toBe(0);
     });
 
     it('should handle content with only whitespace', () => {
-        render(<Markdown content="   \n\n   " />);
+        render(<Markdown content={'   \n\n   '} />);
 
-        const container = document.querySelector('.prose');
-        expect(container).toBeInTheDocument();
-        // Should not render any meaningful content
+        // Whitespace-only input renders spacing, never a paragraph of text.
+        expect(screen.getByTestId('markdown').querySelector('p')).not.toBeInTheDocument();
     });
 
     it('should render elements in correct order', () => {
@@ -131,11 +120,10 @@ describe('Markdown Component', () => {
 
         render(<Markdown content={content} />);
 
-        const container = document.querySelector('.prose');
-        const elements = container?.children;
+        const elements = screen.getByTestId('markdown').children;
 
-        expect(elements?.[0]).toHaveTextContent('First');
-        expect(elements?.[1]).toHaveTextContent('Paragraph');
-        expect(elements?.[2]).toHaveTextContent('Second');
+        expect(elements[0]).toHaveTextContent('First');
+        expect(elements[1]).toHaveTextContent('Paragraph');
+        expect(elements[2]).toHaveTextContent('Second');
     });
 });

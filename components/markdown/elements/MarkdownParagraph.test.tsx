@@ -59,42 +59,28 @@ describe('MarkdownParagraph Component', () => {
         expect(link).toHaveAttribute('href', 'https://example.com');
     });
 
-    it('should render empty div for empty content', () => {
+    it('should render spacing instead of a paragraph for empty content', () => {
         const element: ParagraphElement = {
             type: 'paragraph',
             segments: [{ text: '' }],
         };
 
-        render(<MarkdownParagraph element={element} />);
+        const { container } = render(<MarkdownParagraph element={element} />);
 
-        const emptyDiv = document.querySelector('div.h-4');
-        expect(emptyDiv).toBeInTheDocument();
-        expect(screen.queryByRole('paragraph')).not.toBeInTheDocument();
+        expect(container.querySelector('p')).not.toBeInTheDocument();
+        expect(container.firstElementChild?.tagName).toBe('DIV');
     });
 
-    it('should render empty div for whitespace-only content', () => {
+    it('should render spacing instead of a paragraph for whitespace-only content', () => {
         const element: ParagraphElement = {
             type: 'paragraph',
             segments: [{ text: '   \n\t   ' }],
         };
 
-        render(<MarkdownParagraph element={element} />);
+        const { container } = render(<MarkdownParagraph element={element} />);
 
-        const emptyDiv = document.querySelector('div.h-4');
-        expect(emptyDiv).toBeInTheDocument();
-    });
-
-    it('should apply correct CSS classes to paragraph', () => {
-        const element: ParagraphElement = {
-            type: 'paragraph',
-            segments: [{ text: 'Test paragraph' }],
-        };
-
-        render(<MarkdownParagraph element={element} />);
-
-        const paragraphElement = document.querySelector('p');
-        expect(paragraphElement).toHaveClass('text-muted-foreground', 'leading-relaxed', 'mb-4');
-        expect(screen.getByText('Test paragraph')).toBeInTheDocument();
+        expect(container.querySelector('p')).not.toBeInTheDocument();
+        expect(container.firstElementChild?.tagName).toBe('DIV');
     });
 
     it('should handle special characters', () => {
@@ -183,10 +169,9 @@ describe('MarkdownParagraph Component', () => {
             segments: [{ text: '   ' }],
         };
 
-        render(<MarkdownParagraph element={element} />);
+        const { container } = render(<MarkdownParagraph element={element} />);
 
-        const emptyDiv = document.querySelector('div.h-4');
-        expect(emptyDiv).toBeInTheDocument();
+        expect(container.querySelector('p')).not.toBeInTheDocument();
         expect(screen.queryByText('   ')).not.toBeInTheDocument();
     });
 });

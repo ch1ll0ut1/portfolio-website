@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import { type InlineSegment } from './markdownProcessor';
+import styles from './Markdown.module.css';
 
 interface Props {
     segments: InlineSegment[];
@@ -8,7 +9,19 @@ interface Props {
 export const InlineContent: FC<Props> = ({ segments }) => {
     const content = segments.map((segment: InlineSegment, segmentIndex: number) => {
         let segmentContent: React.ReactNode = segment.text;
-        const hasFormatting = Boolean(segment.isBold) || Boolean(segment.isItalic) || Boolean(segment.isLink);
+        const hasFormatting = Boolean(segment.isBold)
+          || Boolean(segment.isItalic)
+          || Boolean(segment.isLink)
+          || Boolean(segment.isCode);
+
+        // Code is the innermost wrapper: its text is never re-formatted.
+        if (segment.isCode) {
+            segmentContent = (
+                <code key={segmentIndex} className={styles.inlineCode}>
+                    {segmentContent}
+                </code>
+            );
+        }
 
         // Handle link first (innermost)
         if (segment.isLink && segment.href) {
@@ -16,7 +29,7 @@ export const InlineContent: FC<Props> = ({ segments }) => {
                 <a
                     key={segmentIndex}
                     href={segment.href}
-                    className="text-action hover:text-action/90 underline transition-colors"
+                    className={styles.link}
                     target="_blank"
                     rel="noopener noreferrer"
                 >
@@ -28,7 +41,7 @@ export const InlineContent: FC<Props> = ({ segments }) => {
         // Wrap with bold if needed
         if (segment.isBold) {
             segmentContent = (
-                <strong key={segmentIndex} className="font-semibold text-primary">
+                <strong key={segmentIndex} className={styles.strong}>
                     {segmentContent}
                 </strong>
             );
@@ -37,7 +50,7 @@ export const InlineContent: FC<Props> = ({ segments }) => {
         // Wrap with italic if needed (outermost)
         if (segment.isItalic) {
             segmentContent = (
-                <i key={segmentIndex} className="italic">
+                <i key={segmentIndex}>
                     {segmentContent}
                 </i>
             );

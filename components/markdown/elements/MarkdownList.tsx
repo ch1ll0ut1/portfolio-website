@@ -1,22 +1,15 @@
 /**
- * Advanced List Renderer with Block-Level Content Support
+ * List renderer with block-level item content.
  *
- * Renders markdown lists with sophisticated nested content handling:
- * - Multiple content blocks per list item
- * - Block quotes with proper styling (border + italic)
- * - Empty line spacing preservation
- * - Proper hanging indentation for multi-line content
- *
- * Architecture:
- * - Uses flexbox layout for proper alignment
- * - Separates concerns with BlockRenderer component
- * - Handles both ordered (1. 2. 3.) and unordered (•) lists
- * - Maintains consistent spacing with Tailwind classes
+ * A list item can hold several blocks: paragraphs, nested quotes and blank
+ * lines that stand in for spacing. Markers are drawn in CSS because the global
+ * reset strips the native ones, which also lets them take the caret colour.
  */
 
 import React, { FC } from 'react';
 import { type ListElement, type BlockSegment } from '../markdownProcessor';
 import { InlineContent } from '../InlineContent';
+import styles from '../Markdown.module.css';
 
 interface Props {
     element: ListElement;
@@ -24,17 +17,12 @@ interface Props {
 
 export const MarkdownList: FC<Props> = ({ element }) => {
     const ListTag = element.ordered ? 'ol' : 'ul';
+    const marker = element.ordered ? styles.ordered : styles.unordered;
 
     return (
-        <ListTag className={`space-y-2 my-4 text-muted-foreground ${
-            element.ordered ? 'list-decimal list-outside ml-4' : 'list-disc list-outside ml-4'
-        }`}
-        >
+        <ListTag className={`${styles.list} ${marker}`}>
             {element.items.map((item, itemIndex) => (
-                <li
-                    key={itemIndex}
-                    className="leading-relaxed space-y-1 pl-2"
-                >
+                <li key={itemIndex} className={styles.item}>
                     {item.map((block, blockIndex) => (
                         <BlockRenderer key={blockIndex} block={block} />
                     ))}
@@ -45,31 +33,22 @@ export const MarkdownList: FC<Props> = ({ element }) => {
 };
 
 /**
- * Renders individual content blocks within list items
- *
- * Block types:
- * - 'quote': Renders as styled blockquote with left border
- * - undefined: Regular paragraph content
- * - Empty blocks: Rendered as spacing div for visual separation
- *
- * Styling:
- * - Quotes: Left border, italic text, muted color
- * - Empty: Fixed height div for consistent spacing
- * - Regular: Standard inline content rendering
+ * Renders one block inside a list item. A quote keeps the article's quote
+ * treatment at a quieter scale; a blank block becomes plain vertical space.
  */
 const BlockRenderer: FC<{ block: BlockSegment }> = ({ block }) => {
     const isEmptyBlock = block.segments.length === 1 && block.segments[0]?.text === '';
 
     if (block.type === 'quote') {
         return (
-            <blockquote className="border-l-4 border-border pl-4 italic text-muted-foreground">
+            <blockquote className={`${styles.quote} ${styles.nestedQuote}`}>
                 <InlineContent segments={block.segments} />
             </blockquote>
         );
     }
 
     if (isEmptyBlock) {
-        return <div className="h-4" />;
+        return <div className={styles.spacer} />;
     }
 
     return (

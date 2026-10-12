@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 import { type QuoteElement } from '../markdownProcessor';
 import { InlineContent } from '../InlineContent';
+import styles from '../Markdown.module.css';
 
 interface Props {
     element: QuoteElement;
@@ -8,7 +9,7 @@ interface Props {
 
 export const MarkdownQuote: FC<Props> = ({ element }) => {
     return (
-        <blockquote className="border-l-2 border-slate-300 pl-6 my-6 text-slate-600 italic leading-relaxed text-lg">
+        <blockquote className={styles.quote}>
             <InlineContent segments={element.segments} />
         </blockquote>
     );

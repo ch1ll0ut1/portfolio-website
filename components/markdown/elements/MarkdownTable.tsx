@@ -1,22 +1,24 @@
 import React, { FC } from 'react';
 import { type TableElement } from '../markdownProcessor';
 import { InlineContent } from '../InlineContent';
+import styles from '../Markdown.module.css';
 
 interface Props {
     element: TableElement;
 }
 
+/**
+ * The wrapper scrolls instead of widening the page, so it is focusable for
+ * keyboard users who cannot drag it.
+ */
 export const MarkdownTable: FC<Props> = ({ element }) => {
     return (
-        <div className="my-6 overflow-x-auto">
-            <table className="w-full border-collapse border border-slate-300 rounded-lg">
+        <div className={styles.tableWrap} tabIndex={0}>
+            <table className={styles.table}>
                 <thead>
-                    <tr className="bg-slate-50">
+                    <tr>
                         {element.headers.map((headerSegments, headerIndex) => (
-                            <th
-                                key={headerIndex}
-                                className="border border-slate-300 px-4 py-3 text-left font-semibold text-primary"
-                            >
+                            <th key={headerIndex} scope="col" className={styles.th}>
                                 <InlineContent segments={headerSegments} />
                             </th>
                         ))}
@@ -24,12 +26,9 @@ export const MarkdownTable: FC<Props> = ({ element }) => {
                 </thead>
                 <tbody>
                     {element.rows.map((row, rowIndex) => (
-                        <tr key={rowIndex} className="hover:bg-slate-50 transition-colors">
+                        <tr key={rowIndex} className={styles.row}>
                             {row.map((cellSegments, cellIndex) => (
-                                <td
-                                    key={cellIndex}
-                                    className="border border-slate-300 px-4 py-3 text-muted-foreground"
-                                >
+                                <td key={cellIndex} className={styles.td}>
                                     <InlineContent segments={cellSegments} />
                                 </td>
                             ))}

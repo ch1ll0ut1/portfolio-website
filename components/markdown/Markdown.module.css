@@ -1,0 +1,345 @@
+/* Markdown reading styles.
+   One module shared by every renderer in this folder, so the article's
+   typographic scale lives in a single place instead of being spread across
+   nine element files.
+
+   The measure is set here and inherited: body text stays at a readable
+   65-75ch, and only code and tables are allowed to break out of it. */
+
+.prose {
+    --measure: 70ch;
+
+    max-width: var(--measure);
+    color: var(--fg-2);
+    font-size: clamp(1.0625rem, 1.05vw, 1.125rem);
+    line-height: 1.75;
+}
+
+/* ==========================================================================
+   Headings
+   ========================================================================== */
+.h2 {
+    margin: clamp(44px, 6vw, 72px) 0 20px;
+    padding-top: clamp(20px, 2.6vw, 28px);
+    border-top: 1px solid var(--line);
+    color: var(--fg);
+    font-size: var(--fs-2);
+    font-variation-settings: 'wdth' 84;
+}
+
+/* A heading right after an explicit rule would otherwise draw a second one. */
+.separator + .h2 {
+    margin-top: clamp(32px, 4vw, 44px);
+    padding-top: 0;
+    border-top: 0;
+}
+
+.h3 {
+    margin: clamp(32px, 4vw, 44px) 0 12px;
+    color: var(--fg);
+    font-size: var(--fs-3);
+    line-height: 1.2;
+    font-variation-settings: 'wdth' 86;
+}
+
+/* A caret standing in front of the subheading. */
+.h3::before {
+    content: '';
+    display: inline-block;
+    width: .16em;
+    height: .8em;
+    margin-right: .44em;
+    vertical-align: -.03em;
+    border-radius: 1px;
+    background: var(--caret);
+}
+
+.h4 {
+    margin: clamp(26px, 3vw, 34px) 0 10px;
+    color: var(--fg);
+    font-size: 1.0625rem;
+    line-height: 1.35;
+    letter-spacing: -.01em;
+    font-variation-settings: 'wdth' 90;
+}
+
+/* ==========================================================================
+   Body text
+   ========================================================================== */
+.paragraph {
+    margin-bottom: 1.35em;
+}
+
+.spacer {
+    height: 1rem;
+}
+
+.strong {
+    color: var(--fg);
+    font-weight: 600;
+}
+
+/* Underlined at rest so a link is never colour-only, and the rule thickens
+   into the caret colour on hover and keyboard focus alike. */
+.link {
+    color: var(--fg);
+    text-decoration: none;
+    padding-bottom: 1px;
+    background-image: linear-gradient(var(--caret), var(--caret));
+    background-repeat: no-repeat;
+    background-size: 100% 1px;
+    background-position: 0 100%;
+    transition:
+        background-size var(--dur-xs) var(--ease-ui),
+        color var(--dur-xs) var(--ease-ui);
+}
+
+.link:hover,
+.link:focus-visible {
+    background-size: 100% 2px;
+    color: var(--caret);
+}
+
+.inlineCode {
+    font-family: var(--font-mono);
+    font-size: .84em;
+    padding: .12em .38em;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: var(--bg-2);
+    color: var(--ice);
+    word-break: break-word;
+}
+
+/* ==========================================================================
+   Lists. The global reset strips native markers, so both kinds are drawn here.
+   ========================================================================== */
+.list {
+    display: grid;
+    gap: .55em;
+    margin: 0 0 1.35em;
+}
+
+.ordered {
+    counter-reset: md-item;
+}
+
+.item {
+    position: relative;
+    padding-left: 1.7em;
+}
+
+.unordered > .item::before {
+    content: '';
+    position: absolute;
+    left: .4em;
+    top: .66em;
+    width: 5px;
+    height: 5px;
+    border-radius: 1px;
+    background: var(--caret);
+}
+
+.ordered > .item::before {
+    counter-increment: md-item;
+    content: counter(md-item) '.';
+    position: absolute;
+    left: 0;
+    top: .12em;
+    font-family: var(--font-mono);
+    font-size: .74em;
+    color: var(--caret);
+    font-variation-settings: 'wdth' 88;
+}
+
+.item > * + * {
+    margin-top: .5em;
+}
+
+/* ==========================================================================
+   Quotes — the selection, used as an editorial device.
+   ========================================================================== */
+.quote {
+    margin: clamp(26px, 3.4vw, 38px) 0;
+    padding: 16px clamp(16px, 2.2vw, 22px);
+    border-left: 2px solid var(--select);
+    border-radius: 0 var(--radius-s) var(--radius-s) 0;
+    background: var(--select-soft);
+    color: var(--fg);
+    font-size: 1.06em;
+    line-height: 1.6;
+}
+
+.quote > * + * {
+    margin-top: .6em;
+}
+
+/* A quote nested inside a list item stays quiet. */
+.nestedQuote {
+    margin: .6em 0;
+    padding: 10px 14px;
+    font-size: 1em;
+}
+
+/* ==========================================================================
+   Separator
+   ========================================================================== */
+.separator {
+    height: 1px;
+    margin: clamp(40px, 5vw, 64px) 0;
+    border: 0;
+    background: var(--line);
+}
+
+/* ==========================================================================
+   Code. The palette is declared here and read by `codeTheme.ts` through
+   inline `var()` references, so one definition serves both themes.
+   ========================================================================== */
+.code {
+    --code-bg: var(--surface);
+    --code-plain: var(--fg);
+    --code-comment: var(--muted);
+    --code-punct: var(--fg-2);
+    --code-keyword: var(--caret);
+    --code-string: var(--ice);
+    --code-fn: #82aaff;
+    --code-number: #c792ea;
+    --code-name: #7fd1b9;
+    --code-add: #7fd1b9;
+    --code-del: #ff8f8f;
+
+    position: relative;
+    margin: clamp(26px, 3.4vw, 38px) 0;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+    background: var(--code-bg);
+    overflow: hidden;
+}
+
+/* Four of the code colours are hue accents with no palette token of their own,
+   so they are the one place that needs a per-theme value. Written as the two
+   parallel rules the tokens themselves use: the media query lets the OS decide
+   while no choice exists, the attribute rule wins once one has been made. */
+@media (prefers-color-scheme: light) {
+    :global(:root:not([data-theme='dark'])) .code {
+        --code-fn: #2a55c8;
+        --code-number: #7a3bb5;
+        --code-name: #0d6b4f;
+        --code-add: #0d6b4f;
+        --code-del: #b3261e;
+    }
+}
+
+:global(:root[data-theme='light']) .code {
+    --code-fn: #2a55c8;
+    --code-number: #7a3bb5;
+    --code-name: #0d6b4f;
+    --code-add: #0d6b4f;
+    --code-del: #b3261e;
+}
+
+.codeHead {
+    display: flex;
+    align-items: center;
+    gap: .55em;
+    padding: 9px clamp(14px, 2vw, 18px);
+    border-bottom: 1px solid var(--line);
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    letter-spacing: .02em;
+    color: var(--muted);
+    font-variation-settings: 'wdth' 88;
+}
+
+.codeHead::before {
+    content: '';
+    width: 2px;
+    height: .9em;
+    border-radius: 1px;
+    background: var(--caret);
+}
+
+/* The block scrolls rather than pushing the page wide, so it is focusable. */
+.pre:focus-visible {
+    outline-offset: -2px;
+}
+
+/* ==========================================================================
+   Tables
+   ========================================================================== */
+.tableWrap {
+    margin: clamp(26px, 3.4vw, 38px) 0;
+    overflow-x: auto;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--fs-small);
+}
+
+.th,
+.td {
+    padding: 12px clamp(12px, 1.6vw, 18px);
+    text-align: left;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+}
+
+.th {
+    color: var(--fg);
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    font-weight: 500;
+    letter-spacing: .03em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    background: var(--bg-2);
+    font-variation-settings: 'wdth' 88;
+}
+
+.row:last-child .td {
+    border-bottom: 0;
+}
+
+.row {
+    transition: background var(--dur-xs) var(--ease-ui);
+}
+
+.row:hover {
+    background: var(--bg-2);
+}
+
+/* ==========================================================================
+   Figures
+   ========================================================================== */
+.figure {
+    margin: clamp(30px, 4vw, 48px) 0;
+}
+
+.image {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+}
+
+.caption {
+    margin-top: 12px;
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    line-height: 1.5;
+    color: var(--muted);
+    font-variation-settings: 'wdth' 88;
+}
+
+/* Code and tables may step outside the measure once there is room for it. */
+@media (min-width: 1100px) {
+    .code,
+    .tableWrap {
+        margin-inline: -4ch;
+    }
+}
