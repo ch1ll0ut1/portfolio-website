@@ -1,0 +1,228 @@
+/* Proof: a full-bleed marquee of organisations, then four odometer stats.
+   Ported from the prototype's proof.css.
+
+   The `.motion` guard comes from the boot script on <html>, so every rule that
+   moves something is inert when motion is off and the numbers simply render. */
+
+.proof {
+    padding-block: clamp(40px, 6vw, 72px) clamp(72px, 10vw, 140px);
+    border-top: 1px solid var(--line);
+}
+
+/* ==========================================================================
+   Marquee
+   ========================================================================== */
+.marquee {
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    padding-block: 8px;
+}
+
+.track {
+    display: flex;
+    width: max-content;
+    gap: clamp(36px, 5vw, 72px);
+    padding-inline: clamp(18px, 2.5vw, 36px);
+}
+
+.item {
+    font-family: var(--font-display);
+    font-size: clamp(1.6rem, 3.4vw, 2.9rem);
+    font-weight: 500;
+    letter-spacing: -.03em;
+    color: var(--muted);
+    white-space: nowrap;
+    font-variation-settings: 'wdth' 80;
+    transition: color var(--dur-s) var(--ease-ui);
+}
+
+/* Added by the engine once it is actually running, so the row is never dimmed
+   by an animation that is not happening. */
+.marquee.isLive .item {
+    color: var(--fg);
+    opacity: var(--o, .4);
+}
+
+.item:hover {
+    color: var(--fg);
+}
+
+/* The live rule above owns the item's opacity, so the hover state has to
+   out-specify it to read as "this one is focused". */
+.marquee.isLive .item:hover {
+    opacity: 1;
+}
+
+.item::after {
+    content: '';
+    display: inline-block;
+    width: .32em;
+    height: .32em;
+    margin-left: clamp(36px, 5vw, 72px);
+    border-radius: 50%;
+    background: var(--line);
+    vertical-align: .18em;
+}
+
+/* ==========================================================================
+   Stats
+   ========================================================================== */
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin-top: clamp(48px, 7vw, 96px);
+    border-top: 1px solid var(--line);
+}
+
+.stat {
+    position: relative;
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 26px 22px 0 0;
+    border-right: 1px solid var(--line);
+}
+
+.stat:not(:first-child) {
+    padding-left: 22px;
+}
+
+.stat:last-child {
+    border-right: 0;
+}
+
+.label {
+    color: var(--fg-2);
+    font-size: var(--fs-small);
+    max-width: 22ch;
+}
+
+.value {
+    font-family: var(--font-display);
+    font-size: clamp(2.8rem, 6vw, 5.4rem);
+    font-weight: 600;
+    letter-spacing: -.05em;
+    line-height: .95;
+    font-variant-numeric: tabular-nums;
+    font-variation-settings: 'wdth' 75;
+}
+
+/* A caret-coloured line sweeps the cell's top hairline as the digits land. */
+.stat::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -1px;
+    height: 1px;
+    background: var(--caret);
+    transform-origin: 0 50%;
+    transform: scaleX(0);
+    opacity: 0;
+}
+
+:global(.motion) .stat.isIn::before {
+    animation: statline 1.4s var(--ease-inout) calc(var(--si) * 90ms) both;
+}
+
+@keyframes statline {
+    0% {
+        transform: scaleX(0);
+        opacity: 1;
+        transform-origin: 0 50%;
+    }
+
+    50% {
+        transform: scaleX(1);
+        opacity: 1;
+        transform-origin: 0 50%;
+    }
+
+    50.1% {
+        transform-origin: 100% 50%;
+    }
+
+    100% {
+        transform: scaleX(0);
+        opacity: 1;
+        transform-origin: 100% 50%;
+    }
+}
+
+@media (max-width: 760px) {
+    .stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .stat {
+        padding: 22px 14px 22px 0;
+        border-bottom: 1px solid var(--line);
+    }
+
+    .stat:nth-child(2n) {
+        border-right: 0;
+        padding-left: 14px;
+    }
+
+    .stat:nth-child(2n+1) {
+        padding-left: 0;
+    }
+}
+
+/* ==========================================================================
+   Odometer
+
+   One column per digit. Each column holds every digit the reel passes through
+   and is translated `--n` rows up, so the roll is a single CSS transition
+   rather than per-frame JS. At rest the reel already shows the final digit.
+   ========================================================================== */
+.odo {
+    display: inline-flex;
+    align-items: center;
+}
+
+.col {
+    display: inline-block;
+    height: 1.2em;
+    margin-block: -.125em;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(transparent, #000 14%, #000 86%, transparent);
+    mask-image: linear-gradient(transparent, #000 14%, #000 86%, transparent);
+}
+
+.reel {
+    display: flex;
+    flex-direction: column;
+    transform: translate3d(0, calc(var(--n) * -1.2em), 0);
+}
+
+.digit {
+    display: block;
+    height: 1.2em;
+    line-height: 1.2em;
+}
+
+.affix {
+    color: var(--caret);
+    line-height: 1;
+}
+
+/* The roll is an animation rather than a transition on purpose: the reel's
+   resting transform is the final number, and only the animation ever puts the
+   starting digits on screen. A stat that is never animated, or whose entrance
+   never fires, therefore still reads 2008 rather than 1990. */
+:global(.motion) .stat.isIn .reel {
+    animation: odometer calc(1.1s + var(--k) * .25s) cubic-bezier(.2, .9, .1, 1) calc(var(--si) * 90ms) both;
+}
+
+@keyframes odometer {
+    from {
+        transform: none;
+    }
+
+    to {
+        transform: translate3d(0, calc(var(--n) * -1.2em), 0);
+    }
+}
