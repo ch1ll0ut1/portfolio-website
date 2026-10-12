@@ -4,7 +4,8 @@
  * An element approaching the viewport is first *armed* (put into its hidden
  * pre-state) and then animated when it actually enters. Anything already on
  * screen is never armed, so content that was visible on load is never hidden
- * and re-revealed — it takes the `onIntro` path instead, or simply stays put.
+ * and re-revealed — it takes the `onIntro` path instead, or, with no `onIntro`
+ * given, goes straight to `onEnter`.
  */
 
 import { prefersReducedMotion } from './env';
@@ -15,7 +16,14 @@ export interface InViewOptions {
     onArm?: () => void;
     /** Run the entrance. Fires at most once. */
     onEnter?: () => void;
-    /** Run instead of arm/enter when the element is already visible on load. */
+    /**
+     * Run instead of arm/enter when the element is already visible on load.
+     *
+     * Omit it and an element on screen at setup runs `onEnter` immediately
+     * instead — never `onArm`. Supply one (even a no-op) whenever `onEnter`
+     * would hide content first, since on screen at setup means the visitor is
+     * already looking at it.
+     */
     onIntro?: () => void;
     /** Run instead of everything else under reduced motion. Defaults to onEnter. */
     onReduced?: () => void;
@@ -65,15 +73,26 @@ export const observeInView = (element: HTMLElement, options: InViewOptions) => {
 
     // Already on screen at setup: this element belongs to the intro, not to a
     // scroll reveal. Never arm it.
-    if (isOnScreen(element) && options.onIntro) {
+    if (isOnScreen(element)) {
+        const { onIntro } = options;
+
+        // No intro path given. Arming below would be pointless — the arm
+        // observer fires at once, sees the element on screen and disconnects
+        // without ever reaching `onEnter` — so run the entrance directly.
+        if (!onIntro) {
+            fire();
+
+            return noop;
+        }
+
         if (isIntroDone()) {
-            options.onIntro();
+            onIntro();
 
             return noop;
         }
 
         return onStage('intro', () => {
-            options.onIntro?.();
+            onIntro();
         });
     }
 

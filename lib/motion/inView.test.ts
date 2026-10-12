@@ -115,6 +115,20 @@ describe('observeInView', () => {
         expect(onEnter).not.toHaveBeenCalled();
     });
 
+    it('should enter straight away for an element visible at setup with no intro path', () => {
+        const onArm = vi.fn();
+        const onEnter = vi.fn();
+
+        onScreen();
+        observeInView(element, { onArm, onEnter });
+
+        // Arming would be pointless and `onEnter` must not be skipped, so the
+        // entrance runs at once and nothing is observed.
+        expect(onEnter).toHaveBeenCalledTimes(1);
+        expect(onArm).not.toHaveBeenCalled();
+        expect(observers.instances).toHaveLength(0);
+    });
+
     it('should fire immediately under reduced motion without observing', () => {
         const onArm = vi.fn();
         const onEnter = vi.fn();
