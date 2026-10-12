@@ -93,26 +93,6 @@
     color-scheme: light;
 }
 
-/* --------------------------------------------------------------------------
-   Legacy tokens. Still referenced by the not-yet-redesigned blog and privacy
-   pages so they keep rendering during the redesign. Remove together with the
-   old components once those pages are rebuilt.
-   -------------------------------------------------------------------------- */
-:root {
-    --legacy-background: oklch(1 0 0);
-    --legacy-foreground: oklch(0.145 0 0);
-    --legacy-primary: oklch(0.27 0.02 249);
-    --legacy-primary-foreground: oklch(1 0 0);
-    --legacy-secondary: oklch(0.97 0 0);
-    --legacy-muted-foreground: oklch(0.556 0 0);
-    --legacy-accent: oklch(0.73 0.15 65);
-    --legacy-action: oklch(0.52 0.19 252);
-    --legacy-action-foreground: oklch(1 0 0);
-    --legacy-border: oklch(0.922 0 0);
-    --legacy-ring: oklch(0.52 0.19 252);
-    --radius: 0.625rem;
-}
-
 /* Only colors and fonts enter Tailwind's theme — the scale, spacing, radii and
    motion tokens are consumed directly as custom properties by the CSS Modules,
    which keeps one source of truth instead of two spellings for each value. */
@@ -133,23 +113,6 @@
     /* Fonts stay out of Tailwind's `--font-*` namespace: mapping them here would
        make `--font-display: var(--font-display)` self-referential. The CSS Modules
        use the custom properties directly. */
-
-    /* legacy — removed with the old components */
-    --color-background: var(--legacy-background);
-    --color-foreground: var(--legacy-foreground);
-    --color-primary: var(--legacy-primary);
-    --color-primary-foreground: var(--legacy-primary-foreground);
-    --color-secondary: var(--legacy-secondary);
-    --color-muted-foreground: var(--legacy-muted-foreground);
-    --color-accent: var(--legacy-accent);
-    --color-action: var(--legacy-action);
-    --color-action-foreground: var(--legacy-action-foreground);
-    --color-border: var(--legacy-border);
-    --color-ring: var(--legacy-ring);
-    --radius-sm: calc(var(--radius) - 4px);
-    --radius-md: calc(var(--radius) - 2px);
-    --radius-lg: var(--radius);
-    --radius-xl: calc(var(--radius) + 4px);
 }
 
 /* ==========================================================================
