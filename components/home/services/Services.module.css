@@ -1,0 +1,330 @@
+/* ==========================================================================
+   Services — three engagement models.
+
+   Ported from the prototype's `services.css`, so the geometry and the timings
+   match the design exactly. `.wrap`, `.section` and `.sec-head` come from
+   `app/globals.css` and are applied alongside these classes.
+
+   Everything that moves is gated behind `html.motion`, which the boot script
+   sets before first paint. With motion off (or JS unavailable) every rule below
+   settles on its finished state: cards in place, markers drawn, the closing
+   paragraph fully written and its phrase selected.
+   ========================================================================== */
+.services {
+    background: var(--bg-2);
+    border-block: 1px solid var(--line);
+}
+
+.offers {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(14px, 2vw, 22px);
+}
+
+@media (max-width: 900px) {
+    .offers {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* ---------- card ---------- */
+.offer {
+    --mx: 50%;
+    --my: 0%;
+
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+    padding: clamp(24px, 3vw, 36px);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+    background: var(--bg);
+    min-width: 0;
+    transition:
+        transform var(--dur-s) var(--ease-ui),
+        opacity var(--dur-s) var(--ease-ui),
+        border-color var(--dur-s) var(--ease-ui);
+}
+
+.offer > * {
+    position: relative;
+    z-index: 1;
+}
+
+.isFeature {
+    background: var(--surface);
+}
+
+.top {
+    display: grid;
+    gap: 10px;
+}
+
+.name {
+    font-size: var(--fs-2);
+    letter-spacing: -.035em;
+    font-variation-settings: 'wdth' 80;
+}
+
+.who {
+    color: var(--fg-2);
+}
+
+.list {
+    display: grid;
+    gap: 0;
+}
+
+.list li {
+    padding: 12px 0 12px 24px;
+    border-top: 1px solid var(--line);
+    font-size: .97rem;
+    color: var(--fg-2);
+    position: relative;
+    transition: color var(--dur-xs) var(--ease-ui);
+}
+
+/* Caret-coloured marker: 18px wide at full, resting at 10px via scaleX so hover
+   can extend it on the compositor. */
+.list li::before {
+    content: '';
+    position: absolute;
+    left: 2px;
+    top: 1.15em;
+    width: 18px;
+    height: 2px;
+    background: var(--caret);
+    border-radius: 1px;
+    transform-origin: 0 50%;
+    transform: scaleX(.556);
+    transition: transform var(--dur-s) var(--ease-out);
+}
+
+.format {
+    margin-top: auto;
+    padding-top: 18px;
+    border-top: 1px dashed var(--line);
+    font-weight: 600;
+    display: grid;
+    gap: 2px;
+}
+
+.format span {
+    font-weight: 400;
+    color: var(--muted);
+    font-size: var(--fs-small);
+}
+
+/* ---------- featured card ---------- */
+
+/* A caret parked after the name, and a caret-coloured border traced once on
+   entrance. */
+.isFeature .name::after {
+    content: '';
+    display: inline-block;
+    width: .07em;
+    height: .82em;
+    margin-left: .08em;
+    vertical-align: -.06em;
+    background: var(--caret);
+    border-radius: 1px;
+}
+
+:global(html.motion) .isFeature .name::after {
+    animation: blink 1.1s steps(1) infinite;
+}
+
+/* The blink is declared here rather than reusing the global `caret-blink`:
+   CSS Modules hash every animation name a module references, so a module can
+   only animate its own keyframes. */
+@keyframes blink {
+    0%,
+    55% {
+        opacity: 1;
+    }
+
+    56%,
+    100% {
+        opacity: 0;
+    }
+}
+
+.trace {
+    position: absolute;
+    inset: -1px;
+    border: 1px solid var(--caret);
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: 2;
+    opacity: .5;
+}
+
+:global(html.motion) .offer.isArmed .trace {
+    clip-path: polygon(50% 50%, 50% 0%, 50% 0%, 50% 0%, 50% 0%, 50% 0%, 50% 0%);
+    opacity: 1;
+}
+
+/* ---------- entrance: card rises, then its markers draw left to right ---------- */
+:global(html.motion) .offer.isArmed {
+    opacity: 0;
+    transform: translate3d(0, 28px, 0);
+}
+
+:global(html.motion) .offer.isArmed .list li::before {
+    transform: scaleX(0);
+}
+
+:global(html.motion) .offer.isIn:not(.isSettled) {
+    transition:
+        opacity var(--dur-m) var(--ease-out) var(--d, 0s),
+        transform var(--dur-m) var(--ease-out) var(--d, 0s);
+}
+
+:global(html.motion) .offer.isIn:not(.isSettled) .list li::before {
+    transition-delay: calc(var(--d, 0s) + .3s + var(--i, 0) * 70ms);
+}
+
+/* ---------- pointer spotlight (fine pointers only; JS adds .isLit) ---------- */
+.offer::before,
+.offer::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--dur-s) var(--ease-ui);
+}
+
+.offer::before {
+    background: radial-gradient(380px circle at var(--mx) var(--my), var(--select-soft), transparent 65%);
+}
+
+/* The border edge is the same gradient masked down to the 1px padding ring. */
+.offer::after {
+    inset: -1px;
+    padding: 1px;
+    background: radial-gradient(220px circle at var(--mx) var(--my), var(--select), transparent 70%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    mask-composite: exclude;
+}
+
+.offer.isLit::before {
+    opacity: .7;
+}
+
+.offer.isLit::after {
+    opacity: 1;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .offer:hover,
+    .offer:focus-within {
+        transform: translate3d(0, -4px, 0);
+    }
+
+    .offers:has(.offer:hover) .offer:not(:hover) {
+        opacity: .72;
+    }
+
+    .list li:hover {
+        color: var(--fg);
+    }
+
+    .list li:hover::before {
+        transform: scaleX(1);
+    }
+}
+
+/* Keyboard mirror of the hover treatment. */
+.offer:focus-within::before {
+    opacity: .7;
+}
+
+.offer:focus-within .list li::before {
+    transform: scaleX(1);
+}
+
+/* ==========================================================================
+   Closing paragraph — written word by word as it scrolls through, with a caret
+   riding the frontier, then the key phrase selected like text in an editor.
+   ========================================================================== */
+.note {
+    position: relative;
+    isolation: isolate;
+    margin-top: clamp(40px, 6vw, 72px);
+    max-width: 62ch;
+    font-size: clamp(1.1rem, 1.6vw, 1.35rem);
+    line-height: 1.5;
+    color: var(--fg-2);
+}
+
+.word {
+    position: relative;
+    display: inline-block;
+    transition: opacity .3s var(--ease-ui);
+}
+
+.note.isWriting .word {
+    opacity: .26;
+}
+
+.note.isWriting .word.isOn {
+    opacity: 1;
+}
+
+.selected {
+    color: var(--fg);
+}
+
+/* The selection band sits behind the word, inside the paragraph's own stacking
+   context, and is drawn at rest so the finished state needs no JS. */
+.selected::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    left: -.1em;
+    right: -.32em;
+    top: .06em;
+    bottom: .02em;
+    background: color-mix(in srgb, var(--select) 30%, var(--bg-2));
+    transform-origin: 0 50%;
+}
+
+.selected.isLast::before {
+    right: -.1em;
+}
+
+:global(html.motion) .note.isWriting .selected::before {
+    transform: scaleX(0);
+    transition: transform .28s var(--ease-inout);
+    transition-delay: calc(var(--si, 0) * 45ms);
+}
+
+:global(html.motion) .note.isWriting.isSelected .selected::before {
+    transform: none;
+}
+
+.caret {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 2px;
+    height: 1.2em;
+    background: var(--caret);
+    border-radius: 1px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--dur-xs) var(--ease-ui);
+}
+
+.note.isWriting .caret {
+    opacity: 1;
+}
+
+:global(html.motion) .note.isDone .caret {
+    animation: blink 1.1s steps(1) infinite;
+}
