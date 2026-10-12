@@ -6,7 +6,7 @@ import { GeistSans } from 'geist/font/sans';
 import { GeistMono } from 'geist/font/mono';
 import './globals.css';
 import { Analytics } from '@vercel/analytics/next';
-import { Geist } from 'next/font/google';
+import { Bricolage_Grotesque, Martian_Mono, Schibsted_Grotesk } from 'next/font/google';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import Script from 'next/script';
 import { ConsentProvider } from '@/components/consent/ConsentContext';
@@ -84,19 +84,51 @@ export const metadata: Metadata = {
     generator: 'Next.js',
 };
 
-// Note: This is a workaround to avoid the font import issues that occur when using the main layout in Storybook.
+// Note: the unused `geist/font` imports above are a workaround for a Storybook
+// font-resolution bug. Removing them breaks the Storybook build.
 // See: https://github.com/vercel/geist-font/issues/59
-// 'import { GeistSans } from 'geist/font/sans';' needs to remain or else storybook will break (magic)
-const geist = Geist({
+
+// Display face. "wdth" 75-90 is used for large type, so the width axis must load.
+const displayFont = Bricolage_Grotesque({
     subsets: ['latin'],
+    axes: ['opsz', 'wdth'],
+    display: 'swap',
+    variable: '--font-bricolage',
 });
+
+const bodyFont = Schibsted_Grotesk({
+    subsets: ['latin'],
+    style: ['normal', 'italic'],
+    display: 'swap',
+    variable: '--font-schibsted',
+});
+
+// Used sparingly for code, hashes and data, so it does not need preloading.
+const monoFont = Martian_Mono({
+    subsets: ['latin'],
+    axes: ['wdth'],
+    display: 'swap',
+    preload: false,
+    variable: '--font-martian',
+});
+
+const fontVariables = `${displayFont.variable} ${bodyFont.variable} ${monoFont.variable}`;
+
+// Runs before first paint so the stored theme is applied without a flash, and so
+// the `.motion` switch gating every animated rule is set before anything renders.
+const bootScript = '(function(){try{var d=document.documentElement;var t=localStorage.getItem("sk-theme");if(t==="light"||t==="dark"){d.dataset.theme=t;}d.classList.add("js");if(!window.matchMedia("(prefers-reduced-motion: reduce)").matches){d.classList.add("motion");}}catch(e){}})();';
 
 const RootLayout: FC<{ children: React.ReactNode }> = ({ children }) => {
     const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 
     return (
-        <html lang="en" className={geist.className}>
+        // suppressHydrationWarning: the boot script adds `js`/`motion` and the stored
+        // theme to <html> before hydration, so the client className intentionally
+        // differs from the server's.
+        <html lang="en" className={fontVariables} suppressHydrationWarning>
             <head>
+                <script dangerouslySetInnerHTML={{ __html: bootScript }} />
+
                 {/* Google Consent Mode V2 - Load before GA4 */}
                 <Script id="google-consent-mode" strategy="beforeInteractive">
                     {`
