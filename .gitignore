@@ -108,3 +108,6 @@ data
 # Storybook
 *storybook.log
 storybook-static
+
+# Visual check output
+.visual-check/

@@ -1,0 +1,79 @@
+/*
+ * The `sk` badge. Ported from the `.brand*` rules in the prototype's `nav.css`.
+ *
+ * `caret-blink` is a global keyframe from `app/globals.css`.
+ */
+
+.brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    margin-right: auto;
+}
+
+.mark {
+    position: relative;
+    display: inline-flex;
+    align-items: flex-end;
+    height: 34px;
+    padding: 0 6px 0 7px;
+    border-radius: 9px;
+    background: var(--fg);
+    color: var(--bg);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.35rem;
+    line-height: 1.38;
+    letter-spacing: -.04em;
+    font-variation-settings: 'wdth' 80;
+}
+
+.letter {
+    display: inline-block;
+}
+
+.caret {
+    display: inline-block;
+    width: 3px;
+    height: 20px;
+    margin: 0 0 7px 2px;
+    background: var(--caret);
+    border-radius: 1px;
+    animation: caret-blink 1.1s steps(1) infinite;
+}
+
+.name {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.05rem;
+    letter-spacing: -.01em;
+    transition: color var(--dur-xs) var(--ease-ui);
+}
+
+.brand:hover .name,
+.brand:focus-visible .name {
+    color: var(--fg);
+}
+
+/* The mark retypes itself; the caret holds solid while letters are typed. */
+.isTyping .caret {
+    animation: none;
+    opacity: 1;
+}
+
+.isGone {
+    display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .caret {
+        animation: none;
+    }
+}
+
+@media (max-width: 520px) {
+    .name {
+        display: none;
+    }
+}
