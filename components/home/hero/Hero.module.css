@@ -72,25 +72,42 @@
 }
 
 .chipDot {
+    position: relative;
     width: 8px;
     height: 8px;
     border-radius: 50%;
+
+    /* Status green reads the same in both themes, which is why it is the one
+       literal colour here. */
     background: #3ecf8e;
-    box-shadow: 0 0 0 0 rgba(62, 207, 142, .55);
 }
 
-:global(html.motion) .chipDot {
+/* The pulse is a ring that scales out and fades. The prototype grew a
+   box-shadow spread, which is the same picture but repaints every frame, and
+   this one loops forever while the hero is on screen. */
+.chipDot::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: #3ecf8e;
+    opacity: 0;
+}
+
+:global(html.motion) .chipDot::after {
     animation: live-pulse 2.4s var(--ease-out) infinite;
 }
 
 @keyframes live-pulse {
     0% {
-        box-shadow: 0 0 0 0 rgba(62, 207, 142, .5);
+        opacity: .5;
+        transform: scale(1);
     }
 
     70%,
     100% {
-        box-shadow: 0 0 0 10px rgba(62, 207, 142, 0);
+        opacity: 0;
+        transform: scale(3.5);
     }
 }
 
@@ -146,6 +163,13 @@
     transition: none;
 }
 
+/* Replays the wipe after a highlight is applied. Driven by a class rather than
+   an inline style, so applying a mark leaves no attribute residue in the
+   document the visitor is editing. */
+.title mark.sweeping {
+    --hl: 0;
+}
+
 .title b,
 .title strong {
     font-weight: 800;
@@ -170,27 +194,8 @@
     margin: -.02em -.06em -.12em;
 }
 
-/* Pre-armed intro state. Rendered on the server and removed by the intro, but
-   only effective under `html.motion`, so the content reads at rest when
-   JavaScript or motion is unavailable. */
-:global(html.motion) .hero.isPre .title {
-    opacity: 0;
-}
-
-:global(html.motion) .hero.isPre .title :global(.swi) {
-    transform: translateY(112%);
-}
-
-:global(html.motion) .hero.isPre .title mark {
-    --hl: 0;
-}
-
-:global(html.motion) .hero.isPre .status > *,
-:global(html.motion) .hero.isPre .lede,
-:global(html.motion) .hero.isPre .ctas > *,
-:global(html.motion) .hero.isPre .tree {
-    opacity: 0;
-}
+/* No pre-armed state: the intro's own animations hold their first frame, so
+   nothing in this section is ever hidden waiting for JavaScript to arrive. */
 
 /* ---------- the intro's pointer and caret ---------- */
 .ibeam,
