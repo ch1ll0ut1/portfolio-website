@@ -1,0 +1,65 @@
+/* Shared shell for the command palette and the shortcuts list: a blurred scrim
+   with a panel dropped in from above. Motion is gated on the global `.motion`
+   class, so with motion off the overlay simply appears. */
+.root {
+    position: fixed;
+    inset: 0;
+    z-index: 95;
+    display: grid;
+    place-items: start center;
+    padding: calc(12vh + env(safe-area-inset-top, 0px)) 16px 16px;
+}
+
+.scrim {
+    position: absolute;
+    inset: 0;
+    background: color-mix(in srgb, var(--bg) 70%, transparent);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+}
+
+.panel {
+    position: relative;
+    width: min(560px, 100%);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+    background: var(--surface);
+    box-shadow: 0 40px 120px -20px rgb(0 0 0 / 55%);
+    overflow: hidden;
+    transform-origin: 50% 0;
+}
+
+/* Both overlays print keycaps, so the keycap itself belongs to the shell. */
+.panel kbd {
+    display: inline-block;
+    min-width: 1.9em;
+    padding: 2px 6px;
+    border: 1px solid var(--line);
+    border-bottom-width: 2px;
+    border-radius: 5px;
+    color: var(--fg-2);
+    text-align: center;
+    line-height: 1.5;
+    background: var(--bg-2);
+}
+
+:global(.motion) .scrim {
+    opacity: 0;
+    transition: opacity .22s var(--ease-ui);
+}
+
+:global(.motion) .panel {
+    opacity: 0;
+    transform: translateY(-10px) scale(.97);
+    transition: opacity .18s var(--ease-ui), transform .18s var(--ease-ui);
+}
+
+:global(.motion) .open .scrim {
+    opacity: 1;
+}
+
+:global(.motion) .open .panel {
+    opacity: 1;
+    transform: none;
+    transition: opacity .28s var(--ease-out), transform .5s var(--ease-out);
+}

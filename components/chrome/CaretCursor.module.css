@@ -19,6 +19,14 @@
     left: 0;
     display: block;
     transform-origin: 0 0;
+}
+
+/* Permanent on purpose, and only on the pieces that are actually transformed
+   every frame. The engine releases the clock once the cursor settles, so
+   without the hint each pointer move would re-promote these layers. */
+.bar,
+.dot,
+.serif {
     will-change: transform;
 }
 
@@ -30,7 +38,6 @@
     height: 100%;
     background: color-mix(in srgb, var(--select) 16%, transparent);
     clip-path: inset(50% 50% 50% 50%);
-    will-change: clip-path;
     opacity: 0;
 }
 

@@ -1,0 +1,74 @@
+/* The `?` overlay: a plain two-column key/description table. */
+.panel {
+    width: min(420px, 100%);
+}
+
+.head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--line);
+}
+
+.title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.05rem;
+    letter-spacing: -.01em;
+}
+
+.close kbd {
+    color: var(--muted);
+}
+
+.list {
+    display: grid;
+    padding: 8px;
+}
+
+.row {
+    display: grid;
+    grid-template-columns: 5.5em minmax(0, 1fr);
+    align-items: center;
+    gap: 12px;
+    padding: 8px 10px;
+    border-radius: 8px;
+}
+
+.row:nth-child(odd) {
+    background: color-mix(in srgb, var(--bg-2) 55%, transparent);
+}
+
+.row dt {
+    display: flex;
+    gap: 4px;
+}
+
+.row dd {
+    color: var(--fg-2);
+    font-size: var(--fs-small);
+}
+
+.row kbd {
+    font-size: .7rem;
+}
+
+/* The `g` of a chord is the prefix, not the destination, so it reads quieter. */
+.prefix {
+    color: var(--muted);
+}
+
+@keyframes keys-in {
+    from {
+        opacity: 0;
+        transform: translateX(-6px);
+    }
+}
+
+/* The rows mount with the overlay, so the stagger needs no open state to key off. */
+:global(.motion) .row {
+    animation: keys-in .45s var(--ease-out) both;
+    animation-delay: calc(80ms + var(--i, 0) * 25ms);
+}
