@@ -1,7 +1,6 @@
 import React, { FC } from 'react';
 import type { Metadata } from 'next';
-import Link from 'next/link';
-import { Button } from '@/components/ui/Button';
+import { notFound } from 'next/navigation';
 import { blogPosts } from '@/config/blog';
 import { readMarkdownFile } from '@/components/markdown/markdownProcessor';
 import { AnalyticsWrapper } from '@/components/analytics/AnalyticsWrapper';
@@ -46,10 +45,16 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     const { slug } = await params;
     const data = getBlogPostData(slug);
 
+    // Guards the property reads below. The 404 response is described by
+    // ./not-found.tsx, since Next drops this result once `notFound()` is thrown.
     if (!data) {
         return {
-            title: 'Post Not Found',
-            description: 'The requested blog post could not be found.',
+            title: 'Post not found',
+            description: 'That article does not exist, or its link has changed.',
+            robots: {
+                index: false,
+                follow: true,
+            },
         };
     }
 
@@ -88,17 +93,10 @@ const BlogPost: FC<{ params: Promise<{ slug: string }> }> = async ({ params }) =
     const { slug } = await params;
     const data = getBlogPostData(slug);
 
+    // Renders ./not-found.tsx with a real 404. Returning the panel from here
+    // answered 200, which made every stale link indexable as real content.
     if (!data) {
-        return (
-            <div className="min-h-screen bg-gradient-to-br from-slate-50 to-white flex items-center justify-center">
-                <div className="text-center">
-                    <h1 className="text-4xl font-bold text-primary mb-4">Post Not Found</h1>
-                    <Link href="/blog">
-                        <Button>Back to Blog</Button>
-                    </Link>
-                </div>
-            </div>
-        );
+        notFound();
     }
 
     const { post, newer, older } = data;
