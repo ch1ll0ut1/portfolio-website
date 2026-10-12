@@ -23,7 +23,7 @@ Read first: the prototype's `BRIEF.md`, plus your own section's three files
 
 | Concern | Location |
 |---|---|
-| Design tokens, resets, `.wrap` / `.btn` / `.tags` / `.ulink`, motion primitives (`.sw` `.swi` `.mr` `.rv`), `.toast`, `caret-blink` | `app/globals.css` — already done, global on purpose |
+| Design tokens, resets, `.wrap` / `.btn` / `.tags` / `.ulink`, motion primitives (`.sw` `.swi` `.mr` `.rv`), `.toast` | `app/globals.css` — already done, global on purpose |
 | Motion hooks and singletons | `lib/motion` (see below) |
 | Section anchor ids, nav labels, chord keys | `config/sections.ts` |
 | Section copy and data | a typed file per section in `config/` |
@@ -71,6 +71,11 @@ Rules:
   Canvas simulations, typing schedulers, SVG builders and geometry belong there, not in JSX.
 - **Imperative code must not hard-code CSS Module class names.** Pass the `styles` object (or the specific
   names) in from the component, since the real names are hashed.
+- **Animation names are hashed too.** css-loader scopes `animation` / `animation-name` idents inside a CSS
+  Module, so a module cannot reach a global `@keyframes` by name — the reference silently resolves to nothing
+  and the animation simply never runs. Declare the keyframes locally in your module instead. (`:global(...)`
+  is a *selector* construct and is not valid inside an `animation` shorthand value.) The global class names
+  above are plain classes, not keyframes, and are safe to use by literal name.
 - Single quotes, 4-space indent, semicolons. No `any`, `as`, or `!` in production code.
 
 ## The custom cursor contract
