@@ -44,7 +44,11 @@ export default tseslint.config(
     {
         languageOptions: {
             parserOptions: {
-                projectService: true,
+                projectService: {
+                    // Node-only dev scripts are not part of the app's tsconfig, but
+                    // should still be linted.
+                    allowDefaultProject: ['scripts/*.mjs'],
+                },
                 tsconfigRootDir: import.meta.dirname,
             },
         },
@@ -127,6 +131,23 @@ export default tseslint.config(
         rules: {
             '@typescript-eslint/naming-convention': 'off',
             'import/no-default-export': 'off',
+        },
+    },
+    {
+        // Node-only dev scripts. Not part of the app build and not type-checked by
+        // the app's tsconfig, so the type-aware rules have nothing to work with.
+        files: ['scripts/**/*.mjs'],
+        rules: {
+            '@typescript-eslint/no-explicit-any': 'off',
+            '@typescript-eslint/no-unsafe-member-access': 'off',
+            '@typescript-eslint/no-unsafe-assignment': 'off',
+            '@typescript-eslint/no-unsafe-return': 'off',
+            '@typescript-eslint/no-unsafe-call': 'off',
+            '@typescript-eslint/no-unsafe-argument': 'off',
+            '@typescript-eslint/no-unnecessary-type-conversion': 'off',
+            '@typescript-eslint/no-unnecessary-condition': 'off',
+            '@typescript-eslint/restrict-plus-operands': 'off',
+            '@typescript-eslint/restrict-template-expressions': 'off',
         },
     }
 );

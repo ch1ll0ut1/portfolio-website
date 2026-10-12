@@ -38,7 +38,7 @@ const ALL_CASES = [
 
 const only = argOf('only', '');
 const cases = only
-    ? ALL_CASES.filter((item) => only.split(',').includes(item.name))
+    ? ALL_CASES.filter(item => only.split(',').includes(item.name))
     : ALL_CASES;
 
 /** Console noise that is expected and not a defect. */
@@ -47,7 +47,7 @@ const IGNORED_ERRORS = [
     /Download the React DevTools/i,
 ];
 
-const slug = (route) => (route === '/' ? 'home' : route.replace(/^\/+|\/+$/g, '').replace(/\//g, '-'));
+const slug = route => (route === '/' ? 'home' : route.replace(/^\/+|\/+$/g, '').replace(/\//g, '-'));
 
 const checkRoute = async (browser, route, testCase) => {
     const context = await browser.newContext({
@@ -66,7 +66,7 @@ const checkRoute = async (browser, route, testCase) => {
 
         const text = message.text();
 
-        if (!IGNORED_ERRORS.some((pattern) => pattern.test(text))) {
+        if (!IGNORED_ERRORS.some(pattern => pattern.test(text))) {
             errors.push(text);
         }
     });
@@ -76,7 +76,7 @@ const checkRoute = async (browser, route, testCase) => {
 
     const response = await page.goto(`${BASE}${route}`, { waitUntil: 'networkidle', timeout: 45000 });
 
-    if (!response || !response.ok()) {
+    if (!response?.ok()) {
         errors.push(`HTTP ${response ? response.status() : 'no response'}`);
     }
 
@@ -98,7 +98,7 @@ const checkRoute = async (browser, route, testCase) => {
 
                 return { element, right: rect.right, left: rect.left };
             })
-            .filter((entry) => entry.right > doc.clientWidth + 1 || entry.left < -1)
+            .filter(entry => entry.right > doc.clientWidth + 1 || entry.left < -1)
             .slice(0, 5)
             .map((entry) => {
                 const classes = String(entry.element.className || '').split(/\s+/).filter(Boolean).slice(0, 2).join('.');
@@ -134,7 +134,7 @@ const main = async () => {
 
     await browser.close();
 
-    const failures = results.filter((result) => result.errors.length > 0);
+    const failures = results.filter(result => result.errors.length > 0);
 
     for (const result of results) {
         const status = result.errors.length === 0 ? 'ok  ' : 'FAIL';
