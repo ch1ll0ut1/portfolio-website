@@ -80,8 +80,42 @@ const checkRoute = async (browser, route, testCase) => {
         errors.push(`HTTP ${response ? response.status() : 'no response'}`);
     }
 
-    // Let entrance animations settle before measuring or shooting.
+    // Scroll the whole page first. Entrances are triggered by an observer, so
+    // without this a full-page screenshot captures every below-fold section in
+    // its armed (hidden) pre-state, which hides both the design and real bugs.
+    await page.evaluate(async () => {
+        const step = Math.round(window.innerHeight * 0.75);
+        const sleep = ms => new Promise((resolve) => {
+            setTimeout(resolve, ms);
+        });
+
+        for (let y = 0; y < document.documentElement.scrollHeight; y += step) {
+            window.scrollTo(0, y);
+            await sleep(120);
+        }
+
+        window.scrollTo(0, document.documentElement.scrollHeight);
+        await sleep(300);
+        window.scrollTo(0, 0);
+        await sleep(300);
+    });
+
+    // Let the entrances that just fired finish.
     await page.waitForTimeout(1600);
+
+    // Anything still armed was never released, so it is invisible to a reader.
+    const stuck = await page.evaluate(() => Array.from(document.querySelectorAll('.is-armed'))
+        .filter(element => !element.classList.contains('is-in'))
+        .slice(0, 5)
+        .map((element) => {
+            const text = (element.textContent || '').trim().slice(0, 40);
+
+            return `${element.tagName.toLowerCase()} "${text}"`;
+        }));
+
+    if (stuck.length > 0) {
+        errors.push(`content left hidden after scrolling: ${stuck.join(', ')}`);
+    }
 
     const overflow = await page.evaluate(() => {
         const doc = document.documentElement;
