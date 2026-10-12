@@ -14,6 +14,8 @@ export interface BlogPost {
     tags: string[];
     slug: string;
     published: boolean;
+    /** Highlighted in the homepage's writing section. */
+    featured?: boolean;
 }
 
 /**
@@ -29,6 +31,7 @@ const rawBlogPosts: BlogPost[] = [
         tags: ['AI', 'Productivity', 'Development', 'Cursor', 'Claude Sonnet 4', 'Claude Code', 'v0', 'ChatGPT'],
         slug: 'how-to-use-ai-to-build-apps-10x-speed',
         published: true,
+        featured: true,
     },
     {
         id: '2',
@@ -99,6 +102,7 @@ const rawBlogPosts: BlogPost[] = [
         tags: ['AI', 'Developer Productivity', 'Workflows', 'Cursor', 'Claude Code', 'ChatGPT', 'Automation'],
         slug: '10-ai-workflows-every-developer-should-know-2025',
         published: true,
+        featured: true,
     },
     {
         id: '9',

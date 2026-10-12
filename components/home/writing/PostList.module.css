@@ -1,0 +1,118 @@
+/*
+ * The featured post rows. Ported from the `.posts` / `.post*` rules in the
+ * prototype's `writing.css`.
+ *
+ * Hovering a row selects its title the way dragging over text in an editor
+ * does, and steps the siblings back. Both are mirrored on `:focus-visible`.
+ */
+
+.posts {
+    border-top: 1px solid var(--line);
+}
+
+.post {
+    border-bottom: 1px solid var(--line);
+}
+
+.link {
+    display: grid;
+    gap: 8px;
+    padding: 28px 48px 28px 0;
+    text-decoration: none;
+    position: relative;
+    outline-offset: 6px;
+}
+
+.link::after {
+    content: "";
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    width: 14px;
+    height: 14px;
+    border-top: 2px solid currentColor;
+    border-right: 2px solid currentColor;
+    transform: translateY(-50%) rotate(45deg);
+    opacity: .45;
+    transition:
+        transform var(--dur-s) var(--ease-out),
+        opacity var(--dur-s) var(--ease-ui),
+        color var(--dur-s) var(--ease-ui);
+}
+
+.link:hover::after,
+.link:focus-visible::after {
+    opacity: 1;
+    color: var(--caret);
+    transform: translate(6px, -50%) rotate(45deg);
+}
+
+.kind {
+    font-size: var(--fs-small);
+    color: var(--muted);
+}
+
+.title {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 2.6vw, 2.1rem);
+    font-weight: 600;
+    letter-spacing: -.03em;
+    line-height: 1.1;
+    font-variation-settings: 'wdth' 85;
+}
+
+/* The selection sweep: a background that grows from zero width. */
+.sel {
+    background-image: linear-gradient(var(--select-soft), var(--select-soft));
+    background-repeat: no-repeat;
+    background-size: 0% 100%;
+    background-position: 0 0;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+    padding: 0 .06em;
+    margin: 0 -.06em;
+    border-radius: 2px;
+    transition: background-size var(--dur-s) var(--ease-inout);
+}
+
+.link:hover .sel,
+.link:focus-visible .sel {
+    background-size: 100% 100%;
+}
+
+.desc {
+    color: var(--fg-2);
+    max-width: 54ch;
+    transition: color var(--dur-s) var(--ease-ui);
+}
+
+.link:hover .desc,
+.link:focus-visible .desc {
+    color: var(--fg);
+}
+
+.postAll .title {
+    font-size: 1.15rem;
+    font-family: var(--font-body);
+    letter-spacing: 0;
+}
+
+/* Siblings step back while one row is hovered. */
+@media (hover: hover) and (pointer: fine) {
+    .posts .link {
+        transition: opacity var(--dur-s) var(--ease-ui);
+    }
+
+    .posts:hover .link:not(:hover) {
+        opacity: .5;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .sel,
+    .desc,
+    .link,
+    .link::after {
+        transition: none;
+    }
+}
