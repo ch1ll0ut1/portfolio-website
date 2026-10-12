@@ -1,0 +1,157 @@
+/**
+ * Tests for the Article component.
+ * Covers the reading surface: the metadata it publishes, the markdown it
+ * renders, the neighbour links, and the decorative progress indicator.
+ */
+
+import { describe, it, expect, afterAll, beforeAll } from 'vitest';
+import { render, screen } from '@testing-library/react';
+import { Article } from './Article';
+import { type BlogPost } from '@/config/blog';
+import { formatDate } from '@/lib/date';
+import { installMatchMedia } from '@/test/motionEnv';
+
+const content = [
+    '## A section heading',
+    '',
+    'A paragraph of body copy with `inline code` in it.',
+    '',
+    '```typescript',
+    'const answer = 42;',
+    '```',
+    '',
+    '| Column | Other |',
+    '| --- | --- |',
+    '| Cell | Value |',
+].join('\n');
+
+const post: BlogPost & { content: string } = {
+    id: '1',
+    title: 'Why Good Software Engineering Is Expensive',
+    excerpt: 'AI can generate code, but it cannot replace engineering judgment.',
+    date: '2026-05-15',
+    readTime: '14 min read',
+    tags: ['Software Engineering', 'AI'],
+    slug: 'why-good-software-engineering-is-expensive',
+    published: true,
+    content,
+};
+
+const older: BlogPost = { ...post, id: '2', title: 'An Older Post', slug: 'an-older-post', content: undefined } as BlogPost;
+const newer: BlogPost = { ...post, id: '3', title: 'A Newer Post', slug: 'a-newer-post', content: undefined } as BlogPost;
+
+describe('Article Component', () => {
+    // jsdom exposes `matchMedia` as an accessor that yields undefined, which the
+    // motion kit calls on mount.
+    let restoreMatchMedia: () => void = () => undefined;
+
+    beforeAll(() => {
+        restoreMatchMedia = installMatchMedia();
+    });
+
+    afterAll(() => {
+        restoreMatchMedia();
+    });
+
+    it('should render the post title as the page heading', () => {
+        // Arrange
+        render(<Article post={post} />);
+
+        // Assert
+        expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(post.title);
+    });
+
+    it('should publish the post metadata', () => {
+        // Arrange
+        render(<Article post={post} />);
+
+        // Assert
+        expect(screen.getByText(formatDate(post.date))).toBeInTheDocument();
+        expect(screen.getByText(post.readTime)).toBeInTheDocument();
+        expect(screen.getByText('Stefan Knoch')).toBeInTheDocument();
+        expect(screen.getByText(post.excerpt)).toBeInTheDocument();
+        post.tags.forEach((tag) => {
+            expect(screen.getByText(tag)).toBeInTheDocument();
+        });
+    });
+
+    it('should mark the date up as machine readable', () => {
+        // Arrange
+        render(<Article post={post} />);
+
+        // Act
+        const time = screen.getByText(formatDate(post.date));
+
+        // Assert
+        expect(time.tagName).toBe('TIME');
+        expect(time).toHaveAttribute('datetime', post.date);
+    });
+
+    it('should render the markdown content of the post', () => {
+        // Arrange
+        render(<Article post={post} />);
+
+        // Assert
+        expect(screen.getByRole('heading', { level: 2, name: 'A section heading' })).toBeInTheDocument();
+        expect(screen.getByTestId('syntax-highlighter')).toHaveAttribute('data-language', 'typescript');
+        expect(screen.getByRole('table')).toBeInTheDocument();
+        expect(screen.getByText('inline code').tagName).toBe('CODE');
+    });
+
+    it('should offer a breadcrumb back to the index', () => {
+        // Arrange
+        render(<Article post={post} />);
+
+        // Act
+        const breadcrumb = screen.getByRole('navigation', { name: 'Breadcrumb' });
+
+        // Assert
+        expect(breadcrumb).toBeInTheDocument();
+        expect(screen.getByRole('link', { name: 'Writing' })).toHaveAttribute('href', '/blog');
+    });
+
+    it('should link to the neighbouring posts and to all articles', () => {
+        // Arrange
+        render(<Article post={post} newer={newer} older={older} />);
+
+        // Act
+        const pager = screen.getByRole('navigation', { name: 'More articles' });
+
+        // Assert
+        expect(pager).toBeInTheDocument();
+        expect(screen.getByRole('link', { name: /A Newer Post/ })).toHaveAttribute('href', '/blog/a-newer-post');
+        expect(screen.getByRole('link', { name: /An Older Post/ })).toHaveAttribute('href', '/blog/an-older-post');
+        expect(screen.getByRole('link', { name: 'All articles' })).toHaveAttribute('href', '/blog');
+    });
+
+    it('should omit a neighbour link that does not exist', () => {
+        // Arrange
+        render(<Article post={post} older={older} />);
+
+        // Assert
+        expect(screen.queryByText('Newer')).not.toBeInTheDocument();
+        expect(screen.getByText('Older')).toBeInTheDocument();
+    });
+
+    it('should keep the reading progress indicator out of the accessibility tree', () => {
+        // Arrange
+        const { container } = render(<Article post={post} />);
+
+        // Act
+        const decorations = container.querySelectorAll('[aria-hidden="true"]');
+
+        // Assert
+        expect(decorations.length).toBeGreaterThan(0);
+        expect(container.firstElementChild).toHaveAttribute('aria-hidden', 'true');
+    });
+
+    it('should expose the article as the analytics scroll target', () => {
+        // Arrange
+        const { container } = render(<Article post={post} />);
+
+        // Assert
+        const article = container.querySelector('article');
+        expect(article).toBeInTheDocument();
+        expect(article).toHaveAttribute('id', 'article-body');
+    });
+});

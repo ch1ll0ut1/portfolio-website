@@ -1,11 +1,16 @@
 import React, { FC } from 'react';
 import type { Metadata } from 'next';
-import { Button } from '@/components/ui/Button';
 import Link from 'next/link';
-import BlogPostPage from '../../../components/blog/BlogPostPage';
+import { Button } from '@/components/ui/Button';
 import { blogPosts } from '@/config/blog';
 import { readMarkdownFile } from '@/components/markdown/markdownProcessor';
 import { AnalyticsWrapper } from '@/components/analytics/AnalyticsWrapper';
+import { Article } from '@/components/blog/Article';
+import { ReadingShell } from '@/components/blog/ReadingShell';
+import { GlobalChrome } from '@/components/chrome/GlobalChrome';
+import { ContactFooter } from '@/components/home/contact/ContactFooter';
+import { NavTools } from '@/components/nav/NavTools';
+import { SiteNav } from '@/components/nav/SiteNav';
 
 /**
  * Generates static params for all blog posts to enable static generation.
@@ -16,18 +21,21 @@ export async function generateStaticParams() {
 
 /**
  * Gets blog post data and content from configuration and markdown files.
- * Returns post metadata and parsed markdown content.
+ * Returns the post metadata, its markdown, and its neighbours in the index.
  */
 function getBlogPostData(slug: string) {
-    const postMetadata = blogPosts.find(p => p.slug === slug);
-    if (!postMetadata) return null;
+    const index = blogPosts.findIndex(p => p.slug === slug);
+    if (index === -1) return null;
 
+    const postMetadata = blogPosts[index];
     const markdownContent = readMarkdownFile(slug);
     if (!markdownContent) return null;
 
+    // The index is newest first, so the entry before this one is the newer post.
     return {
-        ...postMetadata,
-        content: markdownContent,
+        post: { ...postMetadata, content: markdownContent },
+        newer: blogPosts[index - 1],
+        older: blogPosts[index + 1],
     };
 }
 
@@ -36,14 +44,16 @@ function getBlogPostData(slug: string) {
  */
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
     const { slug } = await params;
-    const post = getBlogPostData(slug);
+    const data = getBlogPostData(slug);
 
-    if (!post) {
+    if (!data) {
         return {
             title: 'Post Not Found',
             description: 'The requested blog post could not be found.',
         };
     }
+
+    const { post } = data;
 
     return {
         title: post.title,
@@ -76,9 +86,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 const BlogPost: FC<{ params: Promise<{ slug: string }> }> = async ({ params }) => {
     const { slug } = await params;
-    const post = getBlogPostData(slug);
+    const data = getBlogPostData(slug);
 
-    if (!post) {
+    if (!data) {
         return (
             <div className="min-h-screen bg-gradient-to-br from-slate-50 to-white flex items-center justify-center">
                 <div className="text-center">
@@ -90,6 +100,8 @@ const BlogPost: FC<{ params: Promise<{ slug: string }> }> = async ({ params }) =
             </div>
         );
     }
+
+    const { post, newer, older } = data;
 
     return (
         <>
@@ -143,7 +155,15 @@ const BlogPost: FC<{ params: Promise<{ slug: string }> }> = async ({ params }) =
                 }}
             />
 
-            <BlogPostPage post={post} />
+            <ReadingShell
+                header={<SiteNav tools={<NavTools />} />}
+                footer={<ContactFooter />}
+            >
+                <Article post={post} newer={newer} older={older} />
+            </ReadingShell>
+
+            {/* The article renders its own article-scoped progress caret. */}
+            <GlobalChrome scrollProgress={false} />
         </>
     );
 };

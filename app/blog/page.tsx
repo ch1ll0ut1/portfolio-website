@@ -1,8 +1,13 @@
 import React, { FC } from 'react';
 import type { Metadata } from 'next';
-import BlogPage from '../../components/blog/BlogPage';
 import { blogPosts } from '@/config/blog';
 import { PageViewTracker } from '@/components/analytics/ClientAnalytics';
+import { BlogIndex } from '@/components/blog/BlogIndex';
+import { ReadingShell } from '@/components/blog/ReadingShell';
+import { GlobalChrome } from '@/components/chrome/GlobalChrome';
+import { ContactFooter } from '@/components/home/contact/ContactFooter';
+import { NavTools } from '@/components/nav/NavTools';
+import { SiteNav } from '@/components/nav/SiteNav';
 
 export const metadata: Metadata = {
     title: 'Blog | Software Development & Technology Insights',
@@ -70,7 +75,15 @@ const Blog: FC = () => {
                     }),
                 }}
             />
-            <BlogPage />
+
+            <ReadingShell
+                header={<SiteNav tools={<NavTools />} />}
+                footer={<ContactFooter />}
+            >
+                <BlogIndex posts={blogPosts} />
+            </ReadingShell>
+
+            <GlobalChrome />
         </>
     );
 };

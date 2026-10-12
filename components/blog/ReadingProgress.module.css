@@ -1,0 +1,61 @@
+/* Reading progress, drawn as a caret dragging a hairline behind it.
+   Only transform and a custom property feeding one are animated. */
+
+.track {
+    --p: 0;
+
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 70;
+    height: 11px;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.fill {
+    position: absolute;
+    inset: 0 0 auto;
+    height: 2px;
+    background: var(--caret);
+    transform: scaleX(var(--p));
+    transform-origin: 0 50%;
+}
+
+/* Spans the track and slides by a fraction of its own width, so the percentage
+   resolves against the same box the old `left` did — but on the compositor,
+   since this is rewritten on every scroll frame. The visible 2px mark is the
+   pseudo-element pinned to this box's leading edge. */
+.caret {
+    position: absolute;
+    inset: 0 0 auto;
+    height: 11px;
+    transform: translateX(calc(var(--p) * 100%));
+}
+
+.caret::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 2px;
+    height: 11px;
+    background: var(--caret);
+}
+
+:global(.motion) .caret::after {
+    animation: caret-blink 1.1s steps(1, end) infinite;
+}
+
+/* Redefined locally on purpose: css-loader scopes animation names inside a CSS
+   Module, so the global `caret-blink` in globals.css cannot be reached by name. */
+@keyframes caret-blink {
+    0%,
+    49% {
+        opacity: 1;
+    }
+
+    50%,
+    100% {
+        opacity: 0;
+    }
+}
