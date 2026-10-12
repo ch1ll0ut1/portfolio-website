@@ -1,0 +1,154 @@
+/* The preferences dialog. Same shell as the command palette and the shortcuts
+   list: a blurred scrim over the page, a surface panel with hairline borders. */
+.root {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: grid;
+    place-items: center;
+    padding: calc(16px + env(safe-area-inset-top, 0px)) 16px calc(16px + env(safe-area-inset-bottom, 0px));
+}
+
+.scrim {
+    position: absolute;
+    inset: 0;
+    background: color-mix(in srgb, var(--bg) 70%, transparent);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+}
+
+.panel {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: min(620px, 100%);
+    max-height: min(88vh, 760px);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+    background: var(--surface);
+    box-shadow: 0 40px 120px -20px rgb(0 0 0 / 55%);
+    overflow: hidden;
+    transform-origin: 50% 0;
+}
+
+.head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--line);
+}
+
+.title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.1rem;
+    letter-spacing: -.01em;
+}
+
+/* The keycap, as the overlays print it: the dialog closes on Escape, so the
+   close control says which key does it. */
+.close kbd {
+    display: inline-block;
+    min-width: 1.9em;
+    padding: 2px 6px;
+    border: 1px solid var(--line);
+    border-bottom-width: 2px;
+    border-radius: 5px;
+    color: var(--muted);
+    text-align: center;
+    line-height: 1.5;
+    background: var(--bg-2);
+}
+
+.body {
+    display: grid;
+    gap: 12px;
+    padding: 16px 18px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+
+.intro {
+    color: var(--fg-2);
+    font-size: var(--fs-small);
+}
+
+.list {
+    display: grid;
+    gap: 10px;
+}
+
+.foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 14px 18px;
+    border-top: 1px solid var(--line);
+}
+
+.policy {
+    color: var(--fg-2);
+    font-size: var(--fs-small);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--fg-2) 35%, transparent);
+    text-underline-offset: 3px;
+}
+
+.policy:hover,
+.policy:focus-visible {
+    color: var(--fg);
+    text-decoration-color: var(--caret);
+}
+
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.actions :global(.btn) {
+    min-height: 42px;
+    padding: 0 1.1em;
+    font-size: .92rem;
+}
+
+@media (max-width: 520px) {
+    .foot {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .actions :global(.btn) {
+        flex: 1 1 auto;
+        justify-content: center;
+    }
+}
+
+:global(.motion) .scrim {
+    opacity: 0;
+    transition: opacity .22s var(--ease-ui);
+}
+
+:global(.motion) .panel {
+    opacity: 0;
+    transform: translateY(-10px) scale(.97);
+    transition:
+        opacity .18s var(--ease-ui),
+        transform .18s var(--ease-ui);
+}
+
+:global(.motion) .shown .scrim {
+    opacity: 1;
+}
+
+:global(.motion) .shown .panel {
+    opacity: 1;
+    transform: none;
+    transition:
+        opacity .28s var(--ease-out),
+        transform .5s var(--ease-out);
+}
