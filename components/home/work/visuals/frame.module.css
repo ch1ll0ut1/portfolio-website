@@ -1,0 +1,147 @@
+/* The editor window every case illustration is drawn inside.
+   Design size is 400x360; CaseVisual scales the whole frame to fit its panel. */
+
+.viz {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 400px;
+    height: 360px;
+    transform-origin: 0 0;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1;
+    color: var(--fg-2);
+    font-variation-settings: 'wdth' 88;
+    user-select: none;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.win {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow:
+        0 1px 0 color-mix(in srgb, var(--fg) 6%, transparent) inset,
+        0 40px 70px -40px rgba(0, 0, 0, .5),
+        0 12px 24px -16px rgba(0, 0, 0, .25);
+}
+
+.titleBar {
+    flex: none;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 0 12px 0 14px;
+    border-bottom: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 10.5px;
+    white-space: nowrap;
+}
+
+.titleBar b {
+    font-weight: 400;
+    color: var(--fg);
+}
+
+.path::before {
+    content: '';
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    margin-right: 9px;
+    border-radius: 2px;
+    background: var(--caret);
+    vertical-align: 0;
+}
+
+.body {
+    position: relative;
+    flex: 1;
+    transition: opacity .45s var(--ease-ui);
+}
+
+.body.bodyOut {
+    opacity: 0;
+}
+
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 5px 9px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 10px;
+    color: var(--fg-2);
+}
+
+.chip::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--muted);
+    transition: background .3s;
+}
+
+.chip.chipBusy::before {
+    background: var(--select);
+}
+
+.chip.chipOk::before {
+    background: var(--ok);
+}
+
+.chip.chipErr {
+    color: var(--err);
+}
+
+.chip.chipErr::before {
+    background: var(--err);
+}
+
+.caret {
+    display: inline-block;
+    width: 2px;
+    height: 14px;
+    background: var(--caret);
+    border-radius: 1px;
+    animation: blink 1.05s steps(1) infinite;
+}
+
+/* Sits in a run of text rather than being positioned, so it needs to tuck in. */
+.caretInline {
+    vertical-align: -3px;
+    margin: 0 -1px;
+}
+
+.caret.caretSolid {
+    animation: none;
+}
+
+@keyframes blink {
+    0%,
+    55% {
+        opacity: 1;
+    }
+
+    56%,
+    100% {
+        opacity: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .caret {
+        animation: none;
+    }
+}

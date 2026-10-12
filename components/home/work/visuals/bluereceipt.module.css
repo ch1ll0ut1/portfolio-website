@@ -1,0 +1,191 @@
+/* BlueReceipt: one rename travelling through four typed layers. */
+
+.rail,
+.fill {
+    position: absolute;
+    left: 24px;
+    width: 1px;
+    background: var(--line);
+}
+
+.fill {
+    background: var(--ok);
+    transform-origin: 50% 100%;
+    transform: scaleY(0);
+    transition: transform 1s var(--ease-out);
+}
+
+.fill.fillOn {
+    transform: none;
+}
+
+.node {
+    position: absolute;
+    left: 19px;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    transition: border-color .4s, background .4s;
+}
+
+.node.nodeErr {
+    border-color: var(--err);
+    background: var(--err);
+}
+
+.node.nodeOk {
+    border-color: var(--ok);
+    background: var(--ok);
+}
+
+.pulse {
+    position: absolute;
+    left: 21px;
+    top: 0;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--caret);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--caret) 22%, transparent);
+    opacity: 0;
+}
+
+.card {
+    position: absolute;
+    left: 46px;
+    right: 14px;
+    height: 54px;
+    padding: 9px 12px 0;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--bg-2);
+    transition: border-color .4s, box-shadow .4s;
+}
+
+.card.cardFlash {
+    border-color: color-mix(in srgb, var(--select) 60%, var(--line));
+    box-shadow: 0 0 0 3px var(--select-soft);
+}
+
+.card.cardErr {
+    border-color: color-mix(in srgb, var(--err) 70%, var(--line));
+}
+
+.head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 9.5px;
+    color: var(--muted);
+}
+
+.head b {
+    font-weight: 400;
+    color: var(--fg-2);
+}
+
+.st {
+    margin-left: auto;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 9px;
+    color: var(--muted);
+    border: 1px solid var(--line);
+    transition: color .3s, border-color .3s, background .3s;
+}
+
+.st[data-state='edit'] {
+    color: var(--caret);
+    border-color: var(--caret);
+}
+
+.st[data-state='gen'] {
+    color: var(--select);
+    border-color: var(--select);
+}
+
+.st[data-state='err'] {
+    color: var(--surface);
+    background: var(--err);
+    border-color: var(--err);
+}
+
+.st[data-state='ok'] {
+    color: var(--surface);
+    background: var(--ok);
+    border-color: var(--ok);
+}
+
+.code {
+    position: relative;
+    height: 20px;
+    margin-top: 7px;
+    overflow: hidden;
+    font-size: 10.5px;
+}
+
+.line {
+    position: absolute;
+    left: 0;
+    top: 0;
+    line-height: 20px;
+    white-space: pre;
+}
+
+.tkP {
+    color: var(--fg);
+}
+
+.tkK {
+    color: var(--ice);
+}
+
+.tkT {
+    color: var(--select);
+}
+
+.tkS {
+    color: var(--muted);
+}
+
+.tkSel {
+    background: var(--select-soft);
+    border-radius: 2px;
+}
+
+.cardErr .tkX {
+    text-decoration: underline wavy var(--err);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+}
+
+.err {
+    position: absolute;
+    left: 46px;
+    right: 14px;
+    padding: 7px 10px;
+    border: 1px solid color-mix(in srgb, var(--err) 55%, var(--line));
+    border-radius: 8px;
+    background: var(--surface);
+    color: var(--err);
+    font-size: 9.5px;
+    line-height: 1.45;
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity .35s var(--ease-ui), transform .5s var(--ease-out);
+}
+
+.err.errOn {
+    opacity: 1;
+    transform: none;
+}
+
+.err i {
+    font-style: normal;
+    color: var(--fg-2);
+}

@@ -1,0 +1,130 @@
+/* The "More projects" index: a hovered or focused row lifts while its
+   siblings dim, and one shared marker slides between them. */
+
+.index {
+    position: relative;
+    margin-top: clamp(80px, 12vw, 160px);
+}
+
+.title {
+    font-size: var(--fs-2);
+    margin-bottom: 28px;
+}
+
+.list {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--line);
+    counter-reset: none;
+}
+
+.row {
+    position: relative;
+    display: grid;
+    grid-template-columns: 5.5rem minmax(0, 1.1fr) minmax(0, 2fr) minmax(0, 1.2fr);
+    gap: 20px;
+    align-items: baseline;
+    padding: 22px 0;
+    border-bottom: 1px solid var(--line);
+    transition: opacity var(--dur-s) var(--ease-ui);
+}
+
+.row > * {
+    transition: transform var(--dur-s) var(--ease-out), color var(--dur-s) var(--ease-ui);
+}
+
+.year {
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+    font-size: var(--fs-small);
+}
+
+.name {
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 2vw, 1.6rem);
+    font-weight: 600;
+    letter-spacing: -.02em;
+}
+
+.what {
+    color: var(--fg-2);
+    font-size: .98rem;
+}
+
+.stack {
+    color: var(--muted);
+    font-size: var(--fs-small);
+    text-align: right;
+}
+
+.list.listHot .row {
+    opacity: .38;
+}
+
+.list.listHot .row.rowActive {
+    opacity: 1;
+}
+
+.row.rowActive > * {
+    transform: translateX(18px);
+}
+
+.row.rowActive .stack {
+    transform: none;
+    color: var(--fg-2);
+}
+
+.row.rowActive .year {
+    color: var(--caret);
+}
+
+.marker {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 100px;
+    transform-origin: 0 0;
+    pointer-events: none;
+    opacity: 0;
+    background: linear-gradient(90deg, var(--select-soft), transparent 60%);
+    transition: transform .55s var(--ease-out), opacity .3s var(--ease-ui);
+}
+
+.marker::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 18%;
+    bottom: 18%;
+    width: 2px;
+    border-radius: 1px;
+    background: var(--caret);
+}
+
+.marker.markerOn {
+    opacity: 1;
+}
+
+@media (max-width: 900px) {
+    .row {
+        grid-template-columns: 4.5rem minmax(0, 1fr);
+        gap: 4px 16px;
+    }
+
+    .what,
+    .stack {
+        grid-column: 2;
+        text-align: left;
+    }
+
+    .row.rowActive > * {
+        transform: translateX(12px);
+    }
+
+    .row.rowActive .stack {
+        transform: translateX(12px);
+    }
+}
