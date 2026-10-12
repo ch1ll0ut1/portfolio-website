@@ -1,0 +1,150 @@
+/*
+ * One commit row. Ported from the prototype's `experience.css`.
+ *
+ * The first grid column is the graph's gutter, sized from `--log-gutter` on
+ * `.log`, so the SVG lanes and the rows stay aligned at every breakpoint.
+ *
+ * The muted-hash rule is gated on `html.motion`: without the scroll reveal
+ * nothing is ever "reached", and every hash should simply read as final.
+ */
+
+.commit {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    grid-template-columns: var(--log-gutter) 5.6rem 7.5rem minmax(0, 1fr);
+    gap: 0 18px;
+    align-items: baseline;
+    padding: 22px 0;
+    border-bottom: 1px solid var(--line);
+}
+
+.commit:first-child {
+    border-top: 1px solid var(--line);
+}
+
+/* Editor-style current-line highlight, behind the text. */
+.commit::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 0 calc(var(--log-gutter) - 12px);
+    background: var(--surface);
+    border-radius: var(--radius-s);
+    opacity: 0;
+    z-index: -1;
+    transition: opacity var(--dur-s) var(--ease-ui);
+    pointer-events: none;
+}
+
+.isCurrent::before {
+    opacity: .55;
+}
+
+.isHovered::before {
+    opacity: .9;
+}
+
+/* Mirrors the hover highlight for keyboard users, should a row ever hold a link. */
+.commit:focus-within::before {
+    opacity: .9;
+}
+
+.hash {
+    grid-column: 2;
+    font-family: var(--font-mono);
+    font-size: .74rem;
+    color: var(--caret);
+    font-variation-settings: "wdth" 85;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    transition: color var(--dur-s) var(--ease-ui);
+}
+
+.years {
+    grid-column: 3;
+    color: var(--muted);
+    font-size: var(--fs-small);
+    font-variant-numeric: tabular-nums;
+    transition: color var(--dur-s) var(--ease-ui);
+}
+
+.body {
+    grid-column: 4;
+    min-width: 0;
+}
+
+.body h3 {
+    font-family: var(--font-body);
+    font-size: 1.12rem;
+    font-weight: 600;
+    letter-spacing: -.01em;
+    line-height: 1.35;
+    margin-bottom: 4px;
+}
+
+.body p {
+    color: var(--fg-2);
+    font-size: .97rem;
+    max-width: 64ch;
+}
+
+.ref {
+    display: inline-block;
+    vertical-align: .14em;
+    margin-right: 10px;
+    padding: 3px 7px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: .62rem;
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 1.2;
+    color: var(--fg-2);
+    font-variation-settings: "wdth" 85;
+    white-space: nowrap;
+}
+
+.refHead {
+    border-color: var(--caret);
+    color: var(--caret);
+}
+
+/* Commits the ink has not reached yet sit one step back. */
+:global(html.motion) .commit:not(.isReached) .hash {
+    color: var(--muted);
+}
+
+:global(html.motion) .isCurrent .years {
+    color: var(--fg);
+}
+
+.isHovered .years {
+    color: var(--fg);
+}
+
+@media (max-width: 760px) {
+    .commit {
+        grid-template-columns: var(--log-gutter) minmax(0, 1fr);
+        gap: 4px 12px;
+    }
+
+    .hash,
+    .years,
+    .body {
+        grid-column: 2;
+    }
+
+    .hash {
+        display: none;
+    }
+
+    .commit::before {
+        inset: 0 0 0 calc(var(--log-gutter) - 8px);
+    }
+
+    .ref {
+        display: table;
+        margin: 0 0 6px;
+    }
+}
