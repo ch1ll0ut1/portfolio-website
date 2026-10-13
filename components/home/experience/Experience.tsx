@@ -3,6 +3,7 @@
 import { type FC, useRef } from 'react';
 import { useMaskReveal, useReveal } from '@/lib/motion';
 import { careerLog } from '@/config/career';
+import { yearsShipping } from '@/config/site';
 import { CareerGraph } from './CareerGraph';
 import { CommitRow } from './CommitRow';
 import { useCareerLog } from './useCareerLog';
@@ -12,7 +13,10 @@ import styles from './Experience.module.css';
 const LEAD_DELAY = 0.15;
 
 /**
- * Experience: eighteen years of roles printed as a `git log --graph`.
+ * Experience: every role since the first one, printed as a `git log --graph`.
+ *
+ * The year count in the heading derives from `siteConfig.sinceYear`, so it
+ * never goes stale.
  *
  * The history is an ordered list of real text, so it reads with JavaScript off
  * and in a screen reader. The graph beside it is decorative: it draws the same
@@ -30,9 +34,10 @@ export const Experience: FC = () => {
         <section className="section" id="experience" data-section="experience" aria-labelledby="experience-title">
             <div className="wrap">
                 <header className="sec-head">
-                    <h2 id="experience-title" ref={headingRef}>Eighteen years, one log</h2>
+                    <h2 id="experience-title" ref={headingRef}>{`${yearsShipping()} years, one log`}</h2>
                     <p ref={leadRef}>
-                        Every role, newest first. Independent work since 2020 forks off main onto its own branch.
+                        Every role, newest first, from Liechtenstein and Austria to Bangkok and Singapore.
+                        Independent work since 2020 forks off main onto its own branch.
                     </p>
                 </header>
 

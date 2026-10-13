@@ -24,7 +24,7 @@ describe('splitNoteWords', () => {
         const selected = words.filter(word => word.selected);
 
         // Assert
-        expect(selected.map(word => word.text).join(' ')).toBe('senior judgement on every decision');
+        expect(selected.map(word => word.text).join(' ')).toBe('senior judgment on every decision');
     });
 
     it('should number the selected words in reading order', () => {

@@ -1,7 +1,7 @@
 /**
  * The nine-step feature cycle that runs inside the stepper's "Build" step.
  *
- * Copy is lifted verbatim from the unshipped `/how-i-work` page (see
+ * Copy is lifted, lightly edited, from the unshipped `/how-i-work` page (see
  * `docs/how-i-work-content.md`, section 3). `bridge` is the one line of new
  * copy: without it the four-step engagement model and this nine-step cycle read
  * as two competing processes rather than one nested inside the other.
@@ -25,7 +25,7 @@ export const featureCycleContent: FeatureCycleContent = {
     label: 'Product cycles',
     heading: 'Feature-by-feature product cycles.',
     bridge: 'Build is the step that takes the most time. Inside it, every feature runs the same nine-step cycle.',
-    intro: 'Each important feature moves through a small product cycle: goal, workflow, technical decisions, first implementation, review, refinement, testing, and release.',
+    intro: 'Each important feature moves through a small product cycle: goal, feature definition, feasibility, UX and workflow, first implementation, review, refinement, testing, and release.',
     steps: [
         {
             id: 'vision-goal',

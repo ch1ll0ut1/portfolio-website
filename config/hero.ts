@@ -6,6 +6,7 @@
  */
 
 import { links } from './links';
+import { siteConfig } from './site';
 
 export interface HeroCta {
     label: string;
@@ -22,7 +23,7 @@ export const heroHeadline = {
     after: '.',
 };
 
-export const heroAvailability = 'Available for new engagements';
+export const heroAvailability = 'Open to projects and senior or tech-lead roles';
 
 export const heroLocation = {
     city: 'Bangkok',
@@ -32,7 +33,7 @@ export const heroLocation = {
     placeholder: '--:--',
 };
 
-export const heroLede = 'Software architect, hands-on engineer and fractional CTO. Since 2008 I’ve taken products from the first commit to production, for startups, scale-ups and the Parliament of Iceland.';
+export const heroLede = `Software architect, fractional CTO, and hands-on tech lead. Since ${siteConfig.sinceYear} I’ve taken products from the first commit to production, for startups, scale-ups, and the Parliament of Iceland.`;
 
 export const heroCtas: HeroCta[] = [
     { label: 'Book a 30-min call', href: links.calendly, primary: true, external: true },

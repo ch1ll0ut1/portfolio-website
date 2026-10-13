@@ -1,11 +1,12 @@
 import { MetadataRoute } from 'next';
+import { siteConfig, siteTitle } from '@/config/site';
 import { ogPalette } from '@/lib/opengraphUtils';
 
 export default function manifest(): MetadataRoute.Manifest {
     return {
-        name: 'Stefan Knoch — Software architect and fractional CTO',
-        short_name: 'Stefan Knoch',
-        description: 'Software architect, hands-on engineer and fractional CTO.',
+        name: siteTitle,
+        short_name: siteConfig.name,
+        description: siteConfig.description,
         start_url: '/',
         display: 'standalone',
         background_color: ogPalette.bg,

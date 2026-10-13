@@ -1,7 +1,7 @@
 /**
  * Who the engagement suits and who it does not.
  *
- * Copy is lifted verbatim from the unshipped `/how-i-work` page (see
+ * Copy is lifted, lightly edited, from the unshipped `/how-i-work` page (see
  * `docs/how-i-work-content.md`, section 6). `tone` picks the list marker: a
  * caret for a fit, a struck hairline for a mismatch.
  */
@@ -42,10 +42,10 @@ export const fitContent: FitContent = {
         },
         {
             id: 'not-a-fit',
-            title: 'Who is not a good fit',
+            title: 'What is not a good fit',
             tone: 'unfit',
             items: [
-                'Projects where cheapest possible implementation is the main goal',
+                'Projects where the cheapest possible implementation is the main goal',
                 'Clients who expect AI to replace engineering judgment',
                 'Unrealistic deadlines that require sacrificing quality',
                 'Micromanaged work where technical decisions are forced without discussion',

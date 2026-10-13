@@ -27,7 +27,7 @@ export const Writing: FC = () => {
                 <header className="sec-head">
                     <h2 id="writing-title" ref={headingRef}>Writing and current work</h2>
                     <p ref={leadRef}>
-                        I write about building software with AI agents, from the workflows I use on client projects every day.
+                        I write about building software with AI, and about the teams and decisions behind it.
                     </p>
                 </header>
 

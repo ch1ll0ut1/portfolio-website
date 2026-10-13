@@ -36,7 +36,7 @@ describe('Fit Lists Block', () => {
         render(<FitLists />);
 
         expect(screen.getByRole('heading', { level: 4, name: 'Who I work best with' })).toBeInTheDocument();
-        expect(screen.getByRole('heading', { level: 4, name: 'Who is not a good fit' })).toBeInTheDocument();
+        expect(screen.getByRole('heading', { level: 4, name: 'What is not a good fit' })).toBeInTheDocument();
     });
 
     it('should render every item of both lists', () => {

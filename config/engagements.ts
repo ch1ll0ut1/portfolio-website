@@ -34,9 +34,9 @@ export const engagements: Engagement[] = [
         who: 'For teams without a CTO, or between two of them.',
         bullets: [
             'Technology roadmap and architecture decisions',
-            'Hiring plan, interviews and team setup',
+            'Hiring plan, interviews, and team setup',
             'Delivery process that ships every week',
-            'Build-vs-buy and infrastructure cost calls',
+            'Build-vs-buy, infrastructure cost, and compliance calls (GDPR, HIPAA)',
         ],
         format: '1–3 days a week, monthly retainer',
         featured: false,
@@ -46,9 +46,9 @@ export const engagements: Engagement[] = [
         name: 'Founding engineer',
         who: 'For founders who need the product built properly from the first commit.',
         bullets: [
-            'Architecture, backend, frontend and cloud, end to end',
-            'Next.js, React, Node.js, PostgreSQL, AWS or Vercel',
-            'Tests, CI/CD and monitoring from day one',
+            'Architecture, backend, frontend, and cloud, end to end',
+            'Next.js, React, Node.js, PostgreSQL, and AWS or Vercel',
+            'Tests, CI/CD, and monitoring from day one',
             'Shipped to production in weekly increments',
         ],
         format: 'Contract, three months or longer',
@@ -59,7 +59,7 @@ export const engagements: Engagement[] = [
         name: 'Architecture review',
         who: 'For codebases that have stopped moving, including AI-generated ones.',
         bullets: [
-            'Read-through of code, data model and infrastructure',
+            'Read-through of code, data model, and infrastructure',
             'Written report of risks, ranked by cost',
             'Fix plan your team can run without me',
             'Optional hands-on rescue of the critical path',
@@ -71,16 +71,16 @@ export const engagements: Engagement[] = [
 
 export const engagementsHeading = {
     title: 'Three ways to work together',
-    lede: 'Pick the shape that fits where your product is. I either do the work myself or build and lead the team that does it.',
+    lede: 'Pick the shape that fits where your product is. I either do the work myself or build and lead the team that does it, setting high technical standards and mentoring with patience.',
 };
 
 export const engagementNote: EngagementNoteSegment[] = [
     {
-        text: 'Every engagement runs on an AI-augmented workflow I use daily: Claude Code with custom skills, agent pipelines and project knowledge bases. You get',
+        text: 'Every engagement runs on an AI-augmented workflow I use daily: Claude Code with custom skills, agent pipelines, and project knowledge bases. You get',
         selected: false,
     },
     {
-        text: 'senior judgement on every decision',
+        text: 'senior judgment on every decision',
         selected: true,
     },
     {

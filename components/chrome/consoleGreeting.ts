@@ -5,6 +5,8 @@
  * styling cannot read custom properties, and devtools is its own surface.
  */
 
+import { siteConfig } from '@/config/site';
+
 const MONO = 'font-family: ui-monospace, Menlo, monospace;';
 const CARET = '#ff8b3d';
 
@@ -18,12 +20,12 @@ export const printConsoleGreeting = () => {
     printed = true;
 
     console.log(
-        '%c▍%c Stefan Knoch',
+        `%c▍%c ${siteConfig.name}`,
         `${MONO} color:${CARET}; font-size:16px; font-weight:700;`,
         `${MONO} font-size:14px; font-weight:700;`,
     );
     console.log(
-        '%cHand-written front end: no animation libraries.\nIf you read source for fun, we should talk: hello@example.com\nPress ? for keyboard shortcuts.',
+        `%cHand-written front end: no animation libraries.\nIf you read source for fun, we should talk: ${siteConfig.contactEmail}\nPress ? for keyboard shortcuts.`,
         `${MONO} font-size:12px; line-height:1.6;`,
     );
 };

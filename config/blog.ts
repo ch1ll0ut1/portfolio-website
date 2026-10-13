@@ -28,10 +28,9 @@ const rawBlogPosts: BlogPost[] = [
         excerpt: 'A practical, real-world guide to combining ChatGPT, v0, Claude Code, and Cursor IDE to massively speed up app development.',
         date: '2025-08-14',
         readTime: '10 min read',
-        tags: ['AI', 'Productivity', 'Development', 'Cursor', 'Claude Sonnet 4', 'Claude Code', 'v0', 'ChatGPT'],
+        tags: ['AI', 'Productivity', 'Development', 'Cursor', 'Claude Code', 'v0', 'ChatGPT'],
         slug: 'how-to-use-ai-to-build-apps-10x-speed',
         published: true,
-        featured: true,
     },
     {
         id: '2',
@@ -52,6 +51,7 @@ const rawBlogPosts: BlogPost[] = [
         tags: ['Hiring', 'Developers', 'Startup', 'Fractional CTO', 'Consulting', 'Technical Leadership'],
         slug: 'how-to-hire-your-first-developer',
         published: true,
+        featured: true,
     },
     {
         id: '4',
@@ -84,16 +84,6 @@ const rawBlogPosts: BlogPost[] = [
         published: true,
     },
     {
-        id: '7',
-        title: 'How to Start with Crypto Trading (For Complete Beginners)',
-        excerpt: 'A step-by-step beginner’s guide to trading crypto safely: from choosing exchanges and risk management to diversification, mental discipline, and simple trading strategies.',
-        date: '2025-08-24',
-        readTime: '14 min read',
-        tags: ['Crypto', 'Trading', 'Risk Management', 'Investing', 'Beginners'],
-        slug: 'how-to-start-with-crypto-trading-for-complete-beginners',
-        published: false,
-    },
-    {
         id: '8',
         title: '10 AI Workflows Every Developer Should Know in 2025',
         excerpt: 'AI is no longer just autocomplete — it’s a workflow accelerator. These 10 AI workflows will make developers in 2025 work at 3–10× speed.',
@@ -102,7 +92,6 @@ const rawBlogPosts: BlogPost[] = [
         tags: ['AI', 'Developer Productivity', 'Workflows', 'Cursor', 'Claude Code', 'ChatGPT', 'Automation'],
         slug: '10-ai-workflows-every-developer-should-know-2025',
         published: true,
-        featured: true,
     },
     {
         id: '9',
@@ -113,6 +102,7 @@ const rawBlogPosts: BlogPost[] = [
         tags: ['Software Engineering', 'AI', 'Technical Leadership', 'UX', 'Startups', 'Product Development', 'Vibe Coding', 'Technical Debt', 'Engineering Culture'],
         slug: 'why-good-software-engineering-is-expensive',
         published: true,
+        featured: true,
     },
 ];
 

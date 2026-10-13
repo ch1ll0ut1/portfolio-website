@@ -42,14 +42,14 @@ export const projectsIndex: IndexedProject[] = [
         id: 'slimwiki',
         year: '2017–18',
         name: 'Slimwiki',
-        description: 'Collaborative knowledge base with offline-first sync of edits.',
+        description: 'Collaborative knowledge base with real-time editing and offline-first sync.',
         stack: ['React', 'Koa', 'PostgreSQL', 'AWS'],
     },
     {
         id: 'indycloud',
         year: '2013–15',
         name: 'Indycloud',
-        description: 'Zoomable maps of how enterprise data tables relate, built as CTO.',
+        description: 'Zoomable maps of how enterprise data tables relate. Led development with a team of two.',
         stack: ['React', 'Node.js', 'Koa'],
     },
     {

@@ -9,8 +9,9 @@
 
 import { chordSections } from './sections';
 import { links } from './links';
+import { siteConfig } from './site';
 
-export const contactEmail = 'hello@example.com';
+const contactEmail = siteConfig.contactEmail;
 
 export type CommandAction
     /** Scrolls to a section id from `sections.ts`. */

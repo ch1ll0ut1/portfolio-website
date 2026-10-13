@@ -5,6 +5,7 @@
 
 import { describe, it, expect } from 'vitest';
 import { proofClients, proofStats } from './proof';
+import { siteConfig } from './site';
 
 describe('Proof Configuration', () => {
     describe('Client Data Integrity', () => {
@@ -73,8 +74,9 @@ describe('Proof Configuration', () => {
             const byId = new Map(proofStats.map(stat => [stat.id, stat]));
 
             // Assert
-            expect(byId.get('since')?.value).toBe('2008');
-            expect(byId.get('editors')?.value).toBe('4');
+            expect(byId.get('since')?.value).toBe(String(siteConfig.sinceYear));
+            // Slimwiki, DirectMail and Edithing.
+            expect(byId.get('editors')?.value).toBe('3');
             expect(byId.get('teams')?.value).toBe('3');
             expect(byId.get('messaging')?.value).toBe('2');
             expect(byId.get('messaging')?.suffix).toBe('×');

@@ -1,101 +1,95 @@
-# Branding
+# Brand
 
-## **1. Brand Personality**
+The site is built around the **editor**: a caret, a text selection, a `git log`, a terminal. The concept is "I build the hard part". It is shown in the material itself: rich text editors, typed data layers, and logs. It never claims to be visionary.
 
-**Core identity:**
-
-> *A visionary creator who turns ideas into reality, guided by deep insight, and executed with precision and leadership.*
-
-**Primary archetype:** Creator — *Innovative, imaginative, brings new ideas to life.*
-**Secondary archetypes:** Sage — *Wise, insightful, explains the “why” and the “how”.*
-Ruler — *Organized, authoritative, ensures stability and success.*
-
-**Key personality traits:**
-
-* Visionary
-* Strategic
-* Knowledgeable
-* Dependable
-* Inspirational
-* Precise
+Tokens live in `app/globals.css`. This file explains how to use them. If the two disagree, the CSS is correct and this file needs updating.
 
 ---
 
-## **2. Brand Voice & Tone**
+## 1. Positioning
 
-**Voice should be:**
+- **Line:** Software architect, fractional CTO & hands-on tech lead.
+- **Long form:** "Software architect, fractional CTO, and hands-on tech lead. Since 2008 I've taken products from the first commit to production, for startups, scale-ups, and the Parliament of Iceland."
+- **Who it speaks to:** founders who need a product built properly, teams without a CTO, and companies hiring a senior or tech-lead engineer. Recruiters arrive from the CV, so the site uses the CV's vocabulary next to the consultancy one.
+- **Source of truth:** `config/site.ts` holds the name, URL, email, positioning line, description, and start year. Year counts are derived from `sinceYear` and are never typed by hand.
 
-* **Confident but not arrogant** — communicate authority without talking down.
-* **Insight-driven** — always connect solutions to reasoning.
-* **Vision-oriented** — talk about big-picture goals and transformation.
-* **Structured** — clear, organized language that builds trust.
+## 2. Voice
 
-**Example phrases:**
+**Personality:** hands-on, precise, candid, and calm. A senior engineer explaining a decision, not an agency pitching a vision.
 
-* “I help businesses turn complex ideas into elegant, working solutions.”
-* “I combine creativity with proven strategy to deliver results that last.”
-* “I don’t just build apps — I design the path to your success.”
+Rules:
 
----
+- **First person singular.** "I", "me", and "my". Never "we" or "our".
+- **Concrete over abstract.** Name the actual thing, like "a typed, hierarchical document model on Slate.js", rather than "innovative solutions".
+- **Short declarative sentences.** Prefer a period or a colon. Use em dashes sparingly in site copy.
+- **Numbers only when the CV backs them**, for example 2× messaging performance, a team of six, or three editors. Never round up and never invent a metric. If no figure exists, describe the outcome instead.
+- **Problem → what I did → result** for any piece of work.
+- **US English with the serial comma**, for example "judgment", "organization", "color", or "research, tests, and review".
+- **Sentence case** for headings and labels.
+- **No hype words:** visionary, world-class, cutting-edge, passionate, 10×, rockstar.
 
-## **3. Visual Style**
+Lines that sound right:
 
-**Colors:**
+- "I build the hard part."
+- "Four projects where the difficult part was the whole point."
+- "I write the code myself and run agent pipelines for research, tests, and review."
+- "Fix plan your team can run without me."
 
-* **Primary:** Deep navy or dark gray (authority, trust — Ruler)
-* **Accent:** Gold or warm orange (prestige, leadership — Ruler/Sage)
-* **Secondary accent:** Electric blue or teal (innovation — Creator)
+## 3. Messaging pillars
 
-### Final palette
+1. **The hard part.** Structured editors, end-to-end typed data, messaging under load, and departments built from zero.
+2. **Hands-on leadership.** I lead teams while still writing the code. I set high technical standards and hold them, and I mentor with patience.
+3. **AI with judgment.** I work in a daily Claude Code workflow with custom skills, agent pipelines, and knowledge bases. Senior judgment decides what ships.
 
-- Primary — Dark Gray: #1F2937
-  - Example uses: headings, navigation bars, key dividers, dark text on light backgrounds.
-- Accent — Warm Orange: #F59E0B
-  - Example uses: highlights, key data points, subtle accent lines/icons. Avoid long-form body text.
-- Action (CTA) — Electric Blue: #2563EB
-  - Example uses: primary buttons, links, interactive states (hover/focus rings), key callouts.
+## 4. Color
 
-Contrast: Meet WCAG AA — body text 4.5:1 minimum (large text 3:1).
-Approved pairs: Dark Gray on white/light (body), Electric Blue on white/light (links/CTAs), Warm Orange on Dark Gray for small accents (avoid Warm Orange body text on white/light).
+The palette is dark-first ("basalt") with a light theme ("glacier fog"). It has two accents, and both come from the editor:
 
-**Typography:**
+- **Caret, molten orange:** where the action is, such as the caret, the HEAD ref, highlights, and the primary button.
+- **Selection, editor blue:** what is selected or emphasized, such as the highlighted phrase in the hero and selected rows.
 
-* Headings: Modern, bold sans-serif (Futura, Montserrat, Inter Bold)
-* Body: Clean, readable sans-serif (Open Sans, Lato, Roboto)
+| Token | Dark | Light | Use |
+|---|---|---|---|
+| `--bg` | `#0f171d` | `#edf1f2` | Page background |
+| `--bg-2` | `#131e25` | `#e3eaec` | Raised bands |
+| `--surface` | `#172430` | `#f8fafa` | Panels, cards |
+| `--line` | `#243540` | `#cbd7db` | Hairlines, borders |
+| `--fg` | `#e4ecee` | `#0e181e` | Primary text |
+| `--fg-2` | `#a9b8bf` | `#3a4a52` | Secondary text |
+| `--muted` | `#74868f` | `#5f7079` | Tertiary text, metadata |
+| `--select` | `#3d7bff` | `#2f62e6` | Selection, focus |
+| `--select-soft` | blue at 28% | blue at 20% | Selection wash |
+| `--caret` | `#ff8b3d` | `#e0561c` | Caret, accents, primary action |
+| `--ice` | `#9fd3e6` | `#1d6f8c` | Code tokens |
+| `--on-accent` | `#0b1218` | `#ffffff` | Text on caret or selection fills |
 
-**Design style:**
+Rules:
 
-* Balanced layouts with lots of breathing space (Sage clarity)
-* Touches of creative visuals — geometric patterns, subtle gradients (Creator flair)
-* Consistent alignment, structured sections (Ruler order)
+- Never hard-code a color that only works in one theme. Use the tokens.
+- Accents are for small surfaces such as a caret, a ref chip, a highlight, or a button. Never use them for body text.
+- Body text must meet WCAG AA contrast: 4.5:1, or 3:1 for large text. In the light theme, check caret orange on `--bg` before using it for text.
+- A faint film grain (`--grain-opacity`) sits over everything for texture.
 
----
+## 5. Typography
 
-## **4. Key Messaging Pillars**
+All three faces load through `next/font/google` in `app/layout.tsx`.
 
-Your brand story should repeatedly hit these three points:
+- **Display: Bricolage Grotesque** (`--font-display`). Use it for headlines and big numbers. Large type uses the narrow width axis (`wdth` 75–90).
+- **Body: Schibsted Grotesk** (`--font-body`). Use it for running text, in roman and italic.
+- **Mono: Martian Mono** (`--font-mono`). Use it for code, hashes, terminal output, dates, and metadata. Use it sparingly.
 
-**1. Creation** (*The Creator*)
-You turn visions into reality through innovative app development and problem-solving.
+The scale is fluid (`--fs-hero` down to `--fs-micro`). Layout is one editorial column on a 12-column grid, up to `--maxw` (1320px), with generous section padding.
 
-**2. Wisdom** (*The Sage*)
-You understand business and technology deeply, guiding clients toward informed, future-proof decisions.
+## 6. Motifs and motion
 
-**3. Leadership** (*The Ruler*)
-You manage teams, processes, and complex projects to deliver on time, on budget, and at high quality.
+- **Editor motifs:** a blinking caret, a selection highlight, an editable hero headline, the career as a `git log --graph`, the process as a terminal transcript, and a command palette (⌘K).
+- **Motion is hand-written**, with no animation libraries. It eases out (`--ease-out`) and uses short durations (`--dur-xs` to `--dur-l`).
+- **Content first.** Every section reads as plain markup without JavaScript. Animation only reveals content that is already there.
+- **Reduced motion is respected everywhere.** The `.motion` class gates every animated rule, so a reduced-motion visitor gets the static page.
 
----
+## 7. Don'ts
 
-## **5. Tagline Options**
-
-* “From Vision to Reality — With Insight and Leadership.”
-* “Innovative Solutions. Strategic Guidance. Reliable Delivery.”
-* “Building the Future. Guiding the Way. Leading with Excellence.”
-* “Where Ideas Meet Expertise.”
-
----
-
-## **6. Example Brand Statement for Your Website**
-
-> *I help businesses transform ambitious ideas into powerful, real-world applications. With a unique blend of creativity, strategic insight, and leadership, I guide projects from concept to launch — building not just software, but the teams, systems, and strategies that make it thrive.*
-
+- Don't use navy and gold, stock "creator/sage/ruler" archetypes, or tagline-speak such as "From Vision to Reality".
+- Don't use metrics or client names the CV cannot back up.
+- Don't use a third accent color, gradients as decoration, or glow effects on text.
+- Don't switch voice between "I" and "we".

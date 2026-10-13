@@ -10,9 +10,9 @@ const startYear = (years: string) => parseInt(years.slice(0, 4), 10);
 
 describe('Career Log Configuration', () => {
     describe('Commit Data Integrity', () => {
-        it('should have thirteen commits', () => {
+        it('should have twelve commits', () => {
             // Assert
-            expect(careerLog).toHaveLength(13);
+            expect(careerLog).toHaveLength(12);
         });
 
         it('should have unique hashes', () => {
