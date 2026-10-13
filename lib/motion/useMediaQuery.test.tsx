@@ -22,7 +22,7 @@ const Probe: FC<{ serverValue?: boolean }> = ({ serverValue }) => {
 /** A controllable MediaQueryList: flip `matches` and fire its listeners. */
 const installQuery = (initial: boolean) => {
     const listeners = new Set<() => void>();
-    const original = window.matchMedia;
+    const original = window.matchMedia.bind(window);
     const state = { matches: initial };
 
     window.matchMedia = vi.fn((media: string) => ({
