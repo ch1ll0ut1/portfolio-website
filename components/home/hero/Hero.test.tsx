@@ -88,7 +88,7 @@ describe('Hero', () => {
     it('should show availability and the local time placeholder until the clock starts', () => {
         render(<Hero />);
 
-        expect(screen.getByText(/available for new engagements/i)).toBeInTheDocument();
+        expect(screen.getByText(/senior or tech-lead roles/i)).toBeInTheDocument();
         expect(screen.getByText(heroLocation.placeholder)).toBeInTheDocument();
         expect(screen.getByText(heroLocation.utcOffset)).toBeInTheDocument();
     });
