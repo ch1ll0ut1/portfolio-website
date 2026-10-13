@@ -29,6 +29,10 @@ const EASE_CARET = 0.4;
 const EASE_SELECT = 0.3;
 const EASE_FILL = 0.78;
 const FRAME_MS = 16.7;
+/** Below this the selection wash is invisible, so its box is not updated. */
+const FILL_VISIBLE = 0.001;
+/** Quiet time after the last scroll frame before re-checking what is hovered. */
+const SCROLL_IDLE_MS = 90;
 
 export interface CaretCursorParts {
     root: HTMLElement;
@@ -122,13 +126,21 @@ export const createCaretCursor = (parts: CaretCursorParts, classes: CaretCursorC
         selectAmount = fillGoal;
 
         const { x, y, w, h, r } = box;
-        const width = window.innerWidth;
-        const height = window.innerHeight;
         const scaleY = (h / CARET_HEIGHT).toFixed(3);
         const amount = selectAmount.toFixed(3);
 
         fill.style.opacity = amount;
-        fill.style.clipPath = `inset(${y.toFixed(1)}px ${(width - x - w).toFixed(1)}px ${(height - y - h).toFixed(1)}px ${x.toFixed(1)}px round ${r.toFixed(1)}px)`;
+
+        // The wash is a box the size of the selection, moved by transform, so
+        // only its own pixels repaint. Sized with width/height rather than a
+        // scale so the rounded corners keep their radius; `.fill` is fully
+        // contained, so the resize never reaches the page's layout.
+        if (selectAmount > FILL_VISIBLE) {
+            fill.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0)`;
+            fill.style.width = `${w.toFixed(1)}px`;
+            fill.style.height = `${h.toFixed(1)}px`;
+            fill.style.borderRadius = `${r.toFixed(1)}px`;
+        }
         barA.style.transform = `translate3d(${(x - 1 + (1 - selectAmount)).toFixed(1)}px, ${y.toFixed(1)}px, 0) scaleY(${scaleY})`;
         barB.style.transform = `translate3d(${(x + w - 1).toFixed(1)}px, ${y.toFixed(1)}px, 0) scaleY(${scaleY})`;
         barB.style.opacity = amount;
@@ -260,8 +272,13 @@ export const createCaretCursor = (parts: CaretCursorParts, classes: CaretCursorC
     document.addEventListener('mouseleave', onLeave);
 
     // Scrolling moves the page under a stationary pointer, so what is hovered
-    // can change without any pointer event at all.
-    const unsubscribeScroll = subscribeScroll(refresh);
+    // can change without any pointer event at all. Hit-testing forces layout,
+    // so it waits until the scroll comes to rest instead of running per frame.
+    let scrollTimer = 0;
+    const unsubscribeScroll = subscribeScroll(() => {
+        window.clearTimeout(scrollTimer);
+        scrollTimer = window.setTimeout(refresh, SCROLL_IDLE_MS);
+    });
 
     return {
         refresh,
@@ -274,6 +291,7 @@ export const createCaretCursor = (parts: CaretCursorParts, classes: CaretCursorC
             document.removeEventListener('pointerout', onPointerOut);
             document.removeEventListener('mouseleave', onLeave);
             unsubscribeScroll();
+            window.clearTimeout(scrollTimer);
             window.clearTimeout(idleTimer);
             stop?.();
             stop = null;
