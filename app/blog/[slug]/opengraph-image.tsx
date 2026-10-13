@@ -4,6 +4,9 @@ import { blogPosts } from '@/config/blog';
 export const size = ogImageConfig.size;
 export const contentType = ogImageConfig.contentType;
 
+/** Matches the page: only the posts generated at build time exist. */
+export const dynamicParams = false;
+
 /**
  * Generates static params for all blog posts to enable static generation.
  */

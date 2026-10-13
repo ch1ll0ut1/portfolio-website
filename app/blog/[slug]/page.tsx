@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { cache, FC } from 'react';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { blogPosts } from '@/config/blog';
@@ -14,6 +14,9 @@ import { JsonLd } from '@/components/seo/JsonLd';
 import { absoluteUrl, siteConfig } from '@/config/site';
 import { blogPostingSchema } from '@/lib/structuredData';
 
+/** Every post is generated at build time, so any other slug is a 404. */
+export const dynamicParams = false;
+
 /**
  * Generates static params for all blog posts to enable static generation.
  */
@@ -24,8 +27,10 @@ export async function generateStaticParams() {
 /**
  * Gets blog post data and content from configuration and markdown files.
  * Returns the post metadata, its markdown, and its neighbours in the index.
+ *
+ * Cached per render, so `generateMetadata` and the page share one file read.
  */
-function getBlogPostData(slug: string) {
+const getBlogPostData = cache((slug: string) => {
     const index = blogPosts.findIndex(p => p.slug === slug);
     const postMetadata = blogPosts[index];
     if (postMetadata === undefined) {
@@ -40,7 +45,7 @@ function getBlogPostData(slug: string) {
         newer: blogPosts[index - 1],
         older: blogPosts[index + 1],
     };
-}
+});
 
 /**
  * Generates metadata for individual blog posts
