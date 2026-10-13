@@ -111,14 +111,14 @@
 }
 
 .step.isActive .badge {
-    background: var(--caret);
-    border-color: var(--caret);
+    background: var(--caret-fill);
+    border-color: var(--caret-fill);
     color: var(--on-accent);
 }
 
 .step.isDone .badge {
     border-color: var(--caret);
-    color: var(--caret);
+    color: var(--caret-text);
 }
 
 .step.isDone .num {

@@ -117,7 +117,7 @@
 
 .node.gate {
     border-color: var(--caret);
-    color: var(--caret);
+    color: var(--caret-text);
 }
 
 /*
@@ -221,7 +221,7 @@
 
 .status::before {
     content: "$ ";
-    color: var(--caret);
+    color: var(--caret-text);
 }
 
 .state {

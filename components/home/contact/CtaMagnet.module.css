@@ -35,7 +35,7 @@
     position: absolute;
     inset: -1px;
     z-index: -1;
-    background: var(--caret);
+    background: var(--caret-fill);
     clip-path: circle(0% at var(--fx) var(--fy));
     transition: clip-path .6s var(--ease-out);
 }

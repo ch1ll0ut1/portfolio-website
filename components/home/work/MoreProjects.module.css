@@ -77,7 +77,7 @@
 }
 
 .row.rowActive .year {
-    color: var(--caret);
+    color: var(--caret-text);
 }
 
 .marker {

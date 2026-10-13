@@ -83,7 +83,7 @@
 .link:hover::after,
 .link:focus-visible::after {
     opacity: 1;
-    color: var(--caret);
+    color: var(--caret-text);
     transform: translate(6px, -50%) rotate(45deg);
 }
 
@@ -110,7 +110,7 @@
     padding: 2px 7px;
     border: 1px solid var(--caret);
     border-radius: 999px;
-    color: var(--caret);
+    color: var(--caret-text);
 }
 
 .postTitle {

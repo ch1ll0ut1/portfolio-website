@@ -242,7 +242,7 @@
     margin-bottom: 5px;
     padding: 3px 7px 4px;
     border-radius: 4px 4px 4px 0;
-    background: var(--caret);
+    background: var(--caret-fill);
     color: var(--on-accent);
     font-family: var(--font-mono);
     font-size: .68rem;
@@ -358,7 +358,7 @@
 }
 
 .treeState.isDirty {
-    color: var(--caret);
+    color: var(--caret-text);
 }
 
 .treeCode {
@@ -386,7 +386,7 @@
 }
 
 .bool {
-    color: var(--caret);
+    color: var(--caret-text);
 }
 
 .punct {
@@ -494,7 +494,7 @@
 .toolbarHl {
     padding: 0 3px;
     background: var(--select);
-    color: #fff;
+    color: var(--on-select);
     border-radius: 2px;
 }
 

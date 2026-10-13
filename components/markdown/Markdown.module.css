@@ -97,7 +97,7 @@
 .link:hover,
 .link:focus-visible {
     background-size: 100% 2px;
-    color: var(--caret);
+    color: var(--caret-text);
 }
 
 .inlineCode {
@@ -148,7 +148,7 @@
     top: .12em;
     font-family: var(--font-mono);
     font-size: .74em;
-    color: var(--caret);
+    color: var(--caret-text);
     font-variation-settings: 'wdth' 88;
 }
 
@@ -200,7 +200,7 @@
     --code-plain: var(--fg);
     --code-comment: var(--muted);
     --code-punct: var(--fg-2);
-    --code-keyword: var(--caret);
+    --code-keyword: var(--caret-text);
     --code-string: var(--ice);
     --code-fn: #82aaff;
     --code-number: #c792ea;
