@@ -9,6 +9,7 @@
     "noUnusedParameters": true,
     "noUncheckedIndexedAccess": true,
     "noEmit": true,
+    "types": ["node", "react-syntax-highlighter"],
     "esModuleInterop": true,
     "module": "esnext",
     "moduleResolution": "bundler",
