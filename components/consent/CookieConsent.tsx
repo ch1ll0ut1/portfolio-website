@@ -11,10 +11,14 @@
 'use client';
 
 import { type FC, useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useConsent } from './ConsentContext';
-import { ConsentPreferencesModal } from './ConsentPreferencesModal';
 import styles from './CookieConsent.module.css';
+
+/** Most visitors never open it, so it loads on demand, not with every page. */
+const loadPreferences = () => import('./ConsentPreferencesModal').then(module => module.ConsentPreferencesModal);
+const ConsentPreferencesModal = dynamic(loadPreferences, { ssr: false });
 
 export const CookieConsent: FC = () => {
     const { showBanner, preferencesOpen, acceptAll, rejectAll, openPreferences, closePreferences } = useConsent();
@@ -30,6 +34,9 @@ export const CookieConsent: FC = () => {
         const frame = requestAnimationFrame(() => {
             setShown(true);
         });
+
+        // A banner on screen offers "Customize", so have the dialog ready.
+        void loadPreferences();
 
         return () => {
             cancelAnimationFrame(frame);
