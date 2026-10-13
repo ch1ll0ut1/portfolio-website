@@ -83,4 +83,17 @@ describe('MarkdownImage', () => {
         render(<MarkdownImage element={element} priority />);
         expect(screen.getByTestId('next-image')).toHaveAttribute('data-priority', 'true');
     });
+
+    it('should not announce the caption a second time after the alt text', () => {
+        const element: ImageElement = {
+            type: 'image',
+            src: 'diagram.png',
+            alt: 'Request flow through the queue',
+        };
+
+        render(<MarkdownImage element={element} />);
+
+        expect(screen.getByRole('img', { name: 'Request flow through the queue' })).toBeInTheDocument();
+        expect(screen.getByText('Request flow through the queue', { selector: 'figcaption' })).toHaveAttribute('aria-hidden', 'true');
+    });
 });

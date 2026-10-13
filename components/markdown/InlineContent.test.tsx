@@ -177,4 +177,44 @@ describe('InlineContent Component', () => {
 
         expect(screen.getByText('Text with & special < characters >')).toBeInTheDocument();
     });
+
+    describe('link targets', () => {
+        it('should open an off-site link in a new tab and say so', () => {
+            render(<InlineContent segments={[{ text: 'Vitest', isLink: true, href: 'https://vitest.dev' }]} />);
+
+            const link = screen.getByRole('link', { name: 'Vitest (opens in a new tab)' });
+
+            expect(link).toHaveAttribute('target', '_blank');
+            expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+        });
+
+        it('should keep a link to another page of this site in the same tab', () => {
+            render(<InlineContent segments={[{ text: 'the blog', isLink: true, href: '/blog' }]} />);
+
+            const link = screen.getByRole('link', { name: 'the blog' });
+
+            expect(link).not.toHaveAttribute('target');
+            expect(link).not.toHaveAttribute('rel');
+        });
+
+        it('should treat an absolute link to this site as internal', () => {
+            render(<InlineContent segments={[{ text: 'privacy', isLink: true, href: 'https://www.stefanknoch.com/privacy' }]} />);
+
+            expect(screen.getByRole('link', { name: 'privacy' })).not.toHaveAttribute('target');
+        });
+
+        it('should keep mail and in-page links in the same tab', () => {
+            render(
+                <InlineContent
+                    segments={[
+                        { text: 'mail', isLink: true, href: 'mailto:hello@example.com' },
+                        { text: 'section', isLink: true, href: '#setup' },
+                    ]}
+                />,
+            );
+
+            expect(screen.getByRole('link', { name: 'mail' })).not.toHaveAttribute('target');
+            expect(screen.getByRole('link', { name: 'section' })).not.toHaveAttribute('target');
+        });
+    });
 });
