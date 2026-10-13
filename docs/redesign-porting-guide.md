@@ -33,18 +33,18 @@ Read first: the prototype's `BRIEF.md`, plus your own section's three files
 
 Import from `@/lib/motion`. It replaces the prototype's `SK` global and preserves its semantics.
 
-Hooks: `useReveal`, `useMaskReveal`, `useInView`, `useScrub`, `useScrollState`, `useRaf`, `useVisibleRaf`,
-`useIntro`, `useStageEvent`, `useMagnet`, `useReducedMotion`, `useFinePointer`.
+Hooks: `useReveal`, `useMaskReveal`, `useInView`, `useScrub`, `useScrollState`, `useRaf`,
+`useIntro`, `useStageEvent`, `useMagnet`, `useReducedMotion`, `useFinePointer`, `useEventCallback`.
 
-Plain functions for imperative engines: `subscribeTick`, `registerScrub`, `observeInView`, `splitWords`,
-`indexWords`, `trackWordIndices`, `onStage`, `emitStage`, `tween`, `EASE`, `copyText`, `showToast`,
+Plain functions for imperative engines: `subscribeTick`, `registerScrub`, `observeInView`, `onStage`,
+`emitStage`, `tween`, `EASE`, `scrambleInto`, `scrambleHash`, `copyText`, `showToast`,
 `clamp`, `lerp`, `mapRange`, `smoothstep`, `prefersReducedMotion`, `hasFinePointer`.
 
 Mapping from the prototype:
 
 | Prototype | Here |
 |---|---|
-| `SK.raf(fn)` | `useRaf` / `useVisibleRaf` / `subscribeTick` |
+| `SK.raf(fn)` | `useRaf` / `subscribeTick` |
 | `SK.scrub(el, fn, o)` | `useScrub(ref, fn, o)` |
 | `SK.inview(el, o)` | `useInView(ref, o)` / `observeInView` |
 | `SK.reveal(els, o)` | `useReveal(ref, { selector, delay, stagger })` |
@@ -57,7 +57,7 @@ Mapping from the prototype:
 Rules:
 
 - **Use the shared clock.** Never call `requestAnimationFrame` in a loop of your own; subscribe to the ticker.
-  Pause off-screen and on `visibilitychange` — `useVisibleRaf` does both.
+  Pause off-screen and on `visibilitychange`: pass `enabled` to `useRaf`, or unsubscribe from the ticker.
 - **Effects must be idempotent and fully tear down.** React Strict Mode double-invokes them; a leaked listener,
   observer, animation or ticker subscription is a bug.
 - Cap canvas DPR at 2. Paint static layers once to an offscreen canvas; repaint only on resize, theme or layout.
