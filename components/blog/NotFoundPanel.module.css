@@ -44,7 +44,10 @@
     font-size: clamp(1.05rem, 1.4vw, 1.25rem);
 }
 
-.action {
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
     margin-top: 10px;
 }
 
