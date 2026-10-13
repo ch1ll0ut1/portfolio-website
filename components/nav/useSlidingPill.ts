@@ -1,7 +1,7 @@
 'use client';
 
-import { type RefObject, useCallback, useEffect, useRef } from 'react';
-import { useStageEvent } from '@/lib/motion';
+import { type RefObject, useCallback, useEffect } from 'react';
+import { useEventCallback, useStageEvent } from '@/lib/motion';
 
 /** Links are found by data attribute so the hashed CSS Module names stay in the component. */
 const LINK_SELECTOR = '[data-nav-id]';
@@ -20,9 +20,7 @@ export const useSlidingPill = (
     pillRef: RefObject<HTMLElement | null>,
     activeId: string | null,
 ) => {
-    const activeIdRef = useRef(activeId);
-
-    activeIdRef.current = activeId;
+    const readActiveId = useEventCallback(() => activeId);
 
     const moveTo = useCallback((link: HTMLElement | null) => {
         const pill = pillRef.current;
@@ -44,11 +42,11 @@ export const useSlidingPill = (
 
     const moveToActive = useCallback(() => {
         const list = listRef.current;
-        const id = activeIdRef.current;
+        const id = readActiveId();
         const link = list && id ? list.querySelector(`[data-nav-id="${id}"]`) : null;
 
         moveTo(link instanceof HTMLElement ? link : null);
-    }, [listRef, moveTo]);
+    }, [listRef, moveTo, readActiveId]);
 
     useEffect(() => {
         const list = listRef.current;

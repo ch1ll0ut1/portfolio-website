@@ -139,27 +139,6 @@ export default tseslint.config(
      * is still held to them. Delete a block when its plan item lands.
      */
     {
-        // E10: latest-value refs written during render, to be replaced with
-        // `useEffectEvent` once React is on 19.2. The memoization the compiler
-        // cannot preserve in useCareerLog is a consequence of the same refs.
-        files: [
-            'components/home/experience/Experience.tsx',
-            'components/home/experience/useCareerLog.ts',
-            'components/home/work/caseStack.ts',
-            'components/home/writing/PipelineCanvas.tsx',
-            'components/nav/useSlidingPill.ts',
-            'lib/motion/useInView.ts',
-            'lib/motion/useRaf.ts',
-            'lib/motion/useScrollState.ts',
-            'lib/motion/useScrub.ts',
-            'lib/motion/useStageEvent.ts',
-        ],
-        rules: {
-            'react-hooks/refs': 'warn',
-            'react-hooks/preserve-manual-memoization': 'warn',
-        },
-    },
-    {
         // E9: the stored-consent subscription is mirrored into state from an
         // effect, to move to `useSyncExternalStore` with the consent rework.
         files: ['components/consent/ConsentContext.tsx'],

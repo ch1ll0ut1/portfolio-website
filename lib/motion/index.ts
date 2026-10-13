@@ -29,6 +29,7 @@ export { useFinePointer } from './useFinePointer';
 export { useInView } from './useInView';
 export { useIntro } from './useIntro';
 export { useMagnetic } from './useMagnetic';
+export { useEventCallback } from './useEventCallback';
 export { useMediaQuery } from './useMediaQuery';
 export { useMaskReveal, type MaskRevealOptions } from './useMaskReveal';
 export { useRaf, useVisibleRaf } from './useRaf';

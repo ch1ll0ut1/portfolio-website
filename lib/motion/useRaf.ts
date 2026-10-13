@@ -1,7 +1,8 @@
 'use client';
 
-import { type RefObject, useEffect, useRef } from 'react';
+import { type RefObject, useEffect } from 'react';
 import { type TickFn, subscribeTick } from './ticker';
+import { useEventCallback } from './useEventCallback';
 
 /**
  * Runs a callback on the shared animation clock while `enabled` is true.
@@ -10,19 +11,15 @@ import { type TickFn, subscribeTick } from './ticker';
  * tab should set `enabled` to false rather than idling inside the callback.
  */
 export const useRaf = (callback: TickFn, enabled = true) => {
-    const latest = useRef(callback);
-
-    latest.current = callback;
+    const tick = useEventCallback(callback);
 
     useEffect(() => {
         if (!enabled) {
             return;
         }
 
-        return subscribeTick((now, delta) => {
-            latest.current(now, delta);
-        });
-    }, [enabled]);
+        return subscribeTick(tick);
+    }, [enabled, tick]);
 };
 
 /** Pauses a shared-clock callback while the element is off-screen or the tab is hidden. */
@@ -31,9 +28,7 @@ export const useVisibleRaf = (
     callback: TickFn,
     threshold = 0,
 ) => {
-    const latest = useRef(callback);
-
-    latest.current = callback;
+    const tick = useEventCallback(callback);
 
     useEffect(() => {
         const element = ref.current;
@@ -49,9 +44,7 @@ export const useVisibleRaf = (
             const shouldRun = onScreen && !document.hidden;
 
             if (shouldRun && !stop) {
-                stop = subscribeTick((now, delta) => {
-                    latest.current(now, delta);
-                });
+                stop = subscribeTick(tick);
             }
             else if (!shouldRun && stop) {
                 stop();
@@ -75,5 +68,5 @@ export const useVisibleRaf = (
             document.removeEventListener('visibilitychange', sync);
             stop?.();
         };
-    }, [ref, threshold]);
+    }, [ref, threshold, tick]);
 };

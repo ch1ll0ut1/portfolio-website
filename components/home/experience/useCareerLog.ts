@@ -1,7 +1,7 @@
 'use client';
 
 import { type RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { clamp, useReducedMotion, useScrub, useStageEvent } from '@/lib/motion';
+import { clamp, useEventCallback, useReducedMotion, useScrub, useStageEvent } from '@/lib/motion';
 import { DEFAULT_LANE, type GraphGeometry, buildGeometry, measureRows, xAt } from './graphGeometry';
 
 /** Reading line: progress 0 and 1 both sit at 62% of the viewport, so this tracks one line. */
@@ -53,7 +53,6 @@ export const useCareerLog = (count: number): CareerLogState => {
     const progressRef = useRef(0);
     const reachedRef = useRef(UNMEASURED);
     const currentRef = useRef(UNMEASURED);
-    const reducedRef = useRef(false);
 
     const reduced = useReducedMotion();
     const [geometry, setGeometry] = useState<GraphGeometry | null>(null);
@@ -62,7 +61,7 @@ export const useCareerLog = (count: number): CareerLogState => {
     const [current, setCurrent] = useState(-1);
     const [hovered, setHovered] = useState(-1);
 
-    reducedRef.current = reduced;
+    const isReduced = useEventCallback(() => reduced);
 
     const rowRefs = useMemo(
         () => Array.from({ length: count }, (_, index) => (node: HTMLLIElement | null) => {
@@ -73,7 +72,7 @@ export const useCareerLog = (count: number): CareerLogState => {
 
     const pulse = useCallback((index: number) => {
         setPulses(previous => previous.map((token, at) => (at === index ? token + 1 : token)));
-    }, []);
+    }, [setPulses]);
 
     const measure = useCallback(() => {
         const log = logRef.current;
@@ -158,12 +157,12 @@ export const useCareerLog = (count: number): CareerLogState => {
             currentRef.current = nextCurrent;
             setCurrent(nextCurrent);
         }
-    }, [pulse]);
+    }, [pulse, setReached, setCurrent]);
 
     useScrub(logRef, (progress) => {
         // Under reduced motion the ink layer is drawn in full by CSS, so there
         // is nothing for the scroll position to reveal.
-        if (reducedRef.current) {
+        if (isReduced()) {
             return;
         }
 
@@ -207,11 +206,11 @@ export const useCareerLog = (count: number): CareerLogState => {
     const hover = useCallback((index: number) => {
         setHovered(index);
         pulse(index);
-    }, [pulse]);
+    }, [pulse, setHovered]);
 
     const endHover = useCallback(() => {
         setHovered(-1);
-    }, []);
+    }, [setHovered]);
 
     return {
         logRef,
