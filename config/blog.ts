@@ -115,3 +115,12 @@ export const blogPosts: BlogPost[] = sortByDate(
         ? rawBlogPosts.filter(post => post.published)
         : rawBlogPosts,
 );
+
+/** The writing index's heading, shared by the page and its share card. */
+export const blogIndexHeading = {
+    kicker: 'Writing',
+    title: 'Insights on software development and tech leadership',
+    /** The phrase the share card draws on the selection highlight. */
+    highlight: 'tech leadership',
+    lede: (years: number) => `Practical advice from ${years} years of building software, leading teams, and helping businesses navigate their technology challenges.`,
+};

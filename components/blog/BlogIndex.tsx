@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { type BlogPost } from '@/config/blog';
+import { type BlogPost, blogIndexHeading } from '@/config/blog';
 import { yearsShipping } from '@/config/site';
 import { PostRow } from './PostRow';
 import { MaskHeading } from './MaskHeading';
@@ -18,13 +18,13 @@ export const BlogIndex: FC<Props> = ({ posts }) => {
     return (
         <div className="wrap">
             <header className={styles.head}>
-                <p className={styles.kicker}>Writing</p>
+                <p className={styles.kicker}>{blogIndexHeading.kicker}</p>
                 <MaskHeading className={styles.title}>
-                    Insights on software development and tech leadership
+                    {blogIndexHeading.title}
                 </MaskHeading>
                 <Reveal delay={0.15}>
                     <p className={styles.lead}>
-                        {`Practical advice from ${yearsShipping()} years of building software, leading teams, and helping businesses navigate their technology challenges.`}
+                        {blogIndexHeading.lede(yearsShipping())}
                     </p>
                 </Reveal>
             </header>

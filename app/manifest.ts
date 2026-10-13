@@ -1,6 +1,6 @@
 import { MetadataRoute } from 'next';
 import { siteConfig, siteTitle } from '@/config/site';
-import { ogPalette } from '@/lib/opengraphUtils';
+import { ogPalette } from '@/lib/og/palette';
 
 export default function manifest(): MetadataRoute.Manifest {
     return {

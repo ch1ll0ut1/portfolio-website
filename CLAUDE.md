@@ -57,6 +57,8 @@ app/                    # Next.js app router pages
 ├── layout.tsx         # Root layout with metadata
 └── page.tsx           # Homepage
 
+assets/fonts/          # Static font cuts (with their OFL licences) for share cards and icons
+
 components/            # React components organized by domain
 ├── analytics/        # Page view, scroll and time tracking wrappers
 ├── blog/             # Reading routes: index, article, 404 panel
@@ -79,7 +81,7 @@ content/              # Markdown content
 lib/                  # Utilities and shared logic
 ├── analytics.ts      # GA4 event helpers
 ├── motion/           # Ticker, scroll store and the motion hooks
-└── opengraphUtils.tsx  # OG image helpers and the `ogPalette` literals
+└── og/               # Share cards and icons: layout, fonts, `ogPalette` literals
 
 scripts/              # Tooling
 └── visual-check.mjs  # Playwright visual sweep

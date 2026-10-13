@@ -1,5 +1,5 @@
 import { ImageResponse } from 'next/og';
-import { ogPalette } from '@/lib/opengraphUtils';
+import { ogPalette } from '@/lib/og/palette';
 
 export const size = {
     width: 32,
@@ -33,7 +33,7 @@ export default function Icon() {
                         justifyContent: 'center',
                         fontSize: '12px',
                         fontWeight: 'bold',
-                        color: ogPalette.onAccent,
+                        color: ogPalette.bg,
                     }}
                 >
                     SK

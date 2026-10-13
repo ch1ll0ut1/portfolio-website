@@ -1,15 +1,24 @@
-import { ogImageConfig, createOgImage, OgLayout, ogPalette } from '@/lib/opengraphUtils';
+import { notFound } from 'next/navigation';
 import { blogPosts } from '@/config/blog';
+import { siteConfig } from '@/config/site';
+import { createOgImage, ogContentType, ogImageSize } from '@/lib/og/createOgImage';
+import { OgHeadline } from '@/lib/og/OgHeadline';
+import { OgLayout } from '@/lib/og/OgLayout';
+import { OgMono } from '@/lib/og/OgMono';
+import { ogPalette } from '@/lib/og/palette';
+import { headlineSize, postMetaLine, truncateAtWord } from '@/lib/og/text';
 
-export const size = ogImageConfig.size;
-export const contentType = ogImageConfig.contentType;
+export const alt = `A post from ${siteConfig.name}'s blog`;
+export const size = ogImageSize;
+export const contentType = ogContentType;
 
 /** Only the posts generated at build time have a card; anything else is a 404. */
 export const dynamicParams = false;
 
-/**
- * Generates static params for all blog posts to enable static generation.
- */
+/** Longest title the card sets in full; three lines at the smallest headline size. */
+const TITLE_MAX = 84;
+const TAGS_SHOWN = 3;
+
 export async function generateStaticParams() {
     return blogPosts.map(post => ({ slug: post.slug }));
 }
@@ -18,92 +27,22 @@ export default async function Image({ params }: { params: Promise<{ slug: string
     const { slug } = await params;
     const post = blogPosts.find(p => p.slug === slug);
 
+    // Unreachable with `dynamicParams` off; narrows `post` for the render.
     if (!post) {
-        return createOgImage({
-            children: (
-                <h1 style={{ fontSize: '48px', fontWeight: 'bold', color: ogPalette.fg }}>Post Not Found</h1>
-            ),
-        });
+        notFound();
     }
 
-    return createOgImage({
-        children: (
-            <OgLayout brandSize="small">
-                {/* Blog Post Title */}
-                <h1
-                    style={{
-                        fontSize: '48px',
-                        fontWeight: 'bold',
-                        textAlign: 'center',
-                        margin: '0 0 20px 0',
-                        lineHeight: '1.1',
-                        maxWidth: '1000px',
-                        color: ogPalette.fg,
-                        textShadow: '0 2px 10px rgba(255, 139, 61, .28)',
-                    }}
-                >
-                    {post.title}
-                </h1>
+    const title = truncateAtWord(post.title, TITLE_MAX);
 
-                {/* Excerpt */}
-                <p
-                    style={{
-                        fontSize: '20px',
-                        textAlign: 'center',
-                        margin: '0 0 30px 0',
-                        color: ogPalette.fg2,
-                        maxWidth: '900px',
-                        lineHeight: '1.4',
-                        fontWeight: '500',
-                    }}
-                >
-                    {post.excerpt.length > 120 ? post.excerpt.substring(0, 120) + '...' : post.excerpt}
-                </p>
-
-                {/* Tags */}
-                <div
-                    style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '12px',
-                        flexWrap: 'wrap',
-                        justifyContent: 'center',
-                        marginBottom: '20px',
-                    }}
-                >
-                    {post.tags.map((tag, index) => (
-                        <span
-                            key={index}
-                            style={{
-                                background: ogPalette.caret,
-                                color: ogPalette.onAccent,
-                                padding: '6px 14px',
-                                borderRadius: '16px',
-                                fontSize: '14px',
-                                fontWeight: '600',
-                                boxShadow: '0 2px 10px rgba(255, 139, 61, .28)',
-                            }}
-                        >
-                            {tag}
-                        </span>
-                    ))}
-                </div>
-
-                {/* Date */}
-                <div
-                    style={{
-                        fontSize: '16px',
-                        color: ogPalette.caret,
-                        fontWeight: '600',
-                    }}
-                >
-                    {new Date(post.date).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                    })}
-                </div>
-            </OgLayout>
-        ),
-    });
+    return createOgImage(
+        <OgLayout>
+            <OgHeadline text={title} fontSize={headlineSize(title)} />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 36 }}>
+                <OgMono>{postMetaLine(post)}</OgMono>
+                <OgMono color={ogPalette.caret}>
+                    {post.tags.slice(0, TAGS_SHOWN).join(' / ')}
+                </OgMono>
+            </div>
+        </OgLayout>,
+    );
 }

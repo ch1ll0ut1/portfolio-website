@@ -1,62 +1,33 @@
-import { siteConfig } from '@/config/site';
-import { ogImageConfig, createOgImage, OgLayout, AccentDot, ogPalette } from '@/lib/opengraphUtils';
+import { engagements } from '@/config/engagements';
+import { siteConfig, siteTitle } from '@/config/site';
+import { createOgImage, ogContentType, ogImageSize } from '@/lib/og/createOgImage';
+import { ogFonts } from '@/lib/og/fonts';
+import { OgHeadline } from '@/lib/og/OgHeadline';
+import { OgLayout } from '@/lib/og/OgLayout';
+import { ogPalette } from '@/lib/og/palette';
 
-export const size = ogImageConfig.size;
-export const contentType = ogImageConfig.contentType;
+export const alt = siteTitle;
+export const size = ogImageSize;
+export const contentType = ogContentType;
+
+/** The phrase of the positioning line the card selects. Must appear in `jobTitle`. */
+const HIGHLIGHT = 'hands-on tech lead';
 
 export default async function Image() {
-    return createOgImage({
-        children: (
-            <OgLayout>
-                {/* Main Title */}
-                <h1
-                    style={{
-                        fontSize: '52px',
-                        fontWeight: 'bold',
-                        textAlign: 'center',
-                        margin: '0 0 20px 0',
-                        lineHeight: '1.1',
-                        maxWidth: '1080px',
-                        color: ogPalette.fg,
-                        textShadow: '0 2px 10px rgba(255, 139, 61, .28)',
-                    }}
-                >
-                    {siteConfig.jobTitle}
-                </h1>
-
-                {/* Subtitle */}
-                <p
-                    style={{
-                        fontSize: '32px',
-                        textAlign: 'center',
-                        margin: '0 0 40px 0',
-                        color: ogPalette.fg2,
-                        maxWidth: '920px',
-                        lineHeight: '1.3',
-                        fontWeight: '500',
-                    }}
-                >
-                    {`From the first commit to production, since ${siteConfig.sinceYear}.`}
-                </p>
-
-                {/* Tagline */}
-                <div
-                    style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '8px',
-                        fontSize: '20px',
-                        color: ogPalette.caret,
-                        fontWeight: '600',
-                    }}
-                >
-                    <span>Fractional CTO</span>
-                    <AccentDot />
-                    <span>Founding engineer</span>
-                    <AccentDot />
-                    <span>Architecture review</span>
-                </div>
-            </OgLayout>
-        ),
-    });
+    return createOgImage(
+        <OgLayout>
+            <OgHeadline text={siteConfig.jobTitle} highlight={HIGHLIGHT} fontSize={80} />
+            <span
+                style={{
+                    marginTop: 36,
+                    fontFamily: ogFonts.body,
+                    fontWeight: 500,
+                    fontSize: 30,
+                    color: ogPalette.fg2,
+                }}
+            >
+                {engagements.map(engagement => engagement.name).join('  ·  ')}
+            </span>
+        </OgLayout>,
+    );
 }

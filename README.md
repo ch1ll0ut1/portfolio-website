@@ -121,7 +121,7 @@ portfolio-website/
 │   ├── analytics.ts             # GA4 event helpers
 │   ├── date.ts                  # Date formatting utilities
 │   ├── motion/                  # Ticker, scroll store and the motion hooks
-│   └── opengraphUtils.tsx       # Open Graph image generation utilities
+│   └── og/                      # Share cards and icons: layout, fonts, palette
 ├── scripts/                     # Tooling
 │   └── visual-check.mjs         # Playwright visual sweep
 ├── public/                      # Static assets
