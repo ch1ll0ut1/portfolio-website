@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { chordSections } from '@/config/sections';
 import { ChordHint } from './ChordHint';
 import { isEditingTarget } from './isEditingTarget';
+import { usePreference } from './preferences';
 import { scrollToSection } from './scrollToSection';
 import { toggleTheme } from './themeStore';
 
@@ -23,10 +24,15 @@ interface Props {
  * `g` chords.
  *
  * Single-letter shortcuts are only safe because every path checks the event
- * target first — a `g` typed into the hero's editor must stay a `g`.
+ * target first — a `g` typed into the hero's editor must stay a `g`. They can
+ * also be switched off altogether (WCAG 2.1.4, for speech-input users), which
+ * leaves ⌘K working, since that is how the switch is reached. Held keys are
+ * ignored: auto-repeat would flip the theme back and forth or toggle the
+ * palette open and shut.
  */
 export const KeyboardChords: FC<Props> = ({ overlayOpen, onTogglePalette, onOpenShortcuts }) => {
     const router = useRouter();
+    const singleKeys = usePreference('singleKeyShortcuts');
     const [armed, setArmed] = useState(false);
     const armedRef = useRef(false);
     const timerRef = useRef(0);
@@ -50,6 +56,10 @@ export const KeyboardChords: FC<Props> = ({ overlayOpen, onTogglePalette, onOpen
         };
 
         const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.repeat) {
+                return;
+            }
+
             const modifier = event.metaKey || event.ctrlKey;
 
             // The palette's own shortcut is the one thing that works from
@@ -62,7 +72,7 @@ export const KeyboardChords: FC<Props> = ({ overlayOpen, onTogglePalette, onOpen
                 return;
             }
 
-            if (overlayOpen || modifier || event.altKey || isEditingTarget(event.target)) {
+            if (!singleKeys || overlayOpen || modifier || event.altKey || isEditingTarget(event.target)) {
                 return;
             }
 
@@ -99,7 +109,7 @@ export const KeyboardChords: FC<Props> = ({ overlayOpen, onTogglePalette, onOpen
             document.removeEventListener('keydown', handleKeyDown);
             window.clearTimeout(timerRef.current);
         };
-    }, [overlayOpen, onTogglePalette, onOpenShortcuts, router]);
+    }, [overlayOpen, onTogglePalette, onOpenShortcuts, router, singleKeys]);
 
     return <ChordHint armed={armed} />;
 };

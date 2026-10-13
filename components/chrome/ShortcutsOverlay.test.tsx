@@ -10,6 +10,7 @@ import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { installMatchMedia } from '../../test/motionEnv';
 import { ShortcutsOverlay } from './ShortcutsOverlay';
+import { readPreference, setPreference } from './preferences';
 
 describe('<ShortcutsOverlay>', () => {
     let restoreMedia: () => void;
@@ -28,6 +29,8 @@ describe('<ShortcutsOverlay>', () => {
     beforeEach(() => {
         restoreMedia = installMatchMedia();
         onClose = vi.fn();
+        localStorage.clear();
+        setPreference('singleKeyShortcuts', true);
     });
 
     afterEach(() => {
@@ -47,6 +50,33 @@ describe('<ShortcutsOverlay>', () => {
         await mount();
 
         expect(screen.getByRole('heading', { name: 'Keyboard shortcuts' })).toBeInTheDocument();
+    });
+
+    it('should offer a switch for the single-key shortcuts, on by default', async () => {
+        await mount();
+
+        expect(screen.getByRole('switch', { name: /Single-key shortcuts/ })).toBeChecked();
+    });
+
+    it('should switch the single-key shortcuts off and remember it', async () => {
+        const user = userEvent.setup();
+
+        await mount();
+        await user.click(screen.getByRole('switch', { name: /Single-key shortcuts/ }));
+
+        expect(screen.getByRole('switch', { name: /Single-key shortcuts/ })).not.toBeChecked();
+        expect(readPreference('singleKeyShortcuts')).toBe(false);
+        expect(localStorage.getItem('sk-single-key-shortcuts')).toBe('off');
+    });
+
+    it('should not close on ? while single-key shortcuts are off', async () => {
+        const user = userEvent.setup();
+
+        setPreference('singleKeyShortcuts', false);
+        await mount();
+        await user.keyboard('?');
+
+        expect(onClose).not.toHaveBeenCalled();
     });
 
     it('should list a row for every section chord', async () => {

@@ -10,6 +10,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, render } from '@testing-library/react';
 import { installMatchMedia } from '../../test/motionEnv';
 import { KeyboardChords } from './KeyboardChords';
+import { setPreference } from './preferences';
 import hintStyles from './ChordHint.module.css';
 
 const push = vi.fn();
@@ -55,6 +56,7 @@ describe('<KeyboardChords>', () => {
         window.scrollTo = scrollTo;
         delete document.documentElement.dataset.theme;
         localStorage.clear();
+        setPreference('singleKeyShortcuts', true);
         push.mockClear();
     });
 
@@ -240,6 +242,61 @@ describe('<KeyboardChords>', () => {
         press('w');
 
         expect(push).toHaveBeenCalledWith('/#work');
+    });
+
+    it('should ignore auto-repeated key presses', () => {
+        mount();
+        press('t', { repeat: true });
+        press('k', { metaKey: true, repeat: true });
+
+        expect(document.documentElement.dataset.theme).toBeUndefined();
+        expect(onTogglePalette).not.toHaveBeenCalled();
+    });
+
+    describe('with single-key shortcuts switched off', () => {
+        beforeEach(() => {
+            setPreference('singleKeyShortcuts', false);
+        });
+
+        it('should ignore t, ? and the g chords', () => {
+            const scrollIntoView = vi.fn();
+            const section = document.createElement('section');
+
+            section.id = 'work';
+            section.scrollIntoView = scrollIntoView;
+            document.body.appendChild(section);
+
+            mount();
+            press('t');
+            press('?');
+            press('g');
+            press('w');
+
+            expect(document.documentElement.dataset.theme).toBeUndefined();
+            expect(onOpenShortcuts).not.toHaveBeenCalled();
+            expect(scrollIntoView).not.toHaveBeenCalled();
+        });
+
+        it('should keep the command menu shortcut working', () => {
+            mount();
+            press('k', { metaKey: true });
+
+            expect(onTogglePalette).toHaveBeenCalledTimes(1);
+        });
+
+        it('should remember the choice across visits', () => {
+            expect(localStorage.getItem('sk-single-key-shortcuts')).toBe('off');
+        });
+
+        it('should pick the shortcuts back up once switched on again', () => {
+            mount();
+            act(() => {
+                setPreference('singleKeyShortcuts', true);
+            });
+            press('t');
+
+            expect(document.documentElement.dataset.theme).toBe('light');
+        });
     });
 
     it('should stop listening once unmounted', () => {

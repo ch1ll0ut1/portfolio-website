@@ -2,9 +2,10 @@
  * Tests for carrying out palette commands.
  */
 
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { commands } from '@/config/commands';
 import { OPEN_CONSENT_PREFERENCES_EVENT } from '@/components/consent/ConsentContext';
+import { readPreference, setPreference } from './preferences';
 import { runCommand } from './runCommand';
 
 const handlers = () => ({ openShortcuts: vi.fn(), navigate: vi.fn() });
@@ -26,6 +27,37 @@ describe('runCommand', () => {
         // Assert
         expect(listener).toHaveBeenCalledTimes(1);
         window.removeEventListener(OPEN_CONSENT_PREFERENCES_EVENT, listener);
+    });
+
+    describe('switches', () => {
+        beforeEach(() => {
+            localStorage.clear();
+            setPreference('singleKeyShortcuts', true);
+            setPreference('caretCursor', true);
+        });
+
+        it('should list a command for each switch', () => {
+            const types = commands.map(command => command.action.type);
+
+            expect(types).toContain('toggleSingleKeys');
+            expect(types).toContain('toggleCursor');
+        });
+
+        it('should flip the single-key shortcuts', () => {
+            runCommand({ type: 'toggleSingleKeys' }, handlers());
+
+            expect(readPreference('singleKeyShortcuts')).toBe(false);
+
+            runCommand({ type: 'toggleSingleKeys' }, handlers());
+
+            expect(readPreference('singleKeyShortcuts')).toBe(true);
+        });
+
+        it('should flip the custom cursor', () => {
+            runCommand({ type: 'toggleCursor' }, handlers());
+
+            expect(readPreference('caretCursor')).toBe(false);
+        });
     });
 
     describe('sections', () => {

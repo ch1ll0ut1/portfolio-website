@@ -3,10 +3,12 @@
 import { type CSSProperties, type FC, useCallback, useRef } from 'react';
 import { Overlay } from './Overlay';
 import { orderedChordSections } from './orderedChordSections';
+import { setPreference, usePreference } from './preferences';
 import { useApplePlatform } from './useApplePlatform';
 import styles from './ShortcutsOverlay.module.css';
 
 const TITLE_ID = 'shortcuts-title';
+const SWITCH_ID = 'shortcuts-single-key';
 
 /** `--i` drives the row stagger; the CSS reads it per row. */
 interface RowStyle extends CSSProperties {
@@ -28,19 +30,22 @@ interface Props {
  * The `?` overlay.
  *
  * The chord rows are derived from `sections.ts`, so a section added there shows
- * up here without anyone remembering to update a second list.
+ * up here without anyone remembering to update a second list. It is also where
+ * the single-key shortcuts can be switched off (WCAG 2.1.4): a speech-input
+ * user saying a word containing a `t` should not flip the page's theme.
  */
 export const ShortcutsOverlay: FC<Props> = ({ open, onClose }) => {
     const closeRef = useRef<HTMLButtonElement>(null);
     const apple = useApplePlatform();
+    const singleKeys = usePreference('singleKeyShortcuts');
 
     const handleKeyDown = useCallback((event: KeyboardEvent) => {
-        // `?` opened this, so `?` closes it again.
-        if (event.key === '?') {
+        // `?` opened this, so `?` closes it again — while that key is live.
+        if (event.key === '?' && singleKeys) {
             event.preventDefault();
             onClose();
         }
-    }, [onClose]);
+    }, [onClose, singleKeys]);
 
     return (
         <Overlay
@@ -66,9 +71,14 @@ export const ShortcutsOverlay: FC<Props> = ({ open, onClose }) => {
             <dl className={styles.list}>
                 {buildShortcuts(apple).map((shortcut, index) => {
                     const style: RowStyle = { '--i': index };
+                    const singleKey = shortcut.keys.length === 1 || shortcut.keys[0] === 'G';
 
                     return (
-                        <div className={styles.row} key={shortcut.label} style={style}>
+                        <div
+                            className={singleKey && !singleKeys ? `${styles.row} ${styles.off}` : styles.row}
+                            key={shortcut.label}
+                            style={style}
+                        >
                             <dt>
                                 {shortcut.keys.map((key, position) => (
                                     <kbd className={position === 0 && shortcut.keys.length > 1 ? styles.prefix : undefined} key={key}>
@@ -81,6 +91,22 @@ export const ShortcutsOverlay: FC<Props> = ({ open, onClose }) => {
                     );
                 })}
             </dl>
+            <div className={styles.setting}>
+                <label className={styles.settingLabel} htmlFor={SWITCH_ID}>
+                    Single-key shortcuts
+                    <span className={styles.settingHint}>T, ? and the G chords. The command menu always works.</span>
+                </label>
+                <input
+                    className={styles.switch}
+                    id={SWITCH_ID}
+                    type="checkbox"
+                    role="switch"
+                    checked={singleKeys}
+                    onChange={(event) => {
+                        setPreference('singleKeyShortcuts', event.target.checked);
+                    }}
+                />
+            </div>
         </Overlay>
     );
 };

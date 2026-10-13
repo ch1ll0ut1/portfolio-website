@@ -3,9 +3,14 @@ declare const styles: {
     readonly close: string;
     readonly head: string;
     readonly list: string;
+    readonly off: string;
     readonly panel: string;
     readonly prefix: string;
     readonly row: string;
+    readonly setting: string;
+    readonly settingHint: string;
+    readonly settingLabel: string;
+    readonly switch: string;
     readonly title: string;
 };
 export default styles;
