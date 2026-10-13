@@ -192,8 +192,8 @@
 }
 
 /* ==========================================================================
-   Code. The palette is declared here and read by `codeTheme.ts` through
-   inline `var()` references, so one definition serves both themes.
+   Code. The palette is declared here and read by `CodeTheme.module.css`
+   through `var()` references, so one definition serves both themes.
    ========================================================================== */
 .code {
     --code-bg: var(--surface);

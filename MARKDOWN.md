@@ -88,8 +88,8 @@ def hello_world():
 **Features:**
 - Syntax highlighting via `react-syntax-highlighter`
 - Line numbers
-- Dark theme styling
-- Support for 100+ languages
+- Token colours from `CodeTheme.module.css` (class-based, follows the light/dark theme)
+- Grammars registered for the languages the posts use (bash, javascript, python) in `MarkdownCodeBlock.tsx`; register another there before using it, or the block renders unhighlighted
 - Fallback to 'javascript' if no language specified
 
 ### Lists
@@ -320,7 +320,7 @@ The markdown processor ensures:
 
 ### Performance
 
-- Code highlighting is optimized with bundle splitting
+- Code is highlighted on the server with only the needed grammars, and tokens carry class names instead of inline styles
 - Tables are responsive and don't break layouts
 - Images are optimized with Next.js Image component (lazy loading, responsive sizes, format conversion)
 - Static generation for improved loading times

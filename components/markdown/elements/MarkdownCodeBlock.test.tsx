@@ -115,20 +115,6 @@ describe('MarkdownCodeBlock Component', () => {
         expect(block.parentElement).toHaveTextContent('javascript');
     });
 
-    it('should colour tokens through custom properties so both themes work', () => {
-        const element: CodeBlockElement = {
-            type: 'codeBlock',
-            language: 'javascript',
-            content: 'const test = "hello";',
-        };
-
-        render(<MarkdownCodeBlock element={element} />);
-
-        const token = screen.getByTestId('syntax-highlighter').querySelector('.token');
-        expect(token).toBeInTheDocument();
-        expect(token?.getAttribute('style')).toContain('var(--code-');
-    });
-
     it('should handle unknown language gracefully', () => {
         const element: CodeBlockElement = {
             type: 'codeBlock',
@@ -141,6 +127,23 @@ describe('MarkdownCodeBlock Component', () => {
         const codeBlock = screen.getByTestId('syntax-highlighter');
         expect(codeBlock).toBeInTheDocument();
         expect(codeBlock).toHaveAttribute('data-language', 'unknown-language');
+    });
+
+    it.each([
+        ['javascript', 'const answer = 42;', 'keyword'],
+        ['python', 'def answer():\n    return 42', 'keyword'],
+        ['bash', 'echo "hi"', 'string'],
+    ])('should highlight %s with token classes rather than inline styles', (language, content, tokenClass) => {
+        const element: CodeBlockElement = { type: 'codeBlock', language, content };
+
+        render(<MarkdownCodeBlock element={element} />);
+
+        const codeBlock = screen.getByTestId('syntax-highlighter');
+
+        // The theme stylesheet colours tokens by class, in both themes.
+        expect(codeBlock.querySelector(`.token.${tokenClass}`)).not.toBeNull();
+        expect(codeBlock.querySelector('.token[style]')).toBeNull();
+        expect(codeBlock.querySelector('.linenumber[style]')).toBeNull();
     });
 
     it('should handle very long code content', () => {
