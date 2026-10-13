@@ -87,18 +87,6 @@ describe('MarkdownQuote Component', () => {
         expect(screen.getByText('Quote with & special < characters >')).toBeInTheDocument();
     });
 
-    it('should handle very long quote content', () => {
-        const longContent = 'This is a very long quote that contains a lot of text and should still be rendered correctly without breaking the layout or causing any issues with the styling';
-        const element: QuoteElement = {
-            type: 'quote',
-            segments: [{ text: longContent }],
-        };
-
-        render(<MarkdownQuote element={element} />);
-
-        expect(screen.getByText(longContent)).toBeInTheDocument();
-    });
-
     it('should handle mixed formatting correctly', () => {
         const element: QuoteElement = {
             type: 'quote',

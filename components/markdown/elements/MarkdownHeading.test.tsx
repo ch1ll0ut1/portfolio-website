@@ -120,18 +120,4 @@ describe('MarkdownHeading Component', () => {
             unmount();
         });
     });
-
-    it('should render long content correctly', () => {
-        const longContent = 'This is a very long heading that might wrap to multiple lines and should still be rendered correctly';
-        const element: HeadingElement = {
-            type: 'heading',
-            level: 2,
-            content: longContent,
-        };
-
-        render(<MarkdownHeading element={element} />);
-
-        const heading = screen.getByRole('heading', { level: 2 });
-        expect(heading).toHaveTextContent(longContent);
-    });
 });

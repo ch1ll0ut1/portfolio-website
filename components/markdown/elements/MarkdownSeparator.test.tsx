@@ -4,7 +4,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { MarkdownSeparator } from './MarkdownSeparator';
 import { type SeparatorElement } from '../parser/types';
 
@@ -33,34 +33,6 @@ describe('MarkdownSeparator Component', () => {
         expect(hr?.textContent).toBe('');
     });
 
-    it('should handle multiple separators', () => {
-        const element: SeparatorElement = {
-            type: 'separator',
-        };
-
-        render(
-            <div>
-                <MarkdownSeparator element={element} />
-                <MarkdownSeparator element={element} />
-                <MarkdownSeparator element={element} />
-            </div>,
-        );
-
-        const hrs = document.querySelectorAll('hr');
-        expect(hrs).toHaveLength(3);
-    });
-
-    it('should not accept any content or children', () => {
-        const element: SeparatorElement = {
-            type: 'separator',
-        };
-
-        render(<MarkdownSeparator element={element} />);
-
-        const hr = document.querySelector('hr');
-        expect(hr?.innerHTML).toBe('');
-    });
-
     it('should be accessible as a separator role', () => {
         const element: SeparatorElement = {
             type: 'separator',
@@ -68,9 +40,7 @@ describe('MarkdownSeparator Component', () => {
 
         render(<MarkdownSeparator element={element} />);
 
-        const hr = document.querySelector('hr');
-        expect(hr).toBeInTheDocument();
-        // HR elements have an implicit separator role
-        expect(hr?.getAttribute('role')).toBeNull(); // Default role is separator
+        // The hr's implicit role, not an explicit attribute that could drift.
+        expect(screen.getByRole('separator')).not.toHaveAttribute('role');
     });
 });

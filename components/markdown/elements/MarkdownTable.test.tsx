@@ -135,7 +135,7 @@ describe('MarkdownTable Component', () => {
         expect(tbody?.children.length).toBe(0);
     });
 
-    it('should apply correct CSS classes to container', () => {
+    it('should make the scrolling wrapper reachable by keyboard', () => {
         const element: TableElement = {
             type: 'table',
             headers: [[{ text: 'Header' }]],
