@@ -9,7 +9,7 @@ import { render } from '@testing-library/react';
 import { itemAt } from '@/test/itemAt';
 import type { TerminalSpan } from '@/config/processSteps';
 import { TerminalScreen } from './TerminalScreen';
-import { createTyper } from './typer';
+import { createTyper } from './terminalTyper';
 import styles from './Process.module.css';
 
 const TRANSCRIPT: TerminalSpan[][] = [

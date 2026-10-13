@@ -2,7 +2,7 @@
  * One terminal transcript, rendered whole.
  *
  * Every line and every character of the command is in the markup, so the
- * transcript reads with JavaScript off. `typer.ts` finds the pieces through the
+ * transcript reads with JavaScript off. `terminalTyper.ts` finds the pieces through the
  * `data-line` and `data-char` hooks and only toggles classes on them, which
  * keeps the hashed CSS Module names out of the imperative engine.
  */

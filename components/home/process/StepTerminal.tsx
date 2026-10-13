@@ -11,7 +11,7 @@ import React, { FC, useEffect, useRef } from 'react';
 import { observeInView, prefersReducedMotion } from '@/lib/motion';
 import { type TerminalSpan, terminalPath } from '@/config/processSteps';
 import { TerminalScreen } from './TerminalScreen';
-import { createTyper } from './typer';
+import { createTyper } from './terminalTyper';
 import styles from './Process.module.css';
 
 interface Props {

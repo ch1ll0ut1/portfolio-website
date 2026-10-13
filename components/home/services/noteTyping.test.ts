@@ -4,7 +4,7 @@
 
 import { describe, expect, it } from 'vitest';
 import { engagementNote } from '@/config/engagements';
-import { splitNoteWords } from './typing';
+import { splitNoteWords } from './noteTyping';
 
 describe('splitNoteWords', () => {
     it('should reconstruct the paragraph from its words', () => {
