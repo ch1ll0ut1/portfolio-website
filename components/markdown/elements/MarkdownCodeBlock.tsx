@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter';
+import SyntaxHighlighter from 'react-syntax-highlighter/dist/esm/prism-light';
 import bash from 'react-syntax-highlighter/dist/esm/languages/prism/bash';
 import javascript from 'react-syntax-highlighter/dist/esm/languages/prism/javascript';
 import jsExtras from 'react-syntax-highlighter/dist/esm/languages/prism/js-extras';
@@ -11,6 +11,13 @@ import theme from '../CodeTheme.module.css';
 /**
  * Only the grammars the posts use. A fence in any other language still
  * renders, as plain unhighlighted code, until its grammar is registered here.
+ *
+ * Imported from its own entry, not the package index: since v16 every
+ * highlighter shares one refractor instance, and the index also evaluates the
+ * full Prism build, which registers every grammar on it first (wherever the
+ * index is not tree-shaken, as in tests). js-extras then runs a second time
+ * on a grammar that already has it, and method calls lose their
+ * `method property-access` roles and change colour.
  */
 SyntaxHighlighter.registerLanguage('bash', bash);
 SyntaxHighlighter.registerLanguage('javascript', javascript);
