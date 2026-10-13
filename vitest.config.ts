@@ -8,6 +8,7 @@ import path from 'path';
  * "not defined" error — add it here.
  */
 const DOM_TS_TESTS = [
+    'components/chrome/caretCursorEngine.test.ts',
     'components/chrome/isEditingTarget.test.ts',
     'components/chrome/pickCursorMode.test.ts',
     'components/chrome/runCommand.test.ts',
@@ -16,6 +17,7 @@ const DOM_TS_TESTS = [
     'components/home/contact/wordmarkFit.test.ts',
     'components/home/hero/editorDom.test.ts',
     'components/home/hero/headlineCommands.test.ts',
+    'components/home/proof/marqueeEngine.test.ts',
     'components/home/work/visuals/runner.test.ts',
     'components/nav/retypeMark.test.ts',
     'lib/analytics.test.ts',
@@ -81,6 +83,10 @@ export default defineConfig({
     resolve: {
         alias: {
             '@': path.resolve(__dirname, './'),
+            // The `server-only` marker throws outside a Server Component build.
+            // Tests import server modules directly, so they get the no-op
+            // export Next itself resolves it to on the server.
+            'next/dist/compiled/server-only': 'next/dist/compiled/server-only/empty.js',
         },
     },
 });

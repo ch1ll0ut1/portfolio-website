@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { blogPosts } from '@/config/blog';
+import { afterEach, describe, it, expect, vi } from 'vitest';
+import { blogPosts, type BlogPost } from '@/config/blog';
 import { siteConfig } from '@/config/site';
 import sitemap from './sitemap';
 import robots from './robots';
@@ -38,6 +38,86 @@ describe('sitemap', () => {
         // Assert
         expect(home?.lastModified).toEqual(new Date(siteConfig.staticPagesUpdated));
         expect(first).toEqual(second);
+    });
+});
+
+describe('sitemap URLs and dates', () => {
+    it('should give every entry an absolute https URL on the canonical origin', () => {
+        // Act
+        const entries = sitemap();
+
+        // Assert
+        entries.forEach((entry) => {
+            const url = new URL(entry.url);
+
+            expect(url.protocol).toBe('https:');
+            expect(url.origin).toBe(new URL(siteConfig.url).origin);
+        });
+    });
+
+    it('should give every entry a real calendar date, not an invalid or build-time one', () => {
+        // Arrange
+        const now = Date.now();
+
+        // Act
+        const entries = sitemap();
+
+        // Assert
+        entries.forEach((entry) => {
+            const time = entry.lastModified instanceof Date ? entry.lastModified.getTime() : Number.NaN;
+
+            expect(Number.isNaN(time), entry.url).toBe(false);
+            expect(time, entry.url).toBeLessThan(now);
+        });
+    });
+
+    it('should date the blog index by its newest post', () => {
+        // Act
+        const index = sitemap().find(entry => entry.url === `${siteConfig.url}/blog`);
+
+        // Assert
+        expect(index?.lastModified).toEqual(new Date(blogPosts[0]?.date ?? ''));
+    });
+});
+
+describe('sitemap with drafts', () => {
+    const post = (slug: string, date: string, published: boolean): BlogPost => ({
+        id: slug,
+        title: slug,
+        excerpt: '',
+        date,
+        readTime: '1 min read',
+        tags: [],
+        slug,
+        published,
+    });
+
+    afterEach(() => {
+        vi.doUnmock('@/config/blog');
+        vi.resetModules();
+    });
+
+    it('should list published posts and leave drafts out, even when the config serves drafts', async () => {
+        // Arrange: the dev config, which keeps drafts in, newest first.
+        vi.resetModules();
+        vi.doMock('@/config/blog', () => ({
+            blogPosts: [
+                post('draft-newest', '2030-01-02', false),
+                post('published-post', '2030-01-01', true),
+            ],
+        }));
+        const { default: freshSitemap } = await import('./sitemap');
+
+        // Act
+        const entries = freshSitemap();
+        const urls = entries.map(entry => entry.url);
+        const index = entries.find(entry => entry.url === `${siteConfig.url}/blog`);
+
+        // Assert
+        expect(urls).toContain(`${siteConfig.url}/blog/published-post`);
+        expect(urls).not.toContain(`${siteConfig.url}/blog/draft-newest`);
+        // A draft does not move the index's date either.
+        expect(index?.lastModified).toEqual(new Date('2030-01-01'));
     });
 });
 

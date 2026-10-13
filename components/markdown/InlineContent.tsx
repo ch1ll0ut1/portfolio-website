@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { siteConfig } from '@/config/site';
-import { type InlineSegment } from './markdownProcessor';
+import { type InlineSegment } from './parser/types';
 import styles from './Markdown.module.css';
 
 interface Props {

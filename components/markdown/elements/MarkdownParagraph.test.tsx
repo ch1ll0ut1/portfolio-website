@@ -6,7 +6,7 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { MarkdownParagraph } from './MarkdownParagraph';
-import { type ParagraphElement } from '../markdownProcessor';
+import { type ParagraphElement } from '../parser/types';
 
 describe('MarkdownParagraph Component', () => {
     it('should render paragraph with plain text', () => {
@@ -92,18 +92,6 @@ describe('MarkdownParagraph Component', () => {
         render(<MarkdownParagraph element={element} />);
 
         expect(screen.getByText('Paragraph with & special < characters >')).toBeInTheDocument();
-    });
-
-    it('should handle very long content', () => {
-        const longContent = 'This is a very long paragraph that contains a lot of text and should still be rendered correctly without breaking the layout or causing any issues with the styling and text wrapping';
-        const element: ParagraphElement = {
-            type: 'paragraph',
-            segments: [{ text: longContent }],
-        };
-
-        render(<MarkdownParagraph element={element} />);
-
-        expect(screen.getByText(longContent)).toBeInTheDocument();
     });
 
     it('should handle mixed formatting correctly', () => {

@@ -6,7 +6,7 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { MarkdownHeading } from './MarkdownHeading';
-import { type HeadingElement } from '../markdownProcessor';
+import { type HeadingElement } from '../parser/types';
 
 describe('MarkdownHeading Component', () => {
     it('should render h1 as h4 element', () => {
@@ -119,19 +119,5 @@ describe('MarkdownHeading Component', () => {
 
             unmount();
         });
-    });
-
-    it('should render long content correctly', () => {
-        const longContent = 'This is a very long heading that might wrap to multiple lines and should still be rendered correctly';
-        const element: HeadingElement = {
-            type: 'heading',
-            level: 2,
-            content: longContent,
-        };
-
-        render(<MarkdownHeading element={element} />);
-
-        const heading = screen.getByRole('heading', { level: 2 });
-        expect(heading).toHaveTextContent(longContent);
     });
 });

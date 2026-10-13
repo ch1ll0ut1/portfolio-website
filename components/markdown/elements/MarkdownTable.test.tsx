@@ -6,7 +6,7 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { MarkdownTable } from './MarkdownTable';
-import { type TableElement } from '../markdownProcessor';
+import { type TableElement } from '../parser/types';
 
 describe('MarkdownTable Component', () => {
     it('should let keyboard users reach the scrolling wrapper, named as a region', () => {
@@ -135,7 +135,7 @@ describe('MarkdownTable Component', () => {
         expect(tbody?.children.length).toBe(0);
     });
 
-    it('should apply correct CSS classes to container', () => {
+    it('should make the scrolling wrapper reachable by keyboard', () => {
         const element: TableElement = {
             type: 'table',
             headers: [[{ text: 'Header' }]],

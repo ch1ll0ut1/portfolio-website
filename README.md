@@ -96,7 +96,7 @@ portfolio-website/
 │   ├── markdown/                # Markdown processing components
 │   │   ├── Markdown.tsx         # Main markdown renderer
 │   │   ├── InlineContent.tsx    # Inline formatting component
-│   │   ├── markdownProcessor.ts # Markdown parsing logic
+│   │   ├── parser/              # Pure parsing: block, inline, list, table
 │   │   └── elements/            # Individual markdown element components
 │   │       ├── MarkdownHeading.tsx
 │   │       ├── MarkdownCodeBlock.tsx
@@ -119,11 +119,14 @@ portfolio-website/
 │       └── ... (one file per post)
 ├── lib/                         # Utility functions
 │   ├── analytics.ts             # GA4 event helpers
+│   ├── content/                 # Server-only reads: post markdown, image sizes
 │   ├── date.ts                  # Date formatting utilities
 │   ├── motion/                  # Ticker, scroll store and the motion hooks
 │   └── og/                      # Share cards and icons: layout, fonts, palette
 ├── scripts/                     # Tooling
-│   └── visual-check.mjs         # Playwright visual sweep
+│   ├── a11y-check.mjs           # axe-core accessibility scan
+│   ├── visual-check.mjs         # Playwright visual sweep
+│   └── visual-check/            # The sweep's modules
 ├── public/                      # Static assets
 ├── test/                        # Test configuration
 │   └── setup.ts                 # Test setup file

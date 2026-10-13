@@ -4,7 +4,7 @@ import bash from 'react-syntax-highlighter/dist/esm/languages/prism/bash';
 import javascript from 'react-syntax-highlighter/dist/esm/languages/prism/javascript';
 import jsExtras from 'react-syntax-highlighter/dist/esm/languages/prism/js-extras';
 import python from 'react-syntax-highlighter/dist/esm/languages/prism/python';
-import { type CodeBlockElement } from '../markdownProcessor';
+import { type CodeBlockElement } from '../parser/types';
 import styles from '../Markdown.module.css';
 import theme from '../CodeTheme.module.css';
 

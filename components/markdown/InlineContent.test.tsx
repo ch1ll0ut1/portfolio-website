@@ -6,7 +6,7 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { InlineContent } from './InlineContent';
-import { type InlineSegment } from './markdownProcessor';
+import { type InlineSegment } from './parser/types';
 
 describe('InlineContent Component', () => {
     it('should render plain text segments', () => {

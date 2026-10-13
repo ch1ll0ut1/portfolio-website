@@ -7,7 +7,7 @@
  */
 
 import React, { FC } from 'react';
-import { type ListElement, type BlockSegment } from '../markdownProcessor';
+import { type ListElement, type BlockSegment } from '../parser/types';
 import { InlineContent } from '../InlineContent';
 import styles from '../Markdown.module.css';
 

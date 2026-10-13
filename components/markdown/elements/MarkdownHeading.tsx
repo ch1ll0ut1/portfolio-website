@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { type HeadingElement } from '../markdownProcessor';
+import { type HeadingElement } from '../parser/types';
 import styles from '../Markdown.module.css';
 
 interface Props {
