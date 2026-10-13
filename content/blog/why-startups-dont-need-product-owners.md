@@ -4,11 +4,11 @@
 
 I’ve spent most of my career working hands-on, building products from the ground up — coding, working with designers, talking to stakeholders and customers, and even managing projects myself.  
 
-And in the few occasions I’ve worked with **Product Owners (POs)** or **Product Managers (PMs)** at that early stage, my impression has always been the same:  
+And on the few occasions I’ve worked with **Product Owners (POs)** or **Product Managers (PMs)** at that early stage, my impression has always been the same:  
 
-👉 They don’t actually know how to build a product.  
+👉 The role didn’t help build the product.  
 
-Designers, developers, and architects are the ones collaborating, solving problems, and learning by actually building. POs and PMs, on the other hand, too often spend their time moving cards around in Trello — yet somehow they’re positioned as “responsible for the product.”  
+Designers, developers, and architects are the ones collaborating, solving problems, and learning by actually building. A PO or PM this early often ends up managing the board instead of shaping the product — while still being positioned as “responsible for the product.”  
 
 And then you see companies — sometimes on the advice of consultants — hiring a PO to lead a **new tech department or a startup team of just a few people.**  
 It’s a strange concept, and usually a costly mistake.  

@@ -34,7 +34,7 @@ The system works because you can see it working.
 
 ## Python Frameworks: The Hidden Costs of Magic
 
-Trying to get into Python after years in TypeScript feels like switching from a precision sports car to a Trabant.
+Trying to get into Python after years in TypeScript feels like trading a precision sports car for a bare-bones economy car.
 The first thing you notice isn’t the speed — it’s the missing features.
 
 Python’s typing is optional and often ignored.

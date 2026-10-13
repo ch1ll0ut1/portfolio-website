@@ -37,7 +37,7 @@ Instead of saying “build this app,” you ask AI to **act as a senior architec
 
 1. Ask AI for multiple architectural patterns.  
 2. Challenge it with edge cases.  
-3. Generate a `ARCHITECTURE.md` file with diagrams and folder structure.  
+3. Generate an `ARCHITECTURE.md` file with diagrams and folder structure.  
 
 **Pro tip:** Don’t accept the first answer. Push the AI to explain *why* one design might fail.
 
@@ -160,7 +160,7 @@ Ask AI: *“Write a GitHub Action that runs tests, lints code, and deploys to st
 
 ---
 
-### 9. AI for Learning & Onboarding
+## 9. AI for Learning & Onboarding
 
 New dev joins the team?  
 AI can summarize the codebase, answer “where is X implemented?” and even create learning paths.
@@ -175,7 +175,7 @@ AI can summarize the codebase, answer “where is X implemented?” and even cre
 
 ---
 
-### 10. AI for Continuous Improvement
+## 10. AI for Continuous Improvement
 
 The final workflow is meta: using AI to improve *itself*.  
 
