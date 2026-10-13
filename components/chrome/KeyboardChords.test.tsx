@@ -12,6 +12,14 @@ import { installMatchMedia } from '../../test/motionEnv';
 import { KeyboardChords } from './KeyboardChords';
 import hintStyles from './ChordHint.module.css';
 
+const push = vi.fn();
+// One instance, as the app router hands out: the layer must not re-subscribe per render.
+const router = { push };
+
+vi.mock('next/navigation', () => ({
+    useRouter: () => router,
+}));
+
 const press = (key: string, options: KeyboardEventInit & { target?: Element } = {}) => {
     const { target, ...init } = options;
     const event = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true, ...init });
@@ -47,6 +55,7 @@ describe('<KeyboardChords>', () => {
         window.scrollTo = scrollTo;
         delete document.documentElement.dataset.theme;
         localStorage.clear();
+        push.mockClear();
     });
 
     afterEach(() => {
@@ -208,6 +217,29 @@ describe('<KeyboardChords>', () => {
 
         expect(document.documentElement.dataset.theme).toBeUndefined();
         expect(onOpenShortcuts).not.toHaveBeenCalled();
+    });
+
+    it('should move focus to the section it jumps to', () => {
+        const section = document.createElement('section');
+
+        section.id = 'work';
+        section.scrollIntoView = vi.fn();
+        document.body.appendChild(section);
+
+        mount();
+        press('g');
+        press('w');
+
+        expect(section).toHaveFocus();
+        expect(section).toHaveAttribute('tabindex', '-1');
+    });
+
+    it('should route to the homepage section when it is not on this page', () => {
+        mount();
+        press('g');
+        press('w');
+
+        expect(push).toHaveBeenCalledWith('/#work');
     });
 
     it('should stop listening once unmounted', () => {

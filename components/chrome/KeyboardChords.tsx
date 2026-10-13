@@ -1,6 +1,7 @@
 'use client';
 
 import { type FC, useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { chordSections } from '@/config/sections';
 import { ChordHint } from './ChordHint';
 import { isEditingTarget } from './isEditingTarget';
@@ -25,6 +26,7 @@ interface Props {
  * target first — a `g` typed into the hero's editor must stay a `g`.
  */
 export const KeyboardChords: FC<Props> = ({ overlayOpen, onTogglePalette, onOpenShortcuts }) => {
+    const router = useRouter();
     const [armed, setArmed] = useState(false);
     const armedRef = useRef(false);
     const timerRef = useRef(0);
@@ -41,6 +43,10 @@ export const KeyboardChords: FC<Props> = ({ overlayOpen, onTogglePalette, onOpen
             setArmed(true);
             window.clearTimeout(timerRef.current);
             timerRef.current = window.setTimeout(disarm, CHORD_MS);
+        };
+
+        const navigate = (href: string) => {
+            router.push(href);
         };
 
         const handleKeyDown = (event: KeyboardEvent) => {
@@ -69,7 +75,7 @@ export const KeyboardChords: FC<Props> = ({ overlayOpen, onTogglePalette, onOpen
 
                 if (section) {
                     event.preventDefault();
-                    scrollToSection(section.id);
+                    scrollToSection(section.id, navigate);
                 }
 
                 return;
@@ -93,7 +99,7 @@ export const KeyboardChords: FC<Props> = ({ overlayOpen, onTogglePalette, onOpen
             document.removeEventListener('keydown', handleKeyDown);
             window.clearTimeout(timerRef.current);
         };
-    }, [overlayOpen, onTogglePalette, onOpenShortcuts]);
+    }, [overlayOpen, onTogglePalette, onOpenShortcuts, router]);
 
     return <ChordHint armed={armed} />;
 };

@@ -20,7 +20,7 @@ export interface CommandHandlers {
 export const runCommand = (action: CommandAction, handlers: CommandHandlers) => {
     switch (action.type) {
         case 'section':
-            scrollToSection(action.sectionId);
+            scrollToSection(action.sectionId, handlers.navigate);
             break;
         case 'external':
             openExternal(action.url);

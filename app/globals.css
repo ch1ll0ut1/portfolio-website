@@ -342,6 +342,13 @@ button {
     border-radius: 4px;
 }
 
+/* Landmarks the palette and the `g` chords move focus to. They are where
+   reading continues, not controls, so they take focus without a ring. */
+main[tabindex='-1']:focus,
+section[tabindex='-1']:focus {
+    outline: none;
+}
+
 kbd {
     font-family: var(--font-mono);
     font-size: .72em;
