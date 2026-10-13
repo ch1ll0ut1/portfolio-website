@@ -26,13 +26,13 @@ interface Highlight {
 }
 
 const highlights: Record<string, Highlight | undefined> = {
-    'how-to-use-ai-to-build-apps-10x-speed': {
-        kind: 'Guide',
-        description: 'The setup, prompts and review loop behind shipping production features with Claude Code.',
+    'why-good-software-engineering-is-expensive': {
+        kind: 'Essay',
+        description: 'AI gets you the first 80% in an hour. The last 20% (edge cases, data consistency, security) is where software gets expensive, and why cheap code gets built twice.',
     },
-    '10-ai-workflows-every-developer-should-know-2025': {
+    'how-to-hire-your-first-developer': {
         kind: 'Guide',
-        description: 'Ten repeatable workflows, from research agents to automated review, that change how a week of work feels.',
+        description: 'For non-technical founders: test real skills instead of resumes, start with a paid trial project, and bring in a tech lead to help you judge.',
     },
 };
 

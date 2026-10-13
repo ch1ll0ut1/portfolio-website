@@ -28,10 +28,9 @@ const rawBlogPosts: BlogPost[] = [
         excerpt: 'A practical, real-world guide to combining ChatGPT, v0, Claude Code, and Cursor IDE to massively speed up app development.',
         date: '2025-08-14',
         readTime: '10 min read',
-        tags: ['AI', 'Productivity', 'Development', 'Cursor', 'Claude Sonnet 4', 'Claude Code', 'v0', 'ChatGPT'],
+        tags: ['AI', 'Productivity', 'Development', 'Cursor', 'Claude Code', 'v0', 'ChatGPT'],
         slug: 'how-to-use-ai-to-build-apps-10x-speed',
         published: true,
-        featured: true,
     },
     {
         id: '2',
@@ -52,6 +51,7 @@ const rawBlogPosts: BlogPost[] = [
         tags: ['Hiring', 'Developers', 'Startup', 'Fractional CTO', 'Consulting', 'Technical Leadership'],
         slug: 'how-to-hire-your-first-developer',
         published: true,
+        featured: true,
     },
     {
         id: '4',
@@ -92,7 +92,6 @@ const rawBlogPosts: BlogPost[] = [
         tags: ['AI', 'Developer Productivity', 'Workflows', 'Cursor', 'Claude Code', 'ChatGPT', 'Automation'],
         slug: '10-ai-workflows-every-developer-should-know-2025',
         published: true,
-        featured: true,
     },
     {
         id: '9',
@@ -103,6 +102,7 @@ const rawBlogPosts: BlogPost[] = [
         tags: ['Software Engineering', 'AI', 'Technical Leadership', 'UX', 'Startups', 'Product Development', 'Vibe Coding', 'Technical Debt', 'Engineering Culture'],
         slug: 'why-good-software-engineering-is-expensive',
         published: true,
+        featured: true,
     },
 ];
 

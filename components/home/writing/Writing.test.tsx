@@ -28,7 +28,7 @@ describe('Writing Section', () => {
 
         // Assert
         expect(screen.getByRole('heading', { name: /writing and current work/i })).toBeInTheDocument();
-        expect(screen.getByText(/building software with AI agents/i)).toBeInTheDocument();
+        expect(screen.getByText(/teams and decisions behind it/i)).toBeInTheDocument();
     });
 
     it('should link every post the blog config flags as featured', () => {
