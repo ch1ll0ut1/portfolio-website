@@ -94,7 +94,7 @@ describe('Engagements Configuration', () => {
 
             // Assert
             expect(selected).toHaveLength(1);
-            expect(selected[0].text).toBe('senior judgement on every decision');
+            expect(selected[0].text).toBe('senior judgment on every decision');
         });
     });
 });

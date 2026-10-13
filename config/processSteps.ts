@@ -34,7 +34,7 @@ export const processSteps: ProcessStep[] = [
     {
         id: 'talk',
         title: 'Talk',
-        description: 'Thirty minutes on the problem, the constraints and what done looks like. Free, and no deck needed.',
+        description: 'Thirty minutes on the problem, the constraints, and what done looks like. Free, and no deck needed.',
         transcript: [
             [{ text: '$', tone: 'prompt' }, { text: ' book --call 30m' }],
             [{ text: 'agenda', tone: 'dim' }, { text: '  problem · constraints · definition of done' }],
@@ -44,7 +44,7 @@ export const processSteps: ProcessStep[] = [
     {
         id: 'map',
         title: 'Map',
-        description: 'I read the code or the idea and write a short plan: architecture, risks, milestones and cost. You decide with real numbers.',
+        description: 'I read the code or the idea and write a short plan: architecture, risks, milestones, and cost. You decide with real numbers.',
         transcript: [
             [{ text: '$', tone: 'prompt' }, { text: ' claude /audit ./repo' }],
             [{ text: 'reading', tone: 'dim' }, { text: ' source, schema, infra, CI' }],
@@ -57,7 +57,7 @@ export const processSteps: ProcessStep[] = [
     {
         id: 'build',
         title: 'Build',
-        description: 'Working increments in production every week. I write the code myself and run agent pipelines for research, tests and review.',
+        description: 'Working increments in production every week. I write the code myself and run agent pipelines for research, tests, and review.',
         transcript: [
             [{ text: '$', tone: 'prompt' }, { text: ' claude /ship feature/onboarding' }],
             [{ text: 'agents', tone: 'dim' }],
@@ -71,7 +71,7 @@ export const processSteps: ProcessStep[] = [
     {
         id: 'handover',
         title: 'Hand over',
-        description: 'Docs, tests, CI/CD and onboarding for your team, so the product keeps running without me.',
+        description: 'Docs, tests, CI/CD, and onboarding for your team, so the product keeps running without me.',
         transcript: [
             [{ text: '$', tone: 'prompt' }, { text: ' handover --team' }],
             [{ text: '✓', tone: 'ok' }, { text: ' docs/handbook.md' }],

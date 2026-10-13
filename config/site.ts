@@ -37,7 +37,7 @@ export const siteConfig: SiteConfig = {
     sinceYear: SINCE_YEAR,
     city: 'Bangkok',
     countryCode: 'TH',
-    description: `Software architect, fractional CTO and hands-on tech lead. Since ${SINCE_YEAR} I have taken products from the first commit to production, for startups, scale-ups, and the Parliament of Iceland.`,
+    description: `Software architect, fractional CTO, and hands-on tech lead. Since ${SINCE_YEAR} I have taken products from the first commit to production, for startups, scale-ups, and the Parliament of Iceland.`,
     staticPagesUpdated: '2026-10-13',
 };
 

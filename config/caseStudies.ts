@@ -76,7 +76,7 @@ export const caseStudies: CaseStudy[] = [
         role: 'Technical lead & product architect',
         title: 'Social-Bee',
         client: 'Immigrant support platform, Germany',
-        problem: 'An organization helping immigrants through German bureaucracy, courses and resources had a mission and no tech team.',
+        problem: 'An organization helping immigrants with German bureaucracy, courses, and resources had a mission and no tech team.',
         did: 'Built the tech and product department from zero: hired developers and designers, set up the process, designed the UX with stakeholders, and architected the platform on AWS with automated pipelines.',
         result: 'A complete technical foundation, from the core platform to CI/CD and AWS infrastructure, and an in-house team I hired and mentored.',
         tags: ['TypeScript', 'React', 'Node.js', 'TypeORM', 'PostgreSQL', 'AWS'],
