@@ -539,9 +539,10 @@ pre {
     margin-bottom: -.08em;
 }
 
+/* No `will-change`: a running transform transition gets its own layer anyway,
+   and a permanent hint would hold one GPU layer per word for the page's life. */
 .swi {
     display: inline-block;
-    will-change: transform;
 }
 
 .motion .mr.is-armed .swi {

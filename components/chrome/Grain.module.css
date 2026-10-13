@@ -1,8 +1,9 @@
-/* Fixed film grain over the whole page. Inset -50% so the tiled noise never
-   shows a seam at the viewport edge while the page scrolls under it. */
+/* Fixed film grain over the viewport. The layer never moves, so covering
+   exactly the viewport is enough: a larger box would only add pixels to
+   rasterise and composite on every frame. */
 .grain {
     position: fixed;
-    inset: -50%;
+    inset: 0;
     z-index: 80;
     pointer-events: none;
     opacity: var(--grain-opacity);
