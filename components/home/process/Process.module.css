@@ -265,7 +265,7 @@
     transform: scaleX(var(--p, 0));
 }
 
-/* ---------- Typing engine states (typer.ts toggles these) ---------- */
+/* ---------- Typing engine states (terminalTyper.ts toggles these) ---------- */
 .tl {
     display: block;
     transition:

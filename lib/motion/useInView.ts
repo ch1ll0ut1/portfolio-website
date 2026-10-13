@@ -1,18 +1,17 @@
 'use client';
 
-import { type RefObject, useEffect, useRef } from 'react';
+import { type RefObject, useEffect } from 'react';
 import { type InViewOptions, observeInView } from './inView';
+import { useEventCallback } from './useEventCallback';
 
 /**
  * Arm-then-fire visibility for a single element.
  *
- * Handlers are held in a ref so inline callbacks do not re-create the
+ * Handlers are read through an event callback so inline callbacks do not re-create the
  * observers, which would re-arm an element that has already fired.
  */
 export const useInView = (ref: RefObject<HTMLElement | null>, options: InViewOptions) => {
-    const latest = useRef(options);
-
-    latest.current = options;
+    const latest = useEventCallback(() => options);
 
     useEffect(() => {
         const element = ref.current;
@@ -21,12 +20,14 @@ export const useInView = (ref: RefObject<HTMLElement | null>, options: InViewOpt
             return;
         }
 
+        const initial = latest();
+
         return observeInView(element, {
-            margin: latest.current.margin,
-            onArm: () => { latest.current.onArm?.(); },
-            onEnter: () => { latest.current.onEnter?.(); },
-            onIntro: latest.current.onIntro ? () => { latest.current.onIntro?.(); } : undefined,
-            onReduced: latest.current.onReduced ? () => { latest.current.onReduced?.(); } : undefined,
+            margin: initial.margin,
+            onArm: () => { latest().onArm?.(); },
+            onEnter: () => { latest().onEnter?.(); },
+            onIntro: initial.onIntro ? () => { latest().onIntro?.(); } : undefined,
+            onReduced: initial.onReduced ? () => { latest().onReduced?.(); } : undefined,
         });
-    }, [ref]);
+    }, [ref, latest]);
 };

@@ -1,7 +1,7 @@
 /**
  * Cookie consent state for the whole site.
  *
- * The provider reads the stored choice after hydration, shows the banner when
+ * The provider reads the stored choice once hydrated, shows the banner when
  * there is no current one, and hands every decision to `lib/analytics`, which
  * is the only place Google Analytics is switched on or off. The preferences
  * dialog can be reopened at any time, because consent has to be as easy to
@@ -10,11 +10,9 @@
 
 'use client';
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type FC, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState, useSyncExternalStore, type FC, type ReactNode } from 'react';
 import { applyAnalyticsConsent } from '@/lib/analytics';
 import { readStoredConsent, writeStoredConsent, type ConsentState } from '@/lib/consentStorage';
-
-export type { ConsentState } from '@/lib/consentStorage';
 
 interface ConsentContextValue {
     /** The current choice; `null` until the stored one has been read. */
@@ -44,6 +42,14 @@ export const requestConsentPreferences = () => {
 };
 
 const DENIED: ConsentState = { analytics: false, essential: true };
+const GRANTED: ConsentState = { analytics: true, essential: true };
+
+/**
+ * The stored choice as a primitive, so `useSyncExternalStore` can compare
+ * snapshots by value. `pending` is the server's answer: it cannot know the
+ * choice, and hydrating with it keeps the two renders in agreement.
+ */
+type StoredChoice = 'pending' | 'none' | 'granted' | 'denied';
 
 const ConsentContext = createContext<ConsentContextValue | undefined>(undefined);
 
@@ -52,24 +58,19 @@ interface Props {
 }
 
 export const ConsentProvider: FC<Props> = ({ children }) => {
-    const [consent, setConsent] = useState<ConsentState | null>(null);
-    const [showBanner, setShowBanner] = useState(false);
+    const stored = useSyncExternalStore(subscribeToNothing, readStoredChoice, readServerChoice);
+    /** A choice made on this visit, which holds even when storage refused it. */
+    const [chosen, setChosen] = useState<ConsentState | null>(null);
     const [preferencesOpen, setPreferencesOpen] = useState(false);
+    const consent = chosen ?? consentFrom(stored);
+    const showBanner = chosen === null && stored === 'none';
 
-    // Storage is read after hydration: the server cannot know the choice, so
-    // reading it during render would make the two disagree.
     useEffect(() => {
-        const stored = readStoredConsent();
+        const choice = readStoredConsent();
 
-        if (stored) {
-            setConsent(stored);
-            applyAnalyticsConsent(stored.analytics);
-
-            return;
+        if (choice) {
+            applyAnalyticsConsent(choice.analytics);
         }
-
-        setConsent(DENIED);
-        setShowBanner(true);
     }, []);
 
     const openPreferences = useCallback(() => {
@@ -95,8 +96,7 @@ export const ConsentProvider: FC<Props> = ({ children }) => {
             console.warn('Cookie consent could not be stored; it applies to this visit only.');
         }
 
-        setConsent(next);
-        setShowBanner(false);
+        setChosen(next);
         applyAnalyticsConsent(next.analytics);
     }, []);
 
@@ -139,4 +139,31 @@ export const useConsent = () => {
     }
 
     return context;
+};
+
+/** Nothing outside this provider writes the record, so there is nothing to subscribe to. */
+const subscribeToNothing = () => () => undefined;
+
+const readStoredChoice = (): StoredChoice => {
+    const choice = readStoredConsent();
+
+    if (!choice) {
+        return 'none';
+    }
+
+    return choice.analytics ? 'granted' : 'denied';
+};
+
+const readServerChoice = (): StoredChoice => 'pending';
+
+const consentFrom = (stored: StoredChoice): ConsentState | null => {
+    switch (stored) {
+        case 'pending':
+            return null;
+        case 'granted':
+            return GRANTED;
+        case 'none':
+        case 'denied':
+            return DENIED;
+    }
 };

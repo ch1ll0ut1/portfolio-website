@@ -2,7 +2,7 @@
 
 import { type FC, type PointerEvent, useEffect, useRef } from 'react';
 import type { CareerCommit } from '@/config/career';
-import { startScramble } from './hashScramble';
+import { scrambleHash } from '@/lib/motion';
 import styles from './CommitRow.module.css';
 
 export interface Props {
@@ -47,7 +47,7 @@ export const CommitRow: FC<Props> = ({
             return;
         }
 
-        return startScramble(node);
+        return scrambleHash(node);
     }, [pulseToken]);
 
     const handlePointerEnter = (event: PointerEvent<HTMLLIElement>) => {

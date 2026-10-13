@@ -4,7 +4,7 @@ import { type FC, Fragment, useCallback, useEffect, useRef, useState } from 'rea
 import { useInView, useScrub, useStageEvent } from '@/lib/motion';
 import { engagementNote } from '@/config/engagements';
 import type { CssVars } from '@/lib/cssVars';
-import { type TypingEngine, createTypingEngine, splitNoteWords } from './typing';
+import { type TypingEngine, createTypingEngine, splitNoteWords } from './noteTyping';
 import styles from './Services.module.css';
 
 /** Progress is 0 while the paragraph's top sits this far down the viewport. */

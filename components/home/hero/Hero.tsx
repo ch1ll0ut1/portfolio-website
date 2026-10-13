@@ -1,7 +1,7 @@
 'use client';
 
 import { type FC, useCallback, useEffect, useRef } from 'react';
-import { clamp, useMagnetic, useReducedMotion, useScrub, useStageEvent } from '@/lib/motion';
+import { clamp, useMagnet, useReducedMotion, useScrub, useStageEvent } from '@/lib/motion';
 import { heroAvailability, heroCtas, heroLede, heroLocation } from '@/config/hero';
 import { DocumentModelPanel } from './DocumentModelPanel';
 import { FormatToolbar } from './FormatToolbar';
@@ -50,8 +50,8 @@ export const Hero: FC = () => {
     const editor = useHeadlineEditor({ titleRef, ripple, exitRef: editButtonRef, toolbarRef });
     const { onArmed, onSelecting, onRelease, onSettled } = editor;
 
-    useMagnetic(primaryCtaRef, 0.3);
-    useMagnetic(secondaryCtaRef, 0.3);
+    useMagnet(primaryCtaRef, { strength: 0.3 });
+    useMagnet(secondaryCtaRef, { strength: 0.3 });
 
     useEffect(() => {
         const root = rootRef.current;

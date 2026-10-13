@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { type ScrollState, subscribeScroll } from './scrollStore';
+import { useEventCallback } from './useEventCallback';
 
 /**
  * Subscribes to scroll state without re-rendering.
@@ -10,11 +11,7 @@ import { type ScrollState, subscribeScroll } from './scrollStore';
  * DOM directly instead.
  */
 export const useScrollState = (callback: (state: ScrollState) => void) => {
-    const latest = useRef(callback);
+    const onScroll = useEventCallback(callback);
 
-    latest.current = callback;
-
-    useEffect(() => subscribeScroll((state) => {
-        latest.current(state);
-    }), []);
+    useEffect(() => subscribeScroll(onScroll), [onScroll]);
 };
