@@ -8,6 +8,7 @@ import path from 'path';
  * "not defined" error — add it here.
  */
 const DOM_TS_TESTS = [
+    'components/chrome/caretCursorEngine.test.ts',
     'components/chrome/isEditingTarget.test.ts',
     'components/chrome/pickCursorMode.test.ts',
     'components/chrome/runCommand.test.ts',
@@ -18,6 +19,7 @@ const DOM_TS_TESTS = [
     'components/home/hero/editorDom.test.ts',
     'components/home/hero/headlineCommands.test.ts',
     'components/home/process/scramble.test.ts',
+    'components/home/proof/marqueeEngine.test.ts',
     'components/home/work/visuals/runner.test.ts',
     'components/nav/retypeMark.test.ts',
     'lib/analytics.test.ts',
