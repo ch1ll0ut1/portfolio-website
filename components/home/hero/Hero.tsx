@@ -106,11 +106,13 @@ export const Hero: FC = () => {
         const inner = innerRef.current;
         const canvas = canvasRef.current;
 
-        if (reduced || !root || !inner || !canvas) {
+        if (!root || !inner || !canvas) {
             return;
         }
 
-        if (progress <= 0) {
+        // Reduced motion clears rather than skips: a frame scrubbed before the
+        // preference was read would otherwise stay applied for good.
+        if (reduced || progress <= 0) {
             inner.style.transform = '';
             inner.style.opacity = '';
             canvas.style.transform = '';
