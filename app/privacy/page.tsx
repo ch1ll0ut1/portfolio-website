@@ -6,24 +6,29 @@ import { GlobalChrome } from '@/components/chrome/GlobalChrome';
 import { ContactFooter } from '@/components/home/contact/ContactFooter';
 import { NavTools } from '@/components/nav/NavTools';
 import { SiteNav } from '@/components/nav/SiteNav';
+import { POLICY_LAST_UPDATED } from './policyLists';
 import { PrivacyPolicy } from './PrivacyPolicy';
+
+const DESCRIPTION = 'What personal data stefanknoch.com processes, why, and how to manage your cookie consent.';
 
 export const metadata: Metadata = {
     title: 'Privacy Policy',
-    description: 'Learn how Stefan Knoch collects, uses, and protects your personal information on this website.',
+    description: DESCRIPTION,
     openGraph: {
         title: 'Privacy Policy | Stefan Knoch',
-        description: 'Learn how Stefan Knoch collects, uses, and protects your personal information on this website.',
+        description: DESCRIPTION,
+        url: '/privacy',
     },
     robots: {
         index: true,
         follow: true,
     },
+    alternates: {
+        canonical: '/privacy',
+    },
 };
 
 const PrivacyPage: FC = () => {
-    const lastUpdated = new Date().toISOString().slice(0, 10);
-
     return (
         <>
             <PageViewTracker
@@ -36,7 +41,7 @@ const PrivacyPage: FC = () => {
                 footer={<ContactFooter />}
             >
                 <div className="wrap">
-                    <PrivacyPolicy lastUpdated={lastUpdated} />
+                    <PrivacyPolicy lastUpdated={POLICY_LAST_UPDATED} />
                 </div>
             </ReadingShell>
 

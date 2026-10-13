@@ -123,7 +123,7 @@
 }
 
 /* ==========================================================================
-   Contact card and closing note
+   Contact card
    ========================================================================== */
 .card {
     display: grid;
@@ -148,16 +148,12 @@
     font-variation-settings: 'wdth' 92;
 }
 
-.cardNote {
-    margin-top: .8em;
+.cardLine a {
+    color: inherit;
 }
 
-.colophon {
-    margin-top: clamp(48px, 6vw, 72px);
-    padding-top: clamp(22px, 2.8vw, 30px);
-    border-top: 1px solid var(--line);
-    color: var(--muted);
-    font-size: var(--fs-small);
+.cardNote {
+    margin-top: .8em;
 }
 
 /* Redefined locally on purpose: css-loader scopes animation names inside a CSS
