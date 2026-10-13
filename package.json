@@ -17,7 +17,7 @@
     "visual-check": "node scripts/visual-check.mjs"
   },
   "dependencies": {
-    "@vercel/analytics": "^1.5.0",
+    "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^1.2.0",
     "image-size": "^2.0.4",
     "next": "15.4.10",
