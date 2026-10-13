@@ -21,7 +21,9 @@ export type CommandAction
       | { type: 'route'; href: string }
       | { type: 'copy'; text: string; toast: string }
       | { type: 'theme' }
-      | { type: 'shortcuts' };
+      | { type: 'shortcuts' }
+    /** Reopens the cookie preferences dialog. */
+      | { type: 'cookieSettings' };
 
 export interface Command {
     /** Stable id, used for React keys and for the listbox option ids. */
@@ -75,6 +77,13 @@ export const commands: Command[] = [
         label: 'Keyboard shortcuts',
         hint: '?',
         action: { type: 'shortcuts' },
+    },
+    {
+        id: 'cookie-settings',
+        group: 'Actions',
+        label: 'Cookie settings',
+        hint: 'Change or withdraw consent',
+        action: { type: 'cookieSettings' },
     },
     {
         id: 'github',

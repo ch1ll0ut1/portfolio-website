@@ -7,6 +7,7 @@
 
 import { copyText } from '@/lib/motion';
 import type { CommandAction } from '@/config/commands';
+import { requestConsentPreferences } from '@/components/consent/ConsentContext';
 import { openExternal } from './openExternal';
 import { scrollToSection } from './scrollToSection';
 import { toggleTheme } from './themeStore';
@@ -35,6 +36,9 @@ export const runCommand = (action: CommandAction, handlers: CommandHandlers) => 
             break;
         case 'shortcuts':
             handlers.openShortcuts();
+            break;
+        case 'cookieSettings':
+            requestConsentPreferences();
             break;
     }
 };

@@ -8,6 +8,8 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { links } from '@/config/links';
 import { installIntersectionObserver, installMatchMedia } from '../../../test/motionEnv';
+import { ConsentProvider } from '@/components/consent/ConsentContext';
+import { CookieConsent } from '@/components/consent/CookieConsent';
 import { ContactFooter } from './ContactFooter';
 
 /** jsdom cannot navigate, and logs loudly when a test clicks a real link. */
@@ -120,5 +122,27 @@ describe('ContactFooter', () => {
 
         // Assert
         expect(screen.getByText(/bangkok/i)).toBeInTheDocument();
+    });
+
+    it('should reopen the cookie preferences from a button', async () => {
+        // Arrange
+        localStorage.setItem('cookie-consent', JSON.stringify({
+            version: '2.0',
+            consent: { analytics: true, essential: true },
+        }));
+        render(
+            <ConsentProvider>
+                <ContactFooter />
+                <CookieConsent />
+            </ConsentProvider>,
+        );
+
+        // Act
+        await userEvent.click(screen.getByRole('button', { name: 'Cookie settings' }));
+
+        // Assert
+        expect(await screen.findByRole('dialog', { name: 'Cookie preferences' })).toBeInTheDocument();
+        expect(screen.getByRole('switch', { name: 'Analytics cookies' })).toBeChecked();
+        localStorage.clear();
     });
 });

@@ -36,8 +36,21 @@
     color: var(--fg-2);
 }
 
+/* A button, since it opens a dialog rather than going anywhere, dressed as
+   the links beside it. */
+.linkButton {
+    padding: 0 0 2px;
+    border: 0;
+    background-color: transparent;
+    color: var(--fg-2);
+    font: inherit;
+    cursor: pointer;
+}
+
 .links a:hover,
-.links a:focus-visible {
+.links a:focus-visible,
+.linkButton:hover,
+.linkButton:focus-visible {
     color: var(--fg);
 }
 

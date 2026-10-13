@@ -2,6 +2,7 @@
 
 import { type FC, useRef } from 'react';
 import { links } from '@/config/links';
+import { requestConsentPreferences } from '@/components/consent/ConsentContext';
 import { externalLinkHandlers } from './outboundTracking';
 import { FooterClock } from './FooterClock';
 import { FooterWordmark } from './FooterWordmark';
@@ -72,6 +73,13 @@ export const ContactFooter: FC = () => {
                                 </li>
                             );
                         })}
+                        <li>
+                            {/* Consent must be as easy to withdraw as to give, so
+                                the preferences stay one click away on every page. */}
+                            <button className={`ulink ${styles.linkButton}`} type="button" onClick={requestConsentPreferences}>
+                                Cookie settings
+                            </button>
+                        </li>
                     </ul>
                     <div className={styles.end}>
                         <p className={styles.clock}>
