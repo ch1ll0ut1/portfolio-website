@@ -9,6 +9,20 @@ import { MarkdownTable } from './MarkdownTable';
 import { type TableElement } from '../markdownProcessor';
 
 describe('MarkdownTable Component', () => {
+    it('should let keyboard users reach the scrolling wrapper, named as a region', () => {
+        const element: TableElement = {
+            type: 'table',
+            headers: [[{ text: 'Header' }]],
+            rows: [[[{ text: 'Cell' }]]],
+        };
+
+        render(<MarkdownTable element={element} />);
+
+        const region = screen.getByRole('region', { name: 'Table' });
+        expect(region).toHaveAttribute('tabindex', '0');
+        expect(region).toContainElement(screen.getByRole('table'));
+    });
+
     it('should render table with headers and rows', () => {
         const element: TableElement = {
             type: 'table',

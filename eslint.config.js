@@ -3,6 +3,8 @@ import importPlugin from 'eslint-plugin-import';
 import tseslint from 'typescript-eslint';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
+import jsxA11y from 'eslint-plugin-jsx-a11y';
+import nextPlugin from '@next/eslint-plugin-next';
 
 export default tseslint.config(
     {
@@ -12,9 +14,8 @@ export default tseslint.config(
             ".next",
             "eslint.config.js",
             "next.config.mjs",
-            "postcss.config.mjs",
-            "tailwind.config.js",
-            'vitest.shims.d.ts'
+            // Agent worktrees: full checkouts of the repo, linted in their own right.
+            '.claude/**',
         ]
     },
     tseslint.configs.strictTypeChecked,
@@ -24,6 +25,10 @@ export default tseslint.config(
     importPlugin.flatConfigs.typescript,
     react.configs.flat.recommended,
     react.configs.flat['jsx-runtime'],
+    reactHooks.configs.flat.recommended,
+    jsxA11y.flatConfigs.recommended,
+    nextPlugin.flatConfig.recommended,
+    nextPlugin.flatConfig.coreWebVitals,
     {
         settings: {
             'import/resolver': {
@@ -53,7 +58,6 @@ export default tseslint.config(
     {
         plugins: {
             '@stylistic': stylistic,
-            'react-hooks': reactHooks,
         },
         rules: {
             // Stylistic rules
@@ -86,7 +90,7 @@ export default tseslint.config(
             // Developer Experience
             '@typescript-eslint/restrict-template-expressions': [
                 'error',
-                { allowNumber: true, allowNever: true, allowNullish: true, allowAny: true }
+                { allowNumber: true, allowNever: true, allowNullish: true }
             ],
             '@typescript-eslint/require-await': 'off',
 
@@ -100,9 +104,13 @@ export default tseslint.config(
             // Next.js requires default exports for pages
             'import/no-default-export': 'off',
 
-            // React hooks rules
-            'react-hooks/rules-of-hooks': 'error',
-            'react-hooks/exhaustive-deps': 'warn',
+            // A scrollable region has to be focusable so keyboard users can scroll
+            // it (axe: scrollable-region-focusable); `region` plus a label names it.
+            'jsx-a11y/no-noninteractive-tabindex': ['error', {
+                tags: [],
+                roles: ['tabpanel', 'region'],
+                allowExpressionValues: true,
+            }],
 
             // React rules
             'react/prop-types': 'off', // We use TypeScript
@@ -121,13 +129,93 @@ export default tseslint.config(
             '@typescript-eslint/no-unsafe-call': 'off',
             '@typescript-eslint/no-unsafe-argument': 'off',
             '@typescript-eslint/no-empty-function': 'off',
+            '@next/next/no-img-element': 'off',
+        },
+    },
+    /*
+     * Known violations scheduled for later work in the improvement plan. Each
+     * block downgrades only the named rules, only in the named files, so new code
+     * is still held to them. Delete a block when its plan item lands.
+     */
+    {
+        // E10: latest-value refs written during render, to be replaced with
+        // `useEffectEvent` once React is on 19.2. The memoization the compiler
+        // cannot preserve in useCareerLog is a consequence of the same refs.
+        files: [
+            'components/home/experience/Experience.tsx',
+            'components/home/experience/useCareerLog.ts',
+            'components/home/work/caseStack.ts',
+            'components/home/writing/PipelineCanvas.tsx',
+            'components/nav/useSlidingPill.ts',
+            'lib/motion/useInView.ts',
+            'lib/motion/useRaf.ts',
+            'lib/motion/useScrollState.ts',
+            'lib/motion/useScrub.ts',
+            'lib/motion/useStageEvent.ts',
+            'lib/scrollTracking.ts',
+            'lib/timeTracking.ts',
+        ],
+        rules: {
+            'react-hooks/refs': 'warn',
+            'react-hooks/preserve-manual-memoization': 'warn',
         },
     },
     {
-        files: ['**/*.stories.ts'],
+        // E9: media-query and stage subscriptions mirrored into state from an
+        // effect, to become one `useSyncExternalStore`-based hook.
+        files: [
+            'lib/motion/useFinePointer.ts',
+            'lib/motion/useReducedMotion.ts',
+            'lib/motion/useIntro.ts',
+        ],
         rules: {
-            '@typescript-eslint/naming-convention': 'off',
-            'import/no-default-export': 'off',
+            'react-hooks/set-state-in-effect': 'warn',
+        },
+    },
+    {
+        // A4: the command palette is reworked to the APG combobox pattern.
+        files: ['components/chrome/CommandPalette.tsx', 'components/chrome/CommandList.tsx'],
+        rules: {
+            'react-hooks/set-state-in-effect': 'warn',
+            'jsx-a11y/click-events-have-key-events': 'warn',
+        },
+    },
+    {
+        // A5: the hand-rolled modals move to native `<dialog>` + `showModal()`.
+        files: [
+            'components/chrome/Overlay.tsx',
+            'components/chrome/ShortcutsOverlay.tsx',
+            'components/consent/ConsentPreferencesModal.tsx',
+        ],
+        rules: {
+            'react-hooks/set-state-in-effect': 'warn',
+            'jsx-a11y/no-noninteractive-element-interactions': 'warn',
+        },
+    },
+    {
+        // A3: the contenteditable h1 becomes an explicit, opt-in textbox widget.
+        files: ['components/home/hero/HeadlineEditor.tsx'],
+        rules: {
+            'jsx-a11y/no-noninteractive-element-interactions': 'warn',
+        },
+    },
+    {
+        // Consent and analytics rework (E15/E16 and the consent wave): a callback
+        // used before its declaration, and `Date.now()` read during render.
+        files: ['components/consent/ConsentContext.tsx', 'lib/scrollTracking.ts', 'lib/timeTracking.ts'],
+        rules: {
+            'react-hooks/immutability': 'warn',
+            'react-hooks/purity': 'warn',
+        },
+    },
+    {
+        // Not yet in the plan: focusable preview rows in the project index, and
+        // the hover preview mirroring its prop into state from an effect. Both
+        // need a design decision rather than a lint fix.
+        files: ['components/home/work/MoreProjects.tsx', 'components/home/work/ProjectPreview.tsx'],
+        rules: {
+            'jsx-a11y/no-noninteractive-tabindex': 'warn',
+            'react-hooks/set-state-in-effect': 'warn',
         },
     },
     {

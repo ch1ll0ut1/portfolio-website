@@ -9,11 +9,12 @@ interface Props {
 
 /**
  * The wrapper scrolls instead of widening the page, so it is focusable for
- * keyboard users who cannot drag it.
+ * keyboard users who cannot drag it — and, being a tab stop, it is a named
+ * region so a screen reader says what the focus landed on.
  */
 export const MarkdownTable: FC<Props> = ({ element }) => {
     return (
-        <div className={styles.tableWrap} tabIndex={0}>
+        <div className={styles.tableWrap} tabIndex={0} role="region" aria-label="Table">
             <table className={styles.table}>
                 <thead>
                     <tr>
