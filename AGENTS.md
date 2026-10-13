@@ -27,12 +27,12 @@ pnpm visual-check   # Sweep every route type in both themes, 1440px and 390px,
 
 ## Architecture Overview
 
-This is a Next.js 15 portfolio website built with TypeScript, React 19, and Tailwind CSS. The architecture follows modular design principles with clear separation of concerns.
+This is a Next.js 15 portfolio website built with TypeScript, React 19 and CSS Modules. The architecture follows modular design principles with clear separation of concerns.
 
 ### Key Technical Stack
 - **Framework**: Next.js 15 with App Router
 - **Language**: TypeScript with strict configuration
-- **Styling**: CSS Modules driven by the design tokens in `app/globals.css`, with Tailwind CSS v4 via PostCSS for the global layer
+- **Styling**: CSS Modules driven by the design tokens in `app/globals.css`, which also holds the reset and the few global primitives. No CSS framework or PostCSS config
 - **UI Components**: No component library. Global primitive classes (`.wrap`, `.btn`, `.tags`, `.sec-head`) in `app/globals.css`, composed per component in a co-located `.module.css`
 - **Motion**: `lib/motion` — one shared ticker and scroll store behind hooks (`useReveal`, `useScrub`, `useIntro`), all of it inert under reduced motion
 - **Testing**: Vitest with jsdom environment

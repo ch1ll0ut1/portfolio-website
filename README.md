@@ -40,7 +40,7 @@ A modern, responsive portfolio website built with Next.js 15, React 19, and Type
 ### **Styling & UI**
 
 - **CSS Modules** - Component styling driven by the design tokens in `app/globals.css`
-- **Tailwind CSS 4** - Utility-first CSS for the global layer
+- **Global layer** - `app/globals.css` holds the tokens, a small reset and the few global primitives; no CSS framework
 - **Bricolage Grotesque / Schibsted Grotesk / Martian Mono** - Display, body and mono typography
 - **Hand-rolled motion** - One shared ticker and scroll store in `lib/motion`, inert under reduced motion
 
@@ -62,7 +62,6 @@ A modern, responsive portfolio website built with Next.js 15, React 19, and Type
 ### **Development Tools**
 
 - **pnpm** - Fast, disk space efficient package manager
-- **PostCSS** - CSS processing, via Tailwind v4's PostCSS plugin
 - **Playwright** - Drives the visual check
 
 ## 📁 **Project Structure**
@@ -321,11 +320,11 @@ This project follows the development standards outlined in `DEVELOPMENT_GUIDE.md
 - Import rules for proper module organization
 - React-specific rules for component best practices
 
-### **Tailwind Configuration**
+### **Styling**
 
-- Custom color palette matching brand guidelines
-- Responsive design utilities
-- Animation and transition classes
+- Design tokens (colors, type scale, spacing, motion) as custom properties in `app/globals.css`, with a dark and a light palette
+- A small reset in a cascade layer, so every component rule wins over it
+- Component styles in co-located CSS Modules
 
 ## 📊 **Performance & SEO**
 

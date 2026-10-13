@@ -287,7 +287,7 @@ function BlogPost({ content }: { content: string }) {
 
 ### Styling
 
-All components use Tailwind CSS classes and follow the site's design system:
+All components are styled with CSS Modules and follow the site's design tokens in `app/globals.css`:
 - Primary colors for headings and important text
 - Muted colors for body text
 - Action colors for interactive elements (links)
