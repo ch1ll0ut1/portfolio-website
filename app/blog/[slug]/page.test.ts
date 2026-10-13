@@ -5,9 +5,14 @@
  */
 
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { notFound } from 'next/navigation';
 import { blogPosts } from '@/config/blog';
 import { absoluteUrl, siteConfig } from '@/config/site';
 import { itemAt } from '@/test/itemAt';
+// Imported once at module scope rather than inside each test: loading the
+// route pulls in the whole article graph, and a cold load inside a test body
+// raced the 5 s test timeout whenever the machine was busy.
+import BlogPost, { generateMetadata } from './page';
 
 // Hoisted with the mock below, which closes over it.
 const { NOT_FOUND } = vi.hoisted(() => ({ NOT_FOUND: new Error('NEXT_NOT_FOUND') }));
@@ -20,8 +25,6 @@ vi.mock('next/navigation', () => ({
 
 const params = (slug: string) => Promise.resolve({ slug });
 
-const loadRoute = () => import('./page');
-
 describe('/blog/[slug]', () => {
     afterEach(() => {
         vi.clearAllMocks();
@@ -29,7 +32,6 @@ describe('/blog/[slug]', () => {
 
     describe('generateMetadata', () => {
         it('should give a post its title, excerpt, canonical path and article card', async () => {
-            const { generateMetadata } = await loadRoute();
             const post = itemAt(blogPosts, 0);
 
             const metadata = await generateMetadata({ params: params(post.slug) });
@@ -51,8 +53,6 @@ describe('/blog/[slug]', () => {
         });
 
         it('should keep an unknown slug out of the index', async () => {
-            const { generateMetadata } = await loadRoute();
-
             const metadata = await generateMetadata({ params: params('this-article-does-not-exist') });
 
             expect(metadata.title).toBe('Post not found');
@@ -62,17 +62,11 @@ describe('/blog/[slug]', () => {
 
     describe('page', () => {
         it('should answer an unknown slug with notFound()', async () => {
-            const { default: BlogPost } = await loadRoute();
-            const { notFound } = await import('next/navigation');
-
             await expect(BlogPost({ params: params('this-article-does-not-exist') })).rejects.toBe(NOT_FOUND);
             expect(notFound).toHaveBeenCalledOnce();
         });
 
         it('should render a known post without calling notFound()', async () => {
-            const { default: BlogPost } = await loadRoute();
-            const { notFound } = await import('next/navigation');
-
             await expect(BlogPost({ params: params(itemAt(blogPosts, 0).slug) })).resolves.toBeTruthy();
             expect(notFound).not.toHaveBeenCalled();
         });

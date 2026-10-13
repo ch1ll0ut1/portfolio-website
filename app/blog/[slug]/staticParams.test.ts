@@ -8,21 +8,24 @@
 
 import fs from 'fs';
 import path from 'path';
-import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
+import { afterAll, describe, expect, it, vi } from 'vitest';
+import { blogPosts } from '@/config/blog';
+import { generateStaticParams } from './page';
+
+// Hoisted above the imports, so the blog config and the route load under the
+// production environment from the start. Loading them at module scope also
+// keeps the route's cold import out of the 5 s test timeout, which it overran
+// on a busy machine when each test imported it in its body.
+vi.hoisted(() => {
+    vi.stubEnv('NODE_ENV', 'production');
+});
 
 describe('/blog/[slug] generateStaticParams', () => {
-    beforeAll(() => {
-        vi.stubEnv('NODE_ENV', 'production');
-        vi.resetModules();
-    });
-
     afterAll(() => {
         vi.unstubAllEnvs();
     });
 
     it('should build exactly the published posts', async () => {
-        const [{ generateStaticParams }, { blogPosts }] = await Promise.all([import('./page'), import('@/config/blog')]);
-
         const slugs = (await generateStaticParams()).map(param => param.slug);
 
         expect(slugs.length).toBeGreaterThan(0);
@@ -31,8 +34,6 @@ describe('/blog/[slug] generateStaticParams', () => {
     });
 
     it('should only build slugs that have a markdown file', async () => {
-        const { generateStaticParams } = await import('./page');
-
         for (const { slug } of await generateStaticParams()) {
             expect(fs.existsSync(path.join(process.cwd(), 'content', 'blog', `${slug}.md`)), slug).toBe(true);
         }
