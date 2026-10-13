@@ -56,9 +56,9 @@
     border-radius: 999px;
     font-size: .85rem;
     color: var(--fg-2);
-    background: color-mix(in srgb, var(--bg) 70%, transparent);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
+    /* Denser fill instead of a backdrop blur: the field canvas behind it
+       animates, and a blur would be recomputed on every one of its frames. */
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
 }
 
 .chip time {
@@ -312,9 +312,8 @@
     min-width: 0;
     border: 1px solid var(--line);
     border-radius: var(--radius-m);
-    background: color-mix(in srgb, var(--surface) 82%, transparent);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    /* No backdrop blur over the animating canvas; see `.chip`. */
+    background: color-mix(in srgb, var(--surface) 94%, transparent);
     overflow: hidden;
 }
 
