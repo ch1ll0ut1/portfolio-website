@@ -162,7 +162,7 @@ This project follows the brand guidelines defined in `BRAND.md`:
 
 ### **Prerequisites**
 
-- Node.js 18+
+- Node.js 24 (see `.nvmrc`)
 - pnpm (recommended) or npm
 
 ### **Installation**
