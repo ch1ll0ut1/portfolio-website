@@ -84,16 +84,6 @@ const rawBlogPosts: BlogPost[] = [
         published: true,
     },
     {
-        id: '7',
-        title: 'How to Start with Crypto Trading (For Complete Beginners)',
-        excerpt: 'A step-by-step beginner’s guide to trading crypto safely: from choosing exchanges and risk management to diversification, mental discipline, and simple trading strategies.',
-        date: '2025-08-24',
-        readTime: '14 min read',
-        tags: ['Crypto', 'Trading', 'Risk Management', 'Investing', 'Beginners'],
-        slug: 'how-to-start-with-crypto-trading-for-complete-beginners',
-        published: false,
-    },
-    {
         id: '8',
         title: '10 AI Workflows Every Developer Should Know in 2025',
         excerpt: 'AI is no longer just autocomplete — it’s a workflow accelerator. These 10 AI workflows will make developers in 2025 work at 3–10× speed.',
