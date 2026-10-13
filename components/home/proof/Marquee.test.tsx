@@ -97,7 +97,9 @@ describe('Marquee', () => {
 
         render(<Marquee names={names} />);
         act(() => {
-            observers.instances.at(-1)?.emit(true);
+            observers.instances.forEach((observer) => {
+                observer.emit(true);
+            });
         });
 
         expect(tickerCount()).toBe(before + 1);
@@ -132,7 +134,9 @@ describe('Marquee', () => {
         const { container } = render(<Marquee names={names} />);
 
         act(() => {
-            observers.instances.at(-1)?.emit(true);
+            observers.instances.forEach((observer) => {
+                observer.emit(true);
+            });
         });
 
         // Assert

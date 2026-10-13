@@ -6,9 +6,9 @@
  * from scroll direction. The only per-frame write is the track's transform:
  * the edges fade through a static CSS mask, so no name is ever restyled.
  *
- * Everything runs on the shared ticker, and the scroll subscription is held,
- * only while the row is on screen, the tab is visible and the visitor has not
- * paused it. Hovering or focusing inside the row eases it to a stop, so a name
+ * The clock runs only while the row is on screen, the tab is visible and the
+ * visitor has not paused it; the scroll subscription is held only while the row
+ * is near the viewport. Hovering or focusing inside the row eases it to a stop, so a name
  * can be read or a control used without chasing it (WCAG 2.2.2).
  */
 
@@ -18,7 +18,7 @@ import {
     onStage,
     scrollState,
     startStage,
-    subscribeScroll,
+    subscribeScrollWhileNear,
     subscribeTick,
 } from '@/lib/motion';
 
@@ -58,7 +58,6 @@ export const startMarquee = ({ root, viewport, track, liveClass }: MarqueeOption
     let paused = false;
     let onScreen = false;
     let stopTick: (() => void) | null = null;
-    let stopScroll: (() => void) | null = null;
 
     const measure = () => {
         half = track.scrollWidth / 2 || 1;
@@ -93,14 +92,10 @@ export const startMarquee = ({ root, viewport, track, liveClass }: MarqueeOption
 
         if (shouldRun && !stopTick) {
             stopTick = subscribeTick(tick);
-            // Velocity only updates while something listens to the scroll store.
-            stopScroll = subscribeScroll(() => undefined);
         }
         else if (!shouldRun && stopTick) {
             stopTick();
-            stopScroll?.();
             stopTick = null;
-            stopScroll = null;
         }
     };
 
@@ -130,6 +125,8 @@ export const startMarquee = ({ root, viewport, track, liveClass }: MarqueeOption
     viewport.classList.add(liveClass);
 
     const stopLayout = onStage('layout', measure);
+    // Velocity only updates while something listens to the scroll store.
+    const stopScroll = subscribeScrollWhileNear(viewport, () => undefined);
     const fine = hasFinePointer();
 
     if (fine) {
@@ -165,7 +162,7 @@ export const startMarquee = ({ root, viewport, track, liveClass }: MarqueeOption
             }
 
             stopTick?.();
-            stopScroll?.();
+            stopScroll();
             stopLayout();
             viewport.classList.remove(liveClass);
             track.style.removeProperty('transform');
