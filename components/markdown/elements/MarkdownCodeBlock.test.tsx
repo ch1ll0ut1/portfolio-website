@@ -146,6 +146,23 @@ describe('MarkdownCodeBlock Component', () => {
         expect(codeBlock.querySelector('.linenumber[style]')).toBeNull();
     });
 
+    it('should tag the JavaScript extras the theme colours', () => {
+        const element: CodeBlockElement = {
+            type: 'codeBlock',
+            language: 'javascript',
+            content: 'console.log(res.end());',
+        };
+
+        render(<MarkdownCodeBlock element={element} />);
+
+        const codeBlock = screen.getByTestId('syntax-highlighter');
+
+        // js-extras' roles: a method call takes the property colour, not the
+        // function colour, and `console` is coloured as a class name.
+        expect(codeBlock.querySelector('.token.console.class-name')).toHaveTextContent('console');
+        expect(codeBlock.querySelectorAll('.token.method.property-access')).toHaveLength(2);
+    });
+
     it('should handle very long code content', () => {
         const longCode = 'const veryLongVariableName = '.repeat(100) + '"end";';
         const element: CodeBlockElement = {
