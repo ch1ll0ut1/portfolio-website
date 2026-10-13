@@ -12,69 +12,32 @@ import { Work } from '@/components/home/work/Work';
 import { Writing } from '@/components/home/writing/Writing';
 import { NavTools } from '@/components/nav/NavTools';
 import { SiteNav } from '@/components/nav/SiteNav';
-
-const DESCRIPTION = 'Software architect, hands-on engineer and fractional CTO. Since 2008 I have taken products from the first commit to production, for startups, scale-ups and the Parliament of Iceland.';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { siteConfig, siteTitle } from '@/config/site';
+import { personSchema } from '@/lib/structuredData';
 
 export const metadata: Metadata = {
-    title: 'Stefan Knoch — Software architect and fractional CTO',
-    description: DESCRIPTION,
-    keywords: [
-        'software architect',
-        'fractional CTO',
-        'founding engineer',
-        'architecture review',
-        'TypeScript',
-        'React',
-        'Next.js',
-        'Node.js',
-        'rich text editors',
-        'technology consultant',
-    ],
+    // Absolute, so the layout's "| Stefan Knoch" template does not repeat the name.
+    title: { absolute: siteTitle },
+    description: siteConfig.description,
     openGraph: {
-        title: 'Stefan Knoch — Software architect and fractional CTO',
-        description: DESCRIPTION,
-        url: 'https://stefanknoch.com',
+        title: siteTitle,
+        description: siteConfig.description,
+        url: siteConfig.url,
         type: 'website',
     },
     twitter: {
-        title: 'Stefan Knoch — Software architect and fractional CTO',
-        description: DESCRIPTION,
+        title: siteTitle,
+        description: siteConfig.description,
     },
     alternates: {
         canonical: '/',
     },
 };
 
-const personSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'Person',
-    'name': 'Stefan Knoch',
-    'jobTitle': 'Software Architect & Fractional CTO',
-    'description': DESCRIPTION,
-    'url': 'https://stefanknoch.com',
-    'sameAs': [
-        'https://www.linkedin.com/in/skdevde/',
-        'https://github.com/ch1ll0ut1',
-    ],
-    'knowsAbout': [
-        'Software Architecture',
-        'Full-Stack Development',
-        'Rich Text Editors',
-        'React',
-        'TypeScript',
-        'Next.js',
-        'Node.js',
-        'Team Leadership',
-        'AI-Augmented Engineering',
-    ],
-};
-
 const Home: FC = () => (
     <>
-        <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
-        />
+        <JsonLd data={personSchema()} />
 
         <AnalyticsWrapper
             pageName="Homepage"

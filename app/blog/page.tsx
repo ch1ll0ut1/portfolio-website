@@ -8,29 +8,36 @@ import { GlobalChrome } from '@/components/chrome/GlobalChrome';
 import { ContactFooter } from '@/components/home/contact/ContactFooter';
 import { NavTools } from '@/components/nav/NavTools';
 import { SiteNav } from '@/components/nav/SiteNav';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { absoluteUrl, siteConfig } from '@/config/site';
+import { blogSchema } from '@/lib/structuredData';
+
+const TITLE = 'Blog — Software engineering, tech leadership and AI';
+const DESCRIPTION = 'Writing on software engineering, technical leadership, hiring, and building software with AI, from years of shipping products and leading teams.';
 
 export const metadata: Metadata = {
-    title: 'Blog | Software Development & Technology Insights',
-    description: 'Insights on software development, technology leadership, AI implementation, and building scalable applications. Learn from real-world experience and strategic thinking.',
+    // Absolute, so the layout's "| Stefan Knoch" template is not stacked onto a second separator.
+    title: { absolute: `${TITLE} | ${siteConfig.name}` },
+    description: DESCRIPTION,
     keywords: [
-        'software development blog',
-        'technology insights',
-        'React development',
-        'TypeScript tips',
-        'AI implementation',
+        'software engineering blog',
         'tech leadership',
+        'hiring developers',
+        'startups',
+        'AI-assisted development',
         'software architecture',
-        'development best practices',
+        'TypeScript',
+        'React',
     ],
     openGraph: {
-        title: 'Blog | Software Development & Technology Insights',
-        description: 'Insights on software development, technology leadership, AI implementation, and building scalable applications.',
-        url: 'https://stefanknoch.com/blog',
+        title: TITLE,
+        description: DESCRIPTION,
+        url: absoluteUrl('/blog'),
         type: 'website',
     },
     twitter: {
-        title: 'Blog | Software Development & Technology Insights',
-        description: 'Insights on software development, technology leadership, AI implementation, and building scalable applications.',
+        title: TITLE,
+        description: DESCRIPTION,
     },
     alternates: {
         canonical: '/blog',
@@ -44,37 +51,7 @@ const Blog: FC = () => {
                 pageName="Blog"
                 pageType="blog"
             />
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{
-                    __html: JSON.stringify({
-                        '@context': 'https://schema.org',
-                        '@type': 'Blog',
-                        'name': 'Stefan Knoch Blog',
-                        'description': 'Insights on software development, technology leadership, and AI implementation',
-                        'url': 'https://stefanknoch.com/blog',
-                        'author': {
-                            '@type': 'Person',
-                            'name': 'Stefan Knoch',
-                        },
-                        'blogPost': blogPosts.map(post => ({
-                            '@type': 'BlogPosting',
-                            'headline': post.title,
-                            'description': post.excerpt,
-                            'author': {
-                                '@type': 'Person',
-                                'name': 'Stefan Knoch',
-                            },
-                            'datePublished': post.date,
-                            'url': `https://stefanknoch.com/blog/${post.slug}`,
-                            'mainEntityOfPage': {
-                                '@type': 'WebPage',
-                                '@id': `https://stefanknoch.com/blog/${post.slug}`,
-                            },
-                        })),
-                    }),
-                }}
-            />
+            <JsonLd data={blogSchema(blogPosts)} />
 
             <ReadingShell
                 header={<SiteNav tools={<NavTools />} />}

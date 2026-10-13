@@ -10,6 +10,9 @@ import { GlobalChrome } from '@/components/chrome/GlobalChrome';
 import { ContactFooter } from '@/components/home/contact/ContactFooter';
 import { NavTools } from '@/components/nav/NavTools';
 import { SiteNav } from '@/components/nav/SiteNav';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { absoluteUrl, siteConfig } from '@/config/site';
+import { blogPostingSchema } from '@/lib/structuredData';
 
 /**
  * Generates static params for all blog posts to enable static generation.
@@ -72,10 +75,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
         openGraph: {
             title: post.title,
             description: post.excerpt,
-            url: `https://stefanknoch.com/blog/${slug}`,
+            url: absoluteUrl(`/blog/${slug}`),
             type: 'article',
             publishedTime: post.date,
-            authors: ['Stefan Knoch'],
+            authors: [siteConfig.name],
             tags: post.tags,
         },
         twitter: {
@@ -103,41 +106,7 @@ const BlogPost: FC<{ params: Promise<{ slug: string }> }> = async ({ params }) =
 
     return (
         <>
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{
-                    __html: JSON.stringify({
-                        '@context': 'https://schema.org',
-                        '@type': 'BlogPosting',
-                        'headline': post.title,
-                        'description': post.excerpt,
-                        'author': {
-                            '@type': 'Person',
-                            'name': 'Stefan Knoch',
-                            'url': 'https://stefanknoch.com',
-                        },
-                        'publisher': {
-                            '@type': 'Organization',
-                            'name': 'Stefan Knoch',
-                            'logo': {
-                                '@type': 'ImageObject',
-                                'url': 'https://stefanknoch.com/logo.png',
-                            },
-                        },
-                        'datePublished': post.date,
-                        'dateModified': post.date,
-                        'mainEntityOfPage': {
-                            '@type': 'WebPage',
-                            '@id': `https://stefanknoch.com/blog/${slug}`,
-                        },
-                        'url': `https://stefanknoch.com/blog/${slug}`,
-                        'articleSection': 'Technology',
-                        'keywords': post.tags.join(', '),
-                        'inLanguage': 'en-US',
-                        'isAccessibleForFree': true,
-                    }),
-                }}
-            />
+            <JsonLd data={blogPostingSchema(post)} />
 
             <AnalyticsWrapper
                 pageName={post.title}
