@@ -1,9 +1,10 @@
 /**
  * Scroll state and scroll-driven progress, behind one passive listener.
  *
- * Scrubs are evaluated in two passes — every element is measured first, then
- * every callback runs — so a callback that writes styles cannot force a
- * synchronous re-layout for the scrub measured after it.
+ * Every scroll frame runs in two phases. The read phase measures every scrub
+ * and runs every listener's `read`; only then does the write phase run the
+ * scrub callbacks and every listener's `write`. Nothing written in a frame can
+ * therefore force a synchronous re-layout for something measured after it.
  */
 
 import { clamp, lerp } from './math';
@@ -28,6 +29,19 @@ export interface ScrubOptions {
     end?: number;
 }
 
+/**
+ * A scroll listener split by what it touches.
+ *
+ * `read` may measure layout but must not write styles; `write` may write
+ * styles but must not measure. A plain function is a `write`.
+ */
+export interface ScrollPhases {
+    read?: (state: ScrollState) => void;
+    write?: (state: ScrollState) => void;
+}
+
+export type ScrollListener = ((state: ScrollState) => void) | ScrollPhases;
+
 interface Scrub {
     element: HTMLElement;
     onProgress: (progress: number) => void;
@@ -42,7 +56,7 @@ const VELOCITY_EPSILON = 0.01;
 export const scrollState: ScrollState = { y: 0, vy: 0, max: 1, p: 0 };
 
 const scrubs = new Set<Scrub>();
-const listeners = new Set<(state: ScrollState) => void>();
+const listeners = new Set<ScrollPhases>();
 const dueCallbacks: { scrub: Scrub; progress: number }[] = [];
 
 let viewportHeight = 0;
@@ -56,10 +70,9 @@ const measure = () => {
     scrollState.max = Math.max(1, document.documentElement.scrollHeight - viewportHeight);
 };
 
-export const runScrubs = () => {
+const measureScrubs = () => {
     dueCallbacks.length = 0;
 
-    // Read pass.
     for (const scrub of scrubs) {
         const rect = scrub.element.getBoundingClientRect();
         const from = viewportHeight * scrub.start;
@@ -72,8 +85,9 @@ export const runScrubs = () => {
             dueCallbacks.push({ scrub, progress });
         }
     }
+};
 
-    // Write pass.
+const flushScrubs = () => {
     for (const due of dueCallbacks) {
         try {
             due.scrub.onProgress(due.progress);
@@ -83,6 +97,40 @@ export const runScrubs = () => {
             scrubs.delete(due.scrub);
         }
     }
+
+    dueCallbacks.length = 0;
+};
+
+/** Measures every scrub, then calls back the ones whose progress changed. */
+export const runScrubs = () => {
+    measureScrubs();
+    flushScrubs();
+};
+
+const runPhase = (phase: keyof ScrollPhases) => {
+    for (const listener of Array.from(listeners)) {
+        try {
+            listener[phase]?.(scrollState);
+        }
+        catch (error) {
+            console.error('[motion] scroll listener failed', error);
+            listeners.delete(listener);
+        }
+    }
+};
+
+/**
+ * One scroll frame: every read (scrubs, then listeners), then every write.
+ * Exported for tests; the store runs it once per animation frame on scroll.
+ */
+export const runScrollFrame = () => {
+    scrollState.y = window.scrollY;
+    scrollState.p = clamp(scrollState.y / scrollState.max, 0, 1);
+
+    measureScrubs();
+    runPhase('read');
+    flushScrubs();
+    runPhase('write');
 };
 
 const trackVelocity = () => {
@@ -103,19 +151,7 @@ const handleScroll = () => {
         queued = true;
         requestAnimationFrame(() => {
             queued = false;
-            scrollState.y = window.scrollY;
-            scrollState.p = clamp(scrollState.y / scrollState.max, 0, 1);
-            runScrubs();
-
-            for (const fn of Array.from(listeners)) {
-                try {
-                    fn(scrollState);
-                }
-                catch (error) {
-                    console.error('[motion] scroll listener failed', error);
-                    listeners.delete(fn);
-                }
-            }
+            runScrollFrame();
         });
     }
 
@@ -143,12 +179,63 @@ export const startScrollStore = () => {
     onStage('layout', remeasure);
 };
 
-export const subscribeScroll = (fn: (state: ScrollState) => void) => {
+/**
+ * Calls `listener` on every scroll frame. A plain function runs in the write
+ * phase, so it must not read layout; pass `{ read, write }` to measure first.
+ */
+export const subscribeScroll = (listener: ScrollListener) => {
+    const phases: ScrollPhases = typeof listener === 'function' ? { write: listener } : { ...listener };
+
     startScrollStore();
-    listeners.add(fn);
+    listeners.add(phases);
 
     return () => {
-        listeners.delete(fn);
+        listeners.delete(phases);
+    };
+};
+
+/** How far outside the viewport a section still counts as near. */
+const NEAR_MARGIN = '50% 0px';
+
+/**
+ * `subscribeScroll`, but only while `element` is within `margin` of the
+ * viewport. A section far off screen costs nothing per scroll frame.
+ *
+ * On coming near, the listener runs once straight away, so whatever it
+ * renders is current before the section can be seen.
+ */
+export const subscribeScrollWhileNear = (
+    element: Element,
+    listener: ScrollListener,
+    margin: string = NEAR_MARGIN,
+) => {
+    if (typeof IntersectionObserver === 'undefined') {
+        return subscribeScroll(listener);
+    }
+
+    const phases: ScrollPhases = typeof listener === 'function' ? { write: listener } : listener;
+    let stop: (() => void) | null = null;
+
+    const observer = new IntersectionObserver((entries) => {
+        const near = entries.some(entry => entry.isIntersecting);
+
+        if (near && !stop) {
+            stop = subscribeScroll(phases);
+            phases.read?.(scrollState);
+            phases.write?.(scrollState);
+        }
+        else if (!near && stop) {
+            stop();
+            stop = null;
+        }
+    }, { rootMargin: margin });
+
+    observer.observe(element);
+
+    return () => {
+        observer.disconnect();
+        stop?.();
+        stop = null;
     };
 };
 

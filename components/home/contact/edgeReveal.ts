@@ -6,7 +6,8 @@
  * custom properties feeding it are touched, so nothing re-layouts.
  *
  * Framework-agnostic on purpose: the component owns the element and the scroll
- * subscription, this owns the geometry.
+ * subscription, this owns the geometry. `read` and `write` slot into the scroll
+ * store's two phases, so measuring the section never follows a style write.
  */
 
 import { clamp } from '@/lib/motion';
@@ -31,7 +32,11 @@ export interface EdgeGeometry {
 }
 
 export interface EdgeReveal {
-    /** Recomputes the clip from the section's current position. */
+    /** Scroll read phase: measures where the section is. */
+    read: () => void;
+    /** Scroll write phase: applies the clip from the last `read`. */
+    write: () => void;
+    /** Reads, then writes. For one-off updates outside a scroll frame. */
     update: () => void;
     /** Re-reads the viewport, then updates. Call on resize. */
     measure: () => void;
@@ -64,8 +69,14 @@ export const createEdgeReveal = (section: HTMLElement): EdgeReveal => {
     let viewportWidth = window.innerWidth;
     let viewportHeight = window.innerHeight;
 
-    const update = () => {
-        const geometry = edgeGeometry(section.getBoundingClientRect().top, viewportWidth, viewportHeight);
+    let top = Number.POSITIVE_INFINITY;
+
+    const read = () => {
+        top = section.getBoundingClientRect().top;
+    };
+
+    const write = () => {
+        const geometry = edgeGeometry(top, viewportWidth, viewportHeight);
 
         if (!geometry) {
             return;
@@ -73,6 +84,11 @@ export const createEdgeReveal = (section: HTMLElement): EdgeReveal => {
 
         section.style.setProperty('--ci', `${geometry.inset.toFixed(2)}px`);
         section.style.setProperty('--cr', `${geometry.radius.toFixed(2)}px`);
+    };
+
+    const update = () => {
+        read();
+        write();
     };
 
     const measure = () => {
@@ -86,5 +102,5 @@ export const createEdgeReveal = (section: HTMLElement): EdgeReveal => {
         section.style.removeProperty('--cr');
     };
 
-    return { update, measure, clear };
+    return { read, write, update, measure, clear };
 };

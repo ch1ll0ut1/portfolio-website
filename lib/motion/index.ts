@@ -14,7 +14,15 @@ export { copyText, showToast } from './toast';
 export { indexWords, splitWords, trackWordIndices } from './splitWords';
 export { observeInView, type InViewOptions } from './inView';
 export { emitStage, isIntroDone, onStage, startStage, type StageEvent } from './stage';
-export { registerScrub, runScrubs, scrollState, subscribeScroll, type ScrollState, type ScrubOptions } from './scrollStore';
+export {
+    registerScrub,
+    runScrubs,
+    scrollState,
+    subscribeScroll,
+    subscribeScrollWhileNear,
+    type ScrollState,
+    type ScrubOptions,
+} from './scrollStore';
 export { subscribeTick, tickerCount, type TickFn } from './ticker';
 
 export { useFinePointer } from './useFinePointer';

@@ -1,7 +1,7 @@
 'use client';
 
 import { type FC, useCallback, useEffect, useRef } from 'react';
-import { clamp, useMagnetic, useReducedMotion, useScrub } from '@/lib/motion';
+import { clamp, useMagnetic, useReducedMotion, useScrub, useStageEvent } from '@/lib/motion';
 import { heroAvailability, heroCtas, heroLede, heroLocation } from '@/config/hero';
 import { DocumentModelPanel } from './DocumentModelPanel';
 import { FormatToolbar } from './FormatToolbar';
@@ -37,6 +37,8 @@ export const Hero: FC = () => {
     const primaryCtaRef = useRef<HTMLAnchorElement>(null);
     const secondaryCtaRef = useRef<HTMLAnchorElement>(null);
     const fieldRef = useRef<HeroField | null>(null);
+    /** The section's height, measured on layout so the scrub never reads it. */
+    const heightRef = useRef(0);
     const reduced = useReducedMotion();
 
     const ripple = useCallback((clientX: number, clientY: number) => {
@@ -91,6 +93,13 @@ export const Hero: FC = () => {
         };
     }, [onArmed, onRelease, onSelecting, onSettled, ripple]);
 
+    const measureHeight = () => {
+        heightRef.current = rootRef.current?.offsetHeight ?? 0;
+    };
+
+    useEffect(measureHeight, []);
+    useStageEvent('layout', measureHeight);
+
     // Scroll-out: the content sinks back as one sheet while the grid drifts faster.
     useScrub(rootRef, (progress) => {
         const root = rootRef.current;
@@ -109,7 +118,7 @@ export const Hero: FC = () => {
             return;
         }
 
-        const height = root.offsetHeight;
+        const height = heightRef.current;
 
         inner.style.transform = `translate3d(0, ${(progress * height * 0.3).toFixed(1)}px, 0) scale(${(1 - progress * 0.05).toFixed(4)})`;
         inner.style.opacity = (1 - clamp((progress - 0.2) / 0.6, 0, 1) * 0.9).toFixed(3);

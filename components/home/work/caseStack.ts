@@ -1,7 +1,7 @@
 'use client';
 
 import { type RefObject, useEffect, useRef } from 'react';
-import { clamp, onStage, smoothstep, prefersReducedMotion, subscribeScroll } from '@/lib/motion';
+import { clamp, onStage, smoothstep, prefersReducedMotion, subscribeScrollWhileNear } from '@/lib/motion';
 
 /** Cards only stack where there is room for two of them side by side. */
 export const DESKTOP_QUERY = '(min-width: 901px)';
@@ -38,7 +38,9 @@ export type CoveredHandler = (index: number, covered: boolean) => void;
 export const useCaseStack = (ref: RefObject<HTMLElement | null>, onCovered: CoveredHandler) => {
     const latest = useRef(onCovered);
 
-    latest.current = onCovered;
+    useEffect(() => {
+        latest.current = onCovered;
+    });
 
     useEffect(() => {
         const root = ref.current;
@@ -63,18 +65,25 @@ export const useCaseStack = (ref: RefObject<HTMLElement | null>, onCovered: Cove
             });
         };
 
-        const stack = () => {
-            const viewportHeight = window.innerHeight;
-            const on = desktop.matches;
+        let viewportHeight = 0;
+        let on = false;
+        let nextTops: (number | undefined)[] = [];
 
+        /** Read phase: where every next card currently sits. */
+        const read = () => {
+            viewportHeight = window.innerHeight;
+            on = desktop.matches;
+            nextTops = on
+                ? cards.map((_, index) => cards[index + 1]?.getBoundingClientRect().top)
+                : [];
+        };
+
+        /** Write phase: style each card from what `read` saw. Never measures. */
+        const write = () => {
             for (let index = 0; index < cards.length; index++) {
-                const next = cards[index + 1];
-                const progress = on && next
-                    ? coverProgress(
-                        viewportHeight,
-                        next.getBoundingClientRect().top,
-                        stickyTops[index + 1] ?? 0,
-                    )
+                const nextTop = nextTops[index];
+                const progress = on && nextTop !== undefined
+                    ? coverProgress(viewportHeight, nextTop, stickyTops[index + 1] ?? 0)
                     : 0;
 
                 if (Math.abs(progress - (previous[index] ?? -1)) < EPSILON) {
@@ -94,6 +103,11 @@ export const useCaseStack = (ref: RefObject<HTMLElement | null>, onCovered: Cove
             }
         };
 
+        const stack = () => {
+            read();
+            write();
+        };
+
         const relayout = () => {
             measure();
             stack();
@@ -101,7 +115,7 @@ export const useCaseStack = (ref: RefObject<HTMLElement | null>, onCovered: Cove
 
         measure();
 
-        const stopScroll = subscribeScroll(stack);
+        const stopScroll = subscribeScrollWhileNear(root, { read, write });
         const stopLayout = onStage('layout', relayout);
         const frame = requestAnimationFrame(stack);
 

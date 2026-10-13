@@ -7,8 +7,8 @@
  */
 
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { stubRect } from '../../test/motionEnv';
-import { registerScrub, runScrubs } from './scrollStore';
+import { installIntersectionObserver, stubRect } from '../../test/motionEnv';
+import { registerScrub, runScrollFrame, runScrubs, subscribeScroll, subscribeScrollWhileNear } from './scrollStore';
 
 const VIEWPORT = 800;
 
@@ -165,5 +165,132 @@ describe('registerScrub', () => {
         stopBroken();
         stopHealthy();
         error.mockRestore();
+    });
+});
+
+describe('subscribeScroll', () => {
+    it('should run every read before any write in a frame', () => {
+        const calls: string[] = [];
+        const element = makeElement({ top: 200, bottom: 600, height: 400 });
+        const stopScrub = registerScrub(element, () => {
+            calls.push('scrub write');
+        });
+        const stopFirst = subscribeScroll({
+            read: () => calls.push('first read'),
+            write: () => calls.push('first write'),
+        });
+        const stopSecond = subscribeScroll({
+            read: () => calls.push('second read'),
+            write: () => calls.push('second write'),
+        });
+
+        runScrollFrame();
+
+        expect(calls).toEqual(['first read', 'second read', 'scrub write', 'first write', 'second write']);
+        stopScrub();
+        stopFirst();
+        stopSecond();
+    });
+
+    it('should run a plain function listener in the write phase', () => {
+        const calls: string[] = [];
+        const stopWriter = subscribeScroll(() => calls.push('plain'));
+        const stopReader = subscribeScroll({ read: () => calls.push('read') });
+
+        runScrollFrame();
+
+        expect(calls).toEqual(['read', 'plain']);
+        stopWriter();
+        stopReader();
+    });
+
+    it('should pass the current scroll state to both phases', () => {
+        window.scrollY = 120;
+        const read = vi.fn();
+        const write = vi.fn();
+        const stop = subscribeScroll({ read, write });
+
+        runScrollFrame();
+
+        expect(read).toHaveBeenCalledWith(expect.objectContaining({ y: 120 }));
+        expect(write).toHaveBeenCalledWith(expect.objectContaining({ y: 120 }));
+        stop();
+        window.scrollY = 0;
+    });
+
+    it('should stop calling a listener after cleanup', () => {
+        const write = vi.fn();
+        const stop = subscribeScroll(write);
+
+        stop();
+        runScrollFrame();
+
+        expect(write).not.toHaveBeenCalled();
+    });
+
+    it('should drop a throwing listener without skipping the others', () => {
+        const error = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+        const healthy = vi.fn();
+        const stopBroken = subscribeScroll({
+            read: () => {
+                throw new Error('boom');
+            },
+        });
+        const stopHealthy = subscribeScroll(healthy);
+
+        runScrollFrame();
+        runScrollFrame();
+
+        expect(healthy).toHaveBeenCalledTimes(2);
+        expect(error).toHaveBeenCalledTimes(1);
+        stopBroken();
+        stopHealthy();
+        error.mockRestore();
+    });
+});
+
+describe('subscribeScrollWhileNear', () => {
+    it('should listen only while the element is near the viewport', () => {
+        const io = installIntersectionObserver();
+        const element = makeElement({ top: 0, bottom: 0, height: 0 });
+        const write = vi.fn();
+        const stop = subscribeScrollWhileNear(element, write);
+        const observer = io.instances.at(-1);
+
+        runScrollFrame();
+        expect(write).not.toHaveBeenCalled();
+
+        observer?.emit(true);
+        // Brought up to date the moment it comes near.
+        expect(write).toHaveBeenCalledTimes(1);
+
+        runScrollFrame();
+        expect(write).toHaveBeenCalledTimes(2);
+
+        observer?.emit(false);
+        runScrollFrame();
+        expect(write).toHaveBeenCalledTimes(2);
+
+        stop();
+        expect(observer?.disconnected).toBe(true);
+        io.restore();
+    });
+
+    it('should read before writing when it catches up on coming near', () => {
+        const io = installIntersectionObserver();
+        const element = makeElement({ top: 0, bottom: 0, height: 0 });
+        const calls: string[] = [];
+        const stop = subscribeScrollWhileNear(element, {
+            read: () => calls.push('read'),
+            write: () => calls.push('write'),
+        });
+
+        io.instances.at(-1)?.emit(true);
+
+        expect(calls).toEqual(['read', 'write']);
+        stop();
+        runScrollFrame();
+        expect(calls).toHaveLength(2);
+        io.restore();
     });
 });

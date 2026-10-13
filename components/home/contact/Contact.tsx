@@ -1,7 +1,14 @@
 'use client';
 
 import { type FC, useEffect, useRef } from 'react';
-import { prefersReducedMotion, useInView, useMaskReveal, useReveal, useScrollState, useStageEvent } from '@/lib/motion';
+import {
+    prefersReducedMotion,
+    subscribeScrollWhileNear,
+    useInView,
+    useMaskReveal,
+    useReveal,
+    useStageEvent,
+} from '@/lib/motion';
 import { ContactFooter } from './ContactFooter';
 import { CopyEmail } from './CopyEmail';
 import { CtaMagnet } from './CtaMagnet';
@@ -9,6 +16,8 @@ import { type EdgeReveal, createEdgeReveal } from './edgeReveal';
 import styles from './Contact.module.css';
 
 const LEDE = 'Tell me what you’re building and where it’s stuck. I reply within a day, from Bangkok (UTC+7), and overlap with Europe and Asia working hours.';
+/** Matches the band in which `edgeGeometry` writes at all. */
+const EDGE_NEAR_MARGIN = '100% 0px 120% 0px';
 /** Head start the mask reveal gets before the selection sweeps. */
 const SWEEP_DELAY_MS = 620;
 
@@ -45,15 +54,15 @@ export const Contact: FC = () => {
         edgeRef.current = edge;
         edge.update();
 
+        // Clip geometry only exists within a viewport or so of the section.
+        const stopScroll = subscribeScrollWhileNear(section, edge, EDGE_NEAR_MARGIN);
+
         return () => {
+            stopScroll();
             edgeRef.current = null;
             edge.clear();
         };
     }, []);
-
-    useScrollState(() => {
-        edgeRef.current?.update();
-    });
 
     useStageEvent('resize', () => {
         edgeRef.current?.measure();
