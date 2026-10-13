@@ -4,7 +4,7 @@ import { blogPosts } from '@/config/blog';
 export const size = ogImageConfig.size;
 export const contentType = ogImageConfig.contentType;
 
-/** Matches the page: only the posts generated at build time exist. */
+/** Only the posts generated at build time have a card; anything else is a 404. */
 export const dynamicParams = false;
 
 /**

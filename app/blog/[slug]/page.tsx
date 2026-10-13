@@ -14,8 +14,13 @@ import { JsonLd } from '@/components/seo/JsonLd';
 import { absoluteUrl, siteConfig } from '@/config/site';
 import { blogPostingSchema } from '@/lib/structuredData';
 
-/** Every post is generated at build time, so any other slug is a 404. */
-export const dynamicParams = false;
+/*
+ * `dynamicParams` stays at its default on purpose. Every post is generated at
+ * build time anyway, but with `false` Next answers an unknown slug from the
+ * root not-found page, skipping ./not-found.tsx and its "All articles" way
+ * back. Left on, an unknown slug renders here, hits `notFound()` and gets the
+ * post-specific 404.
+ */
 
 /**
  * Generates static params for all blog posts to enable static generation.
