@@ -6,7 +6,7 @@
 import { describe, it, expect } from 'vitest';
 import { render } from '@testing-library/react';
 import { MarkdownSeparator } from './MarkdownSeparator';
-import { type SeparatorElement } from '../markdownProcessor';
+import { type SeparatorElement } from '../parser/types';
 
 describe('MarkdownSeparator Component', () => {
     it('should render horizontal rule element', () => {

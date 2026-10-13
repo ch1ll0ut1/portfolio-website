@@ -82,6 +82,10 @@ export default defineConfig({
     resolve: {
         alias: {
             '@': path.resolve(__dirname, './'),
+            // The `server-only` marker throws outside a Server Component build.
+            // Tests import server modules directly, so they get the no-op
+            // export Next itself resolves it to on the server.
+            'next/dist/compiled/server-only': 'next/dist/compiled/server-only/empty.js',
         },
     },
 });

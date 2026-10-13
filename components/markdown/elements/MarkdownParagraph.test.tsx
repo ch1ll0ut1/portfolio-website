@@ -6,7 +6,7 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { MarkdownParagraph } from './MarkdownParagraph';
-import { type ParagraphElement } from '../markdownProcessor';
+import { type ParagraphElement } from '../parser/types';
 
 describe('MarkdownParagraph Component', () => {
     it('should render paragraph with plain text', () => {

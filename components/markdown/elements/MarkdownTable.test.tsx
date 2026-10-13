@@ -6,7 +6,7 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { MarkdownTable } from './MarkdownTable';
-import { type TableElement } from '../markdownProcessor';
+import { type TableElement } from '../parser/types';
 
 describe('MarkdownTable Component', () => {
     it('should let keyboard users reach the scrolling wrapper, named as a region', () => {

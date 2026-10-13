@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { type SeparatorElement } from '../markdownProcessor';
+import { type SeparatorElement } from '../parser/types';
 import styles from '../Markdown.module.css';
 
 interface Props {

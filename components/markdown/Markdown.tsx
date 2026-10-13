@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
-import { processMarkdownContent } from './markdownProcessor';
+import { readImageDimensions } from '@/lib/content/blogImages';
+import { parseMarkdown } from './parser/blockParser';
 import { MarkdownHeading } from './elements/MarkdownHeading';
 import { MarkdownCodeBlock } from './elements/MarkdownCodeBlock';
 import { MarkdownList } from './elements/MarkdownList';
@@ -16,7 +17,7 @@ interface Props {
 }
 
 export const Markdown: FC<Props> = ({ content, className = '' }) => {
-    const elements = processMarkdownContent(content);
+    const elements = parseMarkdown(content, readImageDimensions);
     const firstImage = elements.findIndex(element => element.type === 'image');
 
     return (

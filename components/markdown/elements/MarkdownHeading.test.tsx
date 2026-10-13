@@ -6,7 +6,7 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { MarkdownHeading } from './MarkdownHeading';
-import { type HeadingElement } from '../markdownProcessor';
+import { type HeadingElement } from '../parser/types';
 
 describe('MarkdownHeading Component', () => {
     it('should render h1 as h4 element', () => {

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { MarkdownImage } from './MarkdownImage';
-import { ImageElement } from '../markdownProcessor';
+import { ImageElement } from '../parser/types';
 
 // Mock Next.js Image component
 vi.mock('next/image', () => ({

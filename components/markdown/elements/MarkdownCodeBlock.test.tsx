@@ -6,7 +6,7 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { MarkdownCodeBlock } from './MarkdownCodeBlock';
-import { type CodeBlockElement } from '../markdownProcessor';
+import { type CodeBlockElement } from '../parser/types';
 
 describe('MarkdownCodeBlock Component', () => {
     it('should render code block with syntax highlighter', () => {

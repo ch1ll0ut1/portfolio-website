@@ -80,6 +80,7 @@ content/              # Markdown content
 
 lib/                  # Utilities and shared logic
 ├── analytics.ts      # GA4 event helpers
+├── content/          # Server-only file reads: post markdown, image sizes
 ├── motion/           # Ticker, scroll store and the motion hooks
 └── og/               # Share cards and icons: layout, fonts, `ogPalette` literals
 
@@ -99,7 +100,8 @@ Components follow a consistent pattern:
 
 Blog content is managed through:
 - **Markdown files** in `content/blog/` directory
-- **Custom processor** (`components/markdown/markdownProcessor.ts`) for parsing
+- **Custom parser** in `components/markdown/parser/` — pure: block, inline, list and table parsers over the types in `types.ts`, with `parseMarkdown` in `blockParser.ts` as the entry
+- **File reads** in `lib/content/` (server-only): the post markdown and its `cache()`-wrapped lookup, and the image measuring the parser is handed
 - **Syntax highlighting** via react-syntax-highlighter
 - **Type-safe configuration** in `config/blog.ts`
 
@@ -172,7 +174,7 @@ For complete development standards, testing strategies, and architectural patter
 - Build process includes linting, so code must pass ESLint to build successfully
 - All components should have accompanying tests focused on behavior
 - Navigation lives in `components/nav/SiteNav.tsx`, with the global tools it hosts in `components/chrome`
-- Markdown content processing uses custom implementation, not external libraries
+- Markdown content processing uses custom implementation, not external libraries. The parser stays pure; anything that reads a file goes in `lib/content/`, which is marked server-only
 - Font loading is handled through `next/font/google` (Bricolage Grotesque, Schibsted Grotesk, Martian Mono)
 - The project uses pnpm as package manager, not npm or yarn
 - Components use consolidated structure to reduce over-decomposition

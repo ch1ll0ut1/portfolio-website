@@ -6,7 +6,7 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { MarkdownQuote } from './MarkdownQuote';
-import { type QuoteElement } from '../markdownProcessor';
+import { type QuoteElement } from '../parser/types';
 
 describe('MarkdownQuote Component', () => {
     it('should render blockquote with plain text', () => {

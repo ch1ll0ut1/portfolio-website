@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import Image from 'next/image';
 import { blogImagePath } from '../blogImage';
-import { ImageElement } from '../markdownProcessor';
+import { ImageElement } from '../parser/types';
 import styles from '../Markdown.module.css';
 
 interface Props {

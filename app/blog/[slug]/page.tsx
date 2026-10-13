@@ -1,8 +1,7 @@
-import React, { cache, FC } from 'react';
+import React, { FC } from 'react';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { blogPosts } from '@/config/blog';
-import { readMarkdownFile } from '@/components/markdown/markdownProcessor';
 import { EngagementTracker } from '@/components/analytics/EngagementTracker';
 import { Article } from '@/components/blog/Article';
 import { ReadingShell } from '@/components/blog/ReadingShell';
@@ -12,6 +11,7 @@ import { NavTools } from '@/components/nav/NavTools';
 import { SiteNav } from '@/components/nav/SiteNav';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { absoluteUrl, siteConfig } from '@/config/site';
+import { getBlogPostData } from '@/lib/content/blogPosts';
 import { blogPostingSchema } from '@/lib/structuredData';
 
 /*
@@ -28,29 +28,6 @@ import { blogPostingSchema } from '@/lib/structuredData';
 export async function generateStaticParams() {
     return blogPosts.map(post => ({ slug: post.slug }));
 }
-
-/**
- * Gets blog post data and content from configuration and markdown files.
- * Returns the post metadata, its markdown, and its neighbours in the index.
- *
- * Cached per render, so `generateMetadata` and the page share one file read.
- */
-const getBlogPostData = cache((slug: string) => {
-    const index = blogPosts.findIndex(p => p.slug === slug);
-    const postMetadata = blogPosts[index];
-    if (postMetadata === undefined) {
-        return null;
-    }
-    const markdownContent = readMarkdownFile(slug);
-    if (!markdownContent) return null;
-
-    // The index is newest first, so the entry before this one is the newer post.
-    return {
-        post: { ...postMetadata, content: markdownContent },
-        newer: blogPosts[index - 1],
-        older: blogPosts[index + 1],
-    };
-});
 
 /**
  * Generates metadata for individual blog posts
