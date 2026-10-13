@@ -21,13 +21,13 @@ import {
     mapRange,
     observeInView,
     prefersReducedMotion,
+    scrambleInto,
     useScrub,
     watchMedia,
 } from '@/lib/motion';
 import { processSteps, processTitle } from '@/config/processSteps';
 import { StepList } from './StepList';
 import { Terminal } from './Terminal';
-import { scrambleInto } from './scramble';
 import { type Typer, createTyper } from './typer';
 import styles from './Process.module.css';
 
