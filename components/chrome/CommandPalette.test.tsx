@@ -6,7 +6,7 @@
  * says is selected, and that focus comes back where it started on close.
  */
 
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { type Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { itemAt } from '@/test/itemAt';
@@ -24,8 +24,8 @@ const selectedOption = () => options().find(option => option.getAttribute('aria-
 
 describe('<CommandPalette>', () => {
     let restoreMedia: () => void;
-    let onClose: ReturnType<typeof vi.fn>;
-    let onOpenShortcuts: ReturnType<typeof vi.fn>;
+    let onClose: Mock<() => void>;
+    let onOpenShortcuts: Mock<() => void>;
 
     /** Renders the palette open and waits for it to take focus, as it does for a real user. */
     const mount = async () => {

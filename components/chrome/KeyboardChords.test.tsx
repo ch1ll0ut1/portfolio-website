@@ -6,7 +6,7 @@
  * scrolled the page away mid-sentence would be a bug the user cannot undo.
  */
 
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { type Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, render } from '@testing-library/react';
 import { installMatchMedia } from '../../test/motionEnv';
 import { KeyboardChords } from './KeyboardChords';
@@ -35,9 +35,9 @@ const press = (key: string, options: KeyboardEventInit & { target?: Element } = 
 
 describe('<KeyboardChords>', () => {
     let restoreMedia: () => void;
-    let onTogglePalette: ReturnType<typeof vi.fn>;
-    let onOpenShortcuts: ReturnType<typeof vi.fn>;
-    let scrollTo: ReturnType<typeof vi.fn>;
+    let onTogglePalette: Mock<() => void>;
+    let onOpenShortcuts: Mock<() => void>;
+    let scrollTo: Mock<(...args: unknown[]) => void>;
 
     const mount = (overlayOpen = false) => render(
         <KeyboardChords

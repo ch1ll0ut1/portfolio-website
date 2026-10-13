@@ -6,7 +6,7 @@
  * the page behind inert is `showModal()`'s job, checked in the browser.
  */
 
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { type Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { type FC } from 'react';
@@ -34,8 +34,8 @@ const Harness: FC<HarnessProps> = ({ onClose, onSave }) => {
 };
 
 describe('<ConsentPreferencesModal>', () => {
-    let onClose: ReturnType<typeof vi.fn>;
-    let onSave: ReturnType<typeof vi.fn>;
+    let onClose: Mock<() => void>;
+    let onSave: Mock<() => void>;
 
     const mount = async () => {
         const view = render(

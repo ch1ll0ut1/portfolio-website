@@ -5,7 +5,7 @@
  * hand focus back, and print the right modifier glyph for the platform.
  */
 
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { type Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { installMatchMedia } from '../../test/motionEnv';
@@ -14,7 +14,7 @@ import { readPreference, setPreference } from './preferences';
 
 describe('<ShortcutsOverlay>', () => {
     let restoreMedia: () => void;
-    let onClose: ReturnType<typeof vi.fn>;
+    let onClose: Mock<() => void>;
 
     const mount = async () => {
         const view = render(<ShortcutsOverlay open onClose={onClose} />);
