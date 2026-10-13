@@ -1,9 +1,11 @@
 /**
- * Cookie consent banner.
+ * Cookie consent banner and preferences dialog.
  *
  * Presentation only — every consent decision is taken by `ConsentContext`.
  * The banner is a bottom-docked surface panel using the global button
- * primitives, so it reads as site chrome in both themes.
+ * primitives, so it reads as site chrome in both themes. The dialog is
+ * rendered here too, but opens independently of the banner, so it can be
+ * reopened from the footer or the command palette after the first choice.
  */
 
 'use client';
@@ -15,8 +17,7 @@ import { ConsentPreferencesModal } from './ConsentPreferencesModal';
 import styles from './CookieConsent.module.css';
 
 export const CookieConsent: FC = () => {
-    const { showBanner, acceptAll, rejectAll, hideBanner } = useConsent();
-    const [showPreferences, setShowPreferences] = useState(false);
+    const { showBanner, preferencesOpen, acceptAll, rejectAll, openPreferences, closePreferences } = useConsent();
     const [shown, setShown] = useState(false);
 
     // The entrance transition cannot run from a state the browser never
@@ -35,8 +36,12 @@ export const CookieConsent: FC = () => {
         };
     }, [showBanner]);
 
+    const preferences = preferencesOpen
+        ? <ConsentPreferencesModal onClose={closePreferences} onSave={closePreferences} />
+        : null;
+
     if (!showBanner) {
-        return null;
+        return preferences;
     }
 
     return (
@@ -50,7 +55,8 @@ export const CookieConsent: FC = () => {
                         <h2 className={styles.title} id="consent-banner-title">Cookie preferences</h2>
                         <p className={styles.body}>
                             I use cookies to understand how the site is used. Essential cookies are always
-                            on; analytics, marketing and preference cookies are up to you.
+                            on; analytics cookies are up to you, and you can change your mind any time
+                            under Cookie settings in the footer.
                             {' '}
                             <Link className={styles.link} href="/privacy">Privacy policy</Link>
                         </p>
@@ -60,7 +66,7 @@ export const CookieConsent: FC = () => {
                         <button
                             className="btn"
                             type="button"
-                            onClick={() => { setShowPreferences(true); }}
+                            onClick={openPreferences}
                         >
                             <span className="btn__label">Customize</span>
                         </button>
@@ -74,15 +80,7 @@ export const CookieConsent: FC = () => {
                 </div>
             </section>
 
-            {showPreferences && (
-                <ConsentPreferencesModal
-                    onClose={() => { setShowPreferences(false); }}
-                    onSave={() => {
-                        setShowPreferences(false);
-                        hideBanner();
-                    }}
-                />
-            )}
+            {preferences}
         </>
     );
 };

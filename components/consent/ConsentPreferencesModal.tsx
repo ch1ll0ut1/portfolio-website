@@ -10,7 +10,8 @@
 
 import { type FC, type KeyboardEvent, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { useConsent, type ConsentState } from './ConsentContext';
+import type { ConsentState } from '@/lib/consentStorage';
+import { useConsent } from './ConsentContext';
 import { ConsentCategoryRow } from './ConsentCategoryRow';
 import { consentCategories } from './consentCategories';
 import { useFocusTrap } from './useFocusTrap';
@@ -25,12 +26,7 @@ export const ConsentPreferencesModal: FC<Props> = ({ onClose, onSave }) => {
     const { consent, updateConsent } = useConsent();
     const panelRef = useRef<HTMLDivElement>(null);
     const [shown, setShown] = useState(false);
-    const [preferences, setPreferences] = useState<ConsentState>({
-        analytics: consent?.analytics ?? false,
-        marketing: consent?.marketing ?? false,
-        preferences: consent?.preferences ?? false,
-        essential: true,
-    });
+    const [analytics, setAnalytics] = useState(consent?.analytics ?? false);
 
     useFocusTrap(panelRef);
 
@@ -46,17 +42,15 @@ export const ConsentPreferencesModal: FC<Props> = ({ onClose, onSave }) => {
         };
     }, []);
 
+    // Essential is locked, so analytics is the only switch there is.
     const handleToggle = (type: keyof ConsentState) => {
-        if (type === 'essential') return; // Can't toggle essential cookies
-
-        setPreferences(prev => ({
-            ...prev,
-            [type]: !prev[type],
-        }));
+        if (type === 'analytics') {
+            setAnalytics(previous => !previous);
+        }
     };
 
     const handleSave = () => {
-        updateConsent(preferences);
+        updateConsent({ analytics });
         onSave();
     };
 
@@ -98,7 +92,7 @@ export const ConsentPreferencesModal: FC<Props> = ({ onClose, onSave }) => {
                         {consentCategories.map(category => (
                             <ConsentCategoryRow
                                 category={category}
-                                checked={preferences[category.key]}
+                                checked={category.key === 'essential' || analytics}
                                 key={category.key}
                                 onToggle={handleToggle}
                             />

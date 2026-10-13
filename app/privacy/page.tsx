@@ -1,6 +1,5 @@
 import React, { FC } from 'react';
 import type { Metadata } from 'next';
-import { PageViewTracker } from '@/components/analytics/ClientAnalytics';
 import { ReadingShell } from '@/components/blog/ReadingShell';
 import { GlobalChrome } from '@/components/chrome/GlobalChrome';
 import { ContactFooter } from '@/components/home/contact/ContactFooter';
@@ -26,11 +25,6 @@ const PrivacyPage: FC = () => {
 
     return (
         <>
-            <PageViewTracker
-                pageName="Privacy Policy"
-                pageType="privacy"
-            />
-
             <ReadingShell
                 header={<SiteNav tools={<NavTools />} />}
                 footer={<ContactFooter />}

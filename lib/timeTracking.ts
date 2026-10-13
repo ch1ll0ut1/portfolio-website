@@ -1,60 +1,107 @@
 /**
- * Time-based engagement tracking utilities.
- * Tracks how long users spend on pages and site engagement milestones.
+ * Time-on-page milestones for analytics.
+ *
+ * Counts only the time the page is visible: a tab left in the background is
+ * not engagement. One timer is armed for the next milestone at a time, paused
+ * while `document.hidden`, and everything is torn down once the last
+ * milestone has been reported.
  */
 
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { trackTimeOnSite } from './analytics';
 
-interface TimeTrackingOptions {
-    /** Page identifier for tracking */
-    pageId: string;
-    /** Page type for categorization */
-    pageType: 'home' | 'blog' | 'blog_post' | 'privacy';
-    /** Custom time milestones to track (in seconds) */
-    milestones?: number[];
-}
+const DEFAULT_MILESTONES = [30, 60, 120, 300];
 
 /**
- * Hook for tracking time-based engagement metrics.
- * Tracks when users hit specific time milestones on a page.
- *
- * @param options Configuration for time tracking
- * @returns Object with start time and tracked milestones
+ * Calls `onMilestone` with each milestone (in seconds of visible time) once.
+ * Returns a function that stops tracking early.
  */
-export function useTimeTracking(options: TimeTrackingOptions) {
-    const startTimeRef = useRef<number>(Date.now());
-    const timeTracked = useRef<Set<number>>(new Set());
-    const intervalRef = useRef<NodeJS.Timeout | null>(null);
+export const trackVisibleTime = (milestones: readonly number[], onMilestone: (seconds: number) => void) => {
+    const pending = [...milestones].sort((a, b) => a - b);
+    let visibleMs = 0;
+    let visibleSince: number | null = null;
+    let timer: ReturnType<typeof setTimeout> | null = null;
 
-    const { pageId, pageType, milestones = [30, 60, 120, 300] } = options;
+    const pause = () => {
+        if (timer !== null) {
+            clearTimeout(timer);
+            timer = null;
+        }
+
+        if (visibleSince !== null) {
+            visibleMs += Date.now() - visibleSince;
+            visibleSince = null;
+        }
+    };
+
+    const stop = () => {
+        pause();
+        document.removeEventListener('visibilitychange', handleVisibility);
+    };
+
+    const arm = () => {
+        if (pending.length === 0) {
+            stop();
+
+            return;
+        }
+
+        visibleSince = Date.now();
+        timer = setTimeout(fire, Math.max(0, pending[0] * 1000 - visibleMs));
+    };
+
+    function fire() {
+        pause();
+
+        while (pending.length > 0 && pending[0] * 1000 <= visibleMs) {
+            const milestone = pending[0];
+
+            pending.shift();
+            onMilestone(milestone);
+        }
+
+        arm();
+    }
+
+    function handleVisibility() {
+        if (document.hidden) {
+            pause();
+        }
+        else if (timer === null) {
+            arm();
+        }
+    }
+
+    document.addEventListener('visibilitychange', handleVisibility);
+
+    if (!document.hidden) {
+        arm();
+    }
+
+    return stop;
+};
+
+interface Options {
+    /** Milestones in seconds of visible time. */
+    milestones?: readonly number[];
+    /** Tracking only runs while this is true, i.e. once analytics consent is granted. */
+    enabled: boolean;
+}
+
+/** Reports time-on-page milestones while the page is visible. */
+export const useTimeTracking = ({ milestones = DEFAULT_MILESTONES, enabled }: Options) => {
+    // Keyed by value so an inline array prop does not restart the clock.
+    const milestoneKey = milestones.join(',');
 
     useEffect(() => {
-        if (typeof window === 'undefined') return;
+        if (!enabled) {
+            return;
+        }
 
-        // Set up time-based tracking
-        intervalRef.current = setInterval(() => {
-            const timeOnSite = Math.floor((Date.now() - startTimeRef.current) / 1000);
+        return trackVisibleTime(parseMilestones(milestoneKey), trackTimeOnSite);
+    }, [enabled, milestoneKey]);
+};
 
-            milestones.forEach((milestone) => {
-                if (timeOnSite >= milestone && !timeTracked.current.has(milestone)) {
-                    timeTracked.current.add(milestone);
-                    trackTimeOnSite(milestone);
-                }
-            });
-        }, 5000); // Check every 5 seconds
-
-        return () => {
-            if (intervalRef.current) {
-                clearInterval(intervalRef.current);
-            }
-        };
-    }, [pageId, pageType, milestones]);
-
-    return {
-        startTime: startTimeRef.current,
-        trackedTimeMillestones: Array.from(timeTracked.current),
-    };
-}
+const parseMilestones = (key: string) => (key === '' ? [] : key.split(',').map(Number));

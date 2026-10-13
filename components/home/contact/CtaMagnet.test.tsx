@@ -3,6 +3,7 @@
  */
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { applyAnalyticsConsent } from '@/lib/analytics';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { links } from '@/config/links';
@@ -17,6 +18,7 @@ describe('CtaMagnet', () => {
         restoreMedia = installMatchMedia([]);
         gtag = vi.fn();
         window.gtag = gtag as unknown as typeof window.gtag;
+        applyAnalyticsConsent(true);
     });
 
     afterEach(() => {

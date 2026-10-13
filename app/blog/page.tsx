@@ -1,7 +1,6 @@
 import React, { FC } from 'react';
 import type { Metadata } from 'next';
 import { blogPosts } from '@/config/blog';
-import { PageViewTracker } from '@/components/analytics/ClientAnalytics';
 import { BlogIndex } from '@/components/blog/BlogIndex';
 import { ReadingShell } from '@/components/blog/ReadingShell';
 import { GlobalChrome } from '@/components/chrome/GlobalChrome';
@@ -40,10 +39,6 @@ export const metadata: Metadata = {
 const Blog: FC = () => {
     return (
         <>
-            <PageViewTracker
-                pageName="Blog"
-                pageType="blog"
-            />
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{

@@ -4,6 +4,7 @@
 
 import { type MouseEvent } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { applyAnalyticsConsent } from '@/lib/analytics';
 import { conversionHandlers, externalLinkHandlers } from './outboundTracking';
 
 const auxClick = (button: number) => ({ button }) as MouseEvent<HTMLAnchorElement>;
@@ -15,6 +16,7 @@ describe('conversionHandlers', () => {
         gtag = vi.fn();
         vi.stubGlobal('gtag', gtag);
         window.gtag = gtag as unknown as typeof window.gtag;
+        applyAnalyticsConsent(true);
     });
 
     afterEach(() => {
@@ -56,6 +58,7 @@ describe('externalLinkHandlers', () => {
     beforeEach(() => {
         gtag = vi.fn();
         window.gtag = gtag as unknown as typeof window.gtag;
+        applyAnalyticsConsent(true);
     });
 
     afterEach(() => {

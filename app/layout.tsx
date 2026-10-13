@@ -4,7 +4,7 @@ import './globals.css';
 import { Analytics } from '@vercel/analytics/next';
 import { Bricolage_Grotesque, Martian_Mono, Schibsted_Grotesk } from 'next/font/google';
 import { SpeedInsights } from '@vercel/speed-insights/next';
-import Script from 'next/script';
+import { GoogleAnalytics } from '@/components/analytics/GoogleAnalytics';
 import { ConsentProvider } from '@/components/consent/ConsentContext';
 import { CookieConsent } from '@/components/consent/CookieConsent';
 
@@ -97,8 +97,6 @@ const fontVariables = `${displayFont.variable} ${bodyFont.variable} ${monoFont.v
 const bootScript = '(function(){try{var d=document.documentElement;var t=localStorage.getItem("sk-theme");if(t==="light"||t==="dark"){d.dataset.theme=t;}d.classList.add("js");if(!window.matchMedia("(prefers-reduced-motion: reduce)").matches){d.classList.add("motion");}}catch(e){}})();';
 
 const RootLayout: FC<{ children: React.ReactNode }> = ({ children }) => {
-    const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
-
     return (
         // suppressHydrationWarning: the boot script adds `js`/`motion` and the stored
         // theme to <html> before hydration, so the client className intentionally
@@ -106,52 +104,13 @@ const RootLayout: FC<{ children: React.ReactNode }> = ({ children }) => {
         <html lang="en" className={fontVariables} suppressHydrationWarning>
             <head>
                 <script dangerouslySetInnerHTML={{ __html: bootScript }} />
-
-                {/* Google Consent Mode V2 - Load before GA4 */}
-                <Script id="google-consent-mode" strategy="beforeInteractive">
-                    {`
-                        window.dataLayer = window.dataLayer || [];
-                        function gtag(){dataLayer.push(arguments);}
-                        
-                        // Initialize consent mode with default settings
-                        gtag('consent', 'default', {
-                            'analytics_storage': 'denied',
-                            'ad_storage': 'denied',
-                            'ad_user_data': 'denied',
-                            'ad_personalization': 'denied',
-                            'personalization_storage': 'denied',
-                            'functionality_storage': 'granted',
-                            'security_storage': 'granted',
-                            'wait_for_update': 500
-                        });
-                    `}
-                </Script>
-
-                {/* Google Analytics 4 */}
-                {GA_MEASUREMENT_ID && (
-                    <>
-                        <Script
-                            src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
-                            strategy="afterInteractive"
-                        />
-                        <Script id="google-analytics" strategy="afterInteractive">
-                            {`
-                                window.dataLayer = window.dataLayer || [];
-                                function gtag(){dataLayer.push(arguments);}
-                                gtag('js', new Date());
-                                gtag('config', '${GA_MEASUREMENT_ID}', {
-                                    page_title: document.title,
-                                    page_location: window.location.href,
-                                });
-                            `}
-                        </Script>
-                    </>
-                )}
             </head>
             <body>
                 <ConsentProvider>
                     {children}
                     <CookieConsent />
+                    {/* Requests nothing from Google until analytics consent is granted. */}
+                    <GoogleAnalytics />
                     <Analytics />
                     <SpeedInsights />
                 </ConsentProvider>

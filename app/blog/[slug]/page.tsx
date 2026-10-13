@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { blogPosts } from '@/config/blog';
 import { readMarkdownFile } from '@/components/markdown/markdownProcessor';
-import { AnalyticsWrapper } from '@/components/analytics/AnalyticsWrapper';
+import { EngagementTracker } from '@/components/analytics/EngagementTracker';
 import { Article } from '@/components/blog/Article';
 import { ReadingShell } from '@/components/blog/ReadingShell';
 import { GlobalChrome } from '@/components/chrome/GlobalChrome';
@@ -139,19 +139,7 @@ const BlogPost: FC<{ params: Promise<{ slug: string }> }> = async ({ params }) =
                 }}
             />
 
-            <AnalyticsWrapper
-                pageName={post.title}
-                pageType="blog_post"
-                contentId={post.slug}
-                additionalData={{
-                    reading_time_estimate: post.readTime,
-                }}
-                scrollConfig={{
-                    milestones: [25, 50, 75, 90],
-                    trackCompletion: true,
-                    targetSelector: 'article',
-                }}
-            />
+            <EngagementTracker pageType="blog_post" scrollTarget="article" />
 
             <ReadingShell
                 header={<SiteNav tools={<NavTools />} />}

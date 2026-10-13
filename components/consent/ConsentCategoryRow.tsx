@@ -8,7 +8,7 @@
 'use client';
 
 import { type FC } from 'react';
-import type { ConsentState } from './ConsentContext';
+import type { ConsentState } from '@/lib/consentStorage';
 import type { ConsentCategory } from './consentCategories';
 import styles from './ConsentCategoryRow.module.css';
 

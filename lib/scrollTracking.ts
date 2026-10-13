@@ -1,106 +1,117 @@
 /**
- * Scroll tracking utilities for analytics.
- * Provides reusable scroll depth and reading time tracking functionality.
+ * Scroll-depth milestones for analytics.
+ *
+ * Depth is how much of the target element has passed the bottom edge of the
+ * viewport. It is read through the motion scroll store, so it costs no scroll
+ * listener of its own: measuring is batched into the store's single
+ * rAF-throttled pass with every other scroll-driven effect. Once every
+ * milestone has been reported the element is unregistered and costs nothing.
  */
 
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
+import { registerScrub } from './motion';
 import { trackBlogPost, trackScroll } from './analytics';
 
-interface ScrollTrackingOptions {
-    /** Page type for analytics */
-    pageType: 'blog_post' | 'home' | 'blog' | 'privacy';
-    /** Scroll milestones to track (default: [25, 50, 75, 90]) */
-    milestones?: number[];
-    /** Whether to track reading completion at 90% */
+export type TrackedPageType = 'home' | 'blog' | 'blog_post' | 'privacy';
+
+/** Depth at which a read counts as complete. */
+const COMPLETION_PERCENT = 90;
+
+const DEFAULT_MILESTONES = [25, 50, 75, 90];
+
+interface ScrollDepthOptions {
+    pageType: TrackedPageType;
+    /** Percentages to report, each once. */
+    milestones?: readonly number[];
+    /** Also report a completed read at 90%. */
     trackCompletion?: boolean;
 }
 
 /**
- * Custom hook for tracking scroll depth and reading time.
- *
- * @param elementRef - Reference to the element to track scrolling within
- * @param options - Configuration options for tracking
- *
- * @example
- * ```typescript
- * const articleRef = useRef<HTMLElement>(null);
- * useScrollTracking(articleRef, {
- *   pageType: 'blog_post'
- * });
- * ```
+ * Reports each depth milestone once as `element` scrolls past the viewport's
+ * bottom edge. Returns a function that stops tracking early.
  */
-export function useScrollTracking(
-    elementRef: React.RefObject<HTMLElement | null>,
-    options: ScrollTrackingOptions,
-) {
-    const {
-        pageType,
-        milestones = [25, 50, 75, 90],
-        trackCompletion = true,
-    } = options;
+export const trackScrollDepth = (element: HTMLElement, options: ScrollDepthOptions) => {
+    const { pageType, milestones = DEFAULT_MILESTONES, trackCompletion = true } = options;
+    const pending = [...milestones].sort((a, b) => a - b);
+    const startedAt = Date.now();
+    let completionPending = trackCompletion;
 
-    const startTimeRef = useRef<number>(Date.now());
-    const scrollPercentsTracked = useRef<Set<number>>(new Set());
+    // `start` equal to `end` makes progress a single reading line at the
+    // viewport's bottom edge: 0 while the element's top is below it, 1 once
+    // its bottom has passed it.
+    const stop = registerScrub(element, (progress) => {
+        const percent = Math.floor(progress * 100);
 
-    useEffect(() => {
-        // Track initial page view
-        if (pageType === 'blog_post') {
-            trackBlogPost.view();
+        while (pending.length > 0 && percent >= pending[0]) {
+            const milestone = pending[0];
+
+            pending.shift();
+            reportDepth(pageType, milestone);
         }
 
-        const handleScroll = () => {
-            if (!elementRef.current) return;
+        if (completionPending && percent >= COMPLETION_PERCENT) {
+            completionPending = false;
+            reportCompletion(pageType, (Date.now() - startedAt) / 1000);
+        }
 
-            const scrollTop = window.scrollY;
-            const windowHeight = window.innerHeight;
-            const elementHeight = elementRef.current.offsetHeight;
-            const elementTop = elementRef.current.offsetTop;
+        if (pending.length === 0 && !completionPending) {
+            stop();
+        }
+    }, { start: 1, end: 1 });
 
-            // Calculate scroll percentage within the element
-            const scrolledIntoElement = Math.max(0, scrollTop + windowHeight - elementTop);
-            const maxScrollable = elementHeight;
-            const scrollPercent = Math.min(100, Math.floor((scrolledIntoElement / maxScrollable) * 100));
+    return stop;
+};
 
-            // Track milestone percentages
-            milestones.forEach((milestone) => {
-                if (scrollPercent >= milestone && !scrollPercentsTracked.current.has(milestone)) {
-                    scrollPercentsTracked.current.add(milestone);
-
-                    if (pageType === 'blog_post') {
-                        trackBlogPost.scroll(milestone);
-                    }
-                    else {
-                        trackScroll(pageType, milestone);
-                    }
-                }
-            });
-
-            // Track reading completion
-            if (trackCompletion && scrollPercent >= 90 && !scrollPercentsTracked.current.has(100)) {
-                scrollPercentsTracked.current.add(100);
-                const readingTime = (Date.now() - startTimeRef.current) / 1000; // seconds
-
-                if (pageType === 'blog_post') {
-                    trackBlogPost.readComplete(readingTime);
-                }
-                else {
-                    trackScroll(pageType, 100);
-                }
-            }
-        };
-
-        // Use passive listeners for better performance
-        window.addEventListener('scroll', handleScroll, { passive: true });
-
-        return () => {
-            window.removeEventListener('scroll', handleScroll);
-        };
-    }, [pageType, milestones, trackCompletion, elementRef]);
-
-    return {
-        startTime: startTimeRef.current,
-        trackedPercentages: Array.from(scrollPercentsTracked.current),
-    };
+interface Options extends ScrollDepthOptions {
+    /** CSS selector for the element whose depth is tracked. */
+    targetSelector: string;
+    /** Tracking only runs while this is true, i.e. once analytics consent is granted. */
+    enabled: boolean;
 }
+
+/** Tracks scroll depth through the first element matching `targetSelector`. */
+export const useScrollTracking = ({ targetSelector, enabled, pageType, milestones = DEFAULT_MILESTONES, trackCompletion = true }: Options) => {
+    // Keyed by value so an inline array prop does not restart tracking.
+    const milestoneKey = milestones.join(',');
+
+    useEffect(() => {
+        if (!enabled) {
+            return;
+        }
+
+        const target = document.querySelector(targetSelector);
+
+        if (!(target instanceof HTMLElement)) {
+            return;
+        }
+
+        return trackScrollDepth(target, {
+            pageType,
+            milestones: parseMilestones(milestoneKey),
+            trackCompletion,
+        });
+    }, [enabled, targetSelector, pageType, milestoneKey, trackCompletion]);
+};
+
+const reportDepth = (pageType: TrackedPageType, milestone: number) => {
+    if (pageType === 'blog_post') {
+        trackBlogPost.scroll(milestone);
+    }
+    else {
+        trackScroll(pageType, milestone);
+    }
+};
+
+const reportCompletion = (pageType: TrackedPageType, readingSeconds: number) => {
+    if (pageType === 'blog_post') {
+        trackBlogPost.readComplete(readingSeconds);
+    }
+    else {
+        trackScroll(pageType, 100);
+    }
+};
+
+const parseMilestones = (key: string) => (key === '' ? [] : key.split(',').map(Number));

@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import type { Metadata } from 'next';
-import { AnalyticsWrapper } from '@/components/analytics/AnalyticsWrapper';
+import { EngagementTracker } from '@/components/analytics/EngagementTracker';
 import { GlobalChrome } from '@/components/chrome/GlobalChrome';
 import { Contact } from '@/components/home/contact/Contact';
 import { Experience } from '@/components/home/experience/Experience';
@@ -76,16 +76,7 @@ const Home: FC = () => (
             dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
         />
 
-        <AnalyticsWrapper
-            pageName="Homepage"
-            pageType="home"
-            contentId="homepage"
-            scrollConfig={{
-                milestones: [25, 50, 75, 90],
-                trackCompletion: true,
-                targetSelector: '[data-scroll-target]',
-            }}
-        />
+        <EngagementTracker pageType="home" scrollTarget="[data-scroll-target]" />
 
         <SiteNav tools={<NavTools />} />
 

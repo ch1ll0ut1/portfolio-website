@@ -9,6 +9,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { type FC } from 'react';
+import { CONSENT_VERSION } from '@/lib/consentStorage';
 import { ConsentProvider, useConsent } from './ConsentContext';
 import { ConsentPreferencesModal } from './ConsentPreferencesModal';
 
@@ -68,12 +69,11 @@ describe('<ConsentPreferencesModal>', () => {
         expect(dialog).toHaveAccessibleName('Cookie preferences');
     });
 
-    it('should offer a switch for every optional category', async () => {
+    it('should offer analytics as the only optional category, off by default', async () => {
         await mount();
 
+        expect(screen.getAllByRole('switch')).toHaveLength(1);
         expect(screen.getByRole('switch', { name: 'Analytics cookies' })).not.toBeChecked();
-        expect(screen.getByRole('switch', { name: 'Marketing cookies' })).not.toBeChecked();
-        expect(screen.getByRole('switch', { name: 'Preference cookies' })).not.toBeChecked();
     });
 
     it('should describe each switch with its category text', async () => {
@@ -91,14 +91,13 @@ describe('<ConsentPreferencesModal>', () => {
 
     it('should start from the consent already stored', async () => {
         localStorage.setItem('cookie-consent', JSON.stringify({
-            version: '1.0',
-            consent: { analytics: true, marketing: false, preferences: false, essential: true },
+            version: CONSENT_VERSION,
+            consent: { analytics: true, essential: true },
         }));
 
         await mount();
 
         expect(screen.getByRole('switch', { name: 'Analytics cookies' })).toBeChecked();
-        expect(screen.getByRole('switch', { name: 'Marketing cookies' })).not.toBeChecked();
     });
 
     it('should toggle a switch from the keyboard', async () => {
