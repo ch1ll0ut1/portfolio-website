@@ -1,7 +1,7 @@
 'use client';
 
 import { type FC, type ReactNode, useRef } from 'react';
-import { useMagnetic } from '@/lib/motion';
+import { useMagnet } from '@/lib/motion';
 import { navSections } from '@/config/sections';
 import { links } from '@/config/links';
 import { BrandMark } from './BrandMark';
@@ -50,7 +50,7 @@ export const SiteNav: FC<Props> = ({ tools }) => {
     useHeaderScroll(headerRef, styles.isScrolled, styles.isHidden);
     useSlidingPill(listRef, pillRef, activeId);
     useNavEntrance(headerRef, styles.isPre);
-    useMagnetic(bookRef, BOOK_MAGNET);
+    useMagnet(bookRef, { strength: BOOK_MAGNET });
 
     return (
         <>

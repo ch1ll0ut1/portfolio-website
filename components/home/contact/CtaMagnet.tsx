@@ -1,7 +1,7 @@
 'use client';
 
 import { type FC, type PointerEvent, useRef } from 'react';
-import { useSpringMagnet } from '@/lib/motion';
+import { useMagnet } from '@/lib/motion';
 import { links } from '@/config/links';
 import { conversionHandlers } from './outboundTracking';
 import styles from './CtaMagnet.module.css';
@@ -14,7 +14,7 @@ const CONVERSION_LOCATION = 'cta_section';
 /**
  * The closing call to action: a damped-spring pointer magnet.
  *
- * `useSpringMagnet` writes `--bx` / `--by`, which the stylesheet turns into the
+ * `useMagnet` (spring) writes `--bx` / `--by`, which the stylesheet turns into the
  * button's own transform and, at a fraction of it, the inner content's — the
  * label lags behind the shell, which reads as depth. It no-ops on coarse
  * pointers and under reduced motion, so the button simply sits still there.
@@ -28,7 +28,7 @@ export const CtaMagnet: FC = () => {
     const ctaRef = useRef<HTMLAnchorElement>(null);
     const tracking = conversionHandlers(CONVERSION_TYPE, CONVERSION_LOCATION);
 
-    useSpringMagnet(ctaRef);
+    useMagnet(ctaRef, { kind: 'spring' });
 
     const trackOrigin = (event: PointerEvent<HTMLAnchorElement>) => {
         const element = event.currentTarget;

@@ -34,7 +34,7 @@ Read first: the prototype's `BRIEF.md`, plus your own section's three files
 Import from `@/lib/motion`. It replaces the prototype's `SK` global and preserves its semantics.
 
 Hooks: `useReveal`, `useMaskReveal`, `useInView`, `useScrub`, `useScrollState`, `useRaf`, `useVisibleRaf`,
-`useIntro`, `useStageEvent`, `useMagnetic`, `useSpringMagnet`, `useReducedMotion`, `useFinePointer`.
+`useIntro`, `useStageEvent`, `useMagnet`, `useReducedMotion`, `useFinePointer`.
 
 Plain functions for imperative engines: `subscribeTick`, `registerScrub`, `observeInView`, `splitWords`,
 `indexWords`, `trackWordIndices`, `onStage`, `emitStage`, `tween`, `EASE`, `copyText`, `showToast`,
@@ -49,7 +49,7 @@ Mapping from the prototype:
 | `SK.inview(el, o)` | `useInView(ref, o)` / `observeInView` |
 | `SK.reveal(els, o)` | `useReveal(ref, { selector, delay, stagger })` |
 | `SK.maskReveal(el, o)` | `useMaskReveal(ref, o)` |
-| `SK.magnetic(el, s)` | `useMagnetic(ref, s)` |
+| `SK.magnetic(el, s)` | `useMagnet(ref, { strength: s })` |
 | `SK.on('intro' \| 'layout' \| …)` | `useIntro()` / `useStageEvent(event, fn)` |
 | `SK.reduced` / `SK.fine` | `useReducedMotion()` / `useFinePointer()` — or the plain functions inside effects |
 | `SK.copy` / `SK.toast` | `copyText` / `showToast` |
