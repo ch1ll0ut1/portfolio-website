@@ -1,7 +1,7 @@
 'use client';
 
-import { type CSSProperties, type FC, useEffect, useRef } from 'react';
-import { hasFinePointer, prefersReducedMotion, useEventCallback, useStageEvent } from '@/lib/motion';
+import { type CSSProperties, type FC, useEffect, useEffectEvent, useRef } from 'react';
+import { hasFinePointer, prefersReducedMotion, useStageEvent } from '@/lib/motion';
 import { type PipelineFlow, createPipelineFlow } from './pipelineFlow';
 import { type PipelineClasses, type PipelineNodeSpec, pipelineNodes } from './pipelineSpec';
 import styles from './PipelineCanvas.module.css';
@@ -46,7 +46,7 @@ export const PipelineCanvas: FC<Props> = ({ onLiveChange }) => {
     const svgRef = useRef<SVGSVGElement>(null);
     const stateRef = useRef<HTMLSpanElement>(null);
     const flowRef = useRef<PipelineFlow | null>(null);
-    const liveChanged = useEventCallback((live: boolean) => {
+    const liveChanged = useEffectEvent((live: boolean) => {
         onLiveChange?.(live);
     });
 
@@ -75,7 +75,7 @@ export const PipelineCanvas: FC<Props> = ({ onLiveChange }) => {
             flowRef.current = null;
             flow.destroy();
         };
-    }, [liveChanged]);
+    }, []);
 
     useStageEvent('layout', () => {
         flowRef.current?.layout();

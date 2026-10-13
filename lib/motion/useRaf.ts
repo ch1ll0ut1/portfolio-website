@@ -1,8 +1,7 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useEffectEvent } from 'react';
 import { type TickFn, subscribeTick } from './ticker';
-import { useEventCallback } from './useEventCallback';
 
 /**
  * Runs a callback on the shared animation clock while `enabled` is true.
@@ -11,7 +10,7 @@ import { useEventCallback } from './useEventCallback';
  * tab should set `enabled` to false rather than idling inside the callback.
  */
 export const useRaf = (callback: TickFn, enabled = true) => {
-    const tick = useEventCallback(callback);
+    const tick = useEffectEvent(callback);
 
     useEffect(() => {
         if (!enabled) {
@@ -19,5 +18,5 @@ export const useRaf = (callback: TickFn, enabled = true) => {
         }
 
         return subscribeTick(tick);
-    }, [enabled, tick]);
+    }, [enabled]);
 };

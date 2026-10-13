@@ -21,7 +21,6 @@ export { useFinePointer } from './useFinePointer';
 export { useInView } from './useInView';
 export { useIntro } from './useIntro';
 export { useMagnet } from './useMagnet';
-export { useEventCallback } from './useEventCallback';
 export { useMediaQuery } from './useMediaQuery';
 export { useMaskReveal } from './useMaskReveal';
 export { useRaf } from './useRaf';

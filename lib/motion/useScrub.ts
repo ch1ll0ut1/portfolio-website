@@ -1,8 +1,7 @@
 'use client';
 
-import { type RefObject, useEffect } from 'react';
+import { type RefObject, useEffect, useEffectEvent } from 'react';
 import { type ScrubOptions, registerScrub } from './scrollStore';
-import { useEventCallback } from './useEventCallback';
 
 /**
  * Drives a callback from an element's progress through the viewport.
@@ -15,7 +14,7 @@ export const useScrub = (
     onProgress: (progress: number) => void,
     options: ScrubOptions = {},
 ) => {
-    const progress = useEventCallback(onProgress);
+    const progress = useEffectEvent(onProgress);
     const { start, end } = options;
 
     useEffect(() => {
@@ -26,5 +25,5 @@ export const useScrub = (
         }
 
         return registerScrub(element, progress, { start, end });
-    }, [ref, start, end, progress]);
+    }, [ref, start, end]);
 };
