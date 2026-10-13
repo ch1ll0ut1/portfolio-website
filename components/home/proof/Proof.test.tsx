@@ -2,10 +2,10 @@
  * Tests for the proof section.
  */
 
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterAll, afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { proofClients, proofStats } from '@/config/proof';
-import { installIntersectionObserver, installMatchMedia } from '../../../test/motionEnv';
+import { installIntersectionObserver, installMatchMedia, settleIntro } from '../../../test/motionEnv';
 import { Proof } from './Proof';
 
 /** The motion kit waits on web fonts, which jsdom does not implement. */
@@ -32,6 +32,9 @@ describe('Proof', () => {
         observers = installIntersectionObserver();
         restoreMedia = installMatchMedia([]);
     });
+
+    // The fonts above never settle, so the intro waits on its failsafe timer.
+    afterAll(settleIntro);
 
     afterEach(() => {
         observers.restore();

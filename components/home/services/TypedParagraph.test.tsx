@@ -2,11 +2,11 @@
  * Tests for the closing paragraph of the services section.
  */
 
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterAll, afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { render } from '@testing-library/react';
 import { engagementNote } from '@/config/engagements';
 import { REDUCED_MOTION_QUERY } from '@/lib/motion';
-import { installIntersectionObserver, installMatchMedia } from '../../../test/motionEnv';
+import { installIntersectionObserver, installMatchMedia, settleIntro } from '../../../test/motionEnv';
 import { TypedParagraph } from './TypedParagraph';
 import styles from './Services.module.css';
 
@@ -40,6 +40,9 @@ describe('TypedParagraph', () => {
         stubFonts();
         observers = installIntersectionObserver();
     });
+
+    // The fonts above never settle, so the intro waits on its failsafe timer.
+    afterAll(settleIntro);
 
     afterEach(() => {
         observers.restore();

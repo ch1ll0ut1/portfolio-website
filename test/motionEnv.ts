@@ -6,6 +6,7 @@
  */
 
 import { vi } from 'vitest';
+import { isIntroDone } from '@/lib/motion';
 
 export interface FakeObserver {
     element: Element | null;
@@ -83,6 +84,15 @@ export const installMatchMedia = (matching: string[] = []) => {
         window.matchMedia = original;
     };
 };
+
+/**
+ * Waits for the page intro to fire, for a suite that started the stage with
+ * web fonts that never settle. The intro then waits on its 900 ms failsafe, a
+ * real timer the suite cannot cancel: a file that finished sooner left it
+ * pending, and it fired into the torn-down environment ("document is not
+ * defined") or into the next file's. Call it from an `afterAll`.
+ */
+export const settleIntro = () => vi.waitUntil(isIntroDone, { timeout: 5_000, interval: 20 });
 
 /** Pins an element's measured box so layout-dependent code is deterministic. */
 export const stubRect = (element: HTMLElement, rect: Partial<DOMRect>) => {

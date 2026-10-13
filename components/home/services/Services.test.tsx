@@ -2,11 +2,11 @@
  * Tests for the services section.
  */
 
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterAll, afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import { engagementNote, engagements, engagementsHeading } from '@/config/engagements';
 import { itemAt } from '@/test/itemAt';
-import { installIntersectionObserver, installMatchMedia } from '../../../test/motionEnv';
+import { installIntersectionObserver, installMatchMedia, settleIntro } from '../../../test/motionEnv';
 import { Services } from './Services';
 
 /** The motion kit waits on web fonts, which jsdom does not implement. */
@@ -55,6 +55,9 @@ describe('Services', () => {
         observers = installIntersectionObserver();
         restoreMedia = installMatchMedia([]);
     });
+
+    // The fonts above never settle, so the intro waits on its failsafe timer.
+    afterAll(settleIntro);
 
     afterEach(() => {
         observers.restore();

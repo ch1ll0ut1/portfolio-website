@@ -5,11 +5,11 @@
  * not here.
  */
 
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterAll, afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { REDUCED_MOTION_QUERY, tickerCount } from '@/lib/motion';
-import { installIntersectionObserver, installMatchMedia } from '../../../test/motionEnv';
+import { installIntersectionObserver, installMatchMedia, settleIntro } from '../../../test/motionEnv';
 import { Marquee } from './Marquee';
 import styles from './Proof.module.css';
 
@@ -33,6 +33,9 @@ describe('Marquee', () => {
         observers = installIntersectionObserver();
         restoreMedia = installMatchMedia([]);
     });
+
+    // The fonts above never settle, so the intro waits on its failsafe timer.
+    afterAll(settleIntro);
 
     afterEach(() => {
         observers.restore();
