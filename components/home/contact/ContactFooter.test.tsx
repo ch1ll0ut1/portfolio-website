@@ -2,7 +2,7 @@
  * Tests for the site footer.
  */
 
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { applyAnalyticsConsent } from '@/lib/analytics';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -28,6 +28,12 @@ const blockNavigation = () => {
 describe('ContactFooter', () => {
     let observers: ReturnType<typeof installIntersectionObserver>;
     let restoreMedia: () => void;
+
+    // The cookie dialog loads through `next/dynamic`; loading its module here
+    // keeps a cold load from outlasting `findBy*`'s 1 s on a busy machine.
+    beforeAll(async () => {
+        await import('@/components/consent/ConsentPreferencesModal');
+    }, 30_000);
     let gtag: ReturnType<typeof vi.fn>;
     let restoreNavigation: () => void;
 

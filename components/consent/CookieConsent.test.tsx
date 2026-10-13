@@ -7,7 +7,7 @@
  * never styling.
  */
 
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { CONSENT_KEY, CONSENT_VERSION } from '@/lib/consentStorage';
@@ -47,6 +47,15 @@ const mountWithBanner = async () => {
 
 describe('<CookieConsent>', () => {
     let gtag: ReturnType<typeof vi.fn>;
+
+    /*
+     * The preferences dialog still loads through `next/dynamic` below, but its
+     * module is loaded here first: a cold load could outlast `findBy*`'s 1 s
+     * on a busy machine, most of all where no banner mounted to prefetch it.
+     */
+    beforeAll(async () => {
+        await import('./ConsentPreferencesModal');
+    }, 30_000);
 
     beforeEach(() => {
         localStorage.clear();

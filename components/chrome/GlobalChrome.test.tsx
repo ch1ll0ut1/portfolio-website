@@ -6,7 +6,7 @@
  * and that the cursor stays unmounted where it is not welcome.
  */
 
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { FINE_POINTER_QUERY, REDUCED_MOTION_QUERY, onStage } from '@/lib/motion';
@@ -42,6 +42,17 @@ const trigger = (attribute: string) => {
 describe('<GlobalChrome>', () => {
     let restoreMedia: () => void;
     let release: () => void = () => undefined;
+
+    /*
+     * The overlays still go through `next/dynamic` in every test below, but
+     * their modules are loaded here first. A cold load of either one took
+     * longer than `waitFor`'s 1 s on a busy machine; from the module cache it
+     * resolves in a few ticks. The hook gets its own timeout, since it is
+     * where that cold cost is now paid.
+     */
+    beforeAll(async () => {
+        await Promise.all([import('./CommandPalette'), import('./ShortcutsOverlay')]);
+    }, 30_000);
 
     beforeEach(() => {
         navigation.pathname = '/';
