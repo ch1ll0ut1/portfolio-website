@@ -1,6 +1,6 @@
 # Node.js vs Python: When Framework Magic Stops Feeling Magical
 
-![ ](nodejs-vs-python-framework-magic.png)
+![ ](nodejs-vs-python-framework-magic.webp)
 
 There was a time when I loved “magic” in frameworks.
 Back in the day, Ruby on Rails blew my mind — models auto-loaded, routes appeared from nowhere, database migrations happened like clockwork.

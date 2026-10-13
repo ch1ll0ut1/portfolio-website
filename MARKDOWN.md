@@ -165,14 +165,16 @@ SEO-optimized images with alt text and automatic optimization:
 
 **Features:**
 - Next.js Image component with automatic optimization
-- Lazy loading for improved performance
+- Real width and height read from the file at build time, so the image reserves its space before it loads
+- The first image of a post loads eagerly with high priority (it is usually the largest paint); later ones lazy-load
 - Responsive sizing with srcset generation
-- WebP format conversion when supported
+- AVIF/WebP served when the browser supports them
 - Alt text displayed as caption below image
 - Automatic path resolution for blog images
 
 **File Organization:**
 - Store images in `public/images/blog/` directory
+- Convert new artwork before committing it: `node scripts/optimize-images.mjs` writes a WebP (at most 1600px wide) next to each PNG/JPG, then reference the `.webp` and delete the original
 - Relative paths like `image.jpg` resolve to `/images/blog/image.jpg`
 - Absolute paths like `/custom/path/image.png` remain unchanged
 - Supports all common formats (JPG, PNG, WebP, AVIF)

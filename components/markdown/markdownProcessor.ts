@@ -24,6 +24,7 @@
 
 import fs from 'fs';
 import path from 'path';
+import { readImageDimensions } from './blogImage';
 
 /**
  * Union type representing all possible markdown block elements
@@ -103,6 +104,9 @@ export interface ImageElement {
     type: 'image';
     src: string;
     alt: string;
+    /** Intrinsic pixel size, when the file exists under `public/`. */
+    width?: number;
+    height?: number;
 }
 
 /**
@@ -212,6 +216,7 @@ export function processMarkdownContent(content: string): MarkdownElement[] {
                     type: 'image',
                     alt,
                     src,
+                    ...readImageDimensions(src),
                 });
             }
         }

@@ -1,6 +1,6 @@
 # 10 AI Workflows Every Developer Should Know in 2025
 
-![10 Workflows which AI can help you with](ai-boosted-development-workflows.png)
+![10 Workflows which AI can help you with](ai-boosted-development-workflows.webp)
 
 Artificial Intelligence in 2025 is no longer a curiosity.  
 It’s not just “autocomplete for code.” It’s a **set of workflows that can accelerate every phase of software development**, from brainstorming to deployment.

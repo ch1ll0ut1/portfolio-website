@@ -1,6 +1,6 @@
 # Why Startups Don’t Need Product Owners
 
-![Why Startups Don’t Need Product Owners](why-startups-dont-need-product-owners.png)
+![Why Startups Don’t Need Product Owners](why-startups-dont-need-product-owners.webp)
 
 I’ve spent most of my career working hands-on, building products from the ground up — coding, working with designers, talking to stakeholders and customers, and even managing projects myself.  
 

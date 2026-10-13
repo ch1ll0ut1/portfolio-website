@@ -17,6 +17,7 @@ interface Props {
 
 export const Markdown: FC<Props> = ({ content, className = '' }) => {
     const elements = processMarkdownContent(content);
+    const firstImage = elements.findIndex(element => element.type === 'image');
 
     return (
         <div className={`${styles.prose} ${className}`.trim()} data-testid="markdown">
@@ -41,7 +42,7 @@ export const Markdown: FC<Props> = ({ content, className = '' }) => {
                         return <MarkdownSeparator key={index} element={element} />;
 
                     case 'image':
-                        return <MarkdownImage key={index} element={element} />;
+                        return <MarkdownImage key={index} element={element} priority={index === firstImage} />;
 
                     case 'paragraph':
                     default:

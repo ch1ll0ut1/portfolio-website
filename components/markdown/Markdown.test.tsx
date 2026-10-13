@@ -115,6 +115,16 @@ describe('Markdown Component', () => {
         expect(screen.getByTestId('markdown').querySelector('p')).not.toBeInTheDocument();
     });
 
+    it('should load only the first image eagerly', () => {
+        const content = '![First](/first.webp)\n\nText\n\n![Second](/second.webp)';
+
+        render(<Markdown content={content} />);
+
+        // The first image is usually the largest paint; the rest can wait.
+        expect(screen.getByAltText('First')).not.toHaveAttribute('loading', 'lazy');
+        expect(screen.getByAltText('Second')).toHaveAttribute('loading', 'lazy');
+    });
+
     it('should render elements in correct order', () => {
         const content = '# First\n\nParagraph\n\n## Second';
 

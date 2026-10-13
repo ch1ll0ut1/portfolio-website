@@ -39,6 +39,13 @@ const nextConfig = {
     poweredByHeader: false,
     compress: true,
     reactStrictMode: true,
+    images: {
+        // AVIF first: noticeably smaller than WebP for the flat blog artwork.
+        formats: ['image/avif', 'image/webp'],
+        // Keep optimized variants for a month instead of 60 seconds. Blog art
+        // does not change in place; replaced artwork gets a new file name.
+        minimumCacheTTL: 2678400,
+    },
     async headers() {
         return [
             {

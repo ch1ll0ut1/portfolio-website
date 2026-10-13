@@ -1,6 +1,6 @@
 # The Burnout Trap: Why Overworking Founders Destroy Their Own Startups
 
-![The tale of the tortoise and the hare](the-tale-of-the-tortoise-and-the-hare.png)
+![The tale of the tortoise and the hare](the-tale-of-the-tortoise-and-the-hare.webp)
 
 Startups love to brag about hustle.  
 But when you hear about young founding employees working **13 hours a day, 5 days a week, for months on end** — it’s not hustle. It’s a red flag.  

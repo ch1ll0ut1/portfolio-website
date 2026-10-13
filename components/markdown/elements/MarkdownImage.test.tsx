@@ -5,8 +5,8 @@ import { ImageElement } from '../markdownProcessor';
 
 // Mock Next.js Image component
 vi.mock('next/image', () => ({
-    default: ({ src, alt, ...props }: any) => (
-        <img src={src} alt={alt} {...props} data-testid="next-image" />
+    default: ({ src, alt, priority, ...props }: any) => (
+        <img src={src} alt={alt} {...props} data-priority={String(Boolean(priority))} data-testid="next-image" />
     ),
 }));
 
@@ -55,5 +55,32 @@ describe('MarkdownImage', () => {
         // Check that no caption paragraph exists
         const caption = screen.queryByRole('paragraph');
         expect(caption).not.toBeInTheDocument();
+    });
+
+    it('passes the measured size through so the box matches the image', () => {
+        const element: ImageElement = {
+            type: 'image',
+            src: 'portrait.webp',
+            alt: 'Portrait',
+            width: 1024,
+            height: 1536,
+        };
+
+        render(<MarkdownImage element={element} />);
+
+        const image = screen.getByTestId('next-image');
+        expect(image).toHaveAttribute('width', '1024');
+        expect(image).toHaveAttribute('height', '1536');
+    });
+
+    it('marks the image as priority only when asked to', () => {
+        const element: ImageElement = { type: 'image', src: 'a.webp', alt: 'A' };
+
+        const { unmount } = render(<MarkdownImage element={element} />);
+        expect(screen.getByTestId('next-image')).toHaveAttribute('data-priority', 'false');
+        unmount();
+
+        render(<MarkdownImage element={element} priority />);
+        expect(screen.getByTestId('next-image')).toHaveAttribute('data-priority', 'true');
     });
 });
