@@ -35,14 +35,14 @@ pnpm visual-check   # Sweep every route type in both themes, 1440px and 390px,
 
 ## Architecture Overview
 
-This is a Next.js 15 portfolio website built with TypeScript, React 19 and CSS Modules. The architecture follows modular design principles with clear separation of concerns.
+This is a Next.js 16 portfolio website built with TypeScript, React 19.3 and CSS Modules. The architecture follows modular design principles with clear separation of concerns.
 
 ### Key Technical Stack
-- **Framework**: Next.js 15 with App Router
+- **Framework**: Next.js 16 with App Router, built with Turbopack (the default for `next dev` and `next build`)
 - **Language**: TypeScript with strict configuration
 - **Styling**: CSS Modules driven by the design tokens in `app/globals.css`, which also holds the reset and the few global primitives. No CSS framework or PostCSS config
 - **UI Components**: No component library. Global primitive classes (`.wrap`, `.btn`, `.tags`, `.sec-head`) in `app/globals.css`, composed per component in a co-located `.module.css`
-- **Motion**: `lib/motion` — one shared ticker and scroll store behind hooks (`useReveal`, `useScrub`, `useIntro`), all of it inert under reduced motion
+- **Motion**: `lib/motion` — one shared ticker and scroll store behind hooks (`useReveal`, `useScrub`, `useIntro`), all of it inert under reduced motion. Subscription callbacks go through React's `useEffectEvent`
 - **Testing**: Vitest — Node environment by default, jsdom for `.tsx` tests and the DOM-touching `.ts` tests listed in `vitest.config.ts`
 - **Code Quality**: ESLint with TypeScript, stylistic, and import rules
 - **Fonts**: Bricolage Grotesque, Schibsted Grotesk and Martian Mono via `next/font/google`
@@ -176,3 +176,13 @@ For complete development standards, testing strategies, and architectural patter
 - Font loading is handled through `next/font/google` (Bricolage Grotesque, Schibsted Grotesk, Martian Mono)
 - The project uses pnpm as package manager, not npm or yarn
 - Components use consolidated structure to reduce over-decomposition
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+## This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->
