@@ -168,12 +168,10 @@ export default tseslint.config(
         },
     },
     {
-        // Not yet in the plan: focusable preview rows in the project index, and
-        // the hover preview mirroring its prop into state from an effect. Both
-        // need a design decision rather than a lint fix.
-        files: ['components/home/work/MoreProjects.tsx', 'components/home/work/ProjectPreview.tsx'],
+        // Not yet in the plan: the hover preview mirrors its prop into state
+        // from an effect, which needs a design decision rather than a lint fix.
+        files: ['components/home/work/ProjectPreview.tsx'],
         rules: {
-            'jsx-a11y/no-noninteractive-tabindex': 'warn',
             'react-hooks/set-state-in-effect': 'warn',
         },
     },

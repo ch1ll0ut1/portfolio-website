@@ -1,9 +1,9 @@
 /**
  * Tests for the project index.
  *
- * The behaviour that matters: every project is readable, the list works from a
- * keyboard exactly as it does from a cursor, and the cursor-only preview stays
- * out of the way of keyboard users and touch devices.
+ * The behaviour that matters: every project is readable, the rows stay out of
+ * the Tab order since none of them does anything, and the cursor-only marker
+ * and preview stay out of the way of touch devices.
  */
 
 import { afterEach, describe, expect, it } from 'vitest';
@@ -33,15 +33,9 @@ const marker = (container: HTMLElement) => {
     return element;
 };
 
-const focus = (row: HTMLElement) => {
+const hover = (row: HTMLElement) => {
     act(() => {
-        row.focus();
-    });
-};
-
-const blur = (row: HTMLElement) => {
-    act(() => {
-        row.blur();
+        fireEvent.pointerOver(row);
     });
 };
 
@@ -89,45 +83,47 @@ describe('MoreProjects', () => {
     });
 
     describe('keyboard', () => {
-        it('should make every row reachable from the keyboard', () => {
+        it('should keep the rows out of the Tab order, since they have no action', () => {
             // Act
-            setup();
+            setup([FINE_POINTER_QUERY]);
 
             // Assert
             screen.getAllByRole('listitem').forEach((row) => {
-                expect(row).toHaveAttribute('tabindex', '0');
+                expect(row).not.toHaveAttribute('tabindex');
             });
         });
+    });
 
-        it('should move the marker to the focused row', () => {
+    describe('fine pointer', () => {
+        it('should move the marker to the hovered row', () => {
             // Arrange
-            const { container } = setup();
+            const { container } = setup([FINE_POINTER_QUERY]);
             const rows = screen.getAllByRole('listitem');
 
             stubOffsets(rows);
 
             // Act
-            focus(itemAt(rows, 2));
+            hover(itemAt(rows, 2));
 
             // Assert
             expect(marker(container).className).toContain(styles.markerOn);
             expect(marker(container).style.transform).toContain('140px');
 
             // Act
-            focus(itemAt(rows, 4));
+            hover(itemAt(rows, 4));
 
             // Assert
             expect(marker(container).style.transform).toContain('280px');
         });
 
-        it('should mark the focused row and dim the rest', () => {
+        it('should mark the hovered row and dim the rest', () => {
             // Arrange
-            setup();
+            setup([FINE_POINTER_QUERY]);
 
             const rows = screen.getAllByRole('listitem');
 
             // Act
-            focus(itemAt(rows, 1));
+            hover(itemAt(rows, 1));
 
             // Assert
             expect(itemAt(rows, 1).className).toContain(styles.rowActive);
@@ -135,42 +131,21 @@ describe('MoreProjects', () => {
             expect(itemAt(rows, 1).closest('ol')?.className).toContain(styles.listHot);
         });
 
-        it('should clear the active row when focus leaves the list', () => {
-            // Arrange
-            const { container } = setup();
-            const rows = screen.getAllByRole('listitem');
-
-            focus(itemAt(rows, 1));
-
-            // Act
-            blur(itemAt(rows, 1));
-
-            // Assert
-            expect(marker(container).className).not.toContain(styles.markerOn);
-            expect(itemAt(rows, 1).className).not.toContain(styles.rowActive);
-        });
-    });
-
-    describe('fine pointer', () => {
-        it('should treat a hovered row exactly like a focused one', () => {
+        it('should clear the active row when the pointer leaves the list', () => {
             // Arrange
             const { container } = setup([FINE_POINTER_QUERY]);
             const rows = screen.getAllByRole('listitem');
 
-            stubOffsets(rows);
-            focus(itemAt(rows, 3));
-
-            const fromFocus = marker(container).style.transform;
-
-            blur(itemAt(rows, 3));
+            hover(itemAt(rows, 1));
 
             // Act
-            fireEvent.pointerOver(itemAt(rows, 3));
+            act(() => {
+                fireEvent.pointerLeave(itemAt(rows, 1).closest('ol') ?? document.body);
+            });
 
             // Assert
-            expect(marker(container).style.transform).toBe(fromFocus);
-            expect(marker(container).className).toContain(styles.markerOn);
-            expect(itemAt(rows, 3).className).toContain(styles.rowActive);
+            expect(marker(container).className).not.toContain(styles.markerOn);
+            expect(itemAt(rows, 1).className).not.toContain(styles.rowActive);
         });
 
         it('should show the preview card for a hovered row', () => {
@@ -180,23 +155,10 @@ describe('MoreProjects', () => {
             const rows = screen.getAllByRole('listitem');
 
             // Act
-            fireEvent.pointerOver(itemAt(rows, 0));
+            hover(itemAt(rows, 0));
 
             // Assert
             expect(screen.getByText(`~/work/${itemAt(projectsIndex, 0).id}`)).toBeInTheDocument();
-        });
-
-        it('should not show the preview card for a keyboard-focused row', () => {
-            // Arrange
-            const { container } = setup([FINE_POINTER_QUERY]);
-            const rows = screen.getAllByRole('listitem');
-
-            // Act
-            focus(itemAt(rows, 0));
-
-            // Assert
-            expect(marker(container).className).toContain(styles.markerOn);
-            expect(screen.queryByText(`~/work/${itemAt(projectsIndex, 0).id}`)).toBeNull();
         });
     });
 
@@ -212,18 +174,6 @@ describe('MoreProjects', () => {
 
             // Assert
             expect(screen.queryByText(`~/work/${itemAt(projectsIndex, 0).id}`)).toBeNull();
-        });
-
-        it('should still activate rows from the keyboard without a fine pointer', () => {
-            // Arrange
-            const { container } = setup();
-            const rows = screen.getAllByRole('listitem');
-
-            // Act
-            focus(itemAt(rows, 2));
-
-            // Assert
-            expect(marker(container).className).toContain(styles.markerOn);
         });
     });
 });
