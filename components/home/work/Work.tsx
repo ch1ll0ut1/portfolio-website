@@ -47,8 +47,8 @@ export const Work: FC = () => {
                     <h2 ref={headingRef} id="work-title">Selected work</h2>
                     <p ref={leadRef}>
                         Four projects where the difficult part was the whole point: structured
-                        documents, typed data across three APIs, a department built from nothing,
-                        and a messaging system under load.
+                        documents, typed data from the database to the UI, a department built from
+                        nothing, and a messaging system under load.
                     </p>
                 </header>
 

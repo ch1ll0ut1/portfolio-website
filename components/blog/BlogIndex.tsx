@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import { type BlogPost } from '@/config/blog';
+import { yearsShipping } from '@/config/site';
 import { PostRow } from './PostRow';
 import { MaskHeading } from './MaskHeading';
 import { Reveal } from './Reveal';
@@ -23,8 +24,7 @@ export const BlogIndex: FC<Props> = ({ posts }) => {
                 </MaskHeading>
                 <Reveal delay={0.15}>
                     <p className={styles.lead}>
-                        Practical advice from 15+ years of building software, leading teams, and helping
-                        businesses navigate their technology challenges.
+                        {`Practical advice from ${yearsShipping()} years of building software, leading teams, and helping businesses navigate their technology challenges.`}
                     </p>
                 </Reveal>
             </header>

@@ -41,7 +41,7 @@ describe('Experience', () => {
             const { container } = render(<Experience />);
 
             // Assert
-            expect(screen.getByRole('region', { name: /eighteen years, one log/i })).toBeInTheDocument();
+            expect(screen.getByRole('region', { name: /\d+ years, one log/i })).toBeInTheDocument();
             expect(container.querySelector('#experience')).toBeInTheDocument();
         });
 

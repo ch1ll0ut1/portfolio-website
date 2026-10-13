@@ -15,7 +15,7 @@ export type CareerBranch = 'indie' | 'main';
 export interface CommitRef {
     /** Text of the ref chip shown before the title, e.g. `HEAD → indie`. */
     label: string;
-    /** HEAD refs are drawn in the caret colour. */
+    /** HEAD refs are drawn in the caret color. */
     isHead: boolean;
 }
 
@@ -55,21 +55,7 @@ export const careerLog: CareerCommit[] = [
         hash: 'c3a9f52',
         years: '2022–2023',
         title: 'Technical lead & product architect, Social-Bee',
-        description: 'Built the tech and product department from zero: hiring, process, UX and AWS platform.',
-        branch: 'indie',
-    },
-    {
-        hash: 'b81e6d0',
-        years: '2021',
-        title: 'Interim CTO, women’s health app',
-        description: 'First technical hire. Led a team of eight, set the roadmap and planned HIPAA compliance.',
-        branch: 'indie',
-    },
-    {
-        hash: 'a4f07c3',
-        years: '2021',
-        title: 'Founder, Antler accelerator',
-        description: 'Selected for the founder program: prototypes, customer research and investor pitches.',
+        description: 'Built the tech and product department from zero: hiring, process, UX, and the AWS platform.',
         branch: 'indie',
     },
     {
@@ -80,10 +66,17 @@ export const careerLog: CareerCommit[] = [
         branch: 'indie',
     },
     {
+        hash: 'a4f07c3',
+        years: '2021',
+        title: 'Antler founder program & interim CTO',
+        description: 'Selected for the founder program: prototypes, customer research, and investor pitches. Also interim CTO for an early-stage health-tech startup: led a team of eight and planned HIPAA compliance.',
+        branch: 'indie',
+    },
+    {
         hash: '8e5b3a7',
         years: '2020–2021',
         title: 'Technical co-founder, BlueReceipt',
-        description: 'SMS marketing platform for Shopify brands. Typed data layer, custom ORM, team of six.',
+        description: 'SMS marketing platform for Shopify brands. Typed data layer, custom ORM, marketing automation pipeline, and a team of six.',
         branch: 'indie',
         isFork: true,
     },
@@ -91,7 +84,7 @@ export const careerLog: CareerCommit[] = [
         hash: '7a1d940',
         years: '2018–2020',
         title: 'Senior full-stack engineer, Agoda',
-        description: 'Flight search at one of Asia’s largest travel platforms. Led a code quality initiative, introduced monorepos, mentored four engineers.',
+        description: 'Flight search at one of Asia’s largest travel platforms. Led and mentored a team of four, improved frontend performance and monitoring, and ran a department-wide code quality initiative.',
         branch: 'main',
         ref: { label: 'main', isHead: false },
     },
@@ -99,7 +92,7 @@ export const careerLog: CareerCommit[] = [
         hash: '6c0f2e1',
         years: '2017–2018',
         title: 'Lead full-stack developer, Slimwiki',
-        description: 'Collaborative wiki with offline-first sync and a custom editor. Automated AWS infrastructure.',
+        description: 'Collaborative wiki with real-time editing, offline-first sync, and a custom editor. Automated AWS infrastructure.',
         branch: 'main',
     },
     {
@@ -113,7 +106,7 @@ export const careerLog: CareerCommit[] = [
         hash: '4e28a1f',
         years: '2013–2015',
         title: 'Software consultant, Bangkok',
-        description: 'CTO of Indycloud, a hotel walkthrough CMS, a doctor discovery platform and an ML chatbot backend.',
+        description: 'Led Indycloud’s development with a team of two. Sole developer on a hotel walkthrough CMS, a doctor discovery platform, and a children’s mobile typing game; backend for an ML chatbot.',
         branch: 'main',
     },
     {

@@ -6,6 +6,8 @@
  * for instance) belongs in `prefix` or `suffix`, which render as plain text.
  */
 
+import { siteConfig } from './site';
+
 export interface ProofStat {
     /** Stable key, also used as the React key. */
     id: string;
@@ -21,23 +23,22 @@ export interface ProofStat {
     suffix?: string;
 }
 
-/** Organisations the work was done for, in marquee order. */
+/** Organizations the work was done for, in marquee order. */
 export const proofClients: string[] = [
     'Parliament of Iceland',
     'Agoda',
     'Eko',
-    'Antler',
     'Social-Bee',
     'BlueReceipt',
     'Slimwiki',
     'DirectMail',
-    'Fokus Nachhilfe',
+    'Fokus-Nachhilfe',
 ];
 
 export const proofStats: ProofStat[] = [
     // Rolls up from 1990 rather than 0, so the year reads as a year the whole way.
-    { id: 'since', label: 'Shipping software since', value: '2008', from: '1990' },
-    { id: 'editors', label: 'Production rich text editors built', value: '4', from: '0' },
+    { id: 'since', label: 'Shipping software since', value: String(siteConfig.sinceYear), from: '1990' },
+    { id: 'editors', label: 'Production rich text editors built', value: '3', from: '0' },
     { id: 'teams', label: 'Tech teams built from zero', value: '3', from: '0' },
     { id: 'messaging', label: 'Messaging performance at Eko', value: '2', from: '0', suffix: '×' },
 ];
