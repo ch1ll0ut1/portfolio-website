@@ -68,6 +68,15 @@ export default defineConfig({
             reporter: ['text', 'json', 'html'],
             include: ['app/**', 'components/**', 'config/**', 'lib/**'],
             exclude: ['.claude/**', '**/*.test.{ts,tsx}', '**/*.d.ts', '**/*.css'],
+            // A ratchet, set just under the measured coverage (66.2% lines and
+            // statements, 86.6% branches, 72% functions): a change that drops
+            // it fails CI. Raise it as tests are added; never lower it to pass.
+            thresholds: {
+                lines: 65,
+                statements: 65,
+                branches: 85,
+                functions: 70,
+            },
         },
     },
     resolve: {

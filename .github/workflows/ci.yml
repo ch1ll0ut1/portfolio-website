@@ -43,8 +43,9 @@ jobs:
       - name: Type check
         run: pnpm exec tsc --noEmit
 
+      # With coverage, so the thresholds in vitest.config.ts are enforced
       - name: Run tests
-        run: pnpm test
+        run: pnpm test:coverage
 
       # `pnpm build` would re-run lint and tsc, which the steps above already did
       - name: Build application

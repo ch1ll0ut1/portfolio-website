@@ -13,7 +13,7 @@
     "knip": "knip",
     "test": "vitest run",
     "test:watch": "vitest --watch",
-    "test:coverage": "vitest --coverage",
+    "test:coverage": "vitest run --coverage",
     "visual-check": "node scripts/visual-check.mjs"
   },
   "dependencies": {
