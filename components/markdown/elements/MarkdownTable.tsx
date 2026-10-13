@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { type TableElement } from '../parser/types';
 import { InlineContent } from '../InlineContent';
 import styles from '../Markdown.module.css';

@@ -5,7 +5,7 @@
  * thing is hidden from assistive technology.
  */
 
-import React, { FC, RefObject } from 'react';
+import { FC, RefObject } from 'react';
 import { type ProcessStep, terminalPath } from '@/config/processSteps';
 import { TerminalScreen } from './TerminalScreen';
 import styles from './Process.module.css';

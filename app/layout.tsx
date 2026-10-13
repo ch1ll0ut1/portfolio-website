@@ -91,7 +91,9 @@ const RootLayout: FC<{ children: React.ReactNode }> = ({ children }) => {
         // suppressHydrationWarning: the boot script adds `js`/`motion` and the stored
         // theme to <html> before hydration, so the client className intentionally
         // differs from the server's.
-        <html lang="en" className={fontVariables} suppressHydrationWarning>
+        // data-scroll-behavior: globals.css scrolls smoothly; this asks Next to
+        // jump instantly on route changes, which Next 16 stopped doing unasked.
+        <html lang="en" className={fontVariables} data-scroll-behavior="smooth" suppressHydrationWarning>
             <head>
                 {/* Pre-paint: stored theme and the motion switch. See lib/bootScript.ts. */}
                 <script dangerouslySetInnerHTML={{ __html: BOOT_SCRIPT }} />

@@ -1,17 +1,16 @@
 'use client';
 
-import { type RefObject, useEffect } from 'react';
+import { type RefObject, useEffect, useEffectEvent } from 'react';
 import { type InViewOptions, observeInView } from './inView';
-import { useEventCallback } from './useEventCallback';
 
 /**
  * Arm-then-fire visibility for a single element.
  *
- * Handlers are read through an event callback so inline callbacks do not re-create the
- * observers, which would re-arm an element that has already fired.
+ * Handlers are read through an Effect Event, so inline callbacks do not re-create
+ * the observers, which would re-arm an element that has already fired.
  */
 export const useInView = (ref: RefObject<HTMLElement | null>, options: InViewOptions) => {
-    const latest = useEventCallback(() => options);
+    const latest = useEffectEvent(() => options);
 
     useEffect(() => {
         const element = ref.current;
@@ -29,5 +28,5 @@ export const useInView = (ref: RefObject<HTMLElement | null>, options: InViewOpt
             onIntro: initial.onIntro ? () => { latest().onIntro?.(); } : undefined,
             onReduced: initial.onReduced ? () => { latest().onReduced?.(); } : undefined,
         });
-    }, [ref, latest]);
+    }, [ref]);
 };

@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import type { Metadata } from 'next';
 import { NotFoundPanel } from '@/components/blog/NotFoundPanel';
 import { ReadingShell } from '@/components/blog/ReadingShell';

@@ -8,7 +8,7 @@
  * mismatches.
  */
 
-import React, { FC, useRef } from 'react';
+import { FC, useRef } from 'react';
 import { useMaskReveal, useReveal } from '@/lib/motion';
 import { type FitTone, fitContent } from '@/config/fit';
 import styles from './ProcessBlocks.module.css';

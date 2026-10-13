@@ -1,21 +1,20 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useEffectEvent } from 'react';
 import { type StageEvent, onStage, startStage } from './stage';
-import { useEventCallback } from './useEventCallback';
 
 /**
  * Subscribes to a page lifecycle signal.
  *
- * The callback goes through an event callback so passing an inline function does not
- * resubscribe on every render.
+ * The callback goes through an Effect Event, so passing an inline function does
+ * not resubscribe on every render.
  */
 export const useStageEvent = (event: StageEvent, callback: () => void) => {
-    const handler = useEventCallback(callback);
+    const handler = useEffectEvent(callback);
 
     useEffect(() => {
         startStage();
 
         return onStage(event, handler);
-    }, [event, handler]);
+    }, [event]);
 };

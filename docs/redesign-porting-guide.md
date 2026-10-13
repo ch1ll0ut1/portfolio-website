@@ -34,7 +34,7 @@ Read first: the prototype's `BRIEF.md`, plus your own section's three files
 Import from `@/lib/motion`. It replaces the prototype's `SK` global and preserves its semantics.
 
 Hooks: `useReveal`, `useMaskReveal`, `useInView`, `useScrub`, `useScrollState`, `useRaf`,
-`useIntro`, `useStageEvent`, `useMagnet`, `useReducedMotion`, `useFinePointer`, `useEventCallback`.
+`useIntro`, `useStageEvent`, `useMagnet`, `useReducedMotion`, `useFinePointer`.
 
 Plain functions for imperative engines: `subscribeTick`, `registerScrub`, `observeInView`, `onStage`,
 `emitStage`, `tween`, `EASE`, `scrambleInto`, `scrambleHash`, `copyText`, `showToast`,

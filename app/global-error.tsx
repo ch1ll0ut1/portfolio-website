@@ -1,6 +1,6 @@
 'use client';
 
-import React, { FC } from 'react';
+import { FC } from 'react';
 import './globals.css';
 import { ErrorPanel } from '@/components/blog/ErrorPanel';
 import { ReadingShell } from '@/components/blog/ReadingShell';

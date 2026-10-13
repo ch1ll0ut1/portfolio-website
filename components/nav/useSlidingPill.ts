@@ -1,7 +1,7 @@
 'use client';
 
-import { type RefObject, useCallback, useEffect } from 'react';
-import { useEventCallback, useStageEvent } from '@/lib/motion';
+import { type RefObject, useCallback, useEffect, useLayoutEffect, useRef } from 'react';
+import { useStageEvent } from '@/lib/motion';
 
 /** Links are found by data attribute so the hashed CSS Module names stay in the component. */
 const LINK_SELECTOR = '[data-nav-id]';
@@ -20,7 +20,15 @@ export const useSlidingPill = (
     pillRef: RefObject<HTMLElement | null>,
     activeId: string | null,
 ) => {
-    const readActiveId = useEventCallback(() => activeId);
+    // A ref, not `useEffectEvent`: `moveToActive` reads it and is also handed to
+    // `useStageEvent`, and an Effect Event may not be passed to another hook.
+    // Synced in a layout effect, so it is current before any effect or
+    // subscription of the same commit calls `moveToActive`.
+    const activeIdRef = useRef(activeId);
+
+    useLayoutEffect(() => {
+        activeIdRef.current = activeId;
+    });
 
     const moveTo = useCallback((link: HTMLElement | null) => {
         const pill = pillRef.current;
@@ -42,11 +50,11 @@ export const useSlidingPill = (
 
     const moveToActive = useCallback(() => {
         const list = listRef.current;
-        const id = readActiveId();
+        const id = activeIdRef.current;
         const link = list && id ? list.querySelector(`[data-nav-id="${id}"]`) : null;
 
         moveTo(link instanceof HTMLElement ? link : null);
-    }, [listRef, moveTo, readActiveId]);
+    }, [listRef, moveTo]);
 
     useEffect(() => {
         const list = listRef.current;

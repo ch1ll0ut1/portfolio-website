@@ -8,7 +8,7 @@
  * cannot drift out of sequence.
  */
 
-import React, { FC, useRef } from 'react';
+import { FC, useRef } from 'react';
 import { useReveal } from '@/lib/motion';
 import { principlesContent } from '@/config/principles';
 import styles from './ProcessBlocks.module.css';

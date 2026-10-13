@@ -1,6 +1,6 @@
 # Stefan Knoch - Portfolio Website
 
-A modern, responsive portfolio website built with Next.js 15, React 19, and TypeScript.
+A modern, responsive portfolio website built with Next.js 16, React 19, and TypeScript.
 
 ## 🚀 **Live Demo**
 
@@ -11,7 +11,7 @@ A modern, responsive portfolio website built with Next.js 15, React 19, and Type
 ### **Core Functionality**
 
 - **Responsive Design** - Optimized for all devices and screen sizes
-- **Modern Tech Stack** - Built with Next.js 15, React 19, and TypeScript
+- **Modern Tech Stack** - Built with Next.js 16, React 19, and TypeScript
 - **Performance Optimized** - Server-side rendering and optimized assets
 - **SEO Optimized** - Comprehensive SEO with structured data, Open Graph, and sitemaps
 - **Accessibility** - WCAG AA compliant with proper ARIA labels
@@ -33,7 +33,7 @@ A modern, responsive portfolio website built with Next.js 15, React 19, and Type
 
 ### **Frontend Framework**
 
-- **Next.js 15** - React framework with App Router
+- **Next.js 16** - React framework with App Router, built with Turbopack
 - **React 19** - Latest React with concurrent features
 - **TypeScript** - Type-safe development
 

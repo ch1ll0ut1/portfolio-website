@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { readImageDimensions } from '@/lib/content/blogImages';
 import { parseMarkdown } from './parser/blockParser';
 import { MarkdownHeading } from './elements/MarkdownHeading';

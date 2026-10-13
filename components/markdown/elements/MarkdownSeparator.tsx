@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { type SeparatorElement } from '../parser/types';
 import styles from '../Markdown.module.css';
 

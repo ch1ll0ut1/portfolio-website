@@ -7,7 +7,7 @@
  * off screen, so it just sits at its finished state and costs nothing.
  */
 
-import React, { FC, useEffect, useRef } from 'react';
+import { FC, useEffect, useRef } from 'react';
 import { observeInView, prefersReducedMotion } from '@/lib/motion';
 import { type TerminalSpan, terminalPath } from '@/config/processSteps';
 import { TerminalScreen } from './TerminalScreen';

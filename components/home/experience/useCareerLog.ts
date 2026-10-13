@@ -1,7 +1,7 @@
 'use client';
 
 import { type RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { clamp, useEventCallback, useReducedMotion, useScrub, useStageEvent } from '@/lib/motion';
+import { clamp, useReducedMotion, useScrub, useStageEvent } from '@/lib/motion';
 import { DEFAULT_LANE, type GraphGeometry, buildGeometry, measureRows, xAt } from './graphGeometry';
 
 /** Reading line: progress 0 and 1 both sit at 62% of the viewport, so this tracks one line. */
@@ -60,8 +60,6 @@ export const useCareerLog = (count: number): CareerLogState => {
     const [reached, setReached] = useState(-1);
     const [current, setCurrent] = useState(-1);
     const [hovered, setHovered] = useState(-1);
-
-    const isReduced = useEventCallback(() => reduced);
 
     const rowRefs = useMemo(
         () => Array.from({ length: count }, (_, index) => (node: HTMLLIElement | null) => {
@@ -161,8 +159,9 @@ export const useCareerLog = (count: number): CareerLogState => {
 
     useScrub(logRef, (progress) => {
         // Under reduced motion the ink layer is drawn in full by CSS, so there
-        // is nothing for the scroll position to reveal.
-        if (isReduced()) {
+        // is nothing for the scroll position to reveal. `useScrub` runs this as
+        // an Effect Event, so it always sees the current `reduced`.
+        if (reduced) {
             return;
         }
 

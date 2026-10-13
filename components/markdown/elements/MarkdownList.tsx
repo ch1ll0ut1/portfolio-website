@@ -6,7 +6,7 @@
  * reset strips the native ones, which also lets them take the caret colour.
  */
 
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { type ListElement, type BlockSegment } from '../parser/types';
 import { InlineContent } from '../InlineContent';
 import styles from '../Markdown.module.css';
