@@ -42,24 +42,24 @@ export const trackVisibleTime = (milestones: readonly number[], onMilestone: (se
     };
 
     const arm = () => {
-        if (pending.length === 0) {
+        const next = pending[0];
+
+        if (next === undefined) {
             stop();
 
             return;
         }
 
         visibleSince = Date.now();
-        timer = setTimeout(fire, Math.max(0, pending[0] * 1000 - visibleMs));
+        timer = setTimeout(fire, Math.max(0, next * 1000 - visibleMs));
     };
 
     function fire() {
         pause();
 
-        while (pending.length > 0 && pending[0] * 1000 <= visibleMs) {
-            const milestone = pending[0];
-
+        for (let next = pending[0]; next !== undefined && next * 1000 <= visibleMs; next = pending[0]) {
             pending.shift();
-            onMilestone(milestone);
+            onMilestone(next);
         }
 
         arm();

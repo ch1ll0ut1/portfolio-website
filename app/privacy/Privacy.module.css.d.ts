@@ -4,7 +4,6 @@ declare const styles: {
     readonly cardLine: string;
     readonly cardName: string;
     readonly cardNote: string;
-    readonly colophon: string;
     readonly h2: string;
     readonly h3: string;
     readonly header: string;

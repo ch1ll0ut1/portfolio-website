@@ -152,8 +152,6 @@ export default tseslint.config(
             'lib/motion/useScrollState.ts',
             'lib/motion/useScrub.ts',
             'lib/motion/useStageEvent.ts',
-            'lib/scrollTracking.ts',
-            'lib/timeTracking.ts',
         ],
         rules: {
             'react-hooks/refs': 'warn',
@@ -161,9 +159,10 @@ export default tseslint.config(
         },
     },
     {
-        // E9: media-query and stage subscriptions mirrored into state from an
-        // effect, to become one `useSyncExternalStore`-based hook.
+        // E9: media-query, stage and stored-consent subscriptions mirrored into
+        // state from an effect, to move to `useSyncExternalStore`.
         files: [
+            'components/consent/ConsentContext.tsx',
             'lib/motion/useFinePointer.ts',
             'lib/motion/useReducedMotion.ts',
             'lib/motion/useIntro.ts',
@@ -197,15 +196,6 @@ export default tseslint.config(
         files: ['components/home/hero/HeadlineEditor.tsx'],
         rules: {
             'jsx-a11y/no-noninteractive-element-interactions': 'warn',
-        },
-    },
-    {
-        // Consent and analytics rework (E15/E16 and the consent wave): a callback
-        // used before its declaration, and `Date.now()` read during render.
-        files: ['components/consent/ConsentContext.tsx', 'lib/scrollTracking.ts', 'lib/timeTracking.ts'],
-        rules: {
-            'react-hooks/immutability': 'warn',
-            'react-hooks/purity': 'warn',
         },
     },
     {

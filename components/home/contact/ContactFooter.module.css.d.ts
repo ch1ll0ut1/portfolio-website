@@ -3,6 +3,7 @@ declare const styles: {
     readonly clock: string;
     readonly end: string;
     readonly footer: string;
+    readonly linkButton: string;
     readonly links: string;
     readonly meta: string;
     readonly row: string;

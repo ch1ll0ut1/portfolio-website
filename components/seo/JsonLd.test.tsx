@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render } from '@testing-library/react';
+import { itemAt } from '@/test/itemAt';
 import { JsonLd } from './JsonLd';
 
 describe('JsonLd', () => {
@@ -26,7 +27,7 @@ describe('JsonLd', () => {
 
         // Assert
         expect(scripts).toHaveLength(1);
-        expect(scripts[0].innerHTML).not.toContain('</script>');
-        expect(JSON.parse(scripts[0].innerHTML)).toEqual(data);
+        expect(itemAt(scripts, 0).innerHTML).not.toContain('</script>');
+        expect(JSON.parse(itemAt(scripts, 0).innerHTML)).toEqual(data);
     });
 });

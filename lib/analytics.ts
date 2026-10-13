@@ -79,7 +79,7 @@ export const applyAnalyticsConsent = (granted: boolean) => {
 export const clearAnalyticsCookies = () => {
     const names = document.cookie
         .split(';')
-        .map(cookie => cookie.split('=')[0].trim())
+        .map(cookie => (cookie.split('=')[0] ?? '').trim())
         .filter(name => ANALYTICS_COOKIE.test(name));
     const labels = window.location.hostname.split('.');
     const domains = [

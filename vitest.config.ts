@@ -10,6 +10,7 @@ import path from 'path';
 const DOM_TS_TESTS = [
     'components/chrome/isEditingTarget.test.ts',
     'components/chrome/pickCursorMode.test.ts',
+    'components/chrome/runCommand.test.ts',
     'components/chrome/themeStore.test.ts',
     'components/home/contact/outboundTracking.test.ts',
     'components/home/contact/wordmarkFit.test.ts',
@@ -19,11 +20,15 @@ const DOM_TS_TESTS = [
     'components/home/process/scramble.test.ts',
     'components/home/work/visuals/runner.test.ts',
     'components/nav/retypeMark.test.ts',
+    'lib/analytics.test.ts',
+    'lib/consentStorage.test.ts',
     'lib/motion/inView.test.ts',
     'lib/motion/scrollStore.test.ts',
     'lib/motion/splitWords.test.ts',
     'lib/motion/ticker.test.ts',
     'lib/motion/toast.test.ts',
+    'lib/scrollTracking.test.ts',
+    'lib/timeTracking.test.ts',
 ];
 
 /** Never collected: dependencies, and agent worktrees that are full repo checkouts. */

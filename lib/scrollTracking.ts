@@ -45,11 +45,9 @@ export const trackScrollDepth = (element: HTMLElement, options: ScrollDepthOptio
     const stop = registerScrub(element, (progress) => {
         const percent = Math.floor(progress * 100);
 
-        while (pending.length > 0 && percent >= pending[0]) {
-            const milestone = pending[0];
-
+        for (let next = pending[0]; next !== undefined && percent >= next; next = pending[0]) {
             pending.shift();
-            reportDepth(pageType, milestone);
+            reportDepth(pageType, next);
         }
 
         if (completionPending && percent >= COMPLETION_PERCENT) {
