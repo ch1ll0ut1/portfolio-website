@@ -40,8 +40,13 @@ export const ProjectPreview: FC<Props> = ({ project }) => {
     const pointerRef = useRef<Point>({ x: 0, y: 0 });
     const positionRef = useRef<Point>({ x: 0, y: 0 });
     const shownRef = useRef(false);
-    // Kept so the card can fade out still showing what it described.
-    const [displayed, setDisplayed] = useState<IndexedProject | null>(null);
+    // Kept so the card can fade out still showing what it described. Updated
+    // during render, React's pattern for state that follows a prop.
+    const [displayed, setDisplayed] = useState(project);
+
+    if (project !== null && project !== displayed) {
+        setDisplayed(project);
+    }
 
     useEffect(() => {
         const track = (event: PointerEvent) => {
@@ -61,8 +66,6 @@ export const ProjectPreview: FC<Props> = ({ project }) => {
 
             return;
         }
-
-        setDisplayed(project);
 
         const box = boxRef.current;
 
