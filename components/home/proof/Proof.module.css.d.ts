@@ -8,6 +8,9 @@ declare const styles: {
     readonly item: string;
     readonly label: string;
     readonly marquee: string;
+    readonly marqueeIcon: string;
+    readonly marqueeRoot: string;
+    readonly marqueeToggle: string;
     readonly odo: string;
     readonly proof: string;
     readonly reel: string;

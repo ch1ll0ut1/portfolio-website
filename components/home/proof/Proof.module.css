@@ -12,11 +12,24 @@
 /* ==========================================================================
    Marquee
    ========================================================================== */
+.marqueeRoot {
+    position: relative;
+}
+
+/* The edges fade through a static mask rather than per-name opacity, so the
+   only thing that changes per frame is the track's transform. */
 .marquee {
     overflow: hidden;
     -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
     mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
     padding-block: 8px;
+}
+
+/* Paused, the row is something to read rather than something passing by, so
+   the names at the edges keep their full contrast. */
+.marqueeRoot:has(.marqueeToggle[data-paused='true']) .marquee {
+    -webkit-mask-image: none;
+    mask-image: none;
 }
 
 .track {
@@ -26,32 +39,57 @@
     padding-inline: clamp(18px, 2.5vw, 36px);
 }
 
+/* Only promoted to its own layer while the engine is actually moving it. */
+.marquee.isLive .track {
+    will-change: transform;
+}
+
 .item {
     font-family: var(--font-display);
     font-size: clamp(1.6rem, 3.4vw, 2.9rem);
     font-weight: 500;
     letter-spacing: -.03em;
-    color: var(--muted);
+    color: var(--fg-2);
     white-space: nowrap;
     font-variation-settings: 'wdth' 80;
     transition: color var(--dur-s) var(--ease-ui);
-}
-
-/* Added by the engine once it is actually running, so the row is never dimmed
-   by an animation that is not happening. */
-.marquee.isLive .item {
-    color: var(--fg);
-    opacity: var(--o, .4);
 }
 
 .item:hover {
     color: var(--fg);
 }
 
-/* The live rule above owns the item's opacity, so the hover state has to
-   out-specify it to read as "this one is focused". */
-.marquee.isLive .item:hover {
-    opacity: 1;
+.marqueeToggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 24px;
+    margin: 6px var(--gutter) 0 auto;
+    padding: 2px 4px;
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    color: var(--muted);
+    transition: color var(--dur-xs) var(--ease-ui);
+}
+
+.marqueeToggle:hover,
+.marqueeToggle:focus-visible {
+    color: var(--fg);
+}
+
+/* Two bars while it runs, a play triangle once paused. */
+.marqueeIcon {
+    width: 8px;
+    height: 9px;
+    border-inline: 2.5px solid currentColor;
+}
+
+.marqueeToggle[data-paused='true'] .marqueeIcon {
+    width: 0;
+    height: 0;
+    border-block: 5px solid transparent;
+    border-inline: 8px solid currentColor;
+    border-inline-end-width: 0;
 }
 
 .item::after {
