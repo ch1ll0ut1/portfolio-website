@@ -67,7 +67,7 @@ export const installIntersectionObserver = () => {
 
 /** Forces matchMedia to report the given queries as matching. */
 export const installMatchMedia = (matching: string[] = []) => {
-    const original = window.matchMedia;
+    const original = window.matchMedia.bind(window);
 
     window.matchMedia = vi.fn((query: string) => ({
         matches: matching.includes(query),
@@ -78,7 +78,7 @@ export const installMatchMedia = (matching: string[] = []) => {
         addListener: vi.fn(),
         removeListener: vi.fn(),
         dispatchEvent: vi.fn(),
-    })) as unknown as typeof window.matchMedia;
+    }));
 
     return () => {
         window.matchMedia = original;
@@ -107,5 +107,5 @@ export const stubRect = (element: HTMLElement, rect: Partial<DOMRect>) => {
         y: 0,
         toJSON: () => ({}),
         ...rect,
-    }) as DOMRect;
+    });
 };

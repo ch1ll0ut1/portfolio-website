@@ -17,7 +17,7 @@ describe('CtaMagnet', () => {
     beforeEach(() => {
         restoreMedia = installMatchMedia([]);
         gtag = vi.fn();
-        window.gtag = gtag as unknown as typeof window.gtag;
+        window.gtag = gtag;
         applyAnalyticsConsent(true);
     });
 

@@ -61,7 +61,7 @@ describe('<CookieConsent>', () => {
         localStorage.clear();
         vi.stubEnv('NEXT_PUBLIC_GA_MEASUREMENT_ID', MEASUREMENT_ID);
         gtag = vi.fn();
-        window.gtag = gtag as unknown as typeof window.gtag;
+        window.gtag = gtag;
     });
 
     afterEach(() => {

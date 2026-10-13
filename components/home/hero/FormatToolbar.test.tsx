@@ -69,7 +69,7 @@ describe('<FormatToolbar>', () => {
         // Reduced motion skips the entrance animation, which jsdom cannot run.
         restoreMedia = installMatchMedia([REDUCED_MOTION_QUERY]);
         onCommand = vi.fn();
-        Range.prototype.getBoundingClientRect = () => rect as DOMRect;
+        Range.prototype.getBoundingClientRect = () => rect;
         render(<Harness onCommand={onCommand} />);
     });
 

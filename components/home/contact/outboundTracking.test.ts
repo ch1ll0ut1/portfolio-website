@@ -15,7 +15,7 @@ describe('conversionHandlers', () => {
     beforeEach(() => {
         gtag = vi.fn();
         vi.stubGlobal('gtag', gtag);
-        window.gtag = gtag as unknown as typeof window.gtag;
+        window.gtag = gtag;
         applyAnalyticsConsent(true);
     });
 
@@ -57,7 +57,7 @@ describe('externalLinkHandlers', () => {
 
     beforeEach(() => {
         gtag = vi.fn();
-        window.gtag = gtag as unknown as typeof window.gtag;
+        window.gtag = gtag;
         applyAnalyticsConsent(true);
     });
 

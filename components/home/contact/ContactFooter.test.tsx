@@ -42,7 +42,7 @@ describe('ContactFooter', () => {
         restoreMedia = installMatchMedia([]);
         restoreNavigation = blockNavigation();
         gtag = vi.fn();
-        window.gtag = gtag as unknown as typeof window.gtag;
+        window.gtag = gtag;
         applyAnalyticsConsent(true);
     });
 
