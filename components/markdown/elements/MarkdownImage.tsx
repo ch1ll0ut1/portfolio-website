@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import Image from 'next/image';
 import { blogImagePath } from '../blogImage';
 import { ImageElement } from '../markdownProcessor';
@@ -34,7 +34,9 @@ export const MarkdownImage: FC<Props> = ({ element, priority = false }) => {
                 width={width}
                 height={height}
                 className={styles.image}
-                priority={priority}
+                // Next 16 deprecates `priority`; eager plus high fetch priority
+                // is what its docs recommend for the LCP image instead.
+                loading={priority ? 'eager' : undefined}
                 fetchPriority={priority ? 'high' : undefined}
                 sizes={SIZES}
             />

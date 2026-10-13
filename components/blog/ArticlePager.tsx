@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import Link from 'next/link';
 import { type BlogPost } from '@/config/blog';
 import { PagerLink } from './PagerLink';

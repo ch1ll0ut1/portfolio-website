@@ -5,8 +5,8 @@ import { ImageElement } from '../markdownProcessor';
 
 // Mock Next.js Image component
 vi.mock('next/image', () => ({
-    default: ({ src, alt, priority, ...props }: any) => (
-        <img src={src} alt={alt} {...props} data-priority={String(Boolean(priority))} data-testid="next-image" />
+    default: ({ src, alt, ...props }: any) => (
+        <img src={src} alt={alt} {...props} data-testid="next-image" />
     ),
 }));
 
@@ -73,15 +73,17 @@ describe('MarkdownImage', () => {
         expect(image).toHaveAttribute('height', '1536');
     });
 
-    it('marks the image as priority only when asked to', () => {
+    it('loads eagerly at high priority only when asked to', () => {
         const element: ImageElement = { type: 'image', src: 'a.webp', alt: 'A' };
 
         const { unmount } = render(<MarkdownImage element={element} />);
-        expect(screen.getByTestId('next-image')).toHaveAttribute('data-priority', 'false');
+        expect(screen.getByTestId('next-image')).not.toHaveAttribute('loading');
+        expect(screen.getByTestId('next-image')).not.toHaveAttribute('fetchpriority');
         unmount();
 
         render(<MarkdownImage element={element} priority />);
-        expect(screen.getByTestId('next-image')).toHaveAttribute('data-priority', 'true');
+        expect(screen.getByTestId('next-image')).toHaveAttribute('loading', 'eager');
+        expect(screen.getByTestId('next-image')).toHaveAttribute('fetchpriority', 'high');
     });
 
     it('should not announce the caption a second time after the alt text', () => {

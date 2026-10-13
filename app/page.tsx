@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import type { Metadata } from 'next';
 import { EngagementTracker } from '@/components/analytics/EngagementTracker';
 import { Contact } from '@/components/home/contact/Contact';

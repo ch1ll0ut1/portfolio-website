@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { processMarkdownContent } from './markdownProcessor';
 import { MarkdownHeading } from './elements/MarkdownHeading';
 import { MarkdownCodeBlock } from './elements/MarkdownCodeBlock';

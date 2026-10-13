@@ -14,7 +14,7 @@
  * after hydration on every desktop load, and nothing at all without JavaScript.
  */
 
-import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
+import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import {
     REDUCED_MOTION_QUERY,
     clamp,

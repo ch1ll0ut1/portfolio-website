@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { type BlogPost } from '@/config/blog';
 import { Markdown } from '@/components/markdown/Markdown';
 import { ArticleHeader } from './ArticleHeader';

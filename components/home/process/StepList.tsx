@@ -8,7 +8,7 @@
  * height of its own row. It re-measures on the `layout` signal.
  */
 
-import React, { FC, useCallback, useEffect, useRef } from 'react';
+import { FC, useCallback, useEffect, useRef } from 'react';
 import { useStageEvent } from '@/lib/motion';
 import type { ProcessStep } from '@/config/processSteps';
 import { StepTerminal } from './StepTerminal';

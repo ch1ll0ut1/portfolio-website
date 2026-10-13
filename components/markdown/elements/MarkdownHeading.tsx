@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { type HeadingElement } from '../markdownProcessor';
 import styles from '../Markdown.module.css';
 

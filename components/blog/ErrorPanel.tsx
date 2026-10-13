@@ -1,6 +1,6 @@
 'use client';
 
-import React, { FC, useEffect } from 'react';
+import { FC, useEffect } from 'react';
 import { NotFoundPanel } from './NotFoundPanel';
 
 interface Props {

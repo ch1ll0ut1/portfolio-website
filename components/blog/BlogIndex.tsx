@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { type BlogPost, blogIndexHeading } from '@/config/blog';
 import { yearsShipping } from '@/config/site';
 import { PostRow } from './PostRow';

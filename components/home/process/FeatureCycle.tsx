@@ -9,7 +9,7 @@
  * detail under the stepper, not a rival to it.
  */
 
-import React, { FC, useRef } from 'react';
+import { FC, useRef } from 'react';
 import { useMaskReveal, useReveal } from '@/lib/motion';
 import { featureCycleContent } from '@/config/featureCycle';
 import styles from './ProcessBlocks.module.css';

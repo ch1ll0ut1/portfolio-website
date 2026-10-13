@@ -7,7 +7,7 @@
  * keeps the hashed CSS Module names out of the imperative engine.
  */
 
-import React, { FC } from 'react';
+import { FC } from 'react';
 import type { TerminalSpan, TerminalTone } from '@/config/processSteps';
 import styles from './Process.module.css';
 
