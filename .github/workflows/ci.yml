@@ -36,6 +36,10 @@ jobs:
       - name: Lint
         run: pnpm lint
 
+      # Unused files, exports and dependencies
+      - name: Check for dead code
+        run: pnpm knip
+
       # The committed CSS Module declarations must match the stylesheets
       - name: Check CSS Module types
         run: pnpm css-types --check
