@@ -107,3 +107,6 @@ data
 
 # Visual check output
 .visual-check/
+
+# Personal tooling
+.serena/

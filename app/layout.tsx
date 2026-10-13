@@ -1,9 +1,5 @@
 import React, { FC } from 'react';
 import type { Metadata } from 'next';
-// eslint-disable-next-line import/no-unresolved
-import { GeistSans } from 'geist/font/sans';
-// eslint-disable-next-line import/no-unresolved
-import { GeistMono } from 'geist/font/mono';
 import './globals.css';
 import { Analytics } from '@vercel/analytics/next';
 import { Bricolage_Grotesque, Martian_Mono, Schibsted_Grotesk } from 'next/font/google';
@@ -69,10 +65,6 @@ export const metadata: Metadata = {
     },
     generator: 'Next.js',
 };
-
-// Note: the unused `geist/font` imports above are a workaround for a Storybook
-// font-resolution bug. Removing them breaks the Storybook build.
-// See: https://github.com/vercel/geist-font/issues/59
 
 // Display face. "wdth" 75-90 is used for large type, so the width axis must load.
 const displayFont = Bricolage_Grotesque({
