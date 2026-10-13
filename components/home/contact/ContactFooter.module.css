@@ -54,6 +54,15 @@
     color: var(--fg);
 }
 
+.meta a {
+    color: var(--fg-2);
+}
+
+.meta a:hover,
+.meta a:focus-visible {
+    color: var(--fg);
+}
+
 .end {
     display: flex;
     flex-wrap: wrap;

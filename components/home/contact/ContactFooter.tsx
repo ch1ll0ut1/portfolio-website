@@ -12,6 +12,7 @@ const YEAR = 2026;
 /* Matches the console greeting's wording. The site runs on Next.js and React,
    so "no frameworks" would not be true; the front end being hand-written is. */
 const COLOPHON = 'Hand-written front end: no animation libraries.';
+const SOURCE_URL = 'https://github.com/ch1ll0ut1/portfolio-website';
 
 interface FooterLink {
     label: string;
@@ -50,7 +51,13 @@ export const ContactFooter: FC = () => {
                 <div className={styles.row}>
                     <div className={styles.meta}>
                         <p>{`© ${YEAR} Stefan Knoch`}</p>
-                        <p>{COLOPHON}</p>
+                        <p>
+                            {COLOPHON}
+                            {' '}
+                            <a className="ulink" href={SOURCE_URL} target="_blank" rel="noopener noreferrer">
+                                Source on GitHub
+                            </a>
+                        </p>
                     </div>
                     <ul className={styles.links}>
                         {footerLinks.map((link) => {

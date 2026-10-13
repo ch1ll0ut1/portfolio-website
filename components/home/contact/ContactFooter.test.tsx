@@ -124,6 +124,15 @@ describe('ContactFooter', () => {
         expect(screen.getByText(/bangkok/i)).toBeInTheDocument();
     });
 
+    it('should link the colophon to the site source', () => {
+        // Act
+        render(<ContactFooter />);
+
+        // Assert
+        expect(screen.getByRole('link', { name: 'Source on GitHub' }))
+            .toHaveAttribute('href', 'https://github.com/ch1ll0ut1/portfolio-website');
+    });
+
     it('should reopen the cookie preferences from a button', async () => {
         // Arrange
         localStorage.setItem('cookie-consent', JSON.stringify({
