@@ -31,7 +31,13 @@ pnpm test:coverage  # Run tests with coverage report
 ```bash
 pnpm visual-check   # Sweep every route type in both themes, 1440px and 390px,
                     # and with reduced motion, against a running dev server
+pnpm a11y-check     # axe-core scan (WCAG 2.2 AA) of every route type in both
+                    # themes, against a running dev server
 ```
+
+Both take `--base http://localhost:<port>` and sample articles from the running
+server's `/sitemap.xml`, which lists only published posts. The visual check's
+modules live in `scripts/visual-check/`.
 
 ## Architecture Overview
 
@@ -85,7 +91,9 @@ lib/                  # Utilities and shared logic
 └── og/               # Share cards and icons: layout, fonts, `ogPalette` literals
 
 scripts/              # Tooling
-└── visual-check.mjs  # Playwright visual sweep
+├── a11y-check.mjs    # axe-core accessibility scan
+├── visual-check.mjs  # Playwright visual sweep (entry)
+└── visual-check/     # Its modules: options, routes, sitemap sample, page probes
 ```
 
 ### Component Architecture

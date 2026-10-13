@@ -10,11 +10,9 @@
  *   node scripts/a11y-check.mjs [--base http://localhost:3000] [--routes /,/blog]
  */
 
-import { readFile } from 'node:fs/promises';
-import { dirname, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { AxeBuilder } from '@axe-core/playwright';
 import { chromium } from 'playwright';
+import { publishedArticles } from './visual-check/publishedArticles.mjs';
 
 const argOf = (name, fallback) => {
     const index = process.argv.indexOf(`--${name}`);
@@ -23,19 +21,12 @@ const argOf = (name, fallback) => {
 };
 
 const BASE = argOf('base', 'http://localhost:3000');
-const BLOG_CONFIG = join(dirname(fileURLToPath(import.meta.url)), '..', 'config', 'blog.ts');
 const THEMES = ['dark', 'light'];
 /** WCAG 2.2 A and AA, which is the bar the site holds itself to. */
 const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
 
-/** The first published post, read the same way the visual check reads them. */
-const firstArticle = async () => {
-    const source = await readFile(BLOG_CONFIG, 'utf8');
-    const block = (source.match(/\{[^{}]*\}/g) ?? []).find(candidate => /\bpublished:\s*true\b/.test(candidate));
-    const slug = block ? /\bslug:\s*'([^']+)'/.exec(block)?.[1] : undefined;
-
-    return slug ? [`/blog/${slug}`] : [];
-};
+/** The newest published post, from the same sitemap the visual check samples. */
+const newestArticle = async () => (await publishedArticles(BASE)).slice(0, 1);
 
 const routes = async () => {
     const listed = argOf('routes', '');
@@ -44,7 +35,7 @@ const routes = async () => {
         return listed.split(',');
     }
 
-    return ['/', '/blog', ...await firstArticle(), '/privacy'];
+    return ['/', '/blog', ...await newestArticle(), '/privacy'];
 };
 
 const scan = async (browser, route, theme) => {

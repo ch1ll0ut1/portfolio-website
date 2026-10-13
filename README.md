@@ -124,7 +124,9 @@ portfolio-website/
 │   ├── motion/                  # Ticker, scroll store and the motion hooks
 │   └── og/                      # Share cards and icons: layout, fonts, palette
 ├── scripts/                     # Tooling
-│   └── visual-check.mjs         # Playwright visual sweep
+│   ├── a11y-check.mjs           # axe-core accessibility scan
+│   ├── visual-check.mjs         # Playwright visual sweep
+│   └── visual-check/            # The sweep's modules
 ├── public/                      # Static assets
 ├── test/                        # Test configuration
 │   └── setup.ts                 # Test setup file

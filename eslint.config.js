@@ -50,7 +50,9 @@ export default tseslint.config(
                 projectService: {
                     // Node-only dev scripts are not part of the app's tsconfig, but
                     // should still be linted.
-                    allowDefaultProject: ['scripts/*.mjs'],
+                    allowDefaultProject: ['scripts/*.mjs', 'scripts/visual-check/*.mjs'],
+                    // The default cap of 8 is below the scripts' file count.
+                    maximumDefaultProjectFileMatchCount_THIS_WILL_SLOW_DOWN_LINTING: 16,
                 },
                 tsconfigRootDir: import.meta.dirname,
             },
