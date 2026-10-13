@@ -36,14 +36,6 @@ const DOM_TS_TESTS = [
 const EXCLUDED = ['**/node_modules/**', '.claude/**'];
 
 export default defineConfig({
-    // tsconfig keeps `jsx: preserve` for Next, which Vite's Oxc transform would
-    // otherwise honour and leave the JSX in place for the parser to choke on.
-    // Next itself uses the automatic runtime, so the tests do too.
-    oxc: {
-        jsx: {
-            runtime: 'automatic',
-        },
-    },
     test: {
         projects: [
             {
