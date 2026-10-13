@@ -6,7 +6,7 @@
  * and that the cursor stays unmounted where it is not welcome.
  */
 
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { FINE_POINTER_QUERY, REDUCED_MOTION_QUERY, onStage } from '@/lib/motion';
@@ -42,6 +42,14 @@ const trigger = (attribute: string) => {
 describe('<GlobalChrome>', () => {
     let restoreMedia: () => void;
     let release: () => void = () => undefined;
+
+    // The overlays load on demand. Importing them once up front keeps the
+    // first test that opens one from also paying to transform their whole
+    // module graph inside `waitFor`'s one-second window, which a loaded
+    // machine can overrun. What is under test is the wiring, not the loading.
+    beforeAll(async () => {
+        await Promise.all([import('./CommandPalette'), import('./ShortcutsOverlay')]);
+    });
 
     beforeEach(() => {
         navigation.pathname = '/';
