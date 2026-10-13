@@ -31,7 +31,9 @@ export const Hero: FC = () => {
     const innerRef = useRef<HTMLDivElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const docRef = useRef<HTMLDivElement>(null);
-    const titleRef = useRef<HTMLHeadingElement>(null);
+    const titleRef = useRef<HTMLElement>(null);
+    const toolbarRef = useRef<HTMLDivElement>(null);
+    const editButtonRef = useRef<HTMLButtonElement>(null);
     const caretRef = useRef<HTMLSpanElement>(null);
     const ibeamRef = useRef<HTMLSpanElement>(null);
     const primaryCtaRef = useRef<HTMLAnchorElement>(null);
@@ -45,7 +47,7 @@ export const Hero: FC = () => {
         fieldRef.current?.ripple(clientX, clientY);
     }, []);
 
-    const editor = useHeadlineEditor({ titleRef, ripple });
+    const editor = useHeadlineEditor({ titleRef, ripple, exitRef: editButtonRef, toolbarRef });
     const { onArmed, onSelecting, onRelease, onSettled } = editor;
 
     useMagnetic(primaryCtaRef, 0.3);
@@ -187,10 +189,17 @@ export const Hero: FC = () => {
                     position={editor.position}
                     state={editor.panelState}
                     hintId={HINT_ID}
+                    editButtonRef={editButtonRef}
+                    onEdit={editor.activate}
                 />
             </div>
 
-            <FormatToolbar editorRef={titleRef} hostRef={rootRef} onCommand={editor.applyCommand} />
+            <FormatToolbar
+                editorRef={titleRef}
+                hostRef={rootRef}
+                toolbarRef={toolbarRef}
+                onCommand={editor.applyCommand}
+            />
         </section>
     );
 };

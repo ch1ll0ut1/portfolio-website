@@ -1,4 +1,5 @@
 import { type FC } from 'react';
+import { ModKey } from '@/components/chrome/ModKey';
 import { ThemeToggle } from '@/components/chrome/ThemeToggle';
 import styles from './NavTools.module.css';
 
@@ -18,7 +19,7 @@ export const NavTools: FC = () => (
             aria-label="Open command menu"
         >
             <span className={styles.label}>Menu</span>
-            <kbd className={styles.shortcut}>⌘K</kbd>
+            <ModKey className={styles.shortcut} keyLabel="K" />
         </button>
 
         <ThemeToggle className={`${styles.button} ${styles.theme}`} />

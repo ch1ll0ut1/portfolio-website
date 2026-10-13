@@ -1,6 +1,16 @@
 'use client';
 
-import { type FC, type ReactNode, type RefObject, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import {
+    type FC,
+    type KeyboardEvent,
+    type ReactNode,
+    type RefObject,
+    useCallback,
+    useEffect,
+    useLayoutEffect,
+    useRef,
+    useState,
+} from 'react';
 import { EASE, clamp, prefersReducedMotion } from '@/lib/motion';
 import { readSelection, serializeEditor } from './editorDom';
 import { type MarkName, type MarkSet, NO_MARKS, isMarkFullyApplied } from './editorModel';
@@ -12,6 +22,8 @@ export interface Props {
     editorRef: RefObject<HTMLElement | null>;
     /** Positioning context. The toolbar is clamped inside it. */
     hostRef: RefObject<HTMLElement | null>;
+    /** The toolbar element, shared so the editor can send focus into it. */
+    toolbarRef: RefObject<HTMLDivElement | null>;
     onCommand: (command: FormatCommand) => void;
 }
 
@@ -51,6 +63,22 @@ const marksOfSelection = (editor: HTMLElement, start: number, end: number): Mark
     };
 };
 
+/** Where an arrow, Home or End key moves the toolbar's focus, or null for other keys. */
+const nextIndex = (key: string, current: number, count: number) => {
+    switch (key) {
+        case 'ArrowRight':
+            return (current + 1) % count;
+        case 'ArrowLeft':
+            return (current - 1 + count) % count;
+        case 'Home':
+            return 0;
+        case 'End':
+            return count - 1;
+        default:
+            return null;
+    }
+};
+
 /**
  * The floating format toolbar.
  *
@@ -58,35 +86,33 @@ const marksOfSelection = (editor: HTMLElement, start: number, end: number): Mark
  * selection's marks. It lives outside the editable subtree, so it is free to
  * be ordinary React state; only its position is written imperatively, since it
  * is measured from the live selection rectangle.
+ *
+ * Keyboard support follows the APG toolbar pattern: one Tab stop, with the
+ * arrows, Home and End moving between buttons (a roving tabindex). Alt+F10 in
+ * the editor comes here; Escape goes back to the editor with the selection
+ * intact.
  */
-export const FormatToolbar: FC<Props> = ({ editorRef, hostRef, onCommand }) => {
-    const barRef = useRef<HTMLDivElement>(null);
+export const FormatToolbar: FC<Props> = ({ editorRef, hostRef, toolbarRef, onCommand }) => {
     const wasVisible = useRef(false);
+    const buttonRefs = useRef<(HTMLButtonElement | null)[]>([]);
     const [placement, setPlacement] = useState<{ x: number; y: number } | null>(null);
     const [marks, setMarks] = useState<MarkSet>(NO_MARKS);
+    const [focusIndex, setFocusIndex] = useState(0);
 
     const place = useCallback(() => {
         const editor = editorRef.current;
         const host = hostRef.current;
         const selection = window.getSelection();
+        const current = editor ? readSelection(editor) : null;
+        const rect = current && !current.collapsed ? selection?.getRangeAt(0).getBoundingClientRect() : null;
 
-        if (!editor || !host || !selection) {
-            setPlacement(null);
+        if (!editor || !host || !current || !rect || rect.width === 0) {
+            // A toolbar that vanishes while it holds focus would drop focus on
+            // the page body; hand it back to the text it was formatting.
+            if (toolbarRef.current?.contains(document.activeElement)) {
+                editor?.focus();
+            }
 
-            return;
-        }
-
-        const current = readSelection(editor);
-
-        if (!current || current.collapsed) {
-            setPlacement(null);
-
-            return;
-        }
-
-        const rect = selection.getRangeAt(0).getBoundingClientRect();
-
-        if (rect.width === 0) {
             setPlacement(null);
 
             return;
@@ -99,7 +125,7 @@ export const FormatToolbar: FC<Props> = ({ editorRef, hostRef, onCommand }) => {
             y: rect.top - hostRect.top - SELECTION_GAP,
         });
         setMarks(marksOfSelection(editor, current.start, current.end));
-    }, [editorRef, hostRef]);
+    }, [editorRef, hostRef, toolbarRef]);
 
     useEffect(() => {
         let queued = false;
@@ -125,7 +151,7 @@ export const FormatToolbar: FC<Props> = ({ editorRef, hostRef, onCommand }) => {
     }, [place]);
 
     useLayoutEffect(() => {
-        const element = barRef.current;
+        const element = toolbarRef.current;
         const host = hostRef.current;
 
         if (!element || !host || !placement) {
@@ -148,11 +174,30 @@ export const FormatToolbar: FC<Props> = ({ editorRef, hostRef, onCommand }) => {
         }
 
         wasVisible.current = true;
-    }, [placement, hostRef]);
+    }, [placement, hostRef, toolbarRef]);
+
+    const handleKeyDown = (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
+        if (event.key === 'Escape') {
+            event.preventDefault();
+            editorRef.current?.focus();
+
+            return;
+        }
+
+        const next = nextIndex(event.key, index, BUTTONS.length);
+
+        if (next === null) {
+            return;
+        }
+
+        event.preventDefault();
+        setFocusIndex(next);
+        buttonRefs.current[next]?.focus();
+    };
 
     return (
         <div
-            ref={barRef}
+            ref={toolbarRef}
             className={styles.toolbar}
             role="toolbar"
             aria-label="Format selection"
@@ -162,13 +207,23 @@ export const FormatToolbar: FC<Props> = ({ editorRef, hostRef, onCommand }) => {
                 event.preventDefault();
             }}
         >
-            {BUTTONS.map(button => (
+            {BUTTONS.map((button, index) => (
                 <button
                     key={button.command}
+                    ref={(node) => {
+                        buttonRefs.current[index] = node;
+                    }}
                     type="button"
+                    tabIndex={index === focusIndex ? 0 : -1}
                     aria-label={button.label}
                     aria-pressed={button.toggle ? isMarkOn(marks, button.command) : undefined}
                     className={isMarkOn(marks, button.command) ? styles.isOn : undefined}
+                    onKeyDown={(event) => {
+                        handleKeyDown(event, index);
+                    }}
+                    onFocus={() => {
+                        setFocusIndex(index);
+                    }}
                     onClick={() => {
                         onCommand(button.command);
                     }}

@@ -8,6 +8,7 @@ declare const styles: {
     readonly copy: string;
     readonly ctas: string;
     readonly doc: string;
+    readonly editButton: string;
     readonly field: string;
     readonly flash: string;
     readonly hasFlag: string;

@@ -39,7 +39,7 @@ export interface HeadlineModel {
  * `headlineCommands`, and keeping the two apart is what makes the one-way flow
  * (DOM → model → panel) structural rather than merely documented.
  */
-export const useHeadlineModel = (titleRef: RefObject<HTMLHeadingElement | null>): HeadlineModel => {
+export const useHeadlineModel = (titleRef: RefObject<HTMLElement | null>): HeadlineModel => {
     const [model, setModel] = useState<PanelModel>(() => ({ doc: createDoc(INITIAL_HEADLINE), baseline: [] }));
     const [panelState, setPanelState] = useState<PanelState>('synced');
     const [position, setPosition] = useState('');

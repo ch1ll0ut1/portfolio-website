@@ -168,13 +168,6 @@ export default tseslint.config(
         },
     },
     {
-        // A3: the contenteditable h1 becomes an explicit, opt-in textbox widget.
-        files: ['components/home/hero/HeadlineEditor.tsx'],
-        rules: {
-            'jsx-a11y/no-noninteractive-element-interactions': 'warn',
-        },
-    },
-    {
         // Not yet in the plan: focusable preview rows in the project index, and
         // the hover preview mirroring its prop into state from an effect. Both
         // need a design decision rather than a lint fix.
