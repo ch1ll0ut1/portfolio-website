@@ -64,13 +64,17 @@ const walk = (node: Node, words: HTMLElement[]) => {
 /**
  * Recomputes line and word indices. Must run again whenever wrapping can
  * change — font load, resize, container resize.
+ *
+ * Every offset is read before any index is written: setting a custom property
+ * invalidates style, so interleaving the two would force a layout per word.
  */
 export const indexWords = (words: HTMLElement[]) => {
+    const tops = words.map(word => Math.round(word.offsetTop));
     let line = -1;
     let lastTop: number | null = null;
 
     words.forEach((word, index) => {
-        const top = Math.round(word.offsetTop);
+        const top = tops[index] ?? 0;
 
         if (lastTop === null || Math.abs(top - lastTop) > LINE_TOLERANCE_PX) {
             line += 1;

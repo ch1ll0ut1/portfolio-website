@@ -109,6 +109,32 @@ describe('splitWords', () => {
         expect(words[2]?.style.getPropertyValue('--li')).toBe('1');
     });
 
+    it('should read every offset before writing any index', () => {
+        const element = makeElement('one two three');
+        const words = splitWords(element);
+        const calls: string[] = [];
+
+        words.forEach((word) => {
+            Object.defineProperty(word, 'offsetTop', {
+                configurable: true,
+                get: () => {
+                    calls.push('read');
+
+                    return 0;
+                },
+            });
+            vi.spyOn(word.style, 'setProperty').mockImplementation(() => {
+                calls.push('write');
+            });
+        });
+
+        indexWords(words);
+
+        // Interleaving would force a synchronous layout per word.
+        expect(calls.indexOf('write')).toBe(words.length);
+        expect(calls.lastIndexOf('read')).toBe(words.length - 1);
+    });
+
     it('should ignore whitespace-only text nodes', () => {
         const element = makeElement('   ');
         const words = splitWords(element);
