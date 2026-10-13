@@ -10,7 +10,15 @@ pnpm dev            # Start development server
 pnpm build          # Build production (runs lint first)
 pnpm start          # Start production server
 pnpm lint           # Run ESLint
+pnpm exec tsc --noEmit  # Type-check app and tests (one tsconfig covers both)
+pnpm css-types      # Regenerate the *.module.css.d.ts class-name declarations
+pnpm knip           # Report unused files, exports and dependencies
 ```
+
+After adding, renaming or removing a class in a CSS Module, run `pnpm css-types`
+and commit the regenerated `.d.ts`; CI fails on drift (`pnpm css-types --check`).
+Under `noUncheckedIndexedAccess` these declarations are what make `styles.foo` a
+plain `string` — and a misspelt class a type error.
 
 ### Testing
 ```bash
@@ -35,7 +43,7 @@ This is a Next.js 15 portfolio website built with TypeScript, React 19 and CSS M
 - **Styling**: CSS Modules driven by the design tokens in `app/globals.css`, which also holds the reset and the few global primitives. No CSS framework or PostCSS config
 - **UI Components**: No component library. Global primitive classes (`.wrap`, `.btn`, `.tags`, `.sec-head`) in `app/globals.css`, composed per component in a co-located `.module.css`
 - **Motion**: `lib/motion` — one shared ticker and scroll store behind hooks (`useReveal`, `useScrub`, `useIntro`), all of it inert under reduced motion
-- **Testing**: Vitest with jsdom environment
+- **Testing**: Vitest — Node environment by default, jsdom for `.tsx` tests and the DOM-touching `.ts` tests listed in `vitest.config.ts`
 - **Code Quality**: ESLint with TypeScript, stylistic, and import rules
 - **Fonts**: Bricolage Grotesque, Schibsted Grotesk and Martian Mono via `next/font/google`
 - **Deployment**: Vercel with automatic optimization
@@ -106,7 +114,8 @@ The project enforces strict coding standards:
 
 ### Testing Strategy
 
-- **Vitest** as test runner with jsdom environment
+- **Vitest** as test runner: `.ts` tests run in Node, `.tsx` tests (and the `.ts` tests listed in `DOM_TS_TESTS` in `vitest.config.ts`) in jsdom. A new `.ts` test that touches `document`/`window` goes on that list
+- **No test globals**: tests import `describe`/`it`/`expect`/`vi` from `vitest`; jest-dom matchers come from `test/setup.ts`. `test/itemAt.ts` indexes into a list in a test without a `!`
 - **Testing Library** for React component testing  
 - **Co-located tests** alongside source files
 - **Behavior-focused testing**: Tests focus on component behavior vs implementation details
