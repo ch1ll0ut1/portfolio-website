@@ -110,3 +110,6 @@ data
 
 # Personal tooling
 .serena/
+
+# Agent worktrees (each a full checkout of the repo)
+.claude/worktrees/
