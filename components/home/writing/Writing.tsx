@@ -1,7 +1,6 @@
-'use client';
-
-import { type FC, useRef } from 'react';
-import { useMaskReveal, useReveal } from '@/lib/motion';
+import { type FC } from 'react';
+import { Reveal } from '@/components/motion/Reveal';
+import { SectionHead } from '../SectionHead';
 import { BuildingNow } from './BuildingNow';
 import { PostList } from './PostList';
 import styles from './Writing.module.css';
@@ -12,30 +11,19 @@ import styles from './Writing.module.css';
  * Both columns are plain markup, so the section reads with JS disabled; the
  * entrance only staggers rows that are already there.
  */
-export const Writing: FC = () => {
-    const headingRef = useRef<HTMLHeadingElement>(null);
-    const leadRef = useRef<HTMLParagraphElement>(null);
-    const gridRef = useRef<HTMLDivElement>(null);
+export const Writing: FC = () => (
+    <section className="section" id="writing" data-section="writing" aria-labelledby="writing-title">
+        <div className="wrap">
+            <SectionHead
+                id="writing-title"
+                title="Writing and current work"
+                lede="I write about building software with AI, and about the teams and decisions behind it."
+            />
 
-    useMaskReveal(headingRef);
-    useReveal(leadRef, { delay: 0.15 });
-    useReveal(gridRef, { selector: '[data-post]', stagger: 0.07 });
-
-    return (
-        <section className="section" id="writing" data-section="writing" aria-labelledby="writing-title">
-            <div className="wrap">
-                <header className="sec-head">
-                    <h2 id="writing-title" ref={headingRef}>Writing and current work</h2>
-                    <p ref={leadRef}>
-                        I write about building software with AI, and about the teams and decisions behind it.
-                    </p>
-                </header>
-
-                <div className={styles.grid} ref={gridRef}>
-                    <PostList />
-                    <BuildingNow />
-                </div>
-            </div>
-        </section>
-    );
-};
+            <Reveal className={styles.grid} selector="[data-post]" stagger={0.07}>
+                <PostList />
+                <BuildingNow />
+            </Reveal>
+        </div>
+    </section>
+);

@@ -15,11 +15,13 @@ interface Props {
 }
 
 /**
- * Entrance wrapper for the reading routes.
+ * Entrance wrapper: a small client island a Server Component can put around
+ * server-rendered markup to give it the scroll reveal.
  *
  * `useIntro` is called for its side effect of starting the page lifecycle:
- * these pages can render without any other motion-aware component mounted, and
- * an element already on screen waits for the `intro` signal before it animates.
+ * the reading routes can render without any other motion-aware component
+ * mounted, and an element already on screen waits for the `intro` signal
+ * before it animates.
  */
 export const Reveal: FC<Props> = ({ selector, delay, stagger, className, children }) => {
     const ref = useRef<HTMLDivElement>(null);

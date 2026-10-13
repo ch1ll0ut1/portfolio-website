@@ -1,16 +1,7 @@
-'use client';
-
-import { type FC, useRef } from 'react';
-import { useMaskReveal, useReveal } from '@/lib/motion';
-import { careerLog } from '@/config/career';
+import { type FC } from 'react';
 import { yearsShipping } from '@/config/site';
-import { CareerGraph } from './CareerGraph';
-import { CommitRow } from './CommitRow';
-import { useCareerLog } from './useCareerLog';
-import styles from './Experience.module.css';
-
-/** Matches the sub-line's beat in the other sections' entrances. */
-const LEAD_DELAY = 0.15;
+import { SectionHead } from '../SectionHead';
+import { CareerLog } from './CareerLog';
 
 /**
  * Experience: every role since the first one, printed as a `git log --graph`.
@@ -22,51 +13,16 @@ const LEAD_DELAY = 0.15;
  * and in a screen reader. The graph beside it is decorative: it draws the same
  * two lanes the list already describes, and reveals them as the page scrolls.
  */
-export const Experience: FC = () => {
-    const headingRef = useRef<HTMLHeadingElement>(null);
-    const leadRef = useRef<HTMLParagraphElement>(null);
-    const log = useCareerLog(careerLog.length);
+export const Experience: FC = () => (
+    <section className="section" id="experience" data-section="experience" aria-labelledby="experience-title">
+        <div className="wrap">
+            <SectionHead
+                id="experience-title"
+                title={`${yearsShipping()} years, one log`}
+                lede="Every role, newest first, from Liechtenstein and Austria to Bangkok and Singapore. Independent work since 2020 forks off main onto its own branch."
+            />
 
-    useMaskReveal(headingRef);
-    useReveal(leadRef, { delay: LEAD_DELAY });
-
-    return (
-        <section className="section" id="experience" data-section="experience" aria-labelledby="experience-title">
-            <div className="wrap">
-                <header className="sec-head">
-                    <h2 id="experience-title" ref={headingRef}>{`${yearsShipping()} years, one log`}</h2>
-                    <p ref={leadRef}>
-                        Every role, newest first, from Liechtenstein and Austria to Bangkok and Singapore.
-                        Independent work since 2020 forks off main onto its own branch.
-                    </p>
-                </header>
-
-                <div className={styles.log} ref={log.logRef}>
-                    <CareerGraph
-                        geometry={log.geometry}
-                        pulses={log.pulses}
-                        showHead={log.showHead}
-                        inkRef={log.inkRef}
-                        headRef={log.headRef}
-                    />
-
-                    <ol className={styles.list}>
-                        {careerLog.map((commit, index) => (
-                            <CommitRow
-                                key={commit.hash}
-                                commit={commit}
-                                pulseToken={log.pulses[index] ?? 0}
-                                isReached={index <= log.reached}
-                                isCurrent={index === log.current}
-                                isHovered={index === log.hovered}
-                                rowRef={log.rowRefs[index]}
-                                onHover={() => { log.hover(index); }}
-                                onLeave={log.endHover}
-                            />
-                        ))}
-                    </ol>
-                </div>
-            </div>
-        </section>
-    );
-};
+            <CareerLog />
+        </div>
+    </section>
+);

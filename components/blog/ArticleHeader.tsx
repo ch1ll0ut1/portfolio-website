@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { type BlogPost } from '@/config/blog';
 import { formatDate } from '@/lib/date';
 import { MaskHeading } from './MaskHeading';
-import { Reveal } from './Reveal';
+import { Reveal } from '@/components/motion/Reveal';
 import styles from './Article.module.css';
 
 interface Props {
