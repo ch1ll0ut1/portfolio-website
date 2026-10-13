@@ -14,7 +14,6 @@ export default tseslint.config(
             ".next",
             "coverage",
             "eslint.config.js",
-            "next.config.mjs",
             // Agent worktrees: full checkouts of the repo, linted in their own right.
             '.claude/**',
         ]

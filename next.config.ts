@@ -1,9 +1,16 @@
+import type { NextConfig } from 'next';
+import { CSP_HEADER_NAME, buildContentSecurityPolicy } from './lib/contentSecurityPolicy';
+
 /**
- * Sent with every response. The Content-Security-Policy is deliberately not
- * here yet: it needs hashes for the inline boot scripts and the consent
- * loader's sources, and lands once the consent work has settled them.
+ * Sent with every response. Static pages keep their CSP this way too: headers
+ * from config are attached at the edge, not rendered into the page. The policy
+ * and its trade-offs live in lib/contentSecurityPolicy.ts.
  */
 const SECURITY_HEADERS = [
+    {
+        key: CSP_HEADER_NAME,
+        value: buildContentSecurityPolicy({ dev: process.env.NODE_ENV !== 'production' }),
+    },
     // Never let the browser guess a content type from the bytes.
     { key: 'X-Content-Type-Options', value: 'nosniff' },
     // Full URL to this origin, only the origin to others, nothing on downgrade.
@@ -25,8 +32,8 @@ const SECURITY_HEADERS = [
             'usb=()',
         ].join(', '),
     },
-    // Nothing on the site is meant to be framed; the CSP's `frame-ancestors
-    // 'none'` will say the same for browsers that read it.
+    // Nothing on the site is meant to be framed. The CSP's `frame-ancestors
+    // 'none'` says the same; this covers browsers that predate it.
     { key: 'X-Frame-Options', value: 'DENY' },
     // Two years, matching what Vercel sends on its own domains. Without
     // `includeSubDomains`/`preload`: those commit every subdomain to HTTPS for
@@ -34,8 +41,7 @@ const SECURITY_HEADERS = [
     { key: 'Strict-Transport-Security', value: 'max-age=63072000' },
 ];
 
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+const nextConfig: NextConfig = {
     poweredByHeader: false,
     compress: true,
     reactStrictMode: true,

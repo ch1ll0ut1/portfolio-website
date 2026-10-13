@@ -12,6 +12,7 @@ import { CookieConsent } from '@/components/consent/CookieConsent';
 import { NavTools } from '@/components/nav/NavTools';
 import { SiteNav } from '@/components/nav/SiteNav';
 import { siteConfig, siteKeywords, siteTitle } from '@/config/site';
+import { BOOT_SCRIPT } from '@/lib/bootScript';
 
 export const metadata: Metadata = {
     title: {
@@ -85,10 +86,6 @@ const monoFont = Martian_Mono({
 
 const fontVariables = `${displayFont.variable} ${bodyFont.variable} ${monoFont.variable}`;
 
-// Runs before first paint so the stored theme is applied without a flash, and so
-// the `.motion` switch gating every animated rule is set before anything renders.
-const bootScript = '(function(){try{var d=document.documentElement;var t=localStorage.getItem("sk-theme");if(t==="light"||t==="dark"){d.dataset.theme=t;}d.classList.add("js");if(!window.matchMedia("(prefers-reduced-motion: reduce)").matches){d.classList.add("motion");}}catch(e){}})();';
-
 const RootLayout: FC<{ children: React.ReactNode }> = ({ children }) => {
     return (
         // suppressHydrationWarning: the boot script adds `js`/`motion` and the stored
@@ -96,7 +93,8 @@ const RootLayout: FC<{ children: React.ReactNode }> = ({ children }) => {
         // differs from the server's.
         <html lang="en" className={fontVariables} suppressHydrationWarning>
             <head>
-                <script dangerouslySetInnerHTML={{ __html: bootScript }} />
+                {/* Pre-paint: stored theme and the motion switch. See lib/bootScript.ts. */}
+                <script dangerouslySetInnerHTML={{ __html: BOOT_SCRIPT }} />
             </head>
             <body>
                 <ConsentProvider>
