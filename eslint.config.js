@@ -160,14 +160,9 @@ export default tseslint.config(
         },
     },
     {
-        // E9: media-query, stage and stored-consent subscriptions mirrored into
-        // state from an effect, to move to `useSyncExternalStore`.
-        files: [
-            'components/consent/ConsentContext.tsx',
-            'lib/motion/useFinePointer.ts',
-            'lib/motion/useReducedMotion.ts',
-            'lib/motion/useIntro.ts',
-        ],
+        // E9: the stored-consent subscription is mirrored into state from an
+        // effect, to move to `useSyncExternalStore` with the consent rework.
+        files: ['components/consent/ConsentContext.tsx'],
         rules: {
             'react-hooks/set-state-in-effect': 'warn',
         },

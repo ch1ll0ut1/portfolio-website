@@ -1,30 +1,29 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useSyncExternalStore } from 'react';
 import { isIntroDone, onStage, startStage } from './stage';
 
 /**
  * Whether the page has finished booting and entrance animations may run.
  *
- * Always `false` on the server and on the first client render, so nothing
- * depends on it for content being readable.
+ * Always `false` on the server and during hydration, so nothing depends on it
+ * for content being readable. Subscribing is also what starts the page
+ * lifecycle, which is why some components call this only for that effect.
  */
-export const useIntro = () => {
-    const [ready, setReady] = useState(false);
+export const useIntro = () => useSyncExternalStore(subscribeIntro, introSeen, notDone);
 
-    useEffect(() => {
-        startStage();
+/** Set by the `intro` event itself, so the hook follows the event, not just the flag behind it. */
+let seen = false;
 
-        if (isIntroDone()) {
-            setReady(true);
+const introSeen = () => seen || isIntroDone();
 
-            return;
-        }
+const subscribeIntro = (onChange: () => void) => {
+    startStage();
 
-        return onStage('intro', () => {
-            setReady(true);
-        });
-    }, []);
-
-    return ready;
+    return onStage('intro', () => {
+        seen = true;
+        onChange();
+    });
 };
+
+const notDone = () => false;
