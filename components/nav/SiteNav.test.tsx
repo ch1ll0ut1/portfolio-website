@@ -20,6 +20,12 @@ import { installIntersectionObserver, installMatchMedia } from '../../test/motio
 import { SiteNav } from './SiteNav';
 import styles from './SiteNav.module.css';
 
+const navigation = vi.hoisted(() => ({ pathname: '/' }));
+
+vi.mock('next/navigation', () => ({
+    usePathname: () => navigation.pathname,
+}));
+
 /** The motion kit waits on web fonts, which jsdom does not implement. */
 const stubFonts = () => {
     Object.defineProperty(document, 'fonts', {
@@ -49,6 +55,7 @@ describe('<SiteNav> Component', () => {
 
     beforeEach(() => {
         vi.useFakeTimers();
+        navigation.pathname = '/';
         stubFonts();
         setScrollY(0);
         observers = installIntersectionObserver();
@@ -153,6 +160,29 @@ describe('<SiteNav> Component', () => {
 
         expect(screen.getByRole('link', { name: itemAt(navSections, 2).label })).toHaveAttribute('aria-current', 'location');
         expect(screen.getByRole('link', { name: itemAt(navSections, 0).label })).not.toHaveAttribute('aria-current');
+    });
+
+    // The layout keeps the nav mounted across client-side navigation.
+    it('should drop the highlight and look the sections up again after a route change', () => {
+        const findObservers = () => observers.instances.filter(
+            instance => String(instance.options?.rootMargin).includes('-45%'),
+        );
+        const { rerender } = render(<SiteNav />);
+        const first = findObservers().at(-1);
+
+        act(() => {
+            if (first) {
+                first.element = itemAt(sectionNodes, 2);
+                first.emit(true);
+            }
+        });
+
+        navigation.pathname = '/blog';
+        rerender(<SiteNav />);
+
+        expect(screen.getByRole('link', { name: itemAt(navSections, 2).label })).not.toHaveAttribute('aria-current');
+        expect(first?.disconnected).toBe(true);
+        expect(findObservers().at(-1)).not.toBe(first);
     });
 
     it('should move the pill to a link that receives focus', () => {

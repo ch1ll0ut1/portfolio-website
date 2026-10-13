@@ -2,11 +2,14 @@
 
 import { type FC, useCallback, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
+import { usePathname } from 'next/navigation';
+import { emitStage } from '@/lib/motion';
 import { CaretCursor } from './CaretCursor';
 import { Grain } from './Grain';
 import { KeyboardChords } from './KeyboardChords';
 import { ScrollProgress } from './ScrollProgress';
 import { printConsoleGreeting } from './consoleGreeting';
+import { useReadingProgressClaimed } from './readingProgressClaim';
 import { toggleTheme } from './themeStore';
 
 /*
@@ -25,15 +28,6 @@ const PREFETCH_DELAY_MS = 2000;
 
 type OpenOverlay = 'none' | 'palette' | 'shortcuts';
 
-interface Props {
-    /**
-     * Renders the document-wide reading hairline. Set `false` on a page that
-     * shows its own, narrower progress bar — two bars measuring different
-     * things paint as one stepped line at the top of the viewport.
-     */
-    scrollProgress?: boolean;
-}
-
 /**
  * The page's global shell: grain, scroll progress, the ⌘K palette, the
  * shortcuts list, the keyboard layer and the custom cursor.
@@ -45,8 +39,12 @@ interface Props {
  * Triggers are wired by attribute rather than by prop: a click on anything
  * matching `[data-cmdk]` or `[data-theme-toggle]`, anywhere in the document,
  * reaches this component. That keeps the nav free to style its own buttons.
+ *
+ * Rendered once by the root layout, so an open overlay, the cursor and the
+ * prefetched chunks survive client-side navigation. The document-wide reading
+ * hairline steps aside while a page claims the strip for its own progress bar.
  */
-export const GlobalChrome: FC<Props> = ({ scrollProgress = true }) => {
+export const GlobalChrome: FC = () => {
     const [overlay, setOverlay] = useState<OpenOverlay>('none');
     // Each overlay mounts on its first open and then stays, so it can still
     // play its exit and every later open is instant.
@@ -119,10 +117,21 @@ export const GlobalChrome: FC<Props> = ({ scrollProgress = true }) => {
 
     useEffect(printConsoleGreeting, []);
 
+    // A client-side navigation swaps the document under the long-lived chrome,
+    // so everything that cached a measurement (the scroll range above all) has
+    // to take it again. The first run, on mount, is harmless.
+    const pathname = usePathname();
+
+    useEffect(() => {
+        emitStage('layout');
+    }, [pathname]);
+
+    const pageOwnsProgress = useReadingProgressClaimed();
+
     return (
         <>
             <Grain />
-            {scrollProgress ? <ScrollProgress /> : null}
+            {pageOwnsProgress ? null : <ScrollProgress />}
             {paletteUsed
                 ? <CommandPalette open={overlay === 'palette'} onClose={close} onOpenShortcuts={openShortcuts} />
                 : null}

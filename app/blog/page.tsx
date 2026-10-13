@@ -3,10 +3,6 @@ import type { Metadata } from 'next';
 import { blogPosts } from '@/config/blog';
 import { BlogIndex } from '@/components/blog/BlogIndex';
 import { ReadingShell } from '@/components/blog/ReadingShell';
-import { GlobalChrome } from '@/components/chrome/GlobalChrome';
-import { ContactFooter } from '@/components/home/contact/ContactFooter';
-import { NavTools } from '@/components/nav/NavTools';
-import { SiteNav } from '@/components/nav/SiteNav';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { absoluteUrl, siteConfig } from '@/config/site';
 import { blogSchema } from '@/lib/structuredData';
@@ -48,14 +44,9 @@ const Blog: FC = () => {
         <>
             <JsonLd data={blogSchema(blogPosts)} />
 
-            <ReadingShell
-                header={<SiteNav tools={<NavTools />} />}
-                footer={<ContactFooter />}
-            >
+            <ReadingShell>
                 <BlogIndex posts={blogPosts} />
             </ReadingShell>
-
-            <GlobalChrome />
         </>
     );
 };

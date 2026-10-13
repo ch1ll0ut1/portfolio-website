@@ -1,10 +1,6 @@
 import React, { FC } from 'react';
 import type { Metadata } from 'next';
 import { ReadingShell } from '@/components/blog/ReadingShell';
-import { GlobalChrome } from '@/components/chrome/GlobalChrome';
-import { ContactFooter } from '@/components/home/contact/ContactFooter';
-import { NavTools } from '@/components/nav/NavTools';
-import { SiteNav } from '@/components/nav/SiteNav';
 import { POLICY_LAST_UPDATED } from './policyLists';
 import { PrivacyPolicy } from './PrivacyPolicy';
 
@@ -29,18 +25,11 @@ export const metadata: Metadata = {
 
 const PrivacyPage: FC = () => {
     return (
-        <>
-            <ReadingShell
-                header={<SiteNav tools={<NavTools />} />}
-                footer={<ContactFooter />}
-            >
-                <div className="wrap">
-                    <PrivacyPolicy lastUpdated={POLICY_LAST_UPDATED} />
-                </div>
-            </ReadingShell>
-
-            <GlobalChrome />
-        </>
+        <ReadingShell>
+            <div className="wrap">
+                <PrivacyPolicy lastUpdated={POLICY_LAST_UPDATED} />
+            </div>
+        </ReadingShell>
     );
 };
 

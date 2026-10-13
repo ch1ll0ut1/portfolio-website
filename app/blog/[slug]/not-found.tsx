@@ -2,10 +2,6 @@ import React, { FC } from 'react';
 import type { Metadata } from 'next';
 import { NotFoundPanel } from '@/components/blog/NotFoundPanel';
 import { ReadingShell } from '@/components/blog/ReadingShell';
-import { GlobalChrome } from '@/components/chrome/GlobalChrome';
-import { ContactFooter } from '@/components/home/contact/ContactFooter';
-import { NavTools } from '@/components/nav/NavTools';
-import { SiteNav } from '@/components/nav/SiteNav';
 
 /**
  * Shown when `/blog/[slug]` matches no post.
@@ -29,23 +25,15 @@ export const metadata: Metadata = {
 
 const PostNotFound: FC = () => {
     return (
-        <>
-            <ReadingShell
-                header={<SiteNav tools={<NavTools />} />}
-                footer={<ContactFooter />}
-            >
-                <NotFoundPanel
-                    kicker="404"
-                    title="Post not found"
-                    body="That article does not exist, or its link has changed since it was shared."
-                    actionHref="/blog"
-                    actionLabel="All articles"
-                />
-            </ReadingShell>
-
-            {/* Scroll progress stays on: there is no article here to own it. */}
-            <GlobalChrome />
-        </>
+        <ReadingShell>
+            <NotFoundPanel
+                kicker="404"
+                title="Post not found"
+                body="That article does not exist, or its link has changed since it was shared."
+                actionHref="/blog"
+                actionLabel="All articles"
+            />
+        </ReadingShell>
     );
 };
 

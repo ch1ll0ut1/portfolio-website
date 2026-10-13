@@ -1,7 +1,7 @@
 /**
  * Tests for the ReadingShell component.
- * Covers the landmark it owns and the header/footer slots the real site chrome
- * is dropped into.
+ * Covers the landmark it owns, and that it adds no chrome of its own: the nav
+ * and footer come from the root layout.
  */
 
 import { describe, it, expect } from 'vitest';
@@ -23,23 +23,7 @@ describe('ReadingShell Component', () => {
         expect(main).toHaveTextContent('Page content');
     });
 
-    it('should render the header and footer slots around the content', () => {
-        // Arrange
-        render(
-            <ReadingShell
-                header={<nav aria-label="Site">Nav</nav>}
-                footer={<footer>Footer</footer>}
-            >
-                <p>Page content</p>
-            </ReadingShell>,
-        );
-
-        // Assert
-        expect(screen.getByRole('navigation', { name: 'Site' })).toBeInTheDocument();
-        expect(screen.getByRole('contentinfo')).toHaveTextContent('Footer');
-    });
-
-    it('should read without site chrome so the slots stay optional', () => {
+    it('should leave the site chrome to the root layout', () => {
         // Arrange
         render(
             <ReadingShell>

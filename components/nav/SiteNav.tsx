@@ -1,6 +1,7 @@
 'use client';
 
 import { type FC, type ReactNode, useRef } from 'react';
+import { usePathname } from 'next/navigation';
 import { useMagnetic } from '@/lib/motion';
 import { navSections } from '@/config/sections';
 import { links } from '@/config/links';
@@ -38,6 +39,9 @@ export interface Props {
  * nav works on the reading routes, where the sections are not in the document.
  * On the homepage the path already matches, so the browser still treats them as
  * same-document fragment navigation.
+ *
+ * Rendered once by the root layout, so it stays mounted across client-side
+ * navigation: the entrance plays once per visit, not once per route.
  */
 export const SiteNav: FC<Props> = ({ tools }) => {
     const headerRef = useRef<HTMLElement>(null);
@@ -45,7 +49,7 @@ export const SiteNav: FC<Props> = ({ tools }) => {
     const pillRef = useRef<HTMLSpanElement>(null);
     const bookRef = useRef<HTMLAnchorElement>(null);
 
-    const activeId = useActiveSection(NAV_IDS);
+    const activeId = useActiveSection(NAV_IDS, usePathname());
 
     useHeaderScroll(headerRef, styles.isScrolled, styles.isHidden);
     useSlidingPill(listRef, pillRef, activeId);

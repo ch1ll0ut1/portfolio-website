@@ -7,16 +7,20 @@
  */
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { FINE_POINTER_QUERY, REDUCED_MOTION_QUERY } from '@/lib/motion';
+import { FINE_POINTER_QUERY, REDUCED_MOTION_QUERY, onStage } from '@/lib/motion';
 import { installMatchMedia } from '../../test/motionEnv';
 import { GlobalChrome } from './GlobalChrome';
+import { claimReadingProgress } from './readingProgressClaim';
 import cursorStyles from './CaretCursor.module.css';
 import progressStyles from './ScrollProgress.module.css';
 
+const navigation = vi.hoisted(() => ({ pathname: '/' }));
+
 vi.mock('next/navigation', () => ({
     useRouter: () => ({ push: vi.fn() }),
+    usePathname: () => navigation.pathname,
 }));
 
 const scrollBar = (container: HTMLElement) => container.querySelector(`.${progressStyles.bar}`);
@@ -37,8 +41,10 @@ const trigger = (attribute: string) => {
 
 describe('<GlobalChrome>', () => {
     let restoreMedia: () => void;
+    let release: () => void = () => undefined;
 
     beforeEach(() => {
+        navigation.pathname = '/';
         restoreMedia = installMatchMedia();
         delete document.documentElement.dataset.theme;
         localStorage.clear();
@@ -46,6 +52,8 @@ describe('<GlobalChrome>', () => {
     });
 
     afterEach(() => {
+        release();
+        release = () => undefined;
         restoreMedia();
         document.body.innerHTML = '';
         vi.restoreAllMocks();
@@ -119,28 +127,68 @@ describe('<GlobalChrome>', () => {
         expect(scrollBar(container)).toBeInTheDocument();
     });
 
-    it('should render the document scroll bar when asked for explicitly', () => {
-        const { container } = render(<GlobalChrome scrollProgress />);
-
-        expect(scrollBar(container)).toBeInTheDocument();
-    });
-
     // Article pages show their own, narrower bar in the same 2px strip.
-    it('should leave the document scroll bar out when opted out', () => {
-        const { container } = render(<GlobalChrome scrollProgress={false} />);
+    it('should leave the document scroll bar out while a page claims the strip', () => {
+        const { container } = render(<GlobalChrome />);
+
+        act(() => {
+            release = claimReadingProgress();
+        });
 
         expect(scrollBar(container)).not.toBeInTheDocument();
     });
 
-    it('should keep the rest of the chrome when the scroll bar is opted out', async () => {
+    it('should bring the document scroll bar back once the claim is released', () => {
+        const { container } = render(<GlobalChrome />);
+
+        act(() => {
+            release = claimReadingProgress();
+        });
+        act(() => {
+            release();
+        });
+
+        expect(scrollBar(container)).toBeInTheDocument();
+    });
+
+    it('should keep the rest of the chrome while the scroll bar steps aside', async () => {
         const user = userEvent.setup();
 
-        render(<GlobalChrome scrollProgress={false} />);
+        render(<GlobalChrome />);
+        act(() => {
+            release = claimReadingProgress();
+        });
         await user.keyboard('?');
 
         await waitFor(() => {
             expect(screen.getByRole('dialog', { name: 'Keyboard shortcuts' })).toBeInTheDocument();
         });
+    });
+
+    // It outlives the page, so a new route must trigger a fresh measurement.
+    it('should ask for a re-measure when the route changes', () => {
+        const onLayout = vi.fn();
+        const stop = onStage('layout', onLayout);
+        const { rerender } = render(<GlobalChrome />);
+
+        onLayout.mockClear();
+        navigation.pathname = '/blog';
+        rerender(<GlobalChrome />);
+
+        expect(onLayout).toHaveBeenCalledTimes(1);
+        stop();
+    });
+
+    it('should not re-measure when it re-renders on the same route', () => {
+        const onLayout = vi.fn();
+        const stop = onStage('layout', onLayout);
+        const { rerender } = render(<GlobalChrome />);
+
+        onLayout.mockClear();
+        rerender(<GlobalChrome />);
+
+        expect(onLayout).not.toHaveBeenCalled();
+        stop();
     });
 
     it('should not mount the custom cursor on a coarse pointer', () => {

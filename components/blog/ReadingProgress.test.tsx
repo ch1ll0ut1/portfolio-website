@@ -1,11 +1,13 @@
 /**
  * Tests for the ReadingProgress component.
- * Covers that it stays out of the accessibility tree and that its progress
- * follows the tracked element through the viewport.
+ * Covers that it stays out of the accessibility tree, that its progress
+ * follows the tracked element through the viewport, and that it claims the top
+ * strip from the site chrome's hairline while mounted.
  */
 
 import { describe, it, expect, afterEach } from 'vitest';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import { useReadingProgressClaimed } from '@/components/chrome/readingProgressClaim';
 import { ReadingProgress } from './ReadingProgress';
 import { stubRect } from '@/test/motionEnv';
 
@@ -31,6 +33,9 @@ const mountTarget = (rect: Partial<DOMRect>) => {
 
     return target;
 };
+
+/** Shows what the site chrome would read about the top strip. */
+const ClaimProbe = () => <output>{useReadingProgressClaimed() ? 'claimed' : 'free'}</output>;
 
 describe('ReadingProgress Component', () => {
     afterEach(() => {
@@ -84,5 +89,21 @@ describe('ReadingProgress Component', () => {
         // Assert
         const track = container.firstElementChild as HTMLElement;
         expect(track.style.getPropertyValue('--p')).toBe('');
+    });
+
+    it('should claim the top strip from the site chrome while mounted', () => {
+        // Arrange
+        mountTarget({ top: 0, height: 2000 });
+        render(<ClaimProbe />);
+        const { unmount } = render(<ReadingProgress targetId={TARGET_ID} />);
+
+        // Assert
+        expect(screen.getByRole('status')).toHaveTextContent('claimed');
+
+        // Act
+        unmount();
+
+        // Assert
+        expect(screen.getByRole('status')).toHaveTextContent('free');
     });
 });

@@ -6,10 +6,6 @@ import { readMarkdownFile } from '@/components/markdown/markdownProcessor';
 import { EngagementTracker } from '@/components/analytics/EngagementTracker';
 import { Article } from '@/components/blog/Article';
 import { ReadingShell } from '@/components/blog/ReadingShell';
-import { GlobalChrome } from '@/components/chrome/GlobalChrome';
-import { ContactFooter } from '@/components/home/contact/ContactFooter';
-import { NavTools } from '@/components/nav/NavTools';
-import { SiteNav } from '@/components/nav/SiteNav';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { absoluteUrl, siteConfig } from '@/config/site';
 import { blogPostingSchema } from '@/lib/structuredData';
@@ -121,15 +117,9 @@ const BlogPost: FC<{ params: Promise<{ slug: string }> }> = async ({ params }) =
 
             <EngagementTracker pageType="blog_post" scrollTarget="article" />
 
-            <ReadingShell
-                header={<SiteNav tools={<NavTools />} />}
-                footer={<ContactFooter />}
-            >
+            <ReadingShell>
                 <Article post={post} newer={newer} older={older} />
             </ReadingShell>
-
-            {/* The article renders its own article-scoped progress caret. */}
-            <GlobalChrome scrollProgress={false} />
         </>
     );
 };

@@ -2,6 +2,7 @@
 
 import { FC, useEffect, useRef } from 'react';
 import { registerScrub } from '@/lib/motion';
+import { claimReadingProgress } from '@/components/chrome/readingProgressClaim';
 import styles from './ReadingProgress.module.css';
 
 interface Props {
@@ -16,9 +17,14 @@ interface Props {
  * is hidden from assistive technology. The scrub is registered against an
  * element this component does not render, so it uses the plain registration
  * rather than `useScrub`'s ref form.
+ *
+ * While mounted it claims the top strip, so the site chrome's document-wide
+ * hairline steps aside instead of painting over it.
  */
 export const ReadingProgress: FC<Props> = ({ targetId }) => {
     const trackRef = useRef<HTMLDivElement>(null);
+
+    useEffect(claimReadingProgress, []);
 
     useEffect(() => {
         const track = trackRef.current;

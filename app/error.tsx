@@ -11,8 +11,9 @@ interface Props {
 
 /**
  * Catches a render error in any route below the root layout. The layout — and
- * with it the fonts, theme and consent — survives, so only the page is swapped
- * for the panel. The nav is left out on purpose: it may be what failed.
+ * with it the fonts, theme, consent and the site chrome — survives, so only the
+ * page is swapped for the panel. An error in the chrome itself happens in the
+ * layout, out of this boundary's reach, and lands in global-error instead.
  */
 const RouteError: FC<Props> = ({ error, reset }) => {
     return (

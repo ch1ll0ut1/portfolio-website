@@ -5,8 +5,12 @@ import { Analytics } from '@vercel/analytics/next';
 import { Bricolage_Grotesque, Martian_Mono, Schibsted_Grotesk } from 'next/font/google';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { GoogleAnalytics } from '@/components/analytics/GoogleAnalytics';
+import { GlobalChrome } from '@/components/chrome/GlobalChrome';
+import { SiteFooter } from '@/components/chrome/SiteFooter';
 import { ConsentProvider } from '@/components/consent/ConsentContext';
 import { CookieConsent } from '@/components/consent/CookieConsent';
+import { NavTools } from '@/components/nav/NavTools';
+import { SiteNav } from '@/components/nav/SiteNav';
 import { siteConfig, siteKeywords, siteTitle } from '@/config/site';
 
 export const metadata: Metadata = {
@@ -96,7 +100,14 @@ const RootLayout: FC<{ children: React.ReactNode }> = ({ children }) => {
             </head>
             <body>
                 <ConsentProvider>
+                    {/* The site chrome lives here rather than in each page, so it
+                        stays mounted — palette, theme, cursor and nav state
+                        included — across client-side navigation. Every page
+                        renders its own `<main id="main">` for the skip link. */}
+                    <SiteNav tools={<NavTools />} />
                     {children}
+                    <SiteFooter />
+                    <GlobalChrome />
                     <CookieConsent />
                     {/* Requests nothing from Google until analytics consent is granted. */}
                     <GoogleAnalytics />
