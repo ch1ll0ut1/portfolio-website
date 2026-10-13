@@ -12,7 +12,7 @@ import { JsonLd } from '@/components/seo/JsonLd';
 import { absoluteUrl, siteConfig } from '@/config/site';
 import { blogSchema } from '@/lib/structuredData';
 
-const TITLE = 'Blog — Software engineering, tech leadership and AI';
+const TITLE = 'Blog — Software engineering, tech leadership, and AI';
 const DESCRIPTION = 'Writing on software engineering, technical leadership, hiring, and building software with AI, from years of shipping products and leading teams.';
 
 export const metadata: Metadata = {

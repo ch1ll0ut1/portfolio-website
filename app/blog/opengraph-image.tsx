@@ -35,7 +35,7 @@ export default async function Image() {
                         fontWeight: '500',
                     }}
                 >
-                    Software Development & Technology Insights
+                    Software engineering, tech leadership, and AI
                 </p>
 
                 {/* Topics */}
