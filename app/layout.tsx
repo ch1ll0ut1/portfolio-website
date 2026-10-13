@@ -7,50 +7,39 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import Script from 'next/script';
 import { ConsentProvider } from '@/components/consent/ConsentContext';
 import { CookieConsent } from '@/components/consent/CookieConsent';
+import { siteConfig, siteKeywords, siteTitle } from '@/config/site';
 
 export const metadata: Metadata = {
     title: {
-        default: 'Stefan Knoch — Software architect and fractional CTO',
-        template: '%s | Stefan Knoch',
+        default: siteTitle,
+        template: `%s | ${siteConfig.name}`,
     },
-    description: 'Software architect, hands-on engineer and fractional CTO. Since 2008 I have taken products from the first commit to production, for startups, scale-ups and the Parliament of Iceland.',
-    keywords: [
-        'software architect',
-        'fractional CTO',
-        'founding engineer',
-        'architecture review',
-        'TypeScript',
-        'React',
-        'Next.js',
-        'Node.js',
-        'rich text editors',
-        'technology consultant',
-    ],
-    authors: [{ name: 'Stefan Knoch' }],
-    creator: 'Stefan Knoch',
-    publisher: 'Stefan Knoch',
+    description: siteConfig.description,
+    keywords: siteKeywords,
+    authors: [{ name: siteConfig.name, url: siteConfig.url }],
+    creator: siteConfig.name,
+    publisher: siteConfig.name,
     formatDetection: {
         email: false,
         address: false,
         telephone: false,
     },
-    metadataBase: new URL('https://stefanknoch.com'),
+    metadataBase: new URL(siteConfig.url),
     alternates: {
         canonical: '/',
     },
     openGraph: {
         type: 'website',
         locale: 'en_US',
-        url: 'https://stefanknoch.com',
-        title: 'Stefan Knoch — Software architect and fractional CTO',
-        description: 'Software architect, hands-on engineer and fractional CTO. Since 2008 I have taken products from the first commit to production, for startups, scale-ups and the Parliament of Iceland.',
-        siteName: 'Stefan Knoch',
+        url: siteConfig.url,
+        title: siteTitle,
+        description: siteConfig.description,
+        siteName: siteConfig.name,
     },
     twitter: {
         card: 'summary_large_image',
-        title: 'Stefan Knoch — Software architect and fractional CTO',
-        description: 'Software architect, hands-on engineer and fractional CTO. Since 2008 I have taken products from the first commit to production, for startups, scale-ups and the Parliament of Iceland.',
-        creator: '@stefanknoch',
+        title: siteTitle,
+        description: siteConfig.description,
     },
     robots: {
         index: true,

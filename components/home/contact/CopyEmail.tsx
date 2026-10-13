@@ -1,10 +1,11 @@
 'use client';
 
 import { type FC, useEffect, useRef, useState } from 'react';
+import { siteConfig } from '@/config/site';
 import { copyText } from '@/lib/motion';
 import styles from './CopyEmail.module.css';
 
-export const CONTACT_EMAIL = 'hello@example.com';
+export const CONTACT_EMAIL = siteConfig.contactEmail;
 
 const COPIED_MESSAGE = 'Email copied to clipboard';
 const FAILED_MESSAGE = 'Could not copy. Select the address to copy it manually.';

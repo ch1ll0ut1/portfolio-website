@@ -1,3 +1,4 @@
+import { siteConfig } from '@/config/site';
 import { ogImageConfig, createOgImage, OgLayout, AccentDot, ogPalette } from '@/lib/opengraphUtils';
 
 export const size = ogImageConfig.size;
@@ -20,7 +21,7 @@ export default async function Image() {
                         textShadow: '0 2px 10px rgba(255, 139, 61, .28)',
                     }}
                 >
-                    Software architect and fractional CTO
+                    {siteConfig.jobTitle}
                 </h1>
 
                 {/* Subtitle */}
@@ -35,7 +36,7 @@ export default async function Image() {
                         fontWeight: '500',
                     }}
                 >
-                    From the first commit to production, since 2008.
+                    {`From the first commit to production, since ${siteConfig.sinceYear}.`}
                 </p>
 
                 {/* Tagline */}
