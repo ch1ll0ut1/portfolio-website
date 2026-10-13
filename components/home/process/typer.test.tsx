@@ -6,6 +6,7 @@
 
 import { describe, it, expect } from 'vitest';
 import { render } from '@testing-library/react';
+import { itemAt } from '@/test/itemAt';
 import type { TerminalSpan } from '@/config/processSteps';
 import { TerminalScreen } from './TerminalScreen';
 import { createTyper } from './typer';
@@ -59,11 +60,11 @@ describe('createTyper', () => {
 
         typer.clear();
 
-        expect(chars[0].classList.contains(styles.off)).toBe(false);
-        expect(chars[1].classList.contains(styles.off)).toBe(false);
-        expect(chars[2].classList.contains(styles.off)).toBe(true);
-        expect(lines[0].classList.contains(styles.off)).toBe(false);
-        expect(lines[1].classList.contains(styles.off)).toBe(true);
+        expect(itemAt(chars, 0).classList.contains(styles.off)).toBe(false);
+        expect(itemAt(chars, 1).classList.contains(styles.off)).toBe(false);
+        expect(itemAt(chars, 2).classList.contains(styles.off)).toBe(true);
+        expect(itemAt(lines, 0).classList.contains(styles.off)).toBe(false);
+        expect(itemAt(lines, 1).classList.contains(styles.off)).toBe(true);
     });
 
     it('should type the command one character at a time', () => {
@@ -72,12 +73,12 @@ describe('createTyper', () => {
         typer.type(true);
         typer.step(8);
 
-        expect(chars[2].classList.contains(styles.off)).toBe(false);
-        expect(chars[3].classList.contains(styles.off)).toBe(true);
+        expect(itemAt(chars, 2).classList.contains(styles.off)).toBe(false);
+        expect(itemAt(chars, 3).classList.contains(styles.off)).toBe(true);
 
         typer.step(16);
 
-        expect(chars[3].classList.contains(styles.off)).toBe(false);
+        expect(itemAt(chars, 3).classList.contains(styles.off)).toBe(false);
     });
 
     it('should hold the output back until the command is typed', () => {
@@ -86,11 +87,11 @@ describe('createTyper', () => {
         typer.type(true);
         typer.step(16);
 
-        expect(lines[1].classList.contains(styles.off)).toBe(true);
+        expect(itemAt(lines, 1).classList.contains(styles.off)).toBe(true);
 
         typer.step(56);
 
-        expect(lines[1].classList.contains(styles.off)).toBe(false);
+        expect(itemAt(lines, 1).classList.contains(styles.off)).toBe(false);
     });
 
     it('should reveal the output lines in order', () => {
@@ -100,11 +101,11 @@ describe('createTyper', () => {
         typer.step(56);
 
         // The trailing prompt is the last line and lands after the output.
-        expect(lines[2].classList.contains(styles.off)).toBe(true);
+        expect(itemAt(lines, 2).classList.contains(styles.off)).toBe(true);
 
         typer.step(1000);
 
-        expect(lines[2].classList.contains(styles.off)).toBe(false);
+        expect(itemAt(lines, 2).classList.contains(styles.off)).toBe(false);
     });
 
     it('should replay a revisited step faster than a first visit', () => {
@@ -116,8 +117,8 @@ describe('createTyper', () => {
         fast.typer.type(true);
         fast.typer.step(250);
 
-        expect(normal.lines[1].classList.contains(styles.off)).toBe(true);
-        expect(fast.lines[1].classList.contains(styles.off)).toBe(false);
+        expect(itemAt(normal.lines, 1).classList.contains(styles.off)).toBe(true);
+        expect(itemAt(fast.lines, 1).classList.contains(styles.off)).toBe(false);
     });
 
     it('should jump to the end state when finished mid-run', () => {
@@ -137,7 +138,7 @@ describe('createTyper', () => {
         typer.type(true);
         typer.step(1000);
 
-        expect(caret()?.parentElement).toBe(lines[2]);
+        expect(caret()?.parentElement).toBe(itemAt(lines, 2));
         expect(caret()?.classList.contains(styles.caretIdle)).toBe(true);
     });
 

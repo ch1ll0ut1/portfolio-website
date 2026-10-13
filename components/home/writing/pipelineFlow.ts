@@ -65,7 +65,12 @@ export const createPipelineFlow = (options: PipelineFlowOptions): PipelineFlow =
         svg.setAttribute('viewBox', `0 0 ${canvas.clientWidth} ${canvas.clientHeight}`);
 
         edges.forEach((edge, index) => {
-            edge.setAttribute('d', edgePath(boxOf(nodes[index]), boxOf(nodes[index + 1])));
+            const from = nodes[index];
+            const to = nodes[index + 1];
+
+            if (from && to) {
+                edge.setAttribute('d', edgePath(boxOf(from), boxOf(to)));
+            }
         });
     };
 
@@ -76,6 +81,10 @@ export const createPipelineFlow = (options: PipelineFlowOptions): PipelineFlow =
         setNode: (index, className) => {
             const node = nodes[index];
 
+            if (node === undefined) {
+                return;
+            }
+
             node.classList.remove(classes.nodeRunning, classes.nodeDone, classes.gateWaiting, classes.gateApproved);
 
             if (className !== undefined) {
@@ -85,6 +94,10 @@ export const createPipelineFlow = (options: PipelineFlowOptions): PipelineFlow =
         setEdge: (index, className) => {
             const edge = edges[index];
 
+            if (edge === undefined) {
+                return;
+            }
+
             edge.classList.remove(classes.edgeDone, classes.edgeLive);
 
             if (className !== undefined) {
@@ -93,6 +106,11 @@ export const createPipelineFlow = (options: PipelineFlowOptions): PipelineFlow =
         },
         moveToken: (index, progress) => {
             const edge = edges[index];
+
+            if (edge === undefined) {
+                return;
+            }
+
             const point = edge.getPointAtLength(edge.getTotalLength() * progress);
 
             for (const shape of [token, halo]) {

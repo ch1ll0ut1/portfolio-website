@@ -96,7 +96,11 @@ export const createWordmarkFit = ({ container, word, letters }: WordmarkFitTarge
         const widths = letters.map(letter => letter.getBoundingClientRect().width);
 
         letters.forEach((letter, index) => {
-            letter.style.width = `${widths[index].toFixed(2)}px`;
+            const letterWidth = widths[index];
+
+            if (letterWidth !== undefined) {
+                letter.style.width = `${letterWidth.toFixed(2)}px`;
+            }
         });
     };
 

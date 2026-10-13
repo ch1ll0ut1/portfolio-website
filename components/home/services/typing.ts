@@ -100,11 +100,12 @@ export const createTypingEngine = ({ paragraph, words, caret, classNames }: Typi
     let selectTimer = 0;
 
     const place = (count: number) => {
-        if (words.length === 0) {
+        const word = words[Math.max(0, count - 1)];
+
+        if (word === undefined) {
             return;
         }
 
-        const word = words[Math.max(0, count - 1)];
         const fontSize = Number.parseFloat(window.getComputedStyle(paragraph).fontSize) || 18;
         const x = count === 0
             ? word.offsetLeft - CARET_LEAD_PX

@@ -125,7 +125,7 @@ export const MoreProjects: FC = () => {
                 aria-hidden="true"
             />
             {fine && !reduced && (
-                <ProjectPreview project={active?.fromPointer ? projectsIndex[active.index] : null} />
+                <ProjectPreview project={active?.fromPointer ? projectsIndex[active.index] ?? null : null} />
             )}
         </div>
     );

@@ -3,6 +3,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
+import { itemAt } from '@/test/itemAt';
 import { buildReels } from './digitReels';
 
 describe('buildReels', () => {
@@ -32,7 +33,7 @@ describe('buildReels', () => {
 
     it('should wrap a reel through zero rather than counting backwards', () => {
         // Act
-        const [, tens] = buildReels('2008', '1990');
+        const tens = itemAt(buildReels('2008', '1990'), 1);
 
         // Assert
         expect(tens.digits).toEqual([9, 0]);
@@ -41,7 +42,7 @@ describe('buildReels', () => {
     it('should spin the last column a full extra turn', () => {
         // Act
         const reels = buildReels('2008', '1990');
-        const units = reels[reels.length - 1];
+        const units = itemAt(reels, reels.length - 1);
 
         // Assert
         expect(units.offset).toBe(18);
@@ -54,9 +55,9 @@ describe('buildReels', () => {
 
         // Assert
         expect(reels).toHaveLength(1);
-        expect(reels[0].offset).toBe(14);
-        expect(reels[0].digits[0]).toBe(0);
-        expect(reels[0].digits[14]).toBe(4);
+        expect(itemAt(reels, 0).offset).toBe(14);
+        expect(itemAt(reels, 0).digits[0]).toBe(0);
+        expect(itemAt(reels, 0).digits[14]).toBe(4);
     });
 
     it('should weight columns from right to left so the left lands first', () => {

@@ -7,6 +7,7 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { REDUCED_MOTION_QUERY } from '@/lib/motion';
+import { itemAt } from '@/test/itemAt';
 import { installIntersectionObserver, installMatchMedia } from '@/test/motionEnv';
 import { fitContent } from '@/config/fit';
 import { FitLists } from './FitLists';
@@ -52,7 +53,9 @@ describe('Fit Lists Block', () => {
     it('should keep the two lists as separate lists', () => {
         render(<FitLists />);
 
-        const [good, bad] = screen.getAllByRole('list');
+        const lists = screen.getAllByRole('list');
+        const good = itemAt(lists, 0);
+        const bad = itemAt(lists, 1);
 
         expect(good.children).toHaveLength(fitContent.lists[0].items.length);
         expect(bad.children).toHaveLength(fitContent.lists[1].items.length);

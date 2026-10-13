@@ -4,6 +4,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
+import { itemAt } from '@/test/itemAt';
 import { careerLog } from './career';
 
 const startYear = (years: string) => parseInt(years.slice(0, 4), 10);
@@ -66,7 +67,7 @@ describe('Career Log Configuration', () => {
             // Assert
             years.forEach((year, index) => {
                 if (index > 0) {
-                    expect(year).toBeLessThanOrEqual(years[index - 1]);
+                    expect(year).toBeLessThanOrEqual(itemAt(years, index - 1));
                 }
             });
         });
@@ -96,8 +97,8 @@ describe('Career Log Configuration', () => {
             const forkIndex = careerLog.findIndex(commit => commit.isFork === true);
 
             // Assert
-            expect(careerLog[forkIndex].branch).toBe('indie');
-            expect(careerLog[forkIndex + 1].branch).toBe('main');
+            expect(itemAt(careerLog, forkIndex).branch).toBe('indie');
+            expect(itemAt(careerLog, forkIndex + 1).branch).toBe('main');
         });
 
         it('should mark exactly one root commit', () => {
@@ -110,7 +111,7 @@ describe('Career Log Configuration', () => {
 
         it('should mark the oldest commit as the root', () => {
             // Assert
-            expect(careerLog[careerLog.length - 1].isRoot).toBe(true);
+            expect(itemAt(careerLog, careerLog.length - 1).isRoot).toBe(true);
         });
     });
 });

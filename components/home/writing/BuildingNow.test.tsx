@@ -5,6 +5,7 @@
 
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
+import { itemAt } from '@/test/itemAt';
 import { buildingNow } from '@/config/buildingNow';
 import { BuildingNow } from './BuildingNow';
 
@@ -53,7 +54,7 @@ describe('BuildingNow Component', () => {
 
         // Act
         const nodes = container.querySelectorAll('[data-node]');
-        const canvas = nodes[0].parentElement;
+        const canvas = itemAt(nodes, 0).parentElement;
 
         // Assert
         expect(nodes.length).toBeGreaterThan(0);

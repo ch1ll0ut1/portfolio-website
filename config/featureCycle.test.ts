@@ -4,6 +4,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
+import { itemAt } from '@/test/itemAt';
 import { featureCycleContent } from './featureCycle';
 
 describe('Feature Cycle Configuration', () => {
@@ -37,8 +38,8 @@ describe('Feature Cycle Configuration', () => {
         });
 
         it('should start at the goal and end at release', () => {
-            expect(featureCycleContent.steps[0].title).toBe('Vision & goal');
-            expect(featureCycleContent.steps[8].title).toBe('Deployment or next feature');
+            expect(itemAt(featureCycleContent.steps, 0).title).toBe('Vision & goal');
+            expect(itemAt(featureCycleContent.steps, 8).title).toBe('Deployment or next feature');
         });
 
         it('should keep titles short enough for a dense grid', () => {

@@ -116,18 +116,27 @@ export const createTimeline = (steps: Step[]): Timeline => {
 
         let start = 0;
         let index = 0;
+        let step = steps[index];
 
-        while (index < steps.length - 1 && elapsed >= start + steps[index].duration) {
-            start += steps[index].duration;
+        if (step === undefined) {
+            return;
+        }
+
+        let next = steps[index + 1];
+
+        while (next !== undefined && elapsed >= start + step.duration) {
+            start += step.duration;
             index += 1;
+            step = next;
+            next = steps[index + 1];
         }
 
         if (index !== current) {
             current = index;
-            steps[index].onStart();
+            step.onStart();
         }
 
-        steps[index].onFrame?.(clamp((elapsed - start) / steps[index].duration, 0, 1));
+        step.onFrame?.(clamp((elapsed - start) / step.duration, 0, 1));
     };
 
     return { advance };

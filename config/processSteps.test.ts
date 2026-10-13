@@ -4,6 +4,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
+import { itemAt } from '@/test/itemAt';
 import { processSteps, processTitle, terminalPath } from './processSteps';
 
 const TONES = ['prompt', 'dim', 'ok', 'warn'];
@@ -40,8 +41,8 @@ describe('Process Steps Configuration', () => {
     describe('Terminal Transcripts', () => {
         it('should open every transcript with a prompt', () => {
             processSteps.forEach((step) => {
-                expect(step.transcript[0][0].tone).toBe('prompt');
-                expect(step.transcript[0][0].text).toBe('$');
+                expect(itemAt(itemAt(step.transcript, 0), 0).tone).toBe('prompt');
+                expect(itemAt(itemAt(step.transcript, 0), 0).text).toBe('$');
             });
         });
 
@@ -53,7 +54,7 @@ describe('Process Steps Configuration', () => {
 
         it('should keep the command short enough to type on screen', () => {
             processSteps.forEach((step) => {
-                const command = step.transcript[0].map(span => span.text).join('');
+                const command = itemAt(step.transcript, 0).map(span => span.text).join('');
 
                 expect(command.length).toBeLessThan(40);
             });

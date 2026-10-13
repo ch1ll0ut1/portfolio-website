@@ -52,12 +52,12 @@ interface LineView {
 }
 
 interface Layer {
-    index: number;
     node: HTMLSpanElement;
     card: HTMLDivElement;
     state: HTMLSpanElement;
     code: HTMLDivElement;
     line: LineView;
+    render: (renamed: boolean) => Token[];
 }
 
 export const buildBluereceipt = (
@@ -105,27 +105,34 @@ export const buildBluereceipt = (
         return { el, target: target ?? h('span', '', el) };
     };
 
-    const layers: Layer[] = TOPS.map((top, index) => {
+    const layers: Layer[] = TOPS.flatMap((top, index) => {
+        const heading = HEADS[index];
+        const render = LINES[index];
+
+        if (heading === undefined || render === undefined) {
+            return [];
+        }
+
         const node = h('span', `${c.node} ${c.nodeOk}`, body);
         const card = h('div', c.card, body);
         const head = h('div', c.head, card);
 
         node.style.top = `${mid(index) - 5.5}px`;
         card.style.top = `${top}px`;
-        h('b', '', head, HEADS[index][0]);
-        head.appendChild(document.createTextNode(HEADS[index][1]));
+        h('b', '', head, heading[0]);
+        head.appendChild(document.createTextNode(heading[1]));
 
         const state = h('span', c.st, head, GLYPH.ok);
         const code = h('div', c.code, card);
 
         state.dataset.state = 'ok';
 
-        return { index, node, card, state, code, line: renderLine(code, LINES[index](false)) };
+        return [{ node, card, state, code, line: renderLine(code, render(false)), render }];
     });
 
     const errorBox = h('div', c.err, body, 'TS2339 Property \'optIn\' does not exist on type \'Customer\'.');
 
-    errorBox.style.top = `${TOPS[3] + 62}px`;
+    errorBox.style.top = `${(TOPS[3] ?? 0) + 62}px`;
     h('br', '', errorBox);
     h('i', '', errorBox, 'Caught at build time, before it shipped.');
 
@@ -146,7 +153,7 @@ export const buildBluereceipt = (
     const roll = (layer: Layer, renamed: boolean) => {
         const old = layer.line;
 
-        layer.line = renderLine(layer.code, LINES[layer.index](renamed));
+        layer.line = renderLine(layer.code, layer.render(renamed));
         anim(layer.line.el, [
             { transform: 'translateY(100%)', opacity: 0 },
             { transform: 'none', opacity: 1 },
@@ -196,7 +203,7 @@ export const buildBluereceipt = (
     const reset = (renamed: boolean) => {
         layers.forEach((layer) => {
             layer.line.el.remove();
-            layer.line = renderLine(layer.code, LINES[layer.index](renamed));
+            layer.line = renderLine(layer.code, layer.render(renamed));
             setState(layer, 'ok');
             layer.card.classList.remove(c.cardErr, c.cardFlash);
         });
@@ -212,6 +219,13 @@ export const buildBluereceipt = (
             reset(true);
         },
         script: async (runner: RunnerApi) => {
+            const [source] = layers;
+            const consumer = layers[3];
+
+            if (source === undefined || consumer === undefined) {
+                return;
+            }
+
             api = runner;
 
             await runner.wait(1000);
@@ -220,14 +234,16 @@ export const buildBluereceipt = (
             layers.forEach((layer) => {
                 layer.node.classList.remove(c.nodeOk);
             });
-            setState(layers[0], 'edit');
-            await edit(layers[0], 'sms_consent');
-            setState(layers[0], 'ok');
+            setState(source, 'edit');
+            await edit(source, 'sms_consent');
+            setState(source, 'ok');
 
-            for (let index = 1; index < layers.length; index++) {
+            for (const [index, layer] of layers.entries()) {
+                if (index === 0) {
+                    continue;
+                }
+
                 await travel(index - 1, index);
-
-                const layer = layers[index];
 
                 if (index < 3) {
                     layer.card.classList.add(c.cardFlash);
@@ -247,9 +263,9 @@ export const buildBluereceipt = (
             }
 
             await runner.wait(1500);
-            await edit(layers[3], 'smsConsent');
-            layers[3].card.classList.remove(c.cardErr);
-            setState(layers[3], 'ok');
+            await edit(consumer, 'smsConsent');
+            consumer.card.classList.remove(c.cardErr);
+            setState(consumer, 'ok');
             errorBox.classList.remove(c.errOn);
             layers.forEach((layer) => {
                 layer.node.classList.add(c.nodeOk);

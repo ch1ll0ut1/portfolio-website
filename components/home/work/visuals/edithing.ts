@@ -154,14 +154,20 @@ export const buildEdithing = (
                 }
             }
 
-            if (labels[index] !== row.label) {
-                setLabel(row, labels[index], !silent && row.label !== null);
+            const label = labels[index];
+
+            if (label !== undefined && label !== row.label) {
+                setLabel(row, label, !silent && row.label !== null);
             }
         });
     };
 
     const caretX = (index: number, atEnd: boolean) => {
         const row = rows[index];
+
+        if (row === undefined) {
+            return LABEL_X + 2;
+        }
 
         return LABEL_X + DEPTH[row.kind] * INDENT + COLUMN[row.kind] + (atEnd ? row.bar : 0) + 2;
     };

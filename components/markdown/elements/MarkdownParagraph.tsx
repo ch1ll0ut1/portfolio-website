@@ -8,7 +8,7 @@ interface Props {
 }
 
 export const MarkdownParagraph: FC<Props> = ({ element }) => {
-    if (element.segments.length === 0 || (element.segments.length === 1 && !element.segments[0].text.trim())) {
+    if (element.segments.length === 0 || (element.segments.length === 1 && !element.segments[0]?.text.trim())) {
         return <div className={styles.spacer} />;
     }
 

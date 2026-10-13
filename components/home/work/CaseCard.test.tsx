@@ -8,6 +8,7 @@
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { render, screen } from '@testing-library/react';
+import { itemAt } from '../../../test/itemAt';
 import { installMatchMedia } from '../../../test/motionEnv';
 import { REDUCED_MOTION_QUERY } from '../../../lib/motion';
 import { caseStudies } from '../../../config/caseStudies';
@@ -28,7 +29,7 @@ describe('CaseCard', () => {
 
     it('should render the case title, years, role and client', () => {
         // Arrange
-        const study = caseStudies[0];
+        const study = itemAt(caseStudies, 0);
 
         // Act
         render(<CaseCard study={study} index={0} covered={false} />);
@@ -42,7 +43,7 @@ describe('CaseCard', () => {
 
     it('should render the problem, what I did and result story', () => {
         // Arrange
-        const study = caseStudies[0];
+        const study = itemAt(caseStudies, 0);
 
         // Act
         render(<CaseCard study={study} index={0} covered={false} />);
@@ -58,7 +59,7 @@ describe('CaseCard', () => {
 
     it('should render every tag', () => {
         // Arrange
-        const study = caseStudies[1];
+        const study = itemAt(caseStudies, 1);
 
         // Act
         render(<CaseCard study={study} index={1} covered={false} />);
@@ -71,7 +72,7 @@ describe('CaseCard', () => {
 
     it('should expose the headline metric as text', () => {
         // Arrange
-        const study = caseStudies[1];
+        const study = itemAt(caseStudies, 1);
 
         // Act
         render(<CaseCard study={study} index={1} covered={false} />);
@@ -83,7 +84,7 @@ describe('CaseCard', () => {
 
     it('should render an outbound link when the case has one', () => {
         // Arrange
-        const study = caseStudies[0];
+        const study = itemAt(caseStudies, 0);
         const link = study.link;
 
         // Act
@@ -96,7 +97,7 @@ describe('CaseCard', () => {
 
     it('should not render a link for a case without one', () => {
         // Arrange
-        const study = caseStudies[3];
+        const study = itemAt(caseStudies, 3);
 
         // Act
         render(<CaseCard study={study} index={3} covered={false} />);
@@ -108,7 +109,7 @@ describe('CaseCard', () => {
 
     it('should hide the decorative illustration from assistive technology', () => {
         // Arrange
-        const study = caseStudies[2];
+        const study = itemAt(caseStudies, 2);
 
         // Act
         const { container } = render(<CaseCard study={study} index={2} covered={false} />);

@@ -57,7 +57,9 @@ export const createRetype = ({ mark, letters, typingClass, goneClass }: RetypeOp
     };
 
     const run = () => {
-        if (running || letters.length < 2 || prefersReducedMotion()) {
+        const [first, second] = letters;
+
+        if (running || first === undefined || second === undefined || prefersReducedMotion()) {
             return;
         }
 
@@ -71,23 +73,29 @@ export const createRetype = ({ mark, letters, typingClass, goneClass }: RetypeOp
 
         const steps = [
             () => {
-                letters[1].classList.add(goneClass);
+                second.classList.add(goneClass);
             },
             () => {
-                letters[0].classList.add(goneClass);
+                first.classList.add(goneClass);
             },
             () => {
-                letters[0].classList.remove(goneClass);
+                first.classList.remove(goneClass);
             },
             () => {
-                letters[1].classList.remove(goneClass);
+                second.classList.remove(goneClass);
             },
         ];
 
         let elapsed = 0;
 
         steps.forEach((step, index) => {
-            elapsed += STEP_DELAYS[index];
+            const delay = STEP_DELAYS[index];
+
+            if (delay === undefined) {
+                return;
+            }
+
+            elapsed += delay;
             timers.push(window.setTimeout(step, elapsed));
         });
 

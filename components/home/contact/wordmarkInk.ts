@@ -74,6 +74,10 @@ export const createWordmarkInk = ({ area, letters }: WordmarkInkTargets) => {
         letters.forEach((letter, index) => {
             const state = states[index];
 
+            if (state === undefined) {
+                return;
+            }
+
             state.value = lerp(state.value, state.target, EASE);
 
             if (Math.abs(state.value - state.target) < SETTLED) {
@@ -109,13 +113,16 @@ export const createWordmarkInk = ({ area, letters }: WordmarkInkTargets) => {
             measure();
         }
 
-        const radius = (centres.length > 0 ? centres[0].width : FALLBACK_WIDTH) * RADIUS_SCALE;
+        const radius = (centres[0]?.width ?? FALLBACK_WIDTH) * RADIUS_SCALE;
 
         centres.forEach((centre, index) => {
             const dx = (pointerX - centre.x) / radius;
             const dy = (pointerY - centre.y) / (radius * VERTICAL_SLACK);
+            const state = states[index];
 
-            states[index].target = Math.exp(-(dx * dx + dy * dy));
+            if (state) {
+                state.target = Math.exp(-(dx * dx + dy * dy));
+            }
         });
 
         start();

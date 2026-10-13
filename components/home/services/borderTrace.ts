@@ -73,7 +73,11 @@ export const runBorderTrace = (trace: HTMLElement, options: BorderTraceOptions =
     });
 
     // Guard against float drift leaving the last offset just shy of 1.
-    keyframes[keyframes.length - 1].offset = 1;
+    const last = keyframes.at(-1);
+
+    if (last) {
+        last.offset = 1;
+    }
 
     const lap = tween(trace, keyframes, {
         duration: options.duration ?? DEFAULT_DURATION_MS,

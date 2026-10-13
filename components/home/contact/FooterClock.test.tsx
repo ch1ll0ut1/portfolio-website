@@ -5,6 +5,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { act, render, screen } from '@testing-library/react';
 import { installIntersectionObserver } from '../../../test/motionEnv';
+import { itemAt } from '@/test/itemAt';
 import { FooterClock } from './FooterClock';
 
 describe('FooterClock', () => {
@@ -40,7 +41,7 @@ describe('FooterClock', () => {
 
         // Act
         act(() => {
-            observers.instances[0].emit(true);
+            itemAt(observers.instances, 0).emit(true);
         });
 
         // Assert

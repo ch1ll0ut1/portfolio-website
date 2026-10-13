@@ -4,7 +4,8 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { processMarkdownContent, type MarkdownElement } from './markdownProcessor';
+import { itemAt } from '@/test/itemAt';
+import { processMarkdownContent } from './markdownProcessor';
 
 describe('processMarkdownContent', () => {
     it('should process headings correctly', () => {
@@ -621,7 +622,7 @@ describe('processMarkdownContent - Image Processing', () => {
  */
 describe('processMarkdownContent - Inline Code', () => {
     const segmentsOf = (content: string) => {
-        const [element] = processMarkdownContent(content);
+        const element = itemAt(processMarkdownContent(content), 0);
 
         if (element.type !== 'paragraph') {
             throw new Error(`expected a paragraph, got ${element.type}`);

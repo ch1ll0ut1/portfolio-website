@@ -27,9 +27,10 @@ export async function generateStaticParams() {
  */
 function getBlogPostData(slug: string) {
     const index = blogPosts.findIndex(p => p.slug === slug);
-    if (index === -1) return null;
-
     const postMetadata = blogPosts[index];
+    if (postMetadata === undefined) {
+        return null;
+    }
     const markdownContent = readMarkdownFile(slug);
     if (!markdownContent) return null;
 

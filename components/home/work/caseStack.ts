@@ -68,16 +68,16 @@ export const useCaseStack = (ref: RefObject<HTMLElement | null>, onCovered: Cove
             const on = desktop.matches;
 
             for (let index = 0; index < cards.length; index++) {
-                const hasNext = index + 1 < cards.length;
-                const progress = on && hasNext
+                const next = cards[index + 1];
+                const progress = on && next
                     ? coverProgress(
                         viewportHeight,
-                        cards[index + 1].getBoundingClientRect().top,
-                        stickyTops[index + 1],
+                        next.getBoundingClientRect().top,
+                        stickyTops[index + 1] ?? 0,
                     )
                     : 0;
 
-                if (Math.abs(progress - previous[index]) < EPSILON) {
+                if (Math.abs(progress - (previous[index] ?? -1)) < EPSILON) {
                     continue;
                 }
 

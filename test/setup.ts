@@ -1,13 +1,10 @@
-import React from 'react';
-import { expect, afterEach } from 'vitest';
+import { afterEach } from 'vitest';
 import { cleanup } from '@testing-library/react';
-import * as matchers from '@testing-library/jest-dom/matchers';
-
-// Make React available globally for JSX in tests
-global.React = React;
-
-// extends Vitest's expect method with methods from react-testing-library
-expect.extend(matchers);
+// Registers the jest-dom matchers on Vitest's `expect` and types them. Imported
+// here rather than listed under `types` in tsconfig.json, so the config the app
+// is built with declares no test globals: tests import `describe`, `it` and
+// `expect` from 'vitest' explicitly.
+import '@testing-library/jest-dom/vitest';
 
 /*
  * Browser APIs the motion kit depends on that jsdom does not implement. Without

@@ -15,6 +15,7 @@ import { act, fireEvent, render, screen } from '@testing-library/react';
 import { emitStage } from '@/lib/motion';
 import { navSections } from '@/config/sections';
 import { links } from '@/config/links';
+import { itemAt } from '@/test/itemAt';
 import { installIntersectionObserver, installMatchMedia } from '../../test/motionEnv';
 import { SiteNav } from './SiteNav';
 import styles from './SiteNav.module.css';
@@ -145,19 +146,19 @@ describe('<SiteNav> Component', () => {
 
         act(() => {
             if (observer) {
-                observer.element = sectionNodes[2];
+                observer.element = itemAt(sectionNodes, 2);
                 observer.emit(true);
             }
         });
 
-        expect(screen.getByRole('link', { name: navSections[2].label })).toHaveAttribute('aria-current', 'location');
-        expect(screen.getByRole('link', { name: navSections[0].label })).not.toHaveAttribute('aria-current');
+        expect(screen.getByRole('link', { name: itemAt(navSections, 2).label })).toHaveAttribute('aria-current', 'location');
+        expect(screen.getByRole('link', { name: itemAt(navSections, 0).label })).not.toHaveAttribute('aria-current');
     });
 
     it('should move the pill to a link that receives focus', () => {
         render(<SiteNav />);
 
-        const link = screen.getByRole('link', { name: navSections[1].label });
+        const link = screen.getByRole('link', { name: itemAt(navSections, 1).label });
 
         Object.defineProperty(link, 'offsetWidth', { value: 80, configurable: true });
         Object.defineProperty(link, 'offsetLeft', { value: 120, configurable: true });
@@ -175,7 +176,7 @@ describe('<SiteNav> Component', () => {
         render(<SiteNav />);
 
         const nav = screen.getByRole('navigation', { name: 'Sections' });
-        const link = screen.getByRole('link', { name: navSections[0].label });
+        const link = screen.getByRole('link', { name: itemAt(navSections, 0).label });
         const pill = getHeader().querySelector(`.${styles.pill}`);
 
         act(() => {

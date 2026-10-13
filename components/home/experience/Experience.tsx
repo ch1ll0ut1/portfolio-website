@@ -55,7 +55,7 @@ export const Experience: FC = () => {
                             <CommitRow
                                 key={commit.hash}
                                 commit={commit}
-                                pulseToken={log.pulses[index]}
+                                pulseToken={log.pulses[index] ?? 0}
                                 isReached={index <= log.reached}
                                 isCurrent={index === log.current}
                                 isHovered={index === log.hovered}

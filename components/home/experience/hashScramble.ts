@@ -43,7 +43,7 @@ export const scrambleFrame = (final: string, progress: number, pickGlyph: () => 
     let text = '';
 
     for (let index = 0; index < final.length; index++) {
-        text += progress * final.length * SETTLE_RATE > index + 1 ? final[index] : pickGlyph();
+        text += progress * final.length * SETTLE_RATE > index + 1 ? final.charAt(index) : pickGlyph();
     }
 
     return text;
@@ -73,7 +73,7 @@ export const startScramble = (node: HTMLElement, options: ScrambleOptions = {}):
         return noop;
     }
 
-    const pickGlyph = () => glyphs[Math.floor(random() * glyphs.length)];
+    const pickGlyph = () => glyphs.charAt(Math.floor(random() * glyphs.length));
 
     busy.add(node);
 

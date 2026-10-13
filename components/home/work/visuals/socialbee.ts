@@ -121,8 +121,10 @@ export const buildSocialbee = (
 
     const spokes = (['eng1', 'eng2', 'design', 'product'] as const).map(id => edge('lead', id));
     const peers = [edge('eng1', 'eng2'), edge('eng1', 'design'), edge('eng2', 'product')];
-    const systems = [edge('lead', 'ci', true), edge('ci', 'aws', true), edge('eng1', 'ci', true), edge('eng2', 'ci', true)];
-    const leadToCi = systems[0];
+    const leadToCi = edge('lead', 'ci', true);
+    const ciToAws = edge('ci', 'aws', true);
+    const eng1ToCi = edge('eng1', 'ci', true);
+    const eng2ToCi = edge('eng2', 'ci', true);
 
     const git = h('div', c.git, body);
 
@@ -232,10 +234,15 @@ export const buildSocialbee = (
 
             const people: NodeId[] = ['eng1', 'eng2', 'design', 'product'];
 
-            for (let i = 0; i < people.length; i++) {
-                draw(spokes[i]);
+            for (const [i, person] of people.entries()) {
+                const spoke = spokes[i];
+
+                if (spoke) {
+                    draw(spoke);
+                }
+
                 await runner.wait(200);
-                nodes[people[i]].classList.add(c.nodeOn);
+                nodes[person].classList.add(c.nodeOn);
                 setTeam(i + 2);
                 await runner.wait(380);
             }
@@ -246,24 +253,24 @@ export const buildSocialbee = (
             }
 
             await runner.wait(300);
-            draw(systems[0]);
+            draw(leadToCi);
             await runner.wait(220);
             nodes.ci.classList.add(c.nodeOn);
             await runner.wait(200);
-            draw(systems[1]);
+            draw(ciToAws);
             await runner.wait(220);
             nodes.aws.classList.add(c.nodeOn);
-            draw(systems[2]);
-            draw(systems[3]);
+            draw(eng1ToCi);
+            draw(eng2ToCi);
             await runner.wait(500);
 
             chip.className = `${frame.chip} ${frame.chipBusy}`;
             chip.textContent = 'shipping';
 
-            const devs: NodeId[] = ['eng1', 'eng2'];
+            const dev = (turn: number): NodeId => (turn % 2 === 0 ? 'eng1' : 'eng2');
 
             for (let i = 0; i < 5; i++) {
-                void ship(devs[i % 2]);
+                void ship(dev(i));
                 await runner.wait(620);
             }
 
@@ -277,7 +284,7 @@ export const buildSocialbee = (
             chip.textContent = 'handover';
 
             for (let i = 0; i < 9; i++) {
-                void ship(devs[(i + 1) % 2]);
+                void ship(dev(i + 1));
                 await runner.wait(i % 3 === 2 ? 820 : 560);
             }
 

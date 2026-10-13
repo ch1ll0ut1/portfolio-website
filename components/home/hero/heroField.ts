@@ -80,6 +80,11 @@ export const createHeroField = ({ canvas, root }: HeroFieldOptions): HeroField =
     const stepRipples = (now: number) => {
         for (let index = ripples.length - 1; index >= 0; index -= 1) {
             const ripple = ripples[index];
+
+            if (ripple === undefined) {
+                continue;
+            }
+
             const radius = (now - ripple.startedAt) * RIPPLE_SPEED;
 
             if (radius > ripple.limit + RIPPLE_BAND) {

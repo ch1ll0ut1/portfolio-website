@@ -4,7 +4,8 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { blogPosts, type BlogPost } from './blog';
+import { itemAt } from '@/test/itemAt';
+import { blogPosts } from './blog';
 
 describe('Blog Configuration', () => {
     describe('Blog Posts Data Integrity', () => {
@@ -57,7 +58,7 @@ describe('Blog Configuration', () => {
 
             // Assert - each subsequent post should be older than or equal to the previous
             for (let i = 1; i < dates.length; i++) {
-                expect(dates[i - 1].getTime()).toBeGreaterThanOrEqual(dates[i].getTime());
+                expect(itemAt(dates, i - 1).getTime()).toBeGreaterThanOrEqual(itemAt(dates, i).getTime());
             }
         });
 

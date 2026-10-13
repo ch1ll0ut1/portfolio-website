@@ -4,6 +4,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
+import { itemAt } from '@/test/itemAt';
 import { engagementNote, engagements, engagementsHeading, formatLabel } from './engagements';
 
 describe('Engagements Configuration', () => {
@@ -60,7 +61,7 @@ describe('Engagements Configuration', () => {
 
             // Assert
             expect(featured).toHaveLength(1);
-            expect(featured[0].name).toBe('Founding engineer');
+            expect(itemAt(featured, 0).name).toBe('Founding engineer');
         });
     });
 
@@ -94,7 +95,7 @@ describe('Engagements Configuration', () => {
 
             // Assert
             expect(selected).toHaveLength(1);
-            expect(selected[0].text).toBe('senior judgment on every decision');
+            expect(itemAt(selected, 0).text).toBe('senior judgment on every decision');
         });
     });
 });

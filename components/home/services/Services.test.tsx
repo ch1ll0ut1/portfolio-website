@@ -5,6 +5,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import { engagementNote, engagements, engagementsHeading } from '@/config/engagements';
+import { itemAt } from '@/test/itemAt';
 import { installIntersectionObserver, installMatchMedia } from '../../../test/motionEnv';
 import { Services } from './Services';
 
@@ -114,7 +115,7 @@ describe('Services', () => {
 
         // Assert
         expect(marked).toHaveLength(featured.length);
-        expect(cardFor(featured[0].id)).toContainElement(marked[0]);
+        expect(cardFor(itemAt(featured, 0).id)).toContainElement(itemAt(marked, 0));
     });
 
     it('should expose the closing paragraph as ordinary text', () => {

@@ -30,7 +30,7 @@ export const scrambleFrame = (text: string, progress: number, bucket: number) =>
     for (let index = settled; index < text.length; index++) {
         out += text[index] === ' '
             ? ' '
-            : GLYPHS[(index * 7 + bucket * 13 + index * bucket) % GLYPHS.length];
+            : GLYPHS.charAt((index * 7 + bucket * 13 + index * bucket) % GLYPHS.length);
     }
 
     return out;

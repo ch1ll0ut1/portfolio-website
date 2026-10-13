@@ -88,7 +88,7 @@ export const laneCenters = (lane: number): Lanes => ({
  * so the geometry stays correct if the history is reordered.
  */
 export const findForkIndex = (rows: RowMeasurement[]) => rows.findIndex((row, index) => {
-    const next = index + 1 < rows.length ? rows[index + 1].branch : null;
+    const next = rows[index + 1]?.branch ?? null;
 
     return row.branch === 'indie' && next === 'main';
 });
@@ -120,10 +120,6 @@ export const measureRows = (rows: (HTMLElement | null)[], container: HTMLElement
 
 /** Builds the paths, nodes and lookup for one set of row measurements. */
 export const buildGeometry = (rows: RowMeasurement[], options: GeometryOptions): GraphGeometry | null => {
-    if (rows.length === 0) {
-        return null;
-    }
-
     const lanes = laneCenters(options.lane);
     const nodes: GraphNode[] = rows.map(row => ({
         x: lanes[row.branch],
@@ -131,14 +127,22 @@ export const buildGeometry = (rows: RowMeasurement[], options: GeometryOptions):
         branch: row.branch,
     }));
     const top = nodes[0];
-    const root = nodes[nodes.length - 1];
+    const root = nodes.at(-1);
+
+    if (top === undefined || root === undefined) {
+        return null;
+    }
+
     const forkIndex = findForkIndex(rows);
     const tipIndex = findTipIndex(rows);
     const width = options.width > 0 ? options.width : lanes.indie + NODE_RADIUS * 2;
     const height = options.height > 0 ? options.height : 1;
 
+    const fork = nodes[forkIndex];
+    const tip = nodes[tipIndex];
+
     // No fork: the whole history is one straight lane.
-    if (forkIndex < 0 || tipIndex < 0) {
+    if (fork === undefined || tip === undefined) {
         const straight = `M ${round(top.x)} ${round(top.y)} V ${round(root.y)}`;
 
         return {
@@ -153,8 +157,6 @@ export const buildGeometry = (rows: RowMeasurement[], options: GeometryOptions):
         };
     }
 
-    const fork = nodes[forkIndex];
-    const tip = nodes[tipIndex];
     const bend = (tip.y - fork.y) * CURVE_TENSION;
     const handles = {
         from: { x: lanes.indie, y: fork.y + bend },
@@ -186,28 +188,29 @@ export const buildGeometry = (rows: RowMeasurement[], options: GeometryOptions):
  * and the write head only has to look like it is riding the line.
  */
 export const xAt = (lookup: LaneLookup, y: number) => {
-    if (lookup.length === 0) {
+    const first = lookup[0];
+
+    if (first === undefined) {
         return 0;
     }
-
-    const first = lookup[0];
 
     if (y <= first.y) {
         return first.x;
     }
 
-    for (let index = 1; index < lookup.length; index++) {
-        const to = lookup[index];
+    let from = first;
 
+    for (const to of lookup.slice(1)) {
         if (y <= to.y) {
-            const from = lookup[index - 1];
             const span = to.y - from.y;
 
             return from.x + (to.x - from.x) * (span === 0 ? 0 : (y - from.y) / span);
         }
+
+        from = to;
     }
 
-    return lookup[lookup.length - 1].x;
+    return from.x;
 };
 
 interface LookupInput {

@@ -4,6 +4,7 @@
 
 import { describe, expect, it } from 'vitest';
 import { stubRect } from '../../../test/motionEnv';
+import { itemAt } from '@/test/itemAt';
 import { createWordmarkFit, fitFontSize, shouldRefit } from './wordmarkFit';
 
 describe('fitFontSize', () => {
@@ -84,8 +85,8 @@ describe('createWordmarkFit', () => {
         document.body.appendChild(container);
         Object.defineProperty(container, 'clientWidth', { value: 900, configurable: true });
         stubRect(word, { width: 300 });
-        stubRect(letters[0], { width: 120 });
-        stubRect(letters[1], { width: 80 });
+        stubRect(itemAt(letters, 0), { width: 120 });
+        stubRect(itemAt(letters, 1), { width: 80 });
 
         return { container, word, letters };
     };
@@ -109,8 +110,8 @@ describe('createWordmarkFit', () => {
         createWordmarkFit({ container, word, letters }).run(true);
 
         // Assert
-        expect(letters[0].style.width).toBe('120px');
-        expect(letters[1].style.width).toBe('80px');
+        expect(itemAt(letters, 0).style.width).toBe('120px');
+        expect(itemAt(letters, 1).style.width).toBe('80px');
     });
 
     it('should drop the inline sizing when cleared', () => {
@@ -125,7 +126,7 @@ describe('createWordmarkFit', () => {
 
         // Assert
         expect(word.style.fontSize).toBe('');
-        expect(letters[0].style.width).toBe('');
+        expect(itemAt(letters, 0).style.width).toBe('');
     });
 
     it('should skip a re-run when the container width has not changed', () => {

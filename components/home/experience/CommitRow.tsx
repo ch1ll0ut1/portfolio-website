@@ -15,7 +15,7 @@ export interface Props {
     isCurrent: boolean;
     isHovered: boolean;
     /** Registers the row with the graph, which measures it. */
-    rowRef: (node: HTMLLIElement | null) => void;
+    rowRef?: (node: HTMLLIElement | null) => void;
     onHover: () => void;
     onLeave: () => void;
 }

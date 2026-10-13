@@ -158,7 +158,7 @@ export const createHeroIntro = ({ root, title, doc, caret, ibeam, classNames, ho
                 [{ transform: 'translateY(112%)' }, { transform: 'none' }],
                 {
                     duration: WORD_RISE_MS,
-                    delay: WORD_DELAY_MS + index * WORD_STAGGER_MS + lines[index] * LINE_STAGGER_MS,
+                    delay: WORD_DELAY_MS + index * WORD_STAGGER_MS + (lines[index] ?? 0) * LINE_STAGGER_MS,
                     easing: EASE.out,
                     fill: 'backwards',
                 },

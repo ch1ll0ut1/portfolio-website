@@ -7,6 +7,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { careerLog } from '@/config/career';
+import { itemAt } from '@/test/itemAt';
 import { installIntersectionObserver, installMatchMedia } from '../../../test/motionEnv';
 import { Experience } from './Experience';
 
@@ -101,7 +102,7 @@ describe('Experience', () => {
 
             // Assert
             items.forEach((item, index) => {
-                expect(item.textContent).toContain(careerLog[index].title);
+                expect(item.textContent).toContain(itemAt(careerLog, index).title);
             });
         });
 
@@ -145,7 +146,9 @@ describe('Experience', () => {
         it('should draw a node for every commit on each layer', () => {
             // Act
             const { container } = render(<Experience />);
-            const [track, ink] = Array.from(container.querySelectorAll('svg'));
+            const layers = container.querySelectorAll('svg');
+            const track = itemAt(layers, 0);
+            const ink = itemAt(layers, 1);
 
             // Assert: the track carries a node and a pulse ring per commit.
             expect(track.querySelectorAll('circle').length).toBeGreaterThanOrEqual(careerLog.length * 2);
@@ -158,19 +161,19 @@ describe('Experience', () => {
         it('should re-roll the hovered commit hash for a mouse', () => {
             // Arrange
             const { container } = render(<Experience />);
-            const row = screen.getAllByRole('listitem')[0];
+            const row = itemAt(screen.getAllByRole('listitem'), 0);
 
             // Act
             hover(row, 'mouse');
 
             // Assert: the scramble stashes the real hash before it starts.
-            expect(container.querySelector('[data-hash]')).toHaveAttribute('data-hash', careerLog[0].hash);
+            expect(container.querySelector('[data-hash]')).toHaveAttribute('data-hash', itemAt(careerLog, 0).hash);
         });
 
         it('should ignore hover from a touch pointer', () => {
             // Arrange
             const { container } = render(<Experience />);
-            const row = screen.getAllByRole('listitem')[0];
+            const row = itemAt(screen.getAllByRole('listitem'), 0);
 
             // Act
             hover(row, 'touch');

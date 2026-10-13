@@ -195,6 +195,10 @@ const buildTimeline = (input: TimelineInput): TimelineEvent[] => {
     for (let index = prompt; index < chars.length; index++) {
         const char = chars[index];
 
+        if (char === undefined) {
+            continue;
+        }
+
         at += timing.jitter ? perChar * (0.55 + Math.random() * 0.9) : perChar;
         events.push({
             at,
@@ -209,6 +213,10 @@ const buildTimeline = (input: TimelineInput): TimelineEvent[] => {
 
     for (let index = 1; index < lines.length; index++) {
         const line = lines[index];
+
+        if (line === undefined) {
+            continue;
+        }
 
         events.push({
             at,

@@ -65,4 +65,4 @@ export const LINES: ((renamed: boolean) => Token[])[] = [
 ];
 
 /** Centre line of a layer card, where the rail node sits. */
-export const mid = (index: number) => TOPS[index] + CARD_MID;
+export const mid = (index: number) => (TOPS[index] ?? 0) + CARD_MID;

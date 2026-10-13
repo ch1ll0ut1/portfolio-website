@@ -220,7 +220,7 @@ export const replaceLeaves = (root: HTMLElement, leaves: Leaf[]) => {
 export const lastTextNode = (root: HTMLElement): Text | null => {
     const nodes = textNodes(root).filter(node => node.data !== '');
 
-    return nodes.length > 0 ? nodes[nodes.length - 1] : null;
+    return nodes.at(-1) ?? null;
 };
 
 /** First `mark` element covering a character offset. */

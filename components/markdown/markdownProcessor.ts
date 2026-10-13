@@ -156,14 +156,20 @@ export function processMarkdownContent(content: string): MarkdownElement[] {
 
     while (i < lines.length) {
         const line = lines[i];
+        if (line === undefined) {
+            break;
+        }
+        const nextLine = lines[i + 1] ?? '';
 
         // Handle headings (1-6 levels)
         const headingMatch = /^(#{1,6})\s+(.+)$/.exec(line);
-        if (headingMatch) {
+        const headingHashes = headingMatch?.[1];
+        const headingText = headingMatch?.[2];
+        if (headingHashes !== undefined && headingText !== undefined) {
             elements.push({
                 type: 'heading',
-                level: headingMatch[1].length as 1 | 2 | 3 | 4 | 5 | 6,
-                content: headingMatch[2].trim(),
+                level: headingHashes.length as 1 | 2 | 3 | 4 | 5 | 6,
+                content: headingText.trim(),
             });
         }
         else if (line.startsWith('```')) {
@@ -186,7 +192,7 @@ export function processMarkdownContent(content: string): MarkdownElement[] {
             elements.push(quoteResult.element);
             i = quoteResult.nextIndex - 1; // -1 because loop will increment
         }
-        else if (line.includes('|') && i + 1 < lines.length && lines[i + 1].includes('|') && /^[\s|:-]+$/.test(lines[i + 1])) {
+        else if (line.includes('|') && nextLine.includes('|') && /^[\s|:-]+$/.test(nextLine)) {
             const tableResult = processTableBlock(lines, i);
             elements.push(tableResult.element);
             i = tableResult.nextIndex - 1; // -1 because loop will increment
@@ -199,11 +205,13 @@ export function processMarkdownContent(content: string): MarkdownElement[] {
         else if (/^!\[([^\]]*)\]\(([^)]+)\)$/.test(line.trim())) {
             // Handle image syntax: ![alt text](image_path)
             const imageMatch = /^!\[([^\]]*)\]\(([^)]+)\)$/.exec(line.trim());
-            if (imageMatch) {
+            const alt = imageMatch?.[1];
+            const src = imageMatch?.[2];
+            if (alt !== undefined && src !== undefined) {
                 elements.push({
                     type: 'image',
-                    alt: imageMatch[1],
-                    src: imageMatch[2],
+                    alt,
+                    src,
                 });
             }
         }
@@ -243,11 +251,16 @@ function processInlineFormatting(content: string): InlineSegment[] {
     let match;
 
     while ((match = linkRegex.exec(content)) !== null) {
+        const text = match[1];
+        const href = match[2];
+        if (text === undefined || href === undefined) {
+            continue;
+        }
         links.push({
             start: match.index,
             end: match.index + match[0].length,
-            text: match[1],
-            href: match[2],
+            text,
+            href,
         });
     }
 
@@ -372,13 +385,17 @@ function processInnerFormatting(
  * Returns the code block element and the next line index to process.
  */
 function processCodeBlock(lines: string[], startIndex: number): { element: CodeBlockElement; nextIndex: number } {
-    const startLine = lines[startIndex];
+    const startLine = lines[startIndex] ?? '';
     const language = startLine.replace('```', '').trim() || 'javascript';
     const codeLines: string[] = [];
 
     let i = startIndex + 1;
-    while (i < lines.length && !lines[i].startsWith('```')) {
-        codeLines.push(lines[i]);
+    while (i < lines.length) {
+        const line = lines[i];
+        if (line === undefined || line.startsWith('```')) {
+            break;
+        }
+        codeLines.push(line);
         i++;
     }
 
@@ -432,16 +449,22 @@ function processListBlock(lines: string[], startIndex: number, ordered = false):
 
     while (i < lines.length) {
         const line = lines[i];
-        const listMatch = listPattern.exec(line);
+        if (line === undefined) {
+            break;
+        }
+        const firstItemLine = listPattern.exec(line)?.[1];
 
-        if (listMatch) {
+        if (firstItemLine !== undefined) {
             // Start a new list item
-            const itemLines = [listMatch[1]];
+            const itemLines = [firstItemLine];
 
             // Look ahead for indented continuation text
             let j = i + 1;
             while (j < lines.length) {
                 const nextLine = lines[j];
+                if (nextLine === undefined) {
+                    break;
+                }
 
                 // If it's an indented line (starts with spaces/tabs), add to current item
                 if (/^\s+\S/.test(nextLine)) {
@@ -455,6 +478,9 @@ function processListBlock(lines: string[], startIndex: number, ordered = false):
                     let hasMoreContent = false;
                     while (k < lines.length) {
                         const lookAhead = lines[k];
+                        if (lookAhead === undefined) {
+                            break;
+                        }
                         if (/^\s+\S/.test(lookAhead)) {
                             hasMoreContent = true;
                             break;
@@ -509,7 +535,7 @@ function processListBlock(lines: string[], startIndex: number, ordered = false):
         }
         else if (line.trim() === '') {
             // Empty line might continue the list or end it
-            if (i + 1 < lines.length && nextLinePattern.test(lines[i + 1])) {
+            if (i + 1 < lines.length && nextLinePattern.test(lines[i + 1] ?? '')) {
                 // Continue to next item
             }
             else {
@@ -545,6 +571,9 @@ function processQuoteBlock(lines: string[], startIndex: number): { element: Quot
 
     while (i < lines.length) {
         const line = lines[i];
+        if (line === undefined) {
+            break;
+        }
 
         if (/^\s*>\s/.test(line)) {
             // Remove the leading whitespace, '>' and optional space
@@ -553,7 +582,7 @@ function processQuoteBlock(lines: string[], startIndex: number): { element: Quot
         }
         else if (line.trim() === '') {
             // Empty line might continue the quote or end it
-            if (i + 1 < lines.length && /^\s*>\s/.test(lines[i + 1])) {
+            if (i + 1 < lines.length && /^\s*>\s/.test(lines[i + 1] ?? '')) {
                 quoteLines.push(''); // Add empty line to quote
             }
             else {
@@ -585,7 +614,7 @@ function processQuoteBlock(lines: string[], startIndex: number): { element: Quot
  * Returns the table element and the next line index to process.
  */
 function processTableBlock(lines: string[], startIndex: number): { element: TableElement; nextIndex: number } {
-    const headerLine = lines[startIndex];
+    const headerLine = lines[startIndex] ?? '';
 
     // Parse headers from the first line
     const headers = headerLine
@@ -600,6 +629,9 @@ function processTableBlock(lines: string[], startIndex: number): { element: Tabl
 
     while (i < lines.length) {
         const line = lines[i];
+        if (line === undefined) {
+            break;
+        }
 
         // Check if this line is a table row (contains pipes)
         if (line.includes('|')) {
@@ -620,7 +652,7 @@ function processTableBlock(lines: string[], startIndex: number): { element: Tabl
         }
         else if (line.trim() === '') {
             // Empty line might end the table or continue it
-            if (i + 1 < lines.length && lines[i + 1].includes('|')) {
+            if (lines[i + 1]?.includes('|') === true) {
                 // Continue to next row
             }
             else {

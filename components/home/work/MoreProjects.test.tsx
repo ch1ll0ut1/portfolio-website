@@ -8,6 +8,7 @@
 
 import { afterEach, describe, expect, it } from 'vitest';
 import { act, fireEvent, render, screen } from '@testing-library/react';
+import { itemAt } from '../../../test/itemAt';
 import { installMatchMedia } from '../../../test/motionEnv';
 import { FINE_POINTER_QUERY } from '../../../lib/motion';
 import { projectsIndex } from '../../../config/projectsIndex';
@@ -106,14 +107,14 @@ describe('MoreProjects', () => {
             stubOffsets(rows);
 
             // Act
-            focus(rows[2]);
+            focus(itemAt(rows, 2));
 
             // Assert
             expect(marker(container).className).toContain(styles.markerOn);
             expect(marker(container).style.transform).toContain('140px');
 
             // Act
-            focus(rows[4]);
+            focus(itemAt(rows, 4));
 
             // Assert
             expect(marker(container).style.transform).toContain('280px');
@@ -126,12 +127,12 @@ describe('MoreProjects', () => {
             const rows = screen.getAllByRole('listitem');
 
             // Act
-            focus(rows[1]);
+            focus(itemAt(rows, 1));
 
             // Assert
-            expect(rows[1].className).toContain(styles.rowActive);
-            expect(rows[0].className).not.toContain(styles.rowActive);
-            expect(rows[1].closest('ol')?.className).toContain(styles.listHot);
+            expect(itemAt(rows, 1).className).toContain(styles.rowActive);
+            expect(itemAt(rows, 0).className).not.toContain(styles.rowActive);
+            expect(itemAt(rows, 1).closest('ol')?.className).toContain(styles.listHot);
         });
 
         it('should clear the active row when focus leaves the list', () => {
@@ -139,14 +140,14 @@ describe('MoreProjects', () => {
             const { container } = setup();
             const rows = screen.getAllByRole('listitem');
 
-            focus(rows[1]);
+            focus(itemAt(rows, 1));
 
             // Act
-            blur(rows[1]);
+            blur(itemAt(rows, 1));
 
             // Assert
             expect(marker(container).className).not.toContain(styles.markerOn);
-            expect(rows[1].className).not.toContain(styles.rowActive);
+            expect(itemAt(rows, 1).className).not.toContain(styles.rowActive);
         });
     });
 
@@ -157,19 +158,19 @@ describe('MoreProjects', () => {
             const rows = screen.getAllByRole('listitem');
 
             stubOffsets(rows);
-            focus(rows[3]);
+            focus(itemAt(rows, 3));
 
             const fromFocus = marker(container).style.transform;
 
-            blur(rows[3]);
+            blur(itemAt(rows, 3));
 
             // Act
-            fireEvent.pointerOver(rows[3]);
+            fireEvent.pointerOver(itemAt(rows, 3));
 
             // Assert
             expect(marker(container).style.transform).toBe(fromFocus);
             expect(marker(container).className).toContain(styles.markerOn);
-            expect(rows[3].className).toContain(styles.rowActive);
+            expect(itemAt(rows, 3).className).toContain(styles.rowActive);
         });
 
         it('should show the preview card for a hovered row', () => {
@@ -179,10 +180,10 @@ describe('MoreProjects', () => {
             const rows = screen.getAllByRole('listitem');
 
             // Act
-            fireEvent.pointerOver(rows[0]);
+            fireEvent.pointerOver(itemAt(rows, 0));
 
             // Assert
-            expect(screen.getByText(`~/work/${projectsIndex[0].id}`)).toBeInTheDocument();
+            expect(screen.getByText(`~/work/${itemAt(projectsIndex, 0).id}`)).toBeInTheDocument();
         });
 
         it('should not show the preview card for a keyboard-focused row', () => {
@@ -191,11 +192,11 @@ describe('MoreProjects', () => {
             const rows = screen.getAllByRole('listitem');
 
             // Act
-            focus(rows[0]);
+            focus(itemAt(rows, 0));
 
             // Assert
             expect(marker(container).className).toContain(styles.markerOn);
-            expect(screen.queryByText(`~/work/${projectsIndex[0].id}`)).toBeNull();
+            expect(screen.queryByText(`~/work/${itemAt(projectsIndex, 0).id}`)).toBeNull();
         });
     });
 
@@ -207,10 +208,10 @@ describe('MoreProjects', () => {
             const rows = screen.getAllByRole('listitem');
 
             // Act
-            fireEvent.pointerOver(rows[0]);
+            fireEvent.pointerOver(itemAt(rows, 0));
 
             // Assert
-            expect(screen.queryByText(`~/work/${projectsIndex[0].id}`)).toBeNull();
+            expect(screen.queryByText(`~/work/${itemAt(projectsIndex, 0).id}`)).toBeNull();
         });
 
         it('should still activate rows from the keyboard without a fine pointer', () => {
@@ -219,7 +220,7 @@ describe('MoreProjects', () => {
             const rows = screen.getAllByRole('listitem');
 
             // Act
-            focus(rows[2]);
+            focus(itemAt(rows, 2));
 
             // Assert
             expect(marker(container).className).toContain(styles.markerOn);

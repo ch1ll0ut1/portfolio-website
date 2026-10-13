@@ -58,7 +58,7 @@ export const Work: FC = () => {
                             key={study.id}
                             study={study}
                             index={index}
-                            covered={covered[index]}
+                            covered={covered[index] ?? false}
                         />
                     ))}
                 </div>

@@ -208,7 +208,7 @@ export const insertText = (
     const inserted = Array.from(text).slice(0, Math.max(0, room));
     // Pasted text picks up the formatting it lands in, like typing would.
     const templateIndex = from > 0 ? from - 1 : to;
-    const template = templateIndex < chars.length ? chars[templateIndex] : { char: '', ...NO_MARKS };
+    const template = chars[templateIndex] ?? { char: '', ...NO_MARKS };
     const next = [
         ...chars.slice(0, from),
         ...inserted.map(char => ({

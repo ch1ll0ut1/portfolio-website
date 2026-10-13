@@ -30,9 +30,7 @@ export const useFocusTrap = (ref: RefObject<HTMLElement | null>) => {
         const restore = document.activeElement;
         const entry = focusableWithin(container);
 
-        if (entry.length > 0) {
-            entry[0].focus({ preventScroll: true });
-        }
+        entry[0]?.focus({ preventScroll: true });
 
         const handleKeyDown = (event: KeyboardEvent) => {
             if (event.key !== 'Tab') {
@@ -40,15 +38,15 @@ export const useFocusTrap = (ref: RefObject<HTMLElement | null>) => {
             }
 
             const items = focusableWithin(container);
+            const first = items[0];
+            const last = items[items.length - 1];
 
-            if (items.length === 0) {
+            if (first === undefined || last === undefined) {
                 event.preventDefault();
 
                 return;
             }
 
-            const first = items[0];
-            const last = items[items.length - 1];
             const active = document.activeElement;
             const atEdge = event.shiftKey ? active === first : active === last;
 

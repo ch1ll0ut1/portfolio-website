@@ -176,13 +176,13 @@ export const buildEko = (
         samples.shift();
         samples.push({ latency, after: wasAfter });
 
-        for (let i = 0; i < BAR_COUNT; i++) {
+        bars.forEach((bar, i) => {
             const sample = samples[i];
             const height = sample ? clamp(sample.latency / WORST_LATENCY, 0.06, 1) : 0.02;
 
-            bars[i].style.transform = `scaleY(${height.toFixed(3)})`;
-            bars[i].classList.toggle(c.barAfter, sample?.after === true);
-        }
+            bar.style.transform = `scaleY(${height.toFixed(3)})`;
+            bar.classList.toggle(c.barAfter, sample?.after === true);
+        });
     };
 
     const step = (delta: number) => {
@@ -194,9 +194,9 @@ export const buildEko = (
             lane.spawn -= delta;
 
             if (lane.spawn <= 0) {
-                const count = lane.pills.length;
+                const newest = lane.pills.at(-1);
 
-                if (count === 0 || lane.pills[count - 1].x > START_X + PILL_GAP) {
+                if (newest === undefined || newest.x > START_X + PILL_GAP) {
                     lane.pills.push({ el: takePill(lane), x: START_X, born: simNow, passed: false, waiting: false });
                 }
 
@@ -205,9 +205,11 @@ export const buildEko = (
 
             lane.gateAt -= delta;
 
-            for (let i = 0; i < lane.pills.length; i++) {
-                const pill = lane.pills[i];
-                let limit = i > 0 ? lane.pills[i - 1].x - PILL_GAP : Infinity;
+            // Each pill queues behind the one ahead of it, which has already moved.
+            let queueLimit = Infinity;
+
+            for (const pill of lane.pills) {
+                let limit = queueLimit;
 
                 if (!after && !pill.passed && pill.x <= GATE_X - 26) {
                     if (pill.x >= GATE_X - 27.5 && lane.gateAt <= 0) {
@@ -234,9 +236,10 @@ export const buildEko = (
 
                 pill.x = next;
                 pill.el.style.transform = `translate3d(${pill.x.toFixed(1)}px,-6px,0)`;
+                queueLimit = pill.x - PILL_GAP;
             }
 
-            while (lane.pills.length > 0 && lane.pills[0].x >= END_X) {
+            while (lane.pills[0] !== undefined && lane.pills[0].x >= END_X) {
                 const pill = lane.pills.shift();
 
                 if (!pill) {

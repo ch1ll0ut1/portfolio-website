@@ -104,15 +104,20 @@ export const useCareerLog = (count: number): CareerLogState => {
     const applyProgress = useCallback((progress: number, quiet: boolean) => {
         const snapshot = geometryRef.current;
 
-        if (!snapshot || snapshot.nodes.length === 0) {
+        if (!snapshot) {
+            return;
+        }
+
+        const { nodes, height, lookup } = snapshot;
+        const first = nodes[0];
+        const last = nodes.at(-1);
+
+        if (first === undefined || last === undefined) {
             return;
         }
 
         progressRef.current = progress;
 
-        const { nodes, height, lookup } = snapshot;
-        const first = nodes[0];
-        const last = nodes[nodes.length - 1];
         const y = progress * height;
 
         inkRef.current?.style.setProperty('--ink', `${Math.max(0, height - y).toFixed(1)}px`);

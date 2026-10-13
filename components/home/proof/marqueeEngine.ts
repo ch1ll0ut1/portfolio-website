@@ -78,7 +78,13 @@ export const startMarquee = ({ viewport, track, liveClass }: MarqueeOptions) => 
         const center = viewportWidth / 2;
 
         items.forEach((item, index) => {
-            let position = centers[index] + offset;
+            const itemCenter = centers[index];
+
+            if (itemCenter === undefined) {
+                return;
+            }
+
+            let position = itemCenter + offset;
 
             // An item that has scrolled past the left edge reads as the copy on
             // the right, which is where it will next be seen.

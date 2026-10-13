@@ -9,6 +9,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { itemAt } from '@/test/itemAt';
 import { installMatchMedia } from '../../test/motionEnv';
 import { CommandPalette } from './CommandPalette';
 
@@ -116,7 +117,7 @@ describe('<CommandPalette>', () => {
 
         await user.keyboard('{ArrowUp}');
 
-        expect(options()[last].getAttribute('aria-selected')).toBe('true');
+        expect(itemAt(options(), last).getAttribute('aria-selected')).toBe('true');
     });
 
     it('should point aria-activedescendant at the selected row', async () => {
@@ -156,7 +157,7 @@ describe('<CommandPalette>', () => {
 
         await mount();
         await user.type(screen.getByRole('combobox'), 'blog');
-        await user.click(options()[0]);
+        await user.click(itemAt(options(), 0));
 
         expect(onClose).toHaveBeenCalled();
     });

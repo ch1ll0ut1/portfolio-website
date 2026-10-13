@@ -95,11 +95,13 @@ export const createGlyphGrid = (
         offscreenContext.fillStyle = dotColor;
 
         for (let index = 0; index < count; index += 1) {
-            if (mask[index] < 0.02) {
+            const fade = mask[index] ?? 0;
+
+            if (fade < 0.02) {
                 continue;
             }
 
-            offscreenContext.globalAlpha = dotAlpha * mask[index];
+            offscreenContext.globalAlpha = dotAlpha * fade;
             offscreenContext.fillRect(cellX(index) - 1, cellY(index) - 1, 2, 2);
         }
 
@@ -154,21 +156,22 @@ export const createGlyphGrid = (
         context.textBaseline = 'middle';
 
         for (let index = 0; index < count; index += 1) {
-            const level = energy[index];
+            const level = energy[index] ?? 0;
+            const fade = mask[index] ?? 0;
 
-            if (level < 0.02 || mask[index] < 0.02) {
+            if (level < 0.02 || fade < 0.02) {
                 continue;
             }
 
+            const glyph = GLYPHS[glyphs[index] ?? 0] ?? '';
             const x = cellX(index);
             const y = cellY(index);
-            const glyph = GLYPHS[glyphs[index]];
-            const alpha = Math.min(1, level * 1.15) * (0.35 + 0.65 * mask[index]);
-            const shade = tint[index];
+            const alpha = Math.min(1, level * 1.15) * (0.35 + 0.65 * fade);
+            const shade = tint[index] ?? 0;
 
             // Dim the blitted dot before drawing the glyph over it.
             context.clearRect(x - 2, y - 2, 4, 4);
-            context.globalAlpha = dotAlpha * mask[index] * (1 - level);
+            context.globalAlpha = dotAlpha * fade * (1 - level);
             context.fillStyle = dotColor;
             context.fillRect(x - 1, y - 1, 2, 2);
 
@@ -187,18 +190,20 @@ export const createGlyphGrid = (
     };
 
     const exciteCell = (index: number, level: number, shade: number) => {
-        if (index < 0 || index >= count || level <= energy[index]) {
+        const current = energy[index];
+
+        if (index < 0 || current === undefined || level <= current) {
             return;
         }
 
         // A cell only re-rolls its glyph once it has gone cold, so a character
         // stays readable for the length of its trail.
-        if (energy[index] < 0.05) {
+        if (current < 0.05) {
             glyphs[index] = randomGlyph();
         }
 
         energy[index] = level;
-        tint[index] = Math.max(tint[index], shade);
+        tint[index] = Math.max(tint[index] ?? 0, shade);
     };
 
     return {
@@ -210,9 +215,11 @@ export const createGlyphGrid = (
             let live = false;
 
             for (let index = 0; index < count; index += 1) {
-                if (energy[index] > 0.002) {
-                    energy[index] *= factor;
-                    tint[index] *= factor;
+                const level = energy[index] ?? 0;
+
+                if (level > 0.002) {
+                    energy[index] = level * factor;
+                    tint[index] = (tint[index] ?? 0) * factor;
                     live = true;
                 }
                 else {

@@ -79,9 +79,15 @@ const measureMark = (title: HTMLElement): MarkGeometry | null => {
 /** Index of the character boundary the pointer has dragged past. */
 const boundaryAt = (boundaries: number[], offset: number) => {
     let boundary = 0;
+    // Each edge sits midway between a boundary and the one before it; the
+    // first boundary, having none before it, is its own edge.
+    let previous = boundaries[0] ?? 0;
 
     for (let index = 0; index < boundaries.length; index += 1) {
-        const edge = index === 0 ? boundaries[0] : (boundaries[index - 1] + boundaries[index]) / 2;
+        const current = boundaries[index] ?? previous;
+        const edge = (previous + current) / 2;
+
+        previous = current;
 
         if (offset >= edge) {
             boundary = index;
@@ -162,11 +168,11 @@ export const runSelectionDrag = ({
         const pad = 0.035 * fontSize;
         const covered = boundary >= last
             ? 1
-            : boundary === 0 ? 0 : (geometry.boundaries[boundary] + pad) / (geometry.width + 2 * pad);
+            : boundary === 0 ? 0 : ((geometry.boundaries[boundary] ?? 0) + pad) / (geometry.width + 2 * pad);
 
         geometry.mark.style.setProperty('--hl', covered.toFixed(4));
 
-        const caretX = left + (boundary >= last ? geometry.width : geometry.boundaries[boundary]);
+        const caretX = left + (boundary >= last ? geometry.width : geometry.boundaries[boundary] ?? 0);
 
         caret.style.height = `${height}px`;
         caret.style.transform = `translate3d(${caretX.toFixed(1)}px, ${top.toFixed(1)}px, 0)`;
