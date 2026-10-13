@@ -1,8 +1,9 @@
 /**
  * Tests for the cookie preferences dialog.
  *
- * Mostly a11y wiring: it is a modal dialog that must name itself, take focus,
- * keep Tab inside, and cancel on Escape without saving anything.
+ * Mostly a11y wiring: it is a native modal dialog that must name itself, take
+ * focus, and cancel on Escape without saving anything. Keeping Tab inside and
+ * the page behind inert is `showModal()`'s job, checked in the browser.
  */
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -65,7 +66,8 @@ describe('<ConsentPreferencesModal>', () => {
 
         const dialog = screen.getByRole('dialog');
 
-        expect(dialog).toHaveAttribute('aria-modal', 'true');
+        expect(dialog.tagName).toBe('DIALOG');
+        expect(dialog).toHaveAttribute('open');
         expect(dialog).toHaveAccessibleName('Cookie preferences');
     });
 
@@ -148,26 +150,28 @@ describe('<ConsentPreferencesModal>', () => {
         expect(onClose).toHaveBeenCalledTimes(2);
     });
 
-    it('should keep Tab inside the dialog', async () => {
+    it('should close from the backdrop', async () => {
         const user = userEvent.setup();
-        const outside = document.createElement('button');
+        const { container } = await mount();
+        const scrim = container.querySelector('dialog > [aria-hidden="true"]');
 
-        document.body.appendChild(outside);
-        await mount();
+        if (!scrim) {
+            throw new Error('The dialog has no scrim');
+        }
 
-        const close = screen.getByRole('button', { name: 'Close cookie preferences' });
-        const save = screen.getByRole('button', { name: 'Save preferences' });
+        await user.click(scrim);
 
-        save.focus();
-        await user.tab();
+        expect(onClose).toHaveBeenCalled();
+        expect(onSave).not.toHaveBeenCalled();
+    });
 
-        expect(close).toHaveFocus();
+    it('should leave the modal state when it unmounts', async () => {
+        const view = await mount();
+        const dialog = screen.getByRole('dialog');
 
-        await user.tab({ shift: true });
+        view.unmount();
 
-        expect(save).toHaveFocus();
-        expect(outside).not.toHaveFocus();
-        outside.remove();
+        expect(dialog).not.toHaveAttribute('open');
     });
 
     it('should restore focus to the element that opened it', async () => {

@@ -2,7 +2,7 @@
 
 import { type FC, type KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { watchMedia } from '@/lib/motion';
+import { useMediaQuery } from '@/lib/motion';
 import { commands } from '@/config/commands';
 import { CommandList } from './CommandList';
 import { Overlay } from './Overlay';
@@ -25,10 +25,12 @@ interface Props {
 }
 
 /**
- * The ⌘K command palette.
+ * The ⌘K command palette, built to the APG combobox-with-listbox pattern.
  *
  * One source of truth for "where can I go and what can I do", filtered by a
- * plain substring match over label, hint and group.
+ * plain substring match over label, hint and group. Focus never leaves the
+ * input: the arrows move `aria-activedescendant`, and a polite status line
+ * reports how many commands the query left.
  */
 export const CommandPalette: FC<Props> = ({ open, onClose, onOpenShortcuts }) => {
     const router = useRouter();
@@ -36,28 +38,26 @@ export const CommandPalette: FC<Props> = ({ open, onClose, onOpenShortcuts }) =>
     const [query, setQuery] = useState('');
     const [selected, setSelected] = useState(0);
     const [intro, setIntro] = useState(false);
-    const [narrow, setNarrow] = useState(false);
+    const [wasOpen, setWasOpen] = useState(false);
+    const narrow = useMediaQuery(NARROW_QUERY);
 
-    const filtered = useMemo(() => filterCommands(commands, query), [query]);
-    // The filter can shrink the list under the selection, so the rendered index
-    // is derived rather than stored — nothing has to chase it back into range.
-    const active = Math.min(selected, Math.max(0, filtered.length - 1));
+    // Every opening starts from a clean palette. Adjusted during render, as
+    // React recommends for state that follows a prop, so the first painted
+    // frame is already the fresh one.
+    if (open !== wasOpen) {
+        setWasOpen(open);
+
+        if (open) {
+            setQuery('');
+            setSelected(0);
+            setIntro(true);
+        }
+    }
 
     useEffect(() => {
-        // Read once as well as subscribe: `watchMedia` only reports changes.
-        setNarrow(window.matchMedia(NARROW_QUERY).matches);
-
-        return watchMedia(NARROW_QUERY, setNarrow);
-    }, []);
-
-    useEffect(() => {
-        if (!open) {
+        if (!intro) {
             return;
         }
-
-        setQuery('');
-        setSelected(0);
-        setIntro(true);
 
         const timer = window.setTimeout(() => {
             setIntro(false);
@@ -66,7 +66,13 @@ export const CommandPalette: FC<Props> = ({ open, onClose, onOpenShortcuts }) =>
         return () => {
             window.clearTimeout(timer);
         };
-    }, [open]);
+    }, [intro]);
+
+    const filtered = useMemo(() => filterCommands(commands, query), [query]);
+    // The filter can shrink the list under the selection, so the rendered index
+    // is derived rather than stored — nothing has to chase it back into range.
+    const active = Math.min(selected, Math.max(0, filtered.length - 1));
+    const expanded = filtered.length > 0;
 
     const run = (index: number) => {
         // `.at` rather than an index: a stale hover index must not crash the run.
@@ -98,8 +104,8 @@ export const CommandPalette: FC<Props> = ({ open, onClose, onOpenShortcuts }) =>
         }, RUN_DELAY_MS);
     };
 
-    const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-        if (filtered.length === 0) {
+    const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+        if (!expanded) {
             return;
         }
 
@@ -118,13 +124,7 @@ export const CommandPalette: FC<Props> = ({ open, onClose, onOpenShortcuts }) =>
     };
 
     return (
-        <Overlay
-            open={open}
-            label="Command menu"
-            focusRef={inputRef}
-            onClose={onClose}
-            onKeyDown={handleKeyDown}
-        >
+        <Overlay open={open} label="Command menu" focusRef={inputRef} onClose={onClose}>
             <div className={styles.search}>
                 <input
                     className={styles.input}
@@ -134,15 +134,18 @@ export const CommandPalette: FC<Props> = ({ open, onClose, onOpenShortcuts }) =>
                     autoComplete="off"
                     spellCheck={false}
                     role="combobox"
-                    aria-expanded
+                    aria-label="Search commands"
+                    aria-autocomplete="list"
+                    aria-expanded={expanded}
                     aria-controls={LIST_ID}
-                    aria-activedescendant={filtered.length > 0 ? `${OPTION_PREFIX}-${active}` : undefined}
+                    aria-activedescendant={expanded ? `${OPTION_PREFIX}-${active}` : undefined}
                     value={query}
                     onChange={(event) => {
                         setQuery(event.target.value);
                         setSelected(0);
                         setIntro(false);
                     }}
+                    onKeyDown={handleKeyDown}
                 />
                 <kbd>esc</kbd>
             </div>
@@ -155,6 +158,8 @@ export const CommandPalette: FC<Props> = ({ open, onClose, onOpenShortcuts }) =>
                 onHover={setSelected}
                 onRun={run}
             />
+            {expanded ? null : <p className={styles.empty}>No matches. Try “work” or “email”.</p>}
+            <p className="visually-hidden" role="status">{resultStatus(query, filtered.length)}</p>
             <div className={styles.foot} aria-hidden="true">
                 <span>
                     <kbd>↑</kbd>
@@ -175,4 +180,21 @@ export const CommandPalette: FC<Props> = ({ open, onClose, onOpenShortcuts }) =>
             </div>
         </Overlay>
     );
+};
+
+/**
+ * What the status line announces. Silent until something is typed: on open the
+ * dialog's name and the input are announced already, and a count on top would
+ * talk over them.
+ */
+const resultStatus = (query: string, count: number) => {
+    if (query.trim() === '') {
+        return '';
+    }
+
+    if (count === 0) {
+        return 'No matching commands';
+    }
+
+    return count === 1 ? '1 command' : `${count} commands`;
 };

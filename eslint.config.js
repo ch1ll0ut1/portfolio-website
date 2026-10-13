@@ -168,26 +168,6 @@ export default tseslint.config(
         },
     },
     {
-        // A4: the command palette is reworked to the APG combobox pattern.
-        files: ['components/chrome/CommandPalette.tsx', 'components/chrome/CommandList.tsx'],
-        rules: {
-            'react-hooks/set-state-in-effect': 'warn',
-            'jsx-a11y/click-events-have-key-events': 'warn',
-        },
-    },
-    {
-        // A5: the hand-rolled modals move to native `<dialog>` + `showModal()`.
-        files: [
-            'components/chrome/Overlay.tsx',
-            'components/chrome/ShortcutsOverlay.tsx',
-            'components/consent/ConsentPreferencesModal.tsx',
-        ],
-        rules: {
-            'react-hooks/set-state-in-effect': 'warn',
-            'jsx-a11y/no-noninteractive-element-interactions': 'warn',
-        },
-    },
-    {
         // A3: the contenteditable h1 becomes an explicit, opt-in textbox widget.
         files: ['components/home/hero/HeadlineEditor.tsx'],
         rules: {

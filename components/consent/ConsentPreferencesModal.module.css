@@ -1,12 +1,31 @@
 /* The preferences dialog. Same shell as the command palette and the shortcuts
-   list: a blurred scrim over the page, a surface panel with hairline borders. */
+   list: a blurred scrim over the page, a surface panel with hairline borders,
+   on a native modal <dialog> stretched over the viewport. */
 .root {
     position: fixed;
     inset: 0;
     z-index: 100;
-    display: grid;
+    display: none;
     place-items: center;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    max-height: none;
+    margin: 0;
     padding: calc(16px + env(safe-area-inset-top, 0px)) 16px calc(16px + env(safe-area-inset-bottom, 0px));
+    border: 0;
+    background: transparent;
+    color: inherit;
+    overflow: hidden;
+}
+
+.root[open] {
+    display: grid;
+}
+
+/* The scrim below is the visible backdrop. */
+.root::backdrop {
+    background: transparent;
 }
 
 .scrim {

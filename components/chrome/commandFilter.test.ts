@@ -8,7 +8,7 @@
 
 import { describe, expect, it } from 'vitest';
 import type { Command } from '@/config/commands';
-import { buildCommandRows, filterCommands } from './commandFilter';
+import { filterCommands, groupCommands } from './commandFilter';
 
 const make = (id: string, group: string, label: string, hint = ''): Command => ({
     id,
@@ -50,32 +50,30 @@ describe('filterCommands', () => {
     });
 });
 
-describe('buildCommandRows', () => {
-    it('should insert a heading before each new group', () => {
-        const rows = buildCommandRows(sample);
+describe('groupCommands', () => {
+    it('should gather consecutive commands under their heading', () => {
+        const groups = groupCommands(sample);
 
-        expect(rows.map(row => (row.kind === 'group' ? `#${row.label}` : row.command.id))).toEqual([
-            '#Go to',
-            'work',
-            'services',
-            '#Actions',
-            'email',
+        expect(groups.map(group => [group.label, group.items.map(item => item.command.id)])).toEqual([
+            ['Go to', ['work', 'services']],
+            ['Actions', ['email']],
         ]);
     });
 
     it('should number item indices by position in the filtered list, not the full one', () => {
-        const rows = buildCommandRows(filterCommands(sample, 'Actions'));
-        const items = rows.filter(row => row.kind === 'item');
+        const items = groupCommands(filterCommands(sample, 'Actions')).flatMap(group => group.items);
 
         expect(items).toHaveLength(1);
-        expect(items.every(row => row.index === 0)).toBe(true);
+        expect(items.every(item => item.index === 0)).toBe(true);
     });
 
     it('should number stagger order across headings and items together', () => {
-        expect(buildCommandRows(sample).map(row => row.order)).toEqual([0, 1, 2, 3, 4]);
+        const orders = groupCommands(sample).flatMap(group => [group.order, ...group.items.map(item => item.order)]);
+
+        expect(orders).toEqual([0, 1, 2, 3, 4]);
     });
 
     it('should return nothing for an empty list', () => {
-        expect(buildCommandRows([])).toEqual([]);
+        expect(groupCommands([])).toEqual([]);
     });
 });

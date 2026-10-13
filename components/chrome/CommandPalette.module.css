@@ -77,7 +77,7 @@
 }
 
 .empty {
-    padding: 18px 12px;
+    padding: 24px 18px;
     color: var(--muted);
 }
 
@@ -145,7 +145,8 @@
     }
 }
 
-:global(.motion) .list.intro > li {
+:global(.motion) .list.intro .group,
+:global(.motion) .list.intro .item {
     animation: cmdk-in .45s var(--ease-out) both;
     animation-delay: calc(60ms + var(--i, 0) * 22ms);
 }

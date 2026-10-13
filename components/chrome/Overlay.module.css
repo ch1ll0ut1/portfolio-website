@@ -1,13 +1,40 @@
 /* Shared shell for the command palette and the shortcuts list: a blurred scrim
-   with a panel dropped in from above. Motion is gated on the global `.motion`
-   class, so with motion off the overlay simply appears. */
+   with a panel dropped in from above, on a native modal <dialog>. Motion is
+   gated on the global `.motion` class, so with motion off the overlay simply
+   appears. */
 .root {
     position: fixed;
     inset: 0;
     z-index: 95;
-    display: grid;
+    display: none;
     place-items: start center;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    max-height: none;
+    margin: 0;
     padding: calc(12vh + env(safe-area-inset-top, 0px)) 16px 16px;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    overflow: hidden;
+}
+
+/* `closing` keeps the dialog painted, outside the top layer, while the exit
+   transition plays. */
+.root[open],
+.root.closing {
+    display: grid;
+}
+
+.root.closing {
+    pointer-events: none;
+}
+
+/* The scrim below is the visible backdrop; it fades with the panel, which the
+   native one cannot do on the way out. */
+.root::backdrop {
+    background: transparent;
 }
 
 .scrim {

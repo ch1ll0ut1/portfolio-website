@@ -1,10 +1,12 @@
 'use client';
 
-import { type CSSProperties, type FC, type KeyboardEvent, useEffect, useRef, useState } from 'react';
+import { type CSSProperties, type FC, useCallback, useRef } from 'react';
 import { Overlay } from './Overlay';
-import { isApplePlatform } from './isApplePlatform';
 import { orderedChordSections } from './orderedChordSections';
+import { useApplePlatform } from './useApplePlatform';
 import styles from './ShortcutsOverlay.module.css';
+
+const TITLE_ID = 'shortcuts-title';
 
 /** `--i` drives the row stagger; the CSS reads it per row. */
 interface RowStyle extends CSSProperties {
@@ -30,31 +32,27 @@ interface Props {
  */
 export const ShortcutsOverlay: FC<Props> = ({ open, onClose }) => {
     const closeRef = useRef<HTMLButtonElement>(null);
-    const [apple, setApple] = useState(false);
+    const apple = useApplePlatform();
 
-    useEffect(() => {
-        setApple(isApplePlatform());
-    }, []);
-
-    const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    const handleKeyDown = useCallback((event: KeyboardEvent) => {
         // `?` opened this, so `?` closes it again.
         if (event.key === '?') {
             event.preventDefault();
             onClose();
         }
-    };
+    }, [onClose]);
 
     return (
         <Overlay
             open={open}
-            labelledBy="shortcuts-title"
+            labelledBy={TITLE_ID}
             panelClassName={styles.panel}
             focusRef={closeRef}
             onClose={onClose}
             onKeyDown={handleKeyDown}
         >
             <div className={styles.head}>
-                <p className={styles.title} id="shortcuts-title">Keyboard shortcuts</p>
+                <h2 className={styles.title} id={TITLE_ID}>Keyboard shortcuts</h2>
                 <button
                     className={styles.close}
                     ref={closeRef}

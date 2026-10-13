@@ -1,11 +1,14 @@
 'use client';
 
-import { type FC, type KeyboardEvent, type ReactNode, type RefObject, useEffect, useRef, useState } from 'react';
+import { type FC, type ReactNode, type RefObject, useEffect, useRef } from 'react';
 import { prefersReducedMotion } from '@/lib/motion';
 import styles from './Overlay.module.css';
 
-/** Matches the panel's exit transition, so the node leaves after it fades. */
+/** Matches the panel's exit transition, so the node is hidden after it fades. */
 const EXIT_MS = 200;
+
+/** Dialogs this component closed itself, whose `close` event is not news. */
+const closedHere = new WeakSet<HTMLDialogElement>();
 
 interface Props {
     open: boolean;
@@ -14,110 +17,140 @@ interface Props {
     labelledBy?: string;
     /** Extra class on the panel, for overlays that want a different width. */
     panelClassName?: string;
-    /** Focused on open, and where Tab is sent back to while open. */
+    /** Focused on open. */
     focusRef: RefObject<HTMLElement | null>;
     onClose: () => void;
-    /** Keys left over after Escape and Tab have been handled. */
-    onKeyDown?: (event: KeyboardEvent<HTMLDivElement>) => void;
+    /** Keys pressed anywhere inside the overlay, after Escape is handled. */
+    onKeyDown?: (event: KeyboardEvent) => void;
     children: ReactNode;
 }
 
 /**
- * A modal overlay with the design's two-stage open.
+ * A modal overlay with the design's two-stage open, on a native `<dialog>`.
  *
- * The node mounts first and only gains `open` on the next frame, because a
- * transition cannot run from a state the browser never painted. Closing runs
- * in reverse: the class comes off, focus goes back to wherever it came from,
- * and the node unmounts once the exit has played.
+ * `showModal()` is what makes it modal: the page behind is inert, so Tab, the
+ * virtual cursor and pointer clicks cannot reach it, and Escape arrives as the
+ * dialog's `cancel` event. The open state is still owned by the parent, so
+ * Escape asks it to close rather than closing the dialog behind its back.
+ *
+ * The dialog opens without the `open` class and gains it on the next frame,
+ * because a transition cannot run from a state the browser never painted.
+ * Closing runs in reverse: the dialog leaves the top layer straight away, so
+ * focus can go back to wherever it came from, and stays painted under an
+ * inert `closing` class until the exit has played.
  */
 export const Overlay: FC<Props> = ({ open, label, labelledBy, panelClassName, focusRef, onClose, onKeyDown, children }) => {
-    const [mounted, setMounted] = useState(false);
-    const [shown, setShown] = useState(false);
-    const restoreRef = useRef<Element | null>(null);
+    const dialogRef = useRef<HTMLDialogElement>(null);
 
     useEffect(() => {
-        if (open) {
-            restoreRef.current = document.activeElement;
-            setMounted(true);
+        const dialog = dialogRef.current;
 
+        if (!open || !dialog) {
             return;
         }
 
-        setShown(false);
+        const restore = document.activeElement;
 
-        const previous = restoreRef.current;
+        dialog.inert = false;
+        dialog.classList.remove(styles.closing);
 
-        restoreRef.current = null;
-
-        if (previous instanceof HTMLElement) {
-            previous.focus({ preventScroll: true });
-        }
-
-        const timer = window.setTimeout(() => {
-            setMounted(false);
-        }, prefersReducedMotion() ? 0 : EXIT_MS);
-
-        return () => {
-            window.clearTimeout(timer);
-        };
-    }, [open]);
-
-    // Deliberately a second effect keyed on `mounted`: the panel and whatever
-    // it focuses only exist after that render commits, and a frame callback
-    // fired from the first effect can beat React to it.
-    useEffect(() => {
-        if (!open || !mounted) {
-            return;
+        if (!dialog.open) {
+            dialog.showModal();
         }
 
         focusRef.current?.focus({ preventScroll: true });
 
         const frame = requestAnimationFrame(() => {
-            setShown(true);
+            dialog.classList.add(styles.open);
         });
 
         return () => {
             cancelAnimationFrame(frame);
+            closeDialog(dialog);
+            restoreFocus(dialog, restore);
         };
-    }, [open, mounted, focusRef]);
+    }, [open, focusRef]);
 
-    if (!mounted) {
-        return null;
-    }
+    useEffect(() => {
+        const dialog = dialogRef.current;
 
-    const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-        if (event.key === 'Escape') {
+        if (!dialog) {
+            return;
+        }
+
+        const handleCancel = (event: Event) => {
             event.preventDefault();
             onClose();
+        };
 
-            return;
-        }
+        // A browser may still close the dialog itself, e.g. on a repeated
+        // Escape it refuses to let the page cancel. The parent has to hear
+        // about it, or it would think the overlay is still up.
+        const handleClose = () => {
+            if (closedHere.delete(dialog)) {
+                return;
+            }
 
-        // The overlay is modal, so Tab cycles back to its own entry point
-        // rather than walking the page behind the scrim.
-        if (event.key === 'Tab') {
-            event.preventDefault();
-            focusRef.current?.focus({ preventScroll: true });
+            if (!dialog.open) {
+                onClose();
+            }
+        };
 
-            return;
-        }
+        const handleKeyDown = (event: KeyboardEvent) => {
+            onKeyDown?.(event);
+        };
 
-        onKeyDown?.(event);
-    };
+        dialog.addEventListener('cancel', handleCancel);
+        dialog.addEventListener('close', handleClose);
+        dialog.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            dialog.removeEventListener('cancel', handleCancel);
+            dialog.removeEventListener('close', handleClose);
+            dialog.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [onClose, onKeyDown]);
 
     return (
-        <div
-            className={shown ? `${styles.root} ${styles.open}` : styles.root}
-            role="dialog"
-            aria-modal="true"
-            aria-label={label}
-            aria-labelledby={labelledBy}
-            onKeyDown={handleKeyDown}
-        >
+        <dialog className={styles.root} ref={dialogRef} aria-label={label} aria-labelledby={labelledBy}>
             <div className={styles.scrim} onClick={onClose} aria-hidden="true" />
             <div className={panelClassName ? `${styles.panel} ${panelClassName}` : styles.panel}>
                 {children}
             </div>
-        </div>
+        </dialog>
     );
+};
+
+const closeDialog = (dialog: HTMLDialogElement) => {
+    dialog.classList.remove(styles.open);
+
+    if (dialog.open) {
+        closedHere.add(dialog);
+        dialog.close();
+    }
+
+    if (prefersReducedMotion()) {
+        return;
+    }
+
+    // Painted but inert while the exit plays: nothing in it can take focus or
+    // a click on its way out.
+    dialog.inert = true;
+    dialog.classList.add(styles.closing);
+    window.setTimeout(() => {
+        dialog.classList.remove(styles.closing);
+    }, EXIT_MS);
+};
+
+/**
+ * Hands focus back to the element that had it before the overlay opened —
+ * unless whatever the overlay ran has already moved it somewhere on purpose.
+ */
+const restoreFocus = (dialog: HTMLDialogElement, restore: Element | null) => {
+    const current = document.activeElement;
+    const stranded = current === null || current === document.body || dialog.contains(current);
+
+    if (stranded && restore instanceof HTMLElement && restore.isConnected) {
+        restore.focus({ preventScroll: true });
+    }
 };

@@ -7,10 +7,18 @@
 
 import type { Command } from '@/config/commands';
 
-export type CommandRow
-    = | { kind: 'group'; label: string; order: number }
-    /** `index` is the position in the filtered list, which is what selection uses. */
-      | { kind: 'item'; command: Command; index: number; order: number };
+export interface CommandItem {
+    command: Command;
+    /** Position in the filtered list, which is what selection uses. */
+    index: number;
+    order: number;
+}
+
+export interface CommandGroup {
+    label: string;
+    order: number;
+    items: CommandItem[];
+}
 
 /**
  * Substring match across label, hint and group.
@@ -31,24 +39,25 @@ export const filterCommands = (commands: Command[], query: string) => {
 };
 
 /**
- * Interleaves group headings into the filtered list.
+ * Groups the filtered list under its headings, keeping list order.
  *
  * `order` counts every rendered row, headings included, because the entrance
  * stagger reads as one sequence down the list.
  */
-export const buildCommandRows = (commands: Command[]): CommandRow[] => {
-    const rows: CommandRow[] = [];
-    let group: string | null = null;
+export const groupCommands = (commands: Command[]): CommandGroup[] => {
+    const groups: CommandGroup[] = [];
     let order = 0;
 
     commands.forEach((command, index) => {
-        if (command.group !== group) {
-            group = command.group;
-            rows.push({ kind: 'group', label: group, order: order++ });
+        let group = groups.at(-1);
+
+        if (group?.label !== command.group) {
+            group = { label: command.group, order: order++, items: [] };
+            groups.push(group);
         }
 
-        rows.push({ kind: 'item', command, index, order: order++ });
+        group.items.push({ command, index, order: order++ });
     });
 
-    return rows;
+    return groups;
 };

@@ -39,8 +39,14 @@ describe('<ShortcutsOverlay>', () => {
 
         const dialog = screen.getByRole('dialog');
 
-        expect(dialog).toHaveAttribute('aria-modal', 'true');
+        expect(dialog).toHaveAttribute('open');
         expect(dialog).toHaveAccessibleName('Keyboard shortcuts');
+    });
+
+    it('should title the list with a heading', async () => {
+        await mount();
+
+        expect(screen.getByRole('heading', { name: 'Keyboard shortcuts' })).toBeInTheDocument();
     });
 
     it('should list a row for every section chord', async () => {
@@ -91,15 +97,6 @@ describe('<ShortcutsOverlay>', () => {
         await user.click(screen.getByRole('button', { name: 'Close shortcuts' }));
 
         expect(onClose).toHaveBeenCalled();
-    });
-
-    it('should keep Tab inside the overlay', async () => {
-        const user = userEvent.setup();
-
-        await mount();
-        await user.tab();
-
-        expect(screen.getByRole('button', { name: 'Close shortcuts' })).toHaveFocus();
     });
 
     it('should restore focus to the element that opened it', async () => {
