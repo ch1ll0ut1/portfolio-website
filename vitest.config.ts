@@ -1,5 +1,5 @@
 import { defineConfig } from 'vitest/config';
-import path from 'path';
+import path from 'node:path';
 
 /**
  * Plain `.ts` tests that need a DOM. Everything else in `.ts` is pure logic and
@@ -36,16 +36,17 @@ const DOM_TS_TESTS = [
 const EXCLUDED = ['**/node_modules/**', '.claude/**'];
 
 export default defineConfig({
-    // tsconfig keeps `jsx: preserve` for Next, which would otherwise make esbuild
-    // compile JSX to `React.createElement` and need React in scope in every test.
+    // tsconfig keeps `jsx: preserve` for Next, which Vite's Oxc transform would
+    // otherwise honour and leave the JSX in place for the parser to choke on.
     // Next itself uses the automatic runtime, so the tests do too.
-    esbuild: {
-        jsx: 'automatic',
+    oxc: {
+        jsx: {
+            runtime: 'automatic',
+        },
     },
     test: {
         projects: [
             {
-                extends: true,
                 test: {
                     name: 'dom',
                     environment: 'jsdom',
@@ -55,7 +56,6 @@ export default defineConfig({
                 },
             },
             {
-                extends: true,
                 test: {
                     name: 'node',
                     environment: 'node',
@@ -69,20 +69,24 @@ export default defineConfig({
             reporter: ['text', 'json', 'html'],
             include: ['app/**', 'components/**', 'config/**', 'lib/**'],
             exclude: ['.claude/**', '**/*.test.{ts,tsx}', '**/*.d.ts', '**/*.css'],
-            // A ratchet, set just under the measured coverage (66.2% lines and
-            // statements, 86.6% branches, 72% functions): a change that drops
-            // it fails CI. Raise it as tests are added; never lower it to pass.
+            // A ratchet, set just under the measured coverage (65.9% lines,
+            // 66.1% statements, 60% branches, 68.5% functions): a change that
+            // drops it fails CI. Raise it as tests are added; never lower it to
+            // pass. Since Vitest 4 the v8 provider remaps through the AST, so a
+            // file no test loads counts its branches and functions as uncovered
+            // rather than as 100% — hence branches sitting far below the 88%
+            // that Vitest 3 reported for the same tests.
             thresholds: {
                 lines: 65,
                 statements: 65,
-                branches: 85,
-                functions: 70,
+                branches: 59,
+                functions: 68,
             },
         },
     },
     resolve: {
         alias: {
-            '@': path.resolve(__dirname, './'),
+            '@': path.resolve(import.meta.dirname, './'),
             // The `server-only` marker throws outside a Server Component build.
             // Tests import server modules directly, so they get the no-op
             // export Next itself resolves it to on the server.

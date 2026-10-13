@@ -657,9 +657,9 @@ class DatabaseConnection {
         "tsx": "^4.20.3",
         "typescript": "~5.7.3",
         "typescript-eslint": "^8.25.0",
-        "vite": "^6.2.0",
-        "vitest": "^3.2.4",
-        "jsdom": "^26.1.0"
+        "vite": "^8.3.4",
+        "vitest": "^5.0.4",
+        "jsdom": "^30.1.2"
     }
 }
 ```

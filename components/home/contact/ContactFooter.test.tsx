@@ -2,7 +2,7 @@
  * Tests for the site footer.
  */
 
-import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { type Mock, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { applyAnalyticsConsent } from '@/lib/analytics';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -34,7 +34,7 @@ describe('ContactFooter', () => {
     beforeAll(async () => {
         await import('@/components/consent/ConsentPreferencesModal');
     }, 30_000);
-    let gtag: ReturnType<typeof vi.fn>;
+    let gtag: Mock<(...args: unknown[]) => void>;
     let restoreNavigation: () => void;
 
     beforeEach(() => {

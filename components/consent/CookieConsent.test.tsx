@@ -7,7 +7,7 @@
  * never styling.
  */
 
-import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { type Mock, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { CONSENT_KEY, CONSENT_VERSION } from '@/lib/consentStorage';
@@ -46,7 +46,7 @@ const mountWithBanner = async () => {
 };
 
 describe('<CookieConsent>', () => {
-    let gtag: ReturnType<typeof vi.fn>;
+    let gtag: Mock<(...args: unknown[]) => void>;
 
     /*
      * The preferences dialog still loads through `next/dynamic` below, but its

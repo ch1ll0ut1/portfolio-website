@@ -2,7 +2,7 @@
  * Tests for the primary call to action.
  */
 
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { type Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { applyAnalyticsConsent } from '@/lib/analytics';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -12,7 +12,7 @@ import { CtaMagnet } from './CtaMagnet';
 
 describe('CtaMagnet', () => {
     let restoreMedia: () => void;
-    let gtag: ReturnType<typeof vi.fn>;
+    let gtag: Mock<(...args: unknown[]) => void>;
 
     beforeEach(() => {
         restoreMedia = installMatchMedia([]);

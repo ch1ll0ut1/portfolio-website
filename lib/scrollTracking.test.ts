@@ -5,13 +5,13 @@
  * progress callback, so each case can scroll to an exact depth.
  */
 
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { type Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { trackScrollDepth } from './scrollTracking';
 
 interface FakeScrub {
     onProgress: (progress: number) => void;
     options: unknown;
-    stop: ReturnType<typeof vi.fn>;
+    stop: Mock<() => void>;
 }
 
 const scrub = vi.hoisted((): FakeScrub => ({

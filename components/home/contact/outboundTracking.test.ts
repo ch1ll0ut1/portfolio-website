@@ -3,14 +3,14 @@
  */
 
 import { type MouseEvent } from 'react';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { type Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { applyAnalyticsConsent } from '@/lib/analytics';
 import { conversionHandlers, externalLinkHandlers } from './outboundTracking';
 
 const auxClick = (button: number) => ({ button }) as MouseEvent<HTMLAnchorElement>;
 
 describe('conversionHandlers', () => {
-    let gtag: ReturnType<typeof vi.fn>;
+    let gtag: Mock<(...args: unknown[]) => void>;
 
     beforeEach(() => {
         gtag = vi.fn();
@@ -53,7 +53,7 @@ describe('conversionHandlers', () => {
 });
 
 describe('externalLinkHandlers', () => {
-    let gtag: ReturnType<typeof vi.fn>;
+    let gtag: Mock<(...args: unknown[]) => void>;
 
     beforeEach(() => {
         gtag = vi.fn();

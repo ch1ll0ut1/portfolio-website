@@ -7,7 +7,7 @@
  * so the selection's rectangle is pinned.
  */
 
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { type Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { type FC, useRef } from 'react';
@@ -50,7 +50,7 @@ const rect = { top: 100, left: 40, right: 140, bottom: 140, width: 100, height: 
 
 describe('<FormatToolbar>', () => {
     let restoreMedia: () => void;
-    let onCommand: ReturnType<typeof vi.fn>;
+    let onCommand: Mock<(command: FormatCommand) => void>;
 
     /** Selects "build" in the editor and waits for the toolbar to follow it. */
     const showToolbar = async () => {

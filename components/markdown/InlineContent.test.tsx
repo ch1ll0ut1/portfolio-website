@@ -182,7 +182,10 @@ describe('InlineContent Component', () => {
         it('should open an off-site link in a new tab and say so', () => {
             render(<InlineContent segments={[{ text: 'Vitest', isLink: true, href: 'https://vitest.dev' }]} />);
 
-            const link = screen.getByRole('link', { name: 'Vitest (opens in a new tab)' });
+            // Chromium names this "Vitest (opens in a new tab)". jsdom 30 gives
+            // the hint its real `display: inline`, so dom-accessibility-api
+            // trims the hint's own name and joins it without the space.
+            const link = screen.getByRole('link', { name: /^Vitest ?\(opens in a new tab\)$/ });
 
             expect(link).toHaveAttribute('target', '_blank');
             expect(link).toHaveAttribute('rel', 'noopener noreferrer');
