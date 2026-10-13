@@ -1,23 +1,14 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { REDUCED_MOTION_QUERY, prefersReducedMotion, watchMedia } from './env';
+import { REDUCED_MOTION_QUERY } from './env';
+import { useMediaQuery } from './useMediaQuery';
 
 /**
  * Tracks the reduced-motion preference.
  *
- * Starts `false` so server and client markup agree, then corrects on mount.
- * Anything that must never animate should also be gated by the `.motion` class
- * the boot script sets, which is correct from the very first paint.
+ * Renders `false` on the server and during hydration, so server and client
+ * markup agree, then reports the live preference. Anything that must never
+ * animate should also be gated by the `.motion` class the boot script sets,
+ * which is correct from the very first paint.
  */
-export const useReducedMotion = () => {
-    const [reduced, setReduced] = useState(false);
-
-    useEffect(() => {
-        setReduced(prefersReducedMotion());
-
-        return watchMedia(REDUCED_MOTION_QUERY, setReduced);
-    }, []);
-
-    return reduced;
-};
+export const useReducedMotion = () => useMediaQuery(REDUCED_MOTION_QUERY);

@@ -53,7 +53,7 @@
     grid-column: 2;
     font-family: var(--font-mono);
     font-size: .74rem;
-    color: var(--caret);
+    color: var(--caret-text);
     font-variation-settings: "wdth" 85;
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
@@ -107,7 +107,7 @@
 
 .refHead {
     border-color: var(--caret);
-    color: var(--caret);
+    color: var(--caret-text);
 }
 
 /* Commits the ink has not reached yet sit one step back. */

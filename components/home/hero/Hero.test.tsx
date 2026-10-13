@@ -8,12 +8,16 @@
  */
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { REDUCED_MOTION_QUERY } from '@/lib/motion';
 import { installMatchMedia } from '../../../test/motionEnv';
 import { heroCtas, heroHeadline, heroLocation } from '@/config/hero';
 import { Hero } from './Hero';
+import { selectOffsets } from './editorDom';
+
+const editor = () => screen.getByRole('textbox', { name: 'Headline' });
 
 describe('Hero', () => {
     let restoreMedia: () => void;
@@ -39,15 +43,93 @@ describe('Hero', () => {
         expect(heading).toHaveTextContent(`${heroHeadline.before}${heroHeadline.highlight}${heroHeadline.after}`);
     });
 
-    it('should make the headline editable and describe how to use it', () => {
+    it('should keep the heading named by the shipped headline, whatever is typed into it', () => {
         render(<Hero />);
 
         const heading = screen.getByRole('heading', { level: 1 });
-        const hintId = heading.getAttribute('aria-describedby');
 
-        expect(heading).toHaveAttribute('contenteditable', 'true');
+        editor().textContent = 'Something else entirely';
+
+        expect(heading).toHaveAccessibleName(`${heroHeadline.before}${heroHeadline.highlight}${heroHeadline.after}`);
+        expect(heading).not.toHaveAttribute('contenteditable');
+    });
+
+    it('should expose the editor as a named single-line textbox that describes how to use it', () => {
+        render(<Hero />);
+
+        const textbox = editor();
+        const hintId = textbox.getAttribute('aria-describedby');
+
+        expect(textbox).toHaveAttribute('contenteditable', 'true');
+        expect(textbox).toHaveAttribute('aria-multiline', 'false');
         expect(hintId).toBeTruthy();
         expect(document.getElementById(String(hintId))).toBeInTheDocument();
+    });
+
+    it('should keep the editor out of the Tab order until the visitor opts in', async () => {
+        const user = userEvent.setup();
+
+        render(<Hero />);
+
+        expect(editor()).toHaveAttribute('tabindex', '-1');
+
+        await user.click(screen.getByRole('button', { name: 'Edit headline' }));
+
+        expect(editor()).toHaveFocus();
+        expect(editor()).toHaveAttribute('tabindex', '0');
+    });
+
+    it('should hand focus back to the edit control on Escape', async () => {
+        const user = userEvent.setup();
+
+        render(<Hero />);
+        await user.click(screen.getByRole('button', { name: 'Edit headline' }));
+        await user.keyboard('{Escape}');
+
+        expect(screen.getByRole('button', { name: 'Edit headline' })).toHaveFocus();
+    });
+
+    it('should finish editing on Enter without adding a line', async () => {
+        const user = userEvent.setup();
+
+        render(<Hero />);
+        await user.click(screen.getByRole('button', { name: 'Edit headline' }));
+        await user.keyboard('{Enter}');
+
+        expect(screen.getByRole('button', { name: 'Edit headline' })).toHaveFocus();
+        expect(editor().querySelector('br, div')).toBeNull();
+    });
+
+    it('should highlight the selection on Mod+Shift+H, and leave plain Mod+H to the browser', () => {
+        render(<Hero />);
+
+        const textbox = editor();
+
+        textbox.focus();
+        act(() => {
+            selectOffsets(textbox, 2, 7);
+        });
+
+        const plain = fireEvent.keyDown(textbox, { key: 'h', code: 'KeyH', metaKey: true });
+
+        expect(plain).toBe(true);
+
+        act(() => {
+            fireEvent.keyDown(textbox, { key: 'H', code: 'KeyH', metaKey: true, shiftKey: true });
+        });
+
+        expect(Array.from(textbox.querySelectorAll('mark')).map(mark => mark.textContent)).toContain('build');
+    });
+
+    it('should print the editor shortcuts for the visitor\'s platform', () => {
+        vi.spyOn(navigator, 'userAgent', 'get').mockReturnValue('Mozilla/5.0 (X11; Linux x86_64)');
+        render(<Hero />);
+
+        const hint = document.getElementById(String(editor().getAttribute('aria-describedby')));
+
+        expect(hint).toHaveTextContent('Ctrl+B');
+        expect(hint).toHaveTextContent('Ctrl+Shift+H');
+        expect(hint).not.toHaveTextContent('⌘');
     });
 
     it('should keep the highlighted phrase as a mark so the model starts with three leaves', () => {

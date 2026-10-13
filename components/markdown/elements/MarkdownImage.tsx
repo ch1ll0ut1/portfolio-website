@@ -38,7 +38,10 @@ export const MarkdownImage: FC<Props> = ({ element, priority = false }) => {
                 fetchPriority={priority ? 'high' : undefined}
                 sizes={SIZES}
             />
-            {alt && <figcaption className={styles.caption}>{alt}</figcaption>}
+            {/* Posts write one text per image, used as both alt and caption. The
+                caption is hidden from assistive technology so the image is not
+                announced twice; its alt carries the same words. */}
+            {alt && <figcaption className={styles.caption} aria-hidden="true">{alt}</figcaption>}
         </figure>
     );
 };

@@ -5,10 +5,11 @@
  * so navigation and overlay handling can be injected rather than imported.
  */
 
-import { copyText } from '@/lib/motion';
+import { copyText, showToast } from '@/lib/motion';
 import type { CommandAction } from '@/config/commands';
 import { requestConsentPreferences } from '@/components/consent/ConsentContext';
 import { openExternal } from './openExternal';
+import { togglePreference } from './preferences';
 import { scrollToSection } from './scrollToSection';
 import { toggleTheme } from './themeStore';
 
@@ -20,7 +21,7 @@ export interface CommandHandlers {
 export const runCommand = (action: CommandAction, handlers: CommandHandlers) => {
     switch (action.type) {
         case 'section':
-            scrollToSection(action.sectionId);
+            scrollToSection(action.sectionId, handlers.navigate);
             break;
         case 'external':
             openExternal(action.url);
@@ -36,6 +37,12 @@ export const runCommand = (action: CommandAction, handlers: CommandHandlers) => 
             break;
         case 'shortcuts':
             handlers.openShortcuts();
+            break;
+        case 'toggleSingleKeys':
+            showToast(togglePreference('singleKeyShortcuts') ? 'Single-key shortcuts on' : 'Single-key shortcuts off');
+            break;
+        case 'toggleCursor':
+            showToast(togglePreference('caretCursor') ? 'Custom cursor on' : 'Custom cursor off');
             break;
         case 'cookieSettings':
             requestConsentPreferences();

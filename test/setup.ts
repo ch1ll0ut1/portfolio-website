@@ -72,6 +72,43 @@ defineDefault(document, 'fonts', {
     },
 });
 
+/*
+ * jsdom has `<dialog>` but not its modal API. This is the smallest stand-in
+ * that keeps the contract the overlays rely on: `showModal()` and `close()`
+ * toggle `open` and focus nothing on their own, `close()` queues a `close`
+ * event, and Escape inside an open dialog fires a cancelable `cancel` that
+ * closes it unless prevented. Inertness of the page behind is the browser's
+ * job and is checked in the browser, not here.
+ */
+if (typeof HTMLDialogElement !== 'undefined' && typeof HTMLDialogElement.prototype.showModal !== 'function') {
+    HTMLDialogElement.prototype.showModal = function showModal(this: HTMLDialogElement) {
+        this.open = true;
+    };
+
+    HTMLDialogElement.prototype.close = function close(this: HTMLDialogElement) {
+        if (!this.open) {
+            return;
+        }
+
+        this.open = false;
+        window.setTimeout(() => {
+            this.dispatchEvent(new Event('close'));
+        }, 0);
+    };
+
+    document.addEventListener('keydown', (event) => {
+        const dialog = event.target instanceof Element ? event.target.closest('dialog') : null;
+
+        if (event.key !== 'Escape' || !dialog?.open) {
+            return;
+        }
+
+        if (dialog.dispatchEvent(new Event('cancel', { cancelable: true }))) {
+            dialog.close();
+        }
+    });
+}
+
 // runs a cleanup after each test case
 afterEach(() => {
     cleanup();

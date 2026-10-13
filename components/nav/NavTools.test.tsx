@@ -11,11 +11,18 @@
  * belongs to the visual axis rather than here.
  */
 
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { NavTools } from './NavTools';
 
+const MAC = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)';
+const LINUX = 'Mozilla/5.0 (X11; Linux x86_64)';
+
 describe('<NavTools> Component', () => {
+    afterEach(() => {
+        vi.restoreAllMocks();
+    });
+
     it('should render the command menu and theme triggers', () => {
         render(<NavTools />);
 
@@ -37,12 +44,22 @@ describe('<NavTools> Component', () => {
     });
 
     it('should carry both the written label and the keyboard shortcut', () => {
+        vi.spyOn(navigator, 'userAgent', 'get').mockReturnValue(MAC);
         render(<NavTools />);
 
         const command = screen.getByRole('button', { name: 'Open command menu' });
 
         expect(command).toHaveTextContent('Menu');
         expect(command.querySelector('kbd')).toHaveTextContent('⌘K');
+    });
+
+    it('should spell the shortcut with Ctrl off an Apple platform', () => {
+        vi.spyOn(navigator, 'userAgent', 'get').mockReturnValue(LINUX);
+        render(<NavTools />);
+
+        const command = screen.getByRole('button', { name: 'Open command menu' });
+
+        expect(command.querySelector('kbd')).toHaveTextContent('Ctrl K');
     });
 
     it('should not submit a surrounding form', () => {

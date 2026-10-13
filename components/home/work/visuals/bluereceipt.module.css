@@ -100,7 +100,7 @@
 }
 
 .st[data-state='edit'] {
-    color: var(--caret);
+    color: var(--caret-text);
     border-color: var(--caret);
 }
 

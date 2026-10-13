@@ -23,6 +23,10 @@ export type CommandAction
       | { type: 'copy'; text: string; toast: string }
       | { type: 'theme' }
       | { type: 'shortcuts' }
+    /** Switches the single-key shortcuts (`t`, `?`, `g` chords) on or off. */
+      | { type: 'toggleSingleKeys' }
+    /** Switches the custom caret cursor on or off. */
+      | { type: 'toggleCursor' }
     /** Reopens the cookie preferences dialog. */
       | { type: 'cookieSettings' };
 
@@ -78,6 +82,20 @@ export const commands: Command[] = [
         label: 'Keyboard shortcuts',
         hint: '?',
         action: { type: 'shortcuts' },
+    },
+    {
+        id: 'single-key-shortcuts',
+        group: 'Actions',
+        label: 'Turn single-key shortcuts on or off',
+        hint: 'T, ?, G',
+        action: { type: 'toggleSingleKeys' },
+    },
+    {
+        id: 'custom-cursor',
+        group: 'Actions',
+        label: 'Turn custom cursor on or off',
+        hint: 'Caret cursor',
+        action: { type: 'toggleCursor' },
     },
     {
         id: 'cookie-settings',

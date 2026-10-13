@@ -2,7 +2,7 @@
 
 import { type CSSProperties, type FC, useLayoutEffect, useRef } from 'react';
 import type { Command } from '@/config/commands';
-import { buildCommandRows } from './commandFilter';
+import { groupCommands } from './commandFilter';
 import styles from './CommandPalette.module.css';
 
 /** How long the caret is held solid while the highlight travels. */
@@ -26,7 +26,12 @@ interface Props {
 }
 
 /**
- * The palette's listbox.
+ * The palette's listbox, with one `group` per heading.
+ *
+ * Options are never focused: focus stays in the combobox input, which points
+ * at the active option with `aria-activedescendant`. That is also why the
+ * options take clicks without key handlers — the keyboard runs them from the
+ * input.
  *
  * The selection is one absolutely positioned highlight that slides between
  * rows instead of a background on each row, so moving down the list reads as a
@@ -35,9 +40,9 @@ interface Props {
  * lists would be noise.
  */
 export const CommandList: FC<Props> = ({ id, optionIdPrefix, commands, selected, intro, onHover, onRun }) => {
-    const rows = buildCommandRows(commands);
-    const itemRefs = useRef<(HTMLLIElement | null)[]>([]);
-    const highlightRef = useRef<HTMLLIElement>(null);
+    const groups = groupCommands(commands);
+    const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+    const highlightRef = useRef<HTMLDivElement>(null);
     const previousCommands = useRef<Command[] | null>(null);
     const solidTimer = useRef(0);
 
@@ -52,7 +57,7 @@ export const CommandList: FC<Props> = ({ id, optionIdPrefix, commands, selected,
             return;
         }
 
-        if (!item) {
+        if (!item || commands.length === 0) {
             highlight.style.opacity = '0';
 
             return;
@@ -78,56 +83,55 @@ export const CommandList: FC<Props> = ({ id, optionIdPrefix, commands, selected,
         window.clearTimeout(solidTimer.current);
     }, []);
 
-    if (commands.length === 0) {
-        return (
-            <ul className={styles.list} id={id} role="listbox" aria-label="Commands">
-                <li className={styles.empty}>No matches. Try “work” or “email”.</li>
-            </ul>
-        );
-    }
-
     return (
-        <ul
+        <div
             className={intro ? `${styles.list} ${styles.intro}` : styles.list}
             id={id}
             role="listbox"
             aria-label="Commands"
+            hidden={commands.length === 0}
         >
-            <li className={styles.highlight} ref={highlightRef} role="presentation" aria-hidden="true" />
-            {rows.map((row) => {
-                const style: RowStyle = { '--i': row.order };
-
-                if (row.kind === 'group') {
-                    return (
-                        <li className={styles.group} key={`group-${row.label}`} role="presentation" style={style}>
-                            {row.label}
-                        </li>
-                    );
-                }
+            <div className={styles.highlight} ref={highlightRef} aria-hidden="true" />
+            {groups.map((group) => {
+                const headingId = `${id}-group-${group.order}`;
+                const headingStyle: RowStyle = { '--i': group.order };
 
                 return (
-                    <li
-                        className={styles.item}
-                        key={row.command.id}
-                        id={`${optionIdPrefix}-${row.index}`}
-                        role="option"
-                        aria-selected={row.index === selected}
-                        style={style}
-                        ref={(node) => {
-                            itemRefs.current[row.index] = node;
-                        }}
-                        onPointerMove={() => {
-                            onHover(row.index);
-                        }}
-                        onClick={() => {
-                            onRun(row.index);
-                        }}
-                    >
-                        <span>{row.command.label}</span>
-                        {row.command.hint ? <small>{row.command.hint}</small> : null}
-                    </li>
+                    <div role="group" aria-labelledby={headingId} key={group.label}>
+                        <div className={styles.group} id={headingId} role="presentation" style={headingStyle}>
+                            {group.label}
+                        </div>
+                        {group.items.map((item) => {
+                            const style: RowStyle = { '--i': item.order };
+
+                            return (
+                                // eslint-disable-next-line jsx-a11y/click-events-have-key-events -- the combobox input runs options from the keyboard
+                                <div
+                                    className={styles.item}
+                                    key={item.command.id}
+                                    id={`${optionIdPrefix}-${item.index}`}
+                                    role="option"
+                                    tabIndex={-1}
+                                    aria-selected={item.index === selected}
+                                    style={style}
+                                    ref={(node) => {
+                                        itemRefs.current[item.index] = node;
+                                    }}
+                                    onPointerMove={() => {
+                                        onHover(item.index);
+                                    }}
+                                    onClick={() => {
+                                        onRun(item.index);
+                                    }}
+                                >
+                                    <span>{item.command.label}</span>
+                                    {item.command.hint ? <small>{item.command.hint}</small> : null}
+                                </div>
+                            );
+                        })}
+                    </div>
                 );
             })}
-        </ul>
+        </div>
     );
 };

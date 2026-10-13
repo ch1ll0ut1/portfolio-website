@@ -171,12 +171,15 @@
     --line: #243540;        /* hairlines */
     --fg: #e4ecee;          /* snow */
     --fg-2: #a9b8bf;        /* secondary text */
-    --muted: #74868f;       /* tertiary */
+    --muted: #7d8f98;       /* tertiary */
     --select: #3d7bff;      /* editor selection */
     --select-soft: rgba(61, 123, 255, .28);
     --caret: #ff8b3d;       /* molten caret */
+    --caret-text: #ff8b3d;  /* caret as text: already AA on every dark surface */
+    --caret-fill: #ff8b3d;  /* caret behind --on-accent text */
     --ice: #9fd3e6;         /* code tokens */
     --on-accent: #0b1218;
+    --on-select: #0b1218;   /* text on a --select fill */
     --grain-opacity: .06;
     color-scheme: dark;
 
@@ -220,12 +223,15 @@
         --line: #cbd7db;
         --fg: #0e181e;
         --fg-2: #3a4a52;
-        --muted: #5f7079;
+        --muted: #566770;
         --select: #2f62e6;
         --select-soft: rgba(47, 98, 230, .2);
         --caret: #e0561c;
+        --caret-text: #b03e0e;
+        --caret-fill: #b03e0e;
         --ice: #1d6f8c;
         --on-accent: #ffffff;
+        --on-select: #ffffff;
         --grain-opacity: .045;
         color-scheme: light;
     }
@@ -238,12 +244,15 @@
     --line: #cbd7db;
     --fg: #0e181e;
     --fg-2: #3a4a52;
-    --muted: #5f7079;
+    --muted: #566770;
     --select: #2f62e6;
     --select-soft: rgba(47, 98, 230, .2);
     --caret: #e0561c;
+    --caret-text: #b03e0e;
+    --caret-fill: #b03e0e;
     --ice: #1d6f8c;
     --on-accent: #ffffff;
+    --on-select: #ffffff;
     --grain-opacity: .045;
     color-scheme: light;
 }
@@ -282,7 +291,7 @@ body {
 
 ::selection {
     background: var(--select);
-    color: #fff;
+    color: var(--on-select);
 }
 
 a {
@@ -340,6 +349,13 @@ button {
     outline: 2px solid var(--caret);
     outline-offset: 3px;
     border-radius: 4px;
+}
+
+/* Landmarks the palette and the `g` chords move focus to. They are where
+   reading continues, not controls, so they take focus without a ring. */
+main[tabindex='-1']:focus,
+section[tabindex='-1']:focus {
+    outline: none;
 }
 
 kbd {
@@ -415,7 +431,7 @@ pre {
     left: 16px;
     top: -60px;
     z-index: 100;
-    background: var(--caret);
+    background: var(--caret-fill);
     color: var(--on-accent);
     padding: 10px 14px;
     border-radius: var(--radius-s);
@@ -481,8 +497,8 @@ pre {
 }
 
 .btn--primary:hover {
-    background: var(--caret);
-    border-color: var(--caret);
+    background: var(--caret-fill);
+    border-color: var(--caret-fill);
     color: var(--on-accent);
 }
 

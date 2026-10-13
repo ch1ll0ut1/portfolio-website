@@ -56,18 +56,21 @@ The palette is dark-first ("basalt") with a light theme ("glacier fog"). It has 
 | `--line` | `#243540` | `#cbd7db` | Hairlines, borders |
 | `--fg` | `#e4ecee` | `#0e181e` | Primary text |
 | `--fg-2` | `#a9b8bf` | `#3a4a52` | Secondary text |
-| `--muted` | `#74868f` | `#5f7079` | Tertiary text, metadata |
+| `--muted` | `#7d8f98` | `#566770` | Tertiary text, metadata |
 | `--select` | `#3d7bff` | `#2f62e6` | Selection, focus |
 | `--select-soft` | blue at 28% | blue at 20% | Selection wash |
 | `--caret` | `#ff8b3d` | `#e0561c` | Caret, accents, primary action |
+| `--caret-text` | `#ff8b3d` | `#b03e0e` | Caret orange used as text |
+| `--caret-fill` | `#ff8b3d` | `#b03e0e` | Caret fill behind `--on-accent` text |
 | `--ice` | `#9fd3e6` | `#1d6f8c` | Code tokens |
-| `--on-accent` | `#0b1218` | `#ffffff` | Text on caret or selection fills |
+| `--on-accent` | `#0b1218` | `#ffffff` | Text on a `--caret-fill` |
+| `--on-select` | `#0b1218` | `#ffffff` | Text on a `--select` fill, including `::selection` |
 
 Rules:
 
 - Never hard-code a color that only works in one theme. Use the tokens.
 - Accents are for small surfaces such as a caret, a ref chip, a highlight, or a button. Never use them for body text.
-- Body text must meet WCAG AA contrast: 4.5:1, or 3:1 for large text. In the light theme, check caret orange on `--bg` before using it for text.
+- Body text must meet WCAG AA contrast: 4.5:1, or 3:1 for large text. `--caret` itself is 3.35:1 on the light `--bg`, so caret-colored text uses `--caret-text`, and text set on a caret fill sits on `--caret-fill`. Both are the same orange in the dark theme and a deeper one in the light theme. `--muted` clears 4.5:1 on `--bg`, `--bg-2` and `--surface` in both themes.
 - A faint film grain (`--grain-opacity`) sits over everything for texture.
 
 ## 5. Typography

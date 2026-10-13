@@ -1,11 +1,11 @@
 'use client';
 
-import { type ClipboardEvent, type KeyboardEvent, type RefObject, useCallback } from 'react';
+import { type RefObject, useCallback } from 'react';
 import { prefersReducedMotion } from '@/lib/motion';
 import type { FormatCommand } from './FormatToolbar';
 import type { PanelState } from './DocumentModelPanel';
 import { insertPlainText, isAtCap, resetHeadline, toggleSelectionMark } from './headlineCommands';
-import { normalizeEditor } from './editorDom';
+import { normalizeEditor, selectOffsets } from './editorDom';
 import type { HeadingDoc } from './editorModel';
 import { INITIAL_HEADLINE } from './initialHeadline';
 import { useHeadlineModel } from './useHeadlineModel';
@@ -20,10 +20,15 @@ export interface HeadlineEditorApi {
     position: string;
     panelState: PanelState;
     onInput: () => void;
-    onKeyDown: (event: KeyboardEvent<HTMLHeadingElement>) => void;
-    onPaste: (event: ClipboardEvent<HTMLHeadingElement>) => void;
+    onKeyDown: (event: KeyboardEvent) => void;
+    onPaste: (event: ClipboardEvent) => void;
     onBlur: () => void;
     applyCommand: (command: FormatCommand) => void;
+    /**
+     * Opts into editing from the keyboard: puts the headline in the Tab
+     * order, focuses it and parks the caret at the end.
+     */
+    activate: () => void;
     /** Called by the intro as its timeline passes each milestone. */
     onArmed: () => void;
     onSelecting: (start: number, end: number) => void;
@@ -32,9 +37,13 @@ export interface HeadlineEditorApi {
 }
 
 export interface UseHeadlineEditorOptions {
-    titleRef: RefObject<HTMLHeadingElement | null>;
+    titleRef: RefObject<HTMLElement | null>;
     /** Sends a ripple through the hero's background field. */
     ripple: (clientX: number, clientY: number) => void;
+    /** Where focus goes when the visitor finishes editing with Enter or Escape. */
+    exitRef: RefObject<HTMLElement | null>;
+    /** The format toolbar, which Alt+F10 moves focus into. */
+    toolbarRef: RefObject<HTMLElement | null>;
 }
 
 /**
@@ -48,7 +57,7 @@ export interface UseHeadlineEditorOptions {
  * Every callback it returns is stable, which is what lets `HeadlineEditor`
  * render exactly once and then be left alone.
  */
-export const useHeadlineEditor = ({ titleRef, ripple }: UseHeadlineEditorOptions): HeadlineEditorApi => {
+export const useHeadlineEditor = ({ titleRef, ripple, exitRef, toolbarRef }: UseHeadlineEditorOptions): HeadlineEditorApi => {
     const model = useHeadlineModel(titleRef);
     const { sync, clearPosition } = model;
 
@@ -113,48 +122,55 @@ export const useHeadlineEditor = ({ titleRef, ripple }: UseHeadlineEditorOptions
         sync();
     }, [sync, titleRef]);
 
-    const onKeyDown = useCallback((event: KeyboardEvent<HTMLHeadingElement>) => {
+    const onKeyDown = useCallback((event: KeyboardEvent) => {
         const title = titleRef.current;
 
         if (!title) {
             return;
         }
 
-        const modifier = event.metaKey || event.ctrlKey;
-
         // A heading is one line, so Enter and Escape both mean "I'm done".
-        if (event.key === 'Enter') {
+        // Focus goes back to the control that opens the editor, rather than
+        // being dropped on the page body.
+        if (event.key === 'Enter' || event.key === 'Escape') {
             event.preventDefault();
-            title.blur();
+            finishEditing(title, exitRef.current);
 
             return;
         }
 
-        if (event.key === 'Escape') {
-            title.blur();
+        // The usual way into an editor's toolbar from its text.
+        if (event.altKey && event.key === 'F10') {
+            const toolbar = toolbarRef.current;
+            const entry = toolbar?.querySelector<HTMLElement>('[tabindex="0"]');
+
+            if (toolbar && entry && !toolbar.hidden) {
+                event.preventDefault();
+                entry.focus();
+            }
 
             return;
         }
 
-        const key = event.key.toLowerCase();
+        const command = formatShortcut(event);
 
-        if (modifier && (key === 'b' || key === 'i' || key === 'h')) {
+        if (command) {
             event.preventDefault();
-            applyCommand(key === 'b' ? 'bold' : key === 'i' ? 'italic' : 'highlight');
+            applyCommand(command);
 
             return;
         }
 
         const selection = window.getSelection();
-        const inserting = event.key.length === 1 && !modifier;
+        const inserting = event.key.length === 1 && !event.metaKey && !event.ctrlKey;
 
         // Typing over a selection replaces it, so only a collapsed caret is capped.
         if (inserting && isAtCap(title) && selection?.isCollapsed === true) {
             event.preventDefault();
         }
-    }, [applyCommand, titleRef]);
+    }, [applyCommand, exitRef, titleRef, toolbarRef]);
 
-    const onPaste = useCallback((event: ClipboardEvent<HTMLHeadingElement>) => {
+    const onPaste = useCallback((event: ClipboardEvent) => {
         event.preventDefault();
 
         const title = titleRef.current;
@@ -165,9 +181,25 @@ export const useHeadlineEditor = ({ titleRef, ripple }: UseHeadlineEditorOptions
 
         // Pasted markup is rebuilt from the model as plain text, which both
         // strips foreign styling and enforces the cap in one step.
-        insertPlainText(title, event.clipboardData.getData('text'));
+        insertPlainText(title, event.clipboardData?.getData('text') ?? '');
         sync();
     }, [sync, titleRef]);
+
+    const activate = useCallback(() => {
+        const title = titleRef.current;
+
+        if (!title) {
+            return;
+        }
+
+        // Opted in once, it stays in the Tab order for the rest of the visit.
+        title.tabIndex = 0;
+        title.focus();
+
+        const length = title.textContent.length;
+
+        selectOffsets(title, length, length);
+    }, [titleRef]);
 
     return {
         doc: model.doc,
@@ -179,9 +211,48 @@ export const useHeadlineEditor = ({ titleRef, ripple }: UseHeadlineEditorOptions
         onPaste,
         onBlur: clearPosition,
         applyCommand,
+        activate,
         onArmed: model.onArmed,
         onSelecting: model.onSelecting,
         onRelease: model.onRelease,
         onSettled: model.onSettled,
     };
+};
+
+/**
+ * The format shortcuts: ⌘B and ⌘I, and ⌘⇧H for highlight (Ctrl on other
+ * platforms). Plain ⌘H never reaches a page on macOS, where it hides the
+ * browser. The highlight key is matched on the physical key as well, since
+ * Shift or Option can change which character `key` reports.
+ */
+const formatShortcut = (event: KeyboardEvent): FormatCommand | null => {
+    if (!(event.metaKey || event.ctrlKey) || event.altKey) {
+        return null;
+    }
+
+    const key = event.key.toLowerCase();
+
+    if (key === 'h' || event.code === 'KeyH') {
+        return event.shiftKey ? 'highlight' : null;
+    }
+
+    if (event.shiftKey) {
+        return null;
+    }
+
+    if (key === 'b') {
+        return 'bold';
+    }
+
+    return key === 'i' ? 'italic' : null;
+};
+
+const finishEditing = (title: HTMLElement, exit: HTMLElement | null) => {
+    if (exit) {
+        exit.focus();
+
+        return;
+    }
+
+    title.blur();
 };

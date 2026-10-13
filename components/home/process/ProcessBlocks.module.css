@@ -82,7 +82,7 @@
 }
 
 .gutterNumber {
-    color: var(--caret);
+    color: var(--caret-text);
 }
 
 .copy {
@@ -118,7 +118,7 @@
 .cycleNumber {
     font-family: var(--font-mono);
     font-size: var(--fs-micro);
-    color: var(--caret);
+    color: var(--caret-text);
     font-variation-settings: 'wdth' 88;
 }
 

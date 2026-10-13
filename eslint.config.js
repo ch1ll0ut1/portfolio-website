@@ -160,52 +160,18 @@ export default tseslint.config(
         },
     },
     {
-        // E9: media-query, stage and stored-consent subscriptions mirrored into
-        // state from an effect, to move to `useSyncExternalStore`.
-        files: [
-            'components/consent/ConsentContext.tsx',
-            'lib/motion/useFinePointer.ts',
-            'lib/motion/useReducedMotion.ts',
-            'lib/motion/useIntro.ts',
-        ],
+        // E9: the stored-consent subscription is mirrored into state from an
+        // effect, to move to `useSyncExternalStore` with the consent rework.
+        files: ['components/consent/ConsentContext.tsx'],
         rules: {
             'react-hooks/set-state-in-effect': 'warn',
         },
     },
     {
-        // A4: the command palette is reworked to the APG combobox pattern.
-        files: ['components/chrome/CommandPalette.tsx', 'components/chrome/CommandList.tsx'],
+        // Not yet in the plan: the hover preview mirrors its prop into state
+        // from an effect, which needs a design decision rather than a lint fix.
+        files: ['components/home/work/ProjectPreview.tsx'],
         rules: {
-            'react-hooks/set-state-in-effect': 'warn',
-            'jsx-a11y/click-events-have-key-events': 'warn',
-        },
-    },
-    {
-        // A5: the hand-rolled modals move to native `<dialog>` + `showModal()`.
-        files: [
-            'components/chrome/Overlay.tsx',
-            'components/chrome/ShortcutsOverlay.tsx',
-            'components/consent/ConsentPreferencesModal.tsx',
-        ],
-        rules: {
-            'react-hooks/set-state-in-effect': 'warn',
-            'jsx-a11y/no-noninteractive-element-interactions': 'warn',
-        },
-    },
-    {
-        // A3: the contenteditable h1 becomes an explicit, opt-in textbox widget.
-        files: ['components/home/hero/HeadlineEditor.tsx'],
-        rules: {
-            'jsx-a11y/no-noninteractive-element-interactions': 'warn',
-        },
-    },
-    {
-        // Not yet in the plan: focusable preview rows in the project index, and
-        // the hover preview mirroring its prop into state from an effect. Both
-        // need a design decision rather than a lint fix.
-        files: ['components/home/work/MoreProjects.tsx', 'components/home/work/ProjectPreview.tsx'],
-        rules: {
-            'jsx-a11y/no-noninteractive-tabindex': 'warn',
             'react-hooks/set-state-in-effect': 'warn',
         },
     },

@@ -6,9 +6,12 @@
  */
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { REDUCED_MOTION_QUERY, tickerCount } from '@/lib/motion';
 import { installIntersectionObserver, installMatchMedia } from '../../../test/motionEnv';
 import { Marquee } from './Marquee';
+import styles from './Proof.module.css';
 
 /** The motion kit waits on web fonts, which jsdom does not implement. */
 const stubFonts = () => {
@@ -65,6 +68,82 @@ describe('Marquee', () => {
         names.forEach((name) => {
             expect(track).toHaveTextContent(name);
         });
+    });
+
+    it('should offer a pause control while the row moves', () => {
+        // Act
+        render(<Marquee names={names} />);
+
+        // Assert
+        expect(screen.getByRole('button', { name: /^Pause/ })).toHaveTextContent('Pause');
+    });
+
+    it('should not offer a pause control when nothing moves', () => {
+        // Arrange
+        restoreMedia();
+        restoreMedia = installMatchMedia([REDUCED_MOTION_QUERY]);
+
+        // Act
+        render(<Marquee names={names} />);
+
+        // Assert
+        expect(screen.queryByRole('button')).not.toBeInTheDocument();
+    });
+
+    it('should stop the clock while paused and run it again on play', async () => {
+        // Arrange
+        const user = userEvent.setup();
+        const before = tickerCount();
+
+        render(<Marquee names={names} />);
+        act(() => {
+            observers.instances.forEach((observer) => {
+                observer.emit(true);
+            });
+        });
+
+        expect(tickerCount()).toBe(before + 1);
+
+        // Act
+        await user.click(screen.getByRole('button', { name: /^Pause/ }));
+
+        // Assert
+        expect(tickerCount()).toBe(before);
+        expect(screen.getByRole('button', { name: /^Play/ })).toHaveTextContent('Play');
+
+        // Act
+        await user.click(screen.getByRole('button', { name: /^Play/ }));
+
+        // Assert
+        expect(tickerCount()).toBe(before + 1);
+    });
+
+    it('should not run the clock while the row is off screen', () => {
+        // Arrange
+        const before = tickerCount();
+
+        // Act
+        render(<Marquee names={names} />);
+
+        // Assert
+        expect(tickerCount()).toBe(before);
+    });
+
+    it('should never restyle the names themselves', () => {
+        // Act
+        const { container } = render(<Marquee names={names} />);
+
+        act(() => {
+            observers.instances.forEach((observer) => {
+                observer.emit(true);
+            });
+        });
+
+        // Assert
+        container.querySelectorAll('li').forEach((item) => {
+            expect(item).not.toHaveAttribute('style');
+        });
+        expect(container.querySelector(`.${styles.marquee}`)).toHaveClass(styles.isLive);
     });
 
     it('should render nothing extra for an empty list', () => {

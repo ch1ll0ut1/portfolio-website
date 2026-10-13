@@ -71,10 +71,10 @@
     background: var(--line);
 }
 
-/* White reads on the selection blue in both themes. */
+/* The selection fill's own text color, which is AA in both themes. */
 .isCopied .copy {
     background: var(--select);
-    color: #fff;
+    color: var(--on-select);
 }
 
 .swap {

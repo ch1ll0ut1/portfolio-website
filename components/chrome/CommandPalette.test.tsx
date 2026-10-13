@@ -193,19 +193,86 @@ describe('<CommandPalette>', () => {
         expect(onClose).toHaveBeenCalled();
     });
 
-    it('should keep Tab inside the search input', async () => {
+    it('should open as a modal dialog', async () => {
+        await mount();
+
+        expect(screen.getByRole('dialog', { name: 'Command menu' })).toHaveAttribute('open');
+    });
+
+    it('should name the combobox and say it filters a list', async () => {
+        await mount();
+
+        const combobox = screen.getByRole('combobox', { name: 'Search commands' });
+
+        expect(combobox).toHaveAttribute('aria-autocomplete', 'list');
+        expect(combobox).toHaveAttribute('aria-expanded', 'true');
+        expect(combobox).toHaveAttribute('aria-controls', screen.getByRole('listbox').id);
+    });
+
+    it('should report the list collapsed and show the empty state outside it when nothing matches', async () => {
         const user = userEvent.setup();
 
         await mount();
-        await user.tab();
+        await user.type(screen.getByRole('combobox'), 'zzzz');
 
-        expect(screen.getByRole('combobox')).toHaveFocus();
+        expect(screen.getByRole('combobox')).toHaveAttribute('aria-expanded', 'false');
+        expect(screen.getByRole('combobox')).not.toHaveAttribute('aria-activedescendant');
+        expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+        expect(screen.getByText(/No matches/)).toBeVisible();
     });
 
-    it('should be announced as a modal dialog', async () => {
+    it('should label each group of options with its heading', async () => {
         await mount();
 
-        expect(screen.getByRole('dialog')).toHaveAttribute('aria-modal', 'true');
+        const groups = screen.getAllByRole('group');
+
+        expect(groups.map(group => group.getAttribute('aria-labelledby') && document.getElementById(String(group.getAttribute('aria-labelledby')))?.textContent))
+            .toEqual(['Go to', 'Actions', 'Elsewhere']);
+        expect(screen.getByRole('group', { name: 'Elsewhere' })).toContainElement(screen.getByRole('option', { name: /GitHub/ }));
+    });
+
+    it('should announce how many commands the query left', async () => {
+        const user = userEvent.setup();
+
+        await mount();
+
+        expect(screen.getByRole('status')).toBeEmptyDOMElement();
+
+        await user.type(screen.getByRole('combobox'), 'email');
+
+        expect(screen.getByRole('status')).toHaveTextContent('1 command');
+
+        await user.type(screen.getByRole('combobox'), 'zzzz');
+
+        expect(screen.getByRole('status')).toHaveTextContent('No matching commands');
+    });
+
+    it('should start from a clean query each time it opens', async () => {
+        const user = userEvent.setup();
+        const view = await mount();
+
+        await user.type(screen.getByRole('combobox'), 'email');
+        view.rerender(<CommandPalette open={false} onClose={onClose} onOpenShortcuts={onOpenShortcuts} />);
+        view.rerender(<CommandPalette open onClose={onClose} onOpenShortcuts={onOpenShortcuts} />);
+
+        await waitFor(() => {
+            expect(screen.getByRole('combobox')).toHaveValue('');
+        });
+        expect(selectedOption()).toHaveTextContent('Work');
+    });
+
+    it('should close when the backdrop is clicked', async () => {
+        const user = userEvent.setup();
+        const { container } = await mount();
+        const scrim = container.querySelector('dialog > [aria-hidden="true"]');
+
+        if (!scrim) {
+            throw new Error('The dialog has no scrim');
+        }
+
+        await user.click(scrim);
+
+        expect(onClose).toHaveBeenCalled();
     });
 
     it('should restore focus to the element that opened it', async () => {

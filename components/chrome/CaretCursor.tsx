@@ -1,8 +1,9 @@
 'use client';
 
 import { type FC, useEffect, useRef } from 'react';
-import { useFinePointer, useReducedMotion } from '@/lib/motion';
+import { useFinePointer, useMediaQuery, useReducedMotion } from '@/lib/motion';
 import { type CaretCursor as Cursor, type CaretCursorParts, createCaretCursor } from './caretCursorEngine';
+import { usePreference } from './preferences';
 import styles from './CaretCursor.module.css';
 
 interface Props {
@@ -10,18 +11,27 @@ interface Props {
     overlayOpen: boolean;
 }
 
+/** Visitors who set their OS to its own colours or to more contrast keep its cursor. */
+const FORCED_COLORS_QUERY = '(forced-colors: active)';
+const MORE_CONTRAST_QUERY = '(prefers-contrast: more)';
+
 /**
  * The page's cursor.
  *
  * Mounts only for a pointer that can actually hover, and never under reduced
  * motion — a per-frame cursor is exactly the kind of thing that preference is
- * asking for less of. Nothing renders in those cases, so the OS cursor keeps
- * working untouched.
+ * asking for less of. It also stands down in forced-colors and high-contrast
+ * modes, whose cursor is part of what the visitor configured, and when the
+ * visitor has switched it off from the command menu. Nothing renders in those
+ * cases, so the OS cursor keeps working untouched.
  */
 export const CaretCursor: FC<Props> = ({ overlayOpen }) => {
     const fine = useFinePointer();
     const reduced = useReducedMotion();
-    const enabled = fine && !reduced;
+    const forcedColors = useMediaQuery(FORCED_COLORS_QUERY);
+    const moreContrast = useMediaQuery(MORE_CONTRAST_QUERY);
+    const wanted = usePreference('caretCursor');
+    const enabled = fine && !reduced && !forcedColors && !moreContrast && wanted;
 
     const rootRef = useRef<HTMLDivElement>(null);
     const fillRef = useRef<HTMLElement>(null);

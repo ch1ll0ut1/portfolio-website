@@ -1,6 +1,6 @@
 'use client';
 
-import { type FC, type FocusEvent, useCallback, useEffect, useRef, useState } from 'react';
+import { type FC, useCallback, useEffect, useRef, useState } from 'react';
 import { projectsIndex } from '@/config/projectsIndex';
 import { useFinePointer, useReducedMotion, useStageEvent } from '@/lib/motion';
 import { ProjectPreview } from './ProjectPreview';
@@ -9,25 +9,21 @@ import styles from './MoreProjects.module.css';
 /** The marker's CSS height; it is scaled from this to each row's height. */
 const MARKER_HEIGHT = 100;
 
-interface Active {
-    index: number;
-    /** True when the cursor put it there, which is what the preview card needs. */
-    fromPointer: boolean;
-}
-
 /**
- * The project index: a shared sliding marker, hovered or focused row lifted,
- * siblings dimmed.
+ * The project index: a shared sliding marker, hovered row lifted, siblings
+ * dimmed, and a preview card that follows the cursor.
  *
- * Hover and focus drive exactly the same state, so the list behaves the same
- * from a keyboard. Only the cursor preview is pointer-specific.
+ * The rows are plain list items, not Tab stops: none of them does anything,
+ * so focusing each one would only add keystrokes between a keyboard user and
+ * the next control. Every row's text is on the page either way; the hover
+ * treatment is a pointer nicety on top.
  */
 export const MoreProjects: FC = () => {
     const listRef = useRef<HTMLOListElement>(null);
     const markerRef = useRef<HTMLDivElement>(null);
     /** The marker jumps to its first row and slides between rows afterwards. */
     const wasActive = useRef(false);
-    const [active, setActive] = useState<Active | null>(null);
+    const [active, setActive] = useState<number | null>(null);
     const fine = useFinePointer();
     const reduced = useReducedMotion();
 
@@ -57,58 +53,39 @@ export const MoreProjects: FC = () => {
     }, []);
 
     useEffect(() => {
-        if (!active) {
+        if (active === null) {
             wasActive.current = false;
 
             return;
         }
 
-        place(active.index, !wasActive.current);
+        place(active, !wasActive.current);
         wasActive.current = true;
     }, [active, place]);
 
     useStageEvent('layout', () => {
-        if (active) {
-            place(active.index, true);
+        if (active !== null) {
+            place(active, true);
         }
     });
-
-    const clearUnlessFocused = () => {
-        const list = listRef.current;
-
-        if (list?.contains(document.activeElement)) {
-            return;
-        }
-
-        setActive(null);
-    };
-
-    const handleBlur = (event: FocusEvent<HTMLOListElement>) => {
-        if (!event.currentTarget.contains(event.relatedTarget)) {
-            setActive(null);
-        }
-    };
 
     return (
         <div className={styles.index} id="more-work">
             <h3 className={styles.title}>More projects</h3>
             <ol
                 ref={listRef}
-                className={`${styles.list}${active ? ` ${styles.listHot}` : ''}`}
-                onBlur={handleBlur}
-                onPointerLeave={clearUnlessFocused}
+                className={`${styles.list}${active === null ? '' : ` ${styles.listHot}`}`}
+                onPointerLeave={() => {
+                    setActive(null);
+                }}
             >
                 {projectsIndex.map((project, index) => (
                     <li
                         key={project.id}
-                        className={`${styles.row}${active?.index === index ? ` ${styles.rowActive}` : ''}`}
-                        tabIndex={0}
-                        onFocus={() => {
-                            setActive({ index, fromPointer: false });
-                        }}
+                        className={`${styles.row}${active === index ? ` ${styles.rowActive}` : ''}`}
                         onPointerEnter={fine
                             ? () => {
-                                setActive({ index, fromPointer: true });
+                                setActive(index);
                             }
                             : undefined}
                     >
@@ -121,11 +98,11 @@ export const MoreProjects: FC = () => {
             </ol>
             <div
                 ref={markerRef}
-                className={`${styles.marker}${active ? ` ${styles.markerOn}` : ''}`}
+                className={`${styles.marker}${active === null ? '' : ` ${styles.markerOn}`}`}
                 aria-hidden="true"
             />
             {fine && !reduced && (
-                <ProjectPreview project={active?.fromPointer ? projectsIndex[active.index] ?? null : null} />
+                <ProjectPreview project={active === null ? null : projectsIndex[active] ?? null} />
             )}
         </div>
     );

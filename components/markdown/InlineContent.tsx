@@ -1,4 +1,5 @@
 import React, { FC } from 'react';
+import { siteConfig } from '@/config/site';
 import { type InlineSegment } from './markdownProcessor';
 import styles from './Markdown.module.css';
 
@@ -23,17 +24,21 @@ export const InlineContent: FC<Props> = ({ segments }) => {
             );
         }
 
-        // Handle link first (innermost)
+        // Handle link first (innermost). Only links that leave the site open a
+        // new tab, and they say so to assistive technology.
         if (segment.isLink && segment.href) {
+            const offSite = isOffSite(segment.href);
+
             segmentContent = (
                 <a
                     key={segmentIndex}
                     href={segment.href}
                     className={styles.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    target={offSite ? '_blank' : undefined}
+                    rel={offSite ? 'noopener noreferrer' : undefined}
                 >
                     {segmentContent}
+                    {offSite ? <span className="visually-hidden"> (opens in a new tab)</span> : null}
                 </a>
             );
         }
@@ -65,4 +70,20 @@ export const InlineContent: FC<Props> = ({ segments }) => {
     });
 
     return <>{content}</>;
+};
+
+const SITE_HOST = new URL(siteConfig.url).host.replace(/^www\./, '');
+
+/** An absolute http(s) URL on another host. Relative paths, anchors and `mailto:` stay put. */
+const isOffSite = (href: string) => {
+    if (!/^https?:\/\//i.test(href)) {
+        return false;
+    }
+
+    try {
+        return new URL(href).host.replace(/^www\./, '') !== SITE_HOST;
+    }
+    catch {
+        return true;
+    }
 };

@@ -117,7 +117,10 @@
     position: relative;
 }
 
+/* The editor inside the page's h1. A span, since a heading only holds
+   phrasing content, laid out as the block the headline always was. */
 .title {
+    display: block;
     font-size: var(--fs-hero);
     line-height: .92;
     letter-spacing: -.045em;
@@ -239,7 +242,7 @@
     margin-bottom: 5px;
     padding: 3px 7px 4px;
     border-radius: 4px 4px 4px 0;
-    background: var(--caret);
+    background: var(--caret-fill);
     color: var(--on-accent);
     font-family: var(--font-mono);
     font-size: .68rem;
@@ -355,7 +358,7 @@
 }
 
 .treeState.isDirty {
-    color: var(--caret);
+    color: var(--caret-text);
 }
 
 .treeCode {
@@ -383,7 +386,7 @@
 }
 
 .bool {
-    color: var(--caret);
+    color: var(--caret-text);
 }
 
 .punct {
@@ -420,6 +423,23 @@
     border: 1px solid var(--line);
     border-radius: 4px;
     color: var(--fg-2);
+}
+
+/* The keyboard way into the editor; the headline itself is not a Tab stop
+   until the visitor opts in here. */
+.editButton {
+    min-height: 24px;
+    margin-top: 6px;
+    color: var(--fg-2);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--fg-2) 35%, transparent);
+    text-underline-offset: 3px;
+}
+
+.editButton:hover,
+.editButton:focus-visible {
+    color: var(--fg);
+    text-decoration-color: var(--caret);
 }
 
 /* ---------- floating format toolbar ---------- */
@@ -474,7 +494,7 @@
 .toolbarHl {
     padding: 0 3px;
     background: var(--select);
-    color: #fff;
+    color: var(--on-select);
     border-radius: 2px;
 }
 

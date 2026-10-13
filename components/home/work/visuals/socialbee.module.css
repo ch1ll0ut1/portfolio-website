@@ -84,7 +84,7 @@
     height: 42px;
     margin: -21px 0 0 -21px;
     border-color: var(--caret);
-    color: var(--caret);
+    color: var(--caret-text);
 }
 
 .lead::before {
