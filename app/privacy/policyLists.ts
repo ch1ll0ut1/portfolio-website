@@ -19,7 +19,9 @@ export interface PolicyItem {
 export const POLICY_LAST_UPDATED = '2026-10-14';
 
 export const directInformation: PolicyItem[] = [
-    { label: 'Messages', text: 'If you message me on LinkedIn, I receive your name, your LinkedIn profile, and whatever your message contains. The site has no contact form; LinkedIn processes those messages under its own privacy policy.' },
+    { label: 'Contact form', text: 'If you send me a message through the contact form, I receive your name, your email address, the topic you picked, and your message, to answer you. The form sends them through Resend, from its EU region, straight to my email inbox; the website itself keeps no copy.' },
+    { label: 'Spam protection', text: 'When you send the contact form, Vercel BotID runs an invisible check in your browser to tell people from bots, and Vercel processes the technical signals that check needs (such as browser and device characteristics). They are used for that check only.' },
+    { label: 'LinkedIn messages', text: 'If you message me on LinkedIn, I receive your name, your LinkedIn profile, and whatever your message contains. LinkedIn processes those messages under its own privacy policy.' },
     { label: 'Call bookings', text: 'If you book a call, Calendly collects your name, email address, and any notes you add, and shares them with me so we can meet. Calendly processes that data under its own privacy policy.' },
 ];
 
@@ -42,7 +44,8 @@ export const storageTypes: PolicyItem[] = [
 ];
 
 export const serviceProviders: PolicyItem[] = [
-    { label: 'Vercel', text: 'Hosts the website and provides the cookieless Web Analytics and Speed Insights statistics.' },
+    { label: 'Vercel', text: 'Hosts the website, provides the cookieless Web Analytics and Speed Insights statistics, and runs the BotID check that keeps bots out of the contact form.' },
+    { label: 'Resend', text: 'Delivers contact form messages to my inbox, sending from its EU region (Ireland). It keeps its own delivery logs for a limited period under its own retention policy.' },
     { label: 'Google Analytics', text: 'Measures how the website is used, only after you accept analytics. Google signals and ad personalization are turned off, and no advertising data is collected.' },
     { label: 'Calendly', text: 'Handles call bookings if you choose to book one.' },
 ];
@@ -63,7 +66,8 @@ export const cookieManagement: PolicyItem[] = [
 ];
 
 export const dataRetention: PolicyItem[] = [
-    { label: 'Messages and bookings', text: 'Kept as long as our conversation or any resulting work needs them, then deleted' },
+    { label: 'Contact form messages', text: 'Kept in my inbox only as long as I need them to answer you, then deleted' },
+    { label: 'Other messages and bookings', text: 'Kept as long as our conversation or any resulting work needs them, then deleted' },
     { label: 'Analytics data', text: 'Kept by Google Analytics for no longer than 14 months' },
     { label: 'Server logs', text: 'Kept by Vercel for a short period under its own retention policy' },
     { label: 'Browser storage', text: 'Stays on your device until you clear it or withdraw consent' },
@@ -72,7 +76,7 @@ export const dataRetention: PolicyItem[] = [
 export const securityMeasures: PolicyItem[] = [
     { label: 'HTTPS', text: 'Every page is served over an encrypted connection' },
     { label: 'Hosting', text: 'The website runs on Vercel’s managed infrastructure' },
-    { label: 'Minimal data', text: 'The website has no accounts, forms, or database of visitor data' },
+    { label: 'Minimal data', text: 'The website has no accounts and no database of visitor data. Contact form messages are not stored on the website; they go straight to my inbox' },
 ];
 
 export const policyChanges: PolicyItem[] = [
@@ -81,7 +85,8 @@ export const policyChanges: PolicyItem[] = [
 ];
 
 export const legalBases: PolicyItem[] = [
-    { label: 'Consent', text: 'For Google Analytics and its cookies' },
-    { label: 'Legitimate interest', text: 'For hosting, server logs, security, cookieless statistics, and the essential storage the site needs to work' },
-    { label: 'Steps before a contract', text: 'For replying to your messages and preparing calls about possible work' },
+    { label: 'Consent (Art. 6(1)(a) GDPR)', text: 'For Google Analytics and its cookies' },
+    { label: 'Legitimate interest (Art. 6(1)(f) GDPR)', text: 'For hosting, server logs, security, keeping spam out of the contact form, cookieless statistics, and the essential storage the site needs to work' },
+    { label: 'Contact form (Art. 6(1)(b) and (f) GDPR)', text: 'For answering your message: where it is about possible work with me, as a step before a contract; otherwise, in my legitimate interest in replying to people who write to me' },
+    { label: 'Steps before a contract (Art. 6(1)(b) GDPR)', text: 'For replying to your LinkedIn messages and preparing calls about possible work' },
 ];

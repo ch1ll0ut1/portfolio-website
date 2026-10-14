@@ -88,6 +88,18 @@
     line-height: 1.75;
 }
 
+.paragraph a {
+    color: var(--fg);
+    text-decoration: underline;
+    text-decoration-color: var(--caret);
+    text-decoration-thickness: 2px;
+    text-underline-offset: .2em;
+}
+
+.paragraph a:hover {
+    text-decoration-color: currentColor;
+}
+
 .paragraph + .paragraph,
 .list + .paragraph {
     margin-top: 1.1em;
@@ -150,6 +162,9 @@
 
 .cardLine a {
     color: inherit;
+    text-decoration: underline;
+    text-decoration-color: var(--caret);
+    text-underline-offset: .2em;
 }
 
 .cardNote {

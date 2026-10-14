@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import Link from 'next/link';
 import { links } from '@/config/links';
 import { siteConfig } from '@/config/site';
 import { PolicyList } from './PolicyList';
@@ -37,6 +38,8 @@ const DATE_FORMAT: Intl.DateTimeFormatOptions = {
 const SITE_HOST = new URL(siteConfig.url).host;
 /** The profile URL as it reads in the contact card: host and path, no scheme or trailing slash. */
 const LINKEDIN_LABEL = links.social.linkedin.replace(/^https:\/\/(www\.)?/, '').replace(/\/$/, '');
+/** The contact form, with the privacy topic already picked. */
+const PRIVACY_REQUEST_HREF = '/contact?topic=privacy';
 
 /** The policy itself, written in the first person and matched to what the site actually does. */
 export const PrivacyPolicy: FC<Props> = ({ lastUpdated }) => {
@@ -111,7 +114,10 @@ export const PrivacyPolicy: FC<Props> = ({ lastUpdated }) => {
                 </p>
                 <PolicyList items={dataRights} />
                 <p className={styles.paragraph}>
-                    To use any of them, message me on LinkedIn, linked below. I will reply within 30 days.
+                    To use any of them, send me a privacy request through the
+                    {' '}
+                    <Link href={PRIVACY_REQUEST_HREF}>contact form</Link>
+                    , or message me on LinkedIn, linked below. I will reply within 30 days.
                 </p>
             </section>
 
@@ -166,10 +172,16 @@ export const PrivacyPolicy: FC<Props> = ({ lastUpdated }) => {
             <section className={styles.section}>
                 <h2 className={styles.h2}>Contact</h2>
                 <p className={styles.paragraph}>
-                    For questions about this policy or to exercise your rights, write to me:
+                    For questions about this policy or to exercise your rights, send me a privacy request through
+                    the contact form. LinkedIn works too.
                 </p>
                 <div className={styles.card}>
                     <p className={styles.cardName}>{siteConfig.name}</p>
+                    <p className={styles.cardLine}>
+                        Contact form:
+                        {' '}
+                        <Link href={PRIVACY_REQUEST_HREF}>{`${SITE_HOST}/contact`}</Link>
+                    </p>
                     <p className={styles.cardLine}>
                         LinkedIn:
                         {' '}
@@ -181,7 +193,7 @@ export const PrivacyPolicy: FC<Props> = ({ lastUpdated }) => {
                         {SITE_HOST}
                     </p>
                     <p className={styles.cardNote}>
-                        Please start your message with “Privacy request”.
+                        On LinkedIn, please start your message with “Privacy request”.
                     </p>
                 </div>
             </section>
