@@ -3,6 +3,7 @@ declare const styles: {
     readonly affix: string;
     readonly col: string;
     readonly digit: string;
+    readonly isArmed: string;
     readonly isIn: string;
     readonly isLive: string;
     readonly item: string;

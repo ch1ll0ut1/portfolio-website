@@ -247,10 +247,16 @@
     line-height: 1;
 }
 
-/* The roll is an animation rather than a transition on purpose: the reel's
-   resting transform is the final number, and only the animation ever puts the
-   starting digits on screen. A stat that is never animated, or whose entrance
-   never fires, therefore still reads 2008 rather than 1990. */
+/* The reel rests on the final number, so no-JS, reduced motion and a stat
+   whose entrance never arms all read 2008. Armed just before it scrolls into
+   view, it drops back to its starting digits while still off screen, as the
+   prototype's `is-armed` did, so the roll starts from what the visitor sees
+   rather than snapping back from the final number. The roll itself is an
+   animation holding its first frame through the stagger delay. */
+:global(.motion) .stat.isArmed .reel {
+    transform: none;
+}
+
 :global(.motion) .stat.isIn .reel {
     animation: odometer calc(1.1s + var(--k) * .25s) cubic-bezier(.2, .9, .1, 1) calc(var(--si) * 90ms) both;
 }
