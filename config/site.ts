@@ -24,6 +24,12 @@ export interface SiteConfig {
      * sitemap does not claim every page changed on every deploy.
      */
     staticPagesUpdated: string;
+    /**
+     * The `From` of the contact form's emails. Not a secret: it is a sending
+     * address on this domain, which Resend has verified. Where the messages
+     * go comes only from the `CONTACT_TO_EMAIL` environment variable.
+     */
+    contactSender: string;
 }
 
 const SINCE_YEAR = 2008;
@@ -37,6 +43,7 @@ export const siteConfig: SiteConfig = {
     countryCode: 'TH',
     description: `Software architect, fractional CTO, and hands-on tech lead. Since ${SINCE_YEAR} I have taken products from the first commit to production, for startups, scale-ups, and the Parliament of Iceland.`,
     staticPagesUpdated: '2026-10-13',
+    contactSender: 'Stefan Knoch website <contact-form@stefanknoch.com>',
 };
 
 /**
