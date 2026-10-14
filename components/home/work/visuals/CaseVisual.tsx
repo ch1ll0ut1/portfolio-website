@@ -3,6 +3,7 @@
 import { type FC, useCallback, useEffect, useRef } from 'react';
 import type { CaseMetric, CaseVisualId } from '@/config/caseStudies';
 import { prefersReducedMotion, useMaskReveal, useStageEvent } from '@/lib/motion';
+import { whenIdle } from '@/lib/whenIdle';
 import styles from './CaseVisual.module.css';
 import { bluereceiptClasses, edithingClasses, ekoClasses, frameClasses, socialbeeClasses, vizClass } from './classes';
 import type { Illustration } from './dom';
@@ -21,38 +22,35 @@ const MAX_SCALE = 1.3;
 const NARROW = 520;
 
 /**
- * Loads an illustration on first approach.
+ * How far outside the viewport an illustration is built: a full viewport above
+ * and below. Built that early, it is complete, and its fade-in has played,
+ * before the first pixel of its panel scrolls into view.
+ */
+const APPROACH_MARGIN = '100% 0px';
+
+type Build = (stage: HTMLElement) => Illustration;
+
+/**
+ * Each illustration's code, resolved to the function that builds it.
  *
  * The four modules together are the biggest thing in this section, so they are
- * imported here rather than at the top of the file: nothing is fetched until a
- * case study is about to be looked at.
+ * imported here rather than at the top of the file and stay out of the page's
+ * first load. Each one is fetched once the page is idle, and built a viewport
+ * before its panel arrives. A second call costs nothing: the module is cached.
  */
-const load = async (id: CaseVisualId, stage: HTMLElement): Promise<Illustration> => {
-    switch (id) {
-        case 'edithing': {
-            const { buildEdithing } = await import('./edithing');
-
-            return buildEdithing(stage, frameClasses, edithingClasses);
-        }
-
-        case 'bluereceipt': {
-            const { buildBluereceipt } = await import('./bluereceipt');
-
-            return buildBluereceipt(stage, frameClasses, bluereceiptClasses);
-        }
-
-        case 'socialbee': {
-            const { buildSocialbee } = await import('./socialbee');
-
-            return buildSocialbee(stage, frameClasses, socialbeeClasses);
-        }
-
-        case 'eko': {
-            const { buildEko } = await import('./eko');
-
-            return buildEko(stage, frameClasses, ekoClasses);
-        }
-    }
+const loaders: Record<CaseVisualId, () => Promise<Build>> = {
+    edithing: () => import('./edithing').then(({ buildEdithing }) =>
+        (stage: HTMLElement) => buildEdithing(stage, frameClasses, edithingClasses),
+    ),
+    bluereceipt: () => import('./bluereceipt').then(({ buildBluereceipt }) =>
+        (stage: HTMLElement) => buildBluereceipt(stage, frameClasses, bluereceiptClasses),
+    ),
+    socialbee: () => import('./socialbee').then(({ buildSocialbee }) =>
+        (stage: HTMLElement) => buildSocialbee(stage, frameClasses, socialbeeClasses),
+    ),
+    eko: () => import('./eko').then(({ buildEko }) =>
+        (stage: HTMLElement) => buildEko(stage, frameClasses, ekoClasses),
+    ),
 };
 
 /**
@@ -130,23 +128,31 @@ export const CaseVisual: FC<Props> = ({ id, metric, covered }) => {
 
         const stage = document.createElement('div');
         let disposed = false;
-        let loading = false;
+        let fadeFrame = 0;
 
-        stage.className = vizClass;
+        stage.className = `${vizClass} ${styles.stage}`;
         host.appendChild(stage);
         stageRef.current = stage;
 
         const mount = async () => {
-            const illustration = await load(id, stage);
+            const build = await loaders[id]();
 
             if (disposed) {
                 return;
             }
 
+            const illustration = build(stage);
+
             illustrationRef.current = illustration;
             stage.style.width = `${illustration.width}px`;
             stage.style.height = `${illustration.height}px`;
             fit();
+
+            // A frame later, so the transparent start is painted and the fade
+            // has something to run from.
+            fadeFrame = requestAnimationFrame(() => {
+                stage.classList.add(styles.built);
+            });
 
             // Reduced motion gets one meaningful frame and no clock at all.
             if (prefersReducedMotion()) {
@@ -155,20 +161,34 @@ export const CaseVisual: FC<Props> = ({ id, metric, covered }) => {
                 return;
             }
 
+            // Built ahead of time, so it waits, paused, for its panel to show.
             runnerRef.current = createRunner(stage, illustration.script);
             sync();
         };
 
+        // Fetch the code while the page is idle, so a reader who jumps straight
+        // here finds it already downloaded.
+        const cancelPreload = whenIdle(() => {
+            loaders[id]().catch(ignoreFailedPreload);
+        });
+
+        // Build as soon as the panel is within a viewport of being seen.
+        const approach = new IntersectionObserver((entries) => {
+            if (!entries.some(entry => entry.isIntersecting)) {
+                return;
+            }
+
+            approach.disconnect();
+            cancelPreload();
+            void mount().catch((error: unknown) => {
+                console.error('[work] illustration failed to mount', error);
+            });
+        }, { rootMargin: APPROACH_MARGIN });
+
+        // Run only while enough of it is actually on screen.
         const observer = new IntersectionObserver((entries) => {
             for (const entry of entries) {
                 onScreenRef.current = entry.isIntersecting;
-            }
-
-            if (onScreenRef.current && !loading) {
-                loading = true;
-                void mount().catch((error: unknown) => {
-                    console.error('[work] illustration failed to mount', error);
-                });
             }
 
             sync();
@@ -178,12 +198,16 @@ export const CaseVisual: FC<Props> = ({ id, metric, covered }) => {
             fit();
         });
 
+        approach.observe(host);
         observer.observe(host);
         resizeObserver.observe(host);
         document.addEventListener('visibilitychange', sync);
 
         return () => {
             disposed = true;
+            cancelAnimationFrame(fadeFrame);
+            cancelPreload();
+            approach.disconnect();
             observer.disconnect();
             resizeObserver.disconnect();
             document.removeEventListener('visibilitychange', sync);
@@ -205,3 +229,6 @@ export const CaseVisual: FC<Props> = ({ id, metric, covered }) => {
         </div>
     );
 };
+
+/** A failed warm-up is not news: the build retries the import and reports it. */
+const ignoreFailedPreload = () => undefined;

@@ -34,6 +34,22 @@
     overflow: hidden;
 }
 
+/* The illustration itself, placed in the host by CaseVisual. It is normally
+   built a viewport ahead of its panel, so this fade has played out of sight;
+   it only shows when the reader jumps straight here before the build lands,
+   where it keeps the window from popping in. With motion off it just appears. */
+.stage {
+    opacity: 0;
+}
+
+.stage.built {
+    opacity: 1;
+}
+
+:global(.motion) .stage.built {
+    transition: opacity .45s var(--ease-ui);
+}
+
 .metric {
     position: absolute;
     left: clamp(20px, 3vw, 36px);
