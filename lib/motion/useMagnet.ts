@@ -47,7 +47,7 @@ const EASE_SETTLED_PX = 0.05;
 const SPRING_STRENGTH = 0.32;
 const SPRING_STIFFNESS = 0.09;
 const SPRING_DAMPING = 0.78;
-const SPRING_SETTLED = 0.01;
+const SPRING_SETTLED = 0.05;
 
 /**
  * Pulls an element toward the pointer and lets it return on leave.
