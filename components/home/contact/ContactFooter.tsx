@@ -1,6 +1,7 @@
 'use client';
 
 import { type FC, useRef } from 'react';
+import Link from 'next/link';
 import { links } from '@/config/links';
 import { requestConsentPreferences } from '@/components/consent/ConsentContext';
 import { externalLinkHandlers } from './outboundTracking';
@@ -61,6 +62,16 @@ export const ContactFooter: FC = () => {
                     </div>
                     <ul className={styles.links}>
                         {footerLinks.map((link) => {
+                            // Routes of this site navigate client-side, keeping the
+                            // nav and the rest of the chrome mounted.
+                            if (!link.external) {
+                                return (
+                                    <li key={link.label}>
+                                        <Link className="ulink" href={link.href}>{link.label}</Link>
+                                    </li>
+                                );
+                            }
+
                             const tracking = link.trackingLabel === undefined
                                 ? undefined
                                 : externalLinkHandlers(link.href, link.trackingLabel);
@@ -70,8 +81,8 @@ export const ContactFooter: FC = () => {
                                     <a
                                         className="ulink"
                                         href={link.href}
-                                        target={link.external ? '_blank' : undefined}
-                                        rel={link.external ? 'noopener noreferrer' : undefined}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
                                         onClick={tracking?.onClick}
                                         onAuxClick={tracking?.onAuxClick}
                                     >

@@ -1,6 +1,7 @@
 'use client';
 
 import { type FC, type MouseEvent, type ReactNode, useRef } from 'react';
+import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useMagnet } from '@/lib/motion';
 import { navSections } from '@/config/sections';
@@ -10,6 +11,7 @@ import { BrandMark } from './BrandMark';
 import { useActiveSection } from './useActiveSection';
 import { useHeaderScroll } from './useHeaderScroll';
 import { useNavEntrance } from './useNavEntrance';
+import { useRouteFocus } from './useRouteFocus';
 import { useSlidingPill } from './useSlidingPill';
 import styles from './SiteNav.module.css';
 
@@ -40,6 +42,9 @@ export interface Props {
  *
  * Those links are absolute (`/#work`) rather than bare fragments so the same
  * nav works on the reading routes, where the sections are not in the document.
+ * They are `next/link`s, so from a reading route they are a client-side
+ * navigation: the nav stays mounted, Next scrolls to the fragment, and
+ * `useRouteFocus` puts focus on the section.
  * On the homepage a plain click is taken over and handed to `scrollToSection`,
  * the same move the palette and the `g` chords make, so focus lands on the
  * section along with the scroll; the URL still gains the fragment. Modified
@@ -62,6 +67,7 @@ export const SiteNav: FC<Props> = ({ tools }) => {
     useSlidingPill(listRef, pillRef, activeId);
     useNavEntrance(headerRef);
     useMagnet(bookRef, { strength: BOOK_MAGNET });
+    useRouteFocus(pathname);
 
     const handleSectionClick = (event: MouseEvent<HTMLAnchorElement>, id: string) => {
         if (pathname !== HOME || isModifiedClick(event) || !document.getElementById(id)) {
@@ -91,7 +97,7 @@ export const SiteNav: FC<Props> = ({ tools }) => {
                             const isActive = section.id === activeId;
 
                             return (
-                                <a
+                                <Link
                                     key={section.id}
                                     href={`/#${section.id}`}
                                     className={isActive ? styles.isActive : undefined}
@@ -102,7 +108,7 @@ export const SiteNav: FC<Props> = ({ tools }) => {
                                     }}
                                 >
                                     {section.label}
-                                </a>
+                                </Link>
                             );
                         })}
                     </nav>

@@ -13,6 +13,12 @@ import { installMatchMedia } from '../../test/motionEnv';
 import { BrandMark } from './BrandMark';
 import styles from './BrandMark.module.css';
 
+const navigation = vi.hoisted(() => ({ pathname: '/' }));
+
+vi.mock('next/navigation', () => ({
+    usePathname: () => navigation.pathname,
+}));
+
 const getLetters = () => Array.from(document.querySelectorAll('[data-brand-letter]'));
 
 describe('<BrandMark> Component', () => {
@@ -20,6 +26,7 @@ describe('<BrandMark> Component', () => {
 
     beforeEach(() => {
         vi.useFakeTimers();
+        navigation.pathname = '/';
         restoreMedia = installMatchMedia([FINE_POINTER_QUERY]);
     });
 
@@ -32,6 +39,13 @@ describe('<BrandMark> Component', () => {
         render(<BrandMark />);
 
         expect(screen.getByRole('link', { name: /back to top/i })).toHaveAttribute('href', '#top');
+    });
+
+    it('should link home from every other route', () => {
+        navigation.pathname = '/blog';
+        render(<BrandMark />);
+
+        expect(screen.getByRole('link', { name: 'Stefan Knoch, home' })).toHaveAttribute('href', '/');
     });
 
     it('should spell the mark out in the markup', () => {
@@ -65,6 +79,23 @@ describe('<BrandMark> Component', () => {
 
         expect(s).not.toHaveClass(styles.isGone);
         expect(k).not.toHaveClass(styles.isGone);
+    });
+
+    // The nav outlives route changes, and leaving the homepage swaps the link.
+    it('should keep retyping after the route changes away from the homepage', () => {
+        const { rerender } = render(<BrandMark />);
+
+        navigation.pathname = '/blog';
+        rerender(<BrandMark />);
+
+        const [, k] = getLetters();
+
+        act(() => {
+            fireEvent.pointerEnter(screen.getByRole('link', { name: 'Stefan Knoch, home' }));
+            vi.advanceTimersByTime(80);
+        });
+
+        expect(k).toHaveClass(styles.isGone);
     });
 
     it('should retype the mark when it is focused with the keyboard', () => {

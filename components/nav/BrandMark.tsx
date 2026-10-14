@@ -1,12 +1,15 @@
 'use client';
 
 import { type FC, useEffect, useRef } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { hasFinePointer } from '@/lib/motion';
 import { type Retype, createRetype } from './retypeMark';
 import styles from './BrandMark.module.css';
 
 /**
- * The `sk` badge with its blinking caret, linking back to the top of the page.
+ * The `sk` badge with its blinking caret: back to the top on the homepage, and
+ * the way home from every other route (client-side, so the nav stays mounted).
  *
  * On hover (fine pointers) or keyboard focus the mark retypes itself: the two
  * letters are backspaced, then typed again, with the caret held solid. The
@@ -16,9 +19,12 @@ import styles from './BrandMark.module.css';
  * `data-nav-item` opts this element into `SiteNav`'s entrance stagger.
  */
 export const BrandMark: FC = () => {
+    const isHome = usePathname() === '/';
     const markRef = useRef<HTMLSpanElement>(null);
     const retypeRef = useRef<Retype | null>(null);
 
+    // Rebuilt when the link switches between `<a>` and `<Link>`, since that
+    // remounts the mark it animates.
     useEffect(() => {
         const mark = markRef.current;
 
@@ -47,7 +53,7 @@ export const BrandMark: FC = () => {
             retypeRef.current = null;
             retype.cancel();
         };
-    }, []);
+    }, [isHome]);
 
     const handlePointerEnter = () => {
         if (hasFinePointer()) {
@@ -61,21 +67,25 @@ export const BrandMark: FC = () => {
         }
     };
 
-    return (
-        <a
-            className={styles.brand}
-            href="#top"
-            aria-label="Stefan Knoch, back to top"
-            data-nav-item
-            onPointerEnter={handlePointerEnter}
-            onFocus={handleFocus}
-        >
-            <span className={styles.mark} ref={markRef} aria-hidden="true">
-                <span className={styles.letter} data-brand-letter>s</span>
-                <span className={styles.letter} data-brand-letter>k</span>
-                <span className={styles.caret} />
-            </span>
-            <span className={styles.name}>Stefan Knoch</span>
-        </a>
-    );
+    const shared = {
+        className: styles.brand,
+        onPointerEnter: handlePointerEnter,
+        onFocus: handleFocus,
+        children: (
+            <>
+                <span className={styles.mark} ref={markRef} aria-hidden="true">
+                    <span className={styles.letter} data-brand-letter>s</span>
+                    <span className={styles.letter} data-brand-letter>k</span>
+                    <span className={styles.caret} />
+                </span>
+                <span className={styles.name}>Stefan Knoch</span>
+            </>
+        ),
+    };
+
+    // On the homepage a plain fragment link, so the browser scrolls to the
+    // hero as before; elsewhere a client-side route change home.
+    return isHome
+        ? <a href="#top" aria-label="Stefan Knoch, back to top" data-nav-item {...shared} />
+        : <Link href="/" aria-label="Stefan Knoch, home" data-nav-item {...shared} />;
 };

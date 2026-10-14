@@ -41,8 +41,11 @@ export const scrollToSection = (id: string, navigate: (href: string) => void) =>
  * Focuses a landmark without scrolling to it a second time. Sections are not
  * focusable by default, so they are made programmatically focusable (and only
  * that: `-1` keeps them out of the Tab order).
+ *
+ * Also used by the nav once a client-side route change has landed, so focus
+ * follows the reader onto the new page the same way.
  */
-const focusTarget = (target: HTMLElement | null) => {
+export const focusTarget = (target: HTMLElement | null) => {
     if (!target) {
         return;
     }
