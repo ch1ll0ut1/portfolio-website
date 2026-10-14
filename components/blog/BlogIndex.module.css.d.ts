@@ -13,5 +13,6 @@ declare const styles: {
     readonly posts: string;
     readonly selection: string;
     readonly title: string;
+    readonly when: string;
 };
 export default styles;

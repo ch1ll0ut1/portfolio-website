@@ -16,9 +16,13 @@ export const PostRow: FC<Props> = ({ post }) => {
         <li className={styles.post} data-post>
             <Link href={`/blog/${post.slug}`} className={styles.link}>
                 <span className={styles.meta}>
-                    <time dateTime={post.date}>{formatDate(post.date)}</time>
-                    <span className={styles.dot} aria-hidden="true" />
-                    <span>{post.readTime}</span>
+                    {/* Date, dot and read time wrap as one unit, so a narrow row
+                        moves the chip down rather than breaking the line in them. */}
+                    <span className={styles.when}>
+                        <time dateTime={post.date}>{formatDate(post.date)}</time>
+                        <span className={styles.dot} aria-hidden="true" />
+                        <span>{post.readTime}</span>
+                    </span>
                     {post.featured && <span className={styles.featured}>Featured</span>}
                 </span>
                 <span className={styles.postTitle}>
