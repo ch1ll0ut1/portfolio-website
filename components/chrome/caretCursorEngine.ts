@@ -12,7 +12,7 @@
  */
 
 import { lerp, subscribeScroll, subscribeTick } from '@/lib/motion';
-import { type CursorMode, pickCursorMode } from './pickCursorMode';
+import { type CursorMode, type CursorPick, pickCursorMode } from './pickCursorMode';
 
 const CARET_HEIGHT = 20;
 const IBEAM_HEIGHT = 28;
@@ -31,8 +31,6 @@ const EASE_FILL = 0.78;
 const FRAME_MS = 16.7;
 /** Below this the selection wash is invisible, so its box is not updated. */
 const FILL_VISIBLE = 0.001;
-/** Quiet time after the last scroll frame before re-checking what is hovered. */
-const SCROLL_IDLE_MS = 90;
 
 export interface CaretCursorParts {
     root: HTMLElement;
@@ -272,12 +270,22 @@ export const createCaretCursor = (parts: CaretCursorParts, classes: CaretCursorC
     document.addEventListener('mouseleave', onLeave);
 
     // Scrolling moves the page under a stationary pointer, so what is hovered
-    // can change without any pointer event at all. Hit-testing forces layout,
-    // so it waits until the scroll comes to rest instead of running per frame.
-    let scrollTimer = 0;
-    const unsubscribeScroll = subscribeScroll(() => {
-        window.clearTimeout(scrollTimer);
-        scrollTimer = window.setTimeout(refresh, SCROLL_IDLE_MS);
+    // can change without any pointer event at all. The hit-test runs in the
+    // scroll store's read phase, once per scroll frame and before anything is
+    // written, so layout is already clean when it asks; the shape change it
+    // picks is applied in the write phase.
+    let scrolledOnto: CursorPick | null = null;
+    const unsubscribeScroll = subscribeScroll({
+        read: () => {
+            scrolledOnto = visible ? pickCursorMode(document.elementFromPoint(pointerX, pointerY)) : null;
+        },
+        write: () => {
+            if (scrolledOnto) {
+                setMode(scrolledOnto.mode, scrolledOnto.target);
+                scrolledOnto = null;
+                kick();
+            }
+        },
     });
 
     return {
@@ -291,7 +299,6 @@ export const createCaretCursor = (parts: CaretCursorParts, classes: CaretCursorC
             document.removeEventListener('pointerout', onPointerOut);
             document.removeEventListener('mouseleave', onLeave);
             unsubscribeScroll();
-            window.clearTimeout(scrollTimer);
             window.clearTimeout(idleTimer);
             stop?.();
             stop = null;

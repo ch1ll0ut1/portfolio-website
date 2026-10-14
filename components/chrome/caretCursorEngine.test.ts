@@ -246,6 +246,43 @@ describe('createCaretCursor', () => {
         expect(parts.root).not.toHaveClass(CLASSES.select);
     });
 
+    it('should re-read what is under a still pointer on the next frame of a scroll', () => {
+        pointer('pointermove', page, { x: 120, y: 60 });
+        Object.defineProperty(document, 'elementFromPoint', { configurable: true, value: () => button });
+
+        window.dispatchEvent(new Event('scroll'));
+
+        expect(parts.root).not.toHaveClass(CLASSES.select);
+
+        frames.step();
+
+        expect(parts.root).toHaveClass(CLASSES.select);
+    });
+
+    it('should hit-test once per scroll frame, however many scroll events arrive', () => {
+        pointer('pointermove', page, { x: 120, y: 60 });
+
+        const lookup = vi.fn(() => page);
+
+        Object.defineProperty(document, 'elementFromPoint', { configurable: true, value: lookup });
+        window.dispatchEvent(new Event('scroll'));
+        window.dispatchEvent(new Event('scroll'));
+        window.dispatchEvent(new Event('scroll'));
+        frames.step();
+
+        expect(lookup).toHaveBeenCalledTimes(1);
+    });
+
+    it('should not hit-test on scroll while it is hidden', () => {
+        const lookup = vi.fn(() => button);
+
+        Object.defineProperty(document, 'elementFromPoint', { configurable: true, value: lookup });
+        window.dispatchEvent(new Event('scroll'));
+        frames.step();
+
+        expect(lookup).not.toHaveBeenCalled();
+    });
+
     it('should stop listening once destroyed', () => {
         cursor.destroy();
         pointer('pointermove', page, { x: 50, y: 50 });
