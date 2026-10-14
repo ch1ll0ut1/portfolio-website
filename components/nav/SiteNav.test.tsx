@@ -20,10 +20,11 @@ import { installIntersectionObserver, installMatchMedia } from '../../test/motio
 import { SiteNav } from './SiteNav';
 import styles from './SiteNav.module.css';
 
-const navigation = vi.hoisted(() => ({ pathname: '/' }));
+const navigation = vi.hoisted(() => ({ pathname: '/', push: vi.fn() }));
 
 vi.mock('next/navigation', () => ({
     usePathname: () => navigation.pathname,
+    useRouter: () => ({ push: navigation.push }),
 }));
 
 /** The motion kit waits on web fonts, which jsdom does not implement. */
@@ -56,6 +57,7 @@ describe('<SiteNav> Component', () => {
     beforeEach(() => {
         vi.useFakeTimers();
         navigation.pathname = '/';
+        navigation.push.mockClear();
         stubFonts();
         setScrollY(0);
         observers = installIntersectionObserver();
@@ -78,6 +80,7 @@ describe('<SiteNav> Component', () => {
         observers.restore();
         restoreMedia();
         vi.useRealTimers();
+        window.history.replaceState(null, '', '/');
     });
 
     describe('entrance', () => {
@@ -161,6 +164,34 @@ describe('<SiteNav> Component', () => {
         });
 
         expect(nav.querySelectorAll('a')).toHaveLength(navSections.length);
+    });
+
+    it('should scroll to and focus the section when a section link is clicked on the homepage', () => {
+        const scrollIntoView = vi.fn();
+        const target = itemAt(sectionNodes, 1);
+        const section = itemAt(navSections, 1);
+
+        target.scrollIntoView = scrollIntoView;
+        render(<SiteNav />);
+
+        const click = fireEvent.click(screen.getByRole('link', { name: section.label }));
+
+        // Handled here rather than by the browser, which would leave focus behind.
+        expect(click).toBe(false);
+        expect(scrollIntoView).toHaveBeenCalled();
+        expect(target).toHaveFocus();
+        expect(target).toHaveAttribute('tabindex', '-1');
+        expect(window.location.hash).toBe(`#${section.id}`);
+        expect(navigation.push).not.toHaveBeenCalled();
+    });
+
+    it('should leave a modified click on a section link to the browser', () => {
+        render(<SiteNav />);
+
+        const click = fireEvent.click(screen.getByRole('link', { name: itemAt(navSections, 1).label }), { metaKey: true });
+
+        expect(click).toBe(true);
+        expect(itemAt(sectionNodes, 1)).not.toHaveFocus();
     });
 
     it('should offer a skip link to the main content', () => {

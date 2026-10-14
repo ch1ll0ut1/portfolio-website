@@ -1,10 +1,10 @@
 /**
  * Takes the reader to a section id, honouring the reduced-motion preference.
  *
- * Shared by the command palette and the keyboard chords so both land in the
- * same place with the same behaviour. Focus moves with the scroll: a keyboard
- * or screen-reader user who jumps to "Work" must continue from Work, not from
- * wherever focus was left behind.
+ * Shared by the command palette, the keyboard chords and the nav's section
+ * links so all three land in the same place with the same behaviour. Focus
+ * moves with the scroll: a keyboard or screen-reader user who jumps to "Work"
+ * must continue from Work, not from wherever focus was left behind.
  */
 
 import { prefersReducedMotion } from '@/lib/motion';

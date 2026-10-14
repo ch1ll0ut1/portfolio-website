@@ -1,10 +1,11 @@
 'use client';
 
-import { type FC, type ReactNode, useRef } from 'react';
-import { usePathname } from 'next/navigation';
+import { type FC, type MouseEvent, type ReactNode, useRef } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 import { useMagnet } from '@/lib/motion';
 import { navSections } from '@/config/sections';
 import { links } from '@/config/links';
+import { scrollToSection } from '@/components/chrome/scrollToSection';
 import { BrandMark } from './BrandMark';
 import { useActiveSection } from './useActiveSection';
 import { useHeaderScroll } from './useHeaderScroll';
@@ -16,6 +17,8 @@ import styles from './SiteNav.module.css';
 const NAV_IDS = navSections.map(section => section.id);
 /** Matches the prototype's `data-magnetic` pull on the primary call to action. */
 const BOOK_MAGNET = 0.25;
+/** The one route the sections live on. */
+const HOME = '/';
 
 export interface Props {
     /**
@@ -37,8 +40,10 @@ export interface Props {
  *
  * Those links are absolute (`/#work`) rather than bare fragments so the same
  * nav works on the reading routes, where the sections are not in the document.
- * On the homepage the path already matches, so the browser still treats them as
- * same-document fragment navigation.
+ * On the homepage a plain click is taken over and handed to `scrollToSection`,
+ * the same move the palette and the `g` chords make, so focus lands on the
+ * section along with the scroll; the URL still gains the fragment. Modified
+ * clicks (new tab, new window) are left to the browser.
  *
  * Rendered once by the root layout, so it stays mounted across client-side
  * navigation: the entrance plays once per visit, not once per route.
@@ -49,12 +54,27 @@ export const SiteNav: FC<Props> = ({ tools }) => {
     const pillRef = useRef<HTMLSpanElement>(null);
     const bookRef = useRef<HTMLAnchorElement>(null);
 
-    const activeId = useActiveSection(NAV_IDS, usePathname());
+    const pathname = usePathname();
+    const router = useRouter();
+    const activeId = useActiveSection(NAV_IDS, pathname);
 
     useHeaderScroll(headerRef, styles.isScrolled, styles.isHidden);
     useSlidingPill(listRef, pillRef, activeId);
     useNavEntrance(headerRef);
     useMagnet(bookRef, { strength: BOOK_MAGNET });
+
+    const handleSectionClick = (event: MouseEvent<HTMLAnchorElement>, id: string) => {
+        if (pathname !== HOME || isModifiedClick(event) || !document.getElementById(id)) {
+            return;
+        }
+
+        event.preventDefault();
+        scrollToSection(id, (href) => {
+            router.push(href);
+        });
+        // Next keeps its router in step with native history calls.
+        window.history.pushState(null, '', `#${id}`);
+    };
 
     return (
         <>
@@ -77,6 +97,9 @@ export const SiteNav: FC<Props> = ({ tools }) => {
                                     className={isActive ? styles.isActive : undefined}
                                     aria-current={isActive ? 'location' : undefined}
                                     data-nav-id={section.id}
+                                    onClick={(event) => {
+                                        handleSectionClick(event, section.id);
+                                    }}
                                 >
                                     {section.label}
                                 </a>
@@ -102,3 +125,8 @@ export const SiteNav: FC<Props> = ({ tools }) => {
         </>
     );
 };
+
+/** A click the browser should keep: another button, or opening elsewhere. */
+const isModifiedClick = (event: MouseEvent) => (
+    event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey
+);
