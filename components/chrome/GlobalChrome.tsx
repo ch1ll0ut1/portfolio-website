@@ -10,7 +10,7 @@ import { KeyboardChords } from './KeyboardChords';
 import { ScrollProgress } from './ScrollProgress';
 import { printConsoleGreeting } from './consoleGreeting';
 import { useReadingProgressClaimed } from './readingProgressClaim';
-import { toggleTheme } from './themeStore';
+import { followThemeAcrossTabs, toggleTheme } from './themeStore';
 
 /*
  * The overlays are only code the first time someone opens one, so they load
@@ -116,6 +116,9 @@ export const GlobalChrome: FC = () => {
     }, [togglePalette]);
 
     useEffect(printConsoleGreeting, []);
+
+    // A theme picked in another tab applies here too, like the preferences do.
+    useEffect(followThemeAcrossTabs, []);
 
     // A client-side navigation swaps the document under the long-lived chrome,
     // so everything that cached a measurement (the scroll range above all) has

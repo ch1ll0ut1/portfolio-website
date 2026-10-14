@@ -44,9 +44,8 @@ export const readTheme = (): Theme => {
 };
 
 /**
- * Applies a theme, growing it in as a circle from `origin` where the browser
- * supports view transitions. Falls back to an instant swap otherwise, and
- * always under reduced motion.
+ * Applies and stores a theme, growing it in as a circle from `origin` (see
+ * `transition`).
  */
 export const setTheme = (theme: Theme, origin?: Element | null) => {
     const apply = () => {
@@ -65,7 +64,60 @@ export const setTheme = (theme: Theme, origin?: Element | null) => {
         emitStage('theme');
     };
 
-    if (prefersReducedMotion() || typeof document.startViewTransition !== 'function') {
+    transition(apply, origin);
+};
+
+/**
+ * Keeps this tab's theme in step with the visitor's other tabs, the way
+ * `preferences` keeps the shortcut and cursor switches in step: the `storage`
+ * event fires here whenever another tab writes the key.
+ *
+ * The other tab already stored its choice, so this only applies it, with the
+ * same sweep when this tab is on screen next to it and an instant swap when it
+ * is in the background. Returns the teardown, so it drops into an effect.
+ */
+export const followThemeAcrossTabs = () => {
+    const handleStorage = (event: StorageEvent) => {
+        // A null key means another tab cleared storage outright, choice included.
+        if (event.key !== STORAGE_KEY && event.key !== null) {
+            return;
+        }
+
+        const stored = event.key === null ? null : event.newValue;
+        const theme = stored === 'light' || stored === 'dark' ? stored : null;
+        const root = document.documentElement;
+
+        if ((root.dataset.theme ?? null) === theme) {
+            return;
+        }
+
+        transition(() => {
+            // No choice left: back to the OS preference, as on a fresh load.
+            if (theme) {
+                root.dataset.theme = theme;
+            }
+            else {
+                delete root.dataset.theme;
+            }
+
+            emitStage('theme');
+        }, null);
+    };
+
+    window.addEventListener('storage', handleStorage);
+
+    return () => {
+        window.removeEventListener('storage', handleStorage);
+    };
+};
+
+/**
+ * Runs `apply` inside the circular sweep where the browser supports view
+ * transitions. Falls back to an instant swap otherwise, always under reduced
+ * motion, and in a hidden tab, where there is nothing to animate.
+ */
+const transition = (apply: () => void, origin?: Element | null) => {
+    if (prefersReducedMotion() || typeof document.startViewTransition !== 'function' || document.hidden) {
         apply();
 
         return;
