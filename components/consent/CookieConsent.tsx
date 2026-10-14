@@ -10,10 +10,11 @@
 
 'use client';
 
-import { type FC, useEffect, useState } from 'react';
+import { type FC, useEffect, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useConsent } from './ConsentContext';
+import { useBannerFocusReturn } from './useBannerFocusReturn';
 import styles from './CookieConsent.module.css';
 
 /** Most visitors never open it, so it loads on demand, not with every page. */
@@ -23,6 +24,8 @@ const ConsentPreferencesModal = dynamic(loadPreferences, { ssr: false });
 export const CookieConsent: FC = () => {
     const { showBanner, preferencesOpen, acceptAll, rejectAll, openPreferences, closePreferences } = useConsent();
     const [shown, setShown] = useState(false);
+    const bannerRef = useRef<HTMLElement>(null);
+    const focus = useBannerFocusReturn(bannerRef, showBanner);
 
     // The entrance transition cannot run from a state the browser never
     // painted, so the panel gains its visible class on the frame after mount.
@@ -56,6 +59,8 @@ export const CookieConsent: FC = () => {
             <section
                 className={shown ? `${styles.root} ${styles.shown}` : styles.root}
                 aria-labelledby="consent-banner-title"
+                ref={bannerRef}
+                onFocus={focus.onFocus}
             >
                 <div className={styles.panel}>
                     <div>
@@ -77,10 +82,24 @@ export const CookieConsent: FC = () => {
                         >
                             <span className="btn__label">Customize</span>
                         </button>
-                        <button className="btn" type="button" onClick={rejectAll}>
+                        <button
+                            className="btn"
+                            type="button"
+                            onClick={() => {
+                                focus.returnFocus();
+                                rejectAll();
+                            }}
+                        >
                             <span className="btn__label">Reject all</span>
                         </button>
-                        <button className="btn btn--primary" type="button" onClick={acceptAll}>
+                        <button
+                            className="btn btn--primary"
+                            type="button"
+                            onClick={() => {
+                                focus.returnFocus();
+                                acceptAll();
+                            }}
+                        >
                             <span className="btn__label">Accept all</span>
                         </button>
                     </div>
