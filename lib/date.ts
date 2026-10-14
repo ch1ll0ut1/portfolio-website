@@ -23,11 +23,3 @@ export function formatDate(dateString: string): string {
         day: 'numeric',
     });
 }
-
-/**
- * Gets the current year as a number.
- * Useful for copyright notices and date-based logic.
- */
-export function getCurrentYear(): number {
-    return new Date().getFullYear();
-}

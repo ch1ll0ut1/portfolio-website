@@ -1,70 +1,50 @@
 import React, { FC } from 'react';
 import type { Metadata } from 'next';
-// eslint-disable-next-line import/no-unresolved
-import { GeistSans } from 'geist/font/sans';
-// eslint-disable-next-line import/no-unresolved
-import { GeistMono } from 'geist/font/mono';
 import './globals.css';
 import { Analytics } from '@vercel/analytics/next';
-import { Geist } from 'next/font/google';
+import { Bricolage_Grotesque, Martian_Mono, Schibsted_Grotesk } from 'next/font/google';
 import { SpeedInsights } from '@vercel/speed-insights/next';
-import Script from 'next/script';
+import { GoogleAnalytics } from '@/components/analytics/GoogleAnalytics';
+import { GlobalChrome } from '@/components/chrome/GlobalChrome';
+import { SiteFooter } from '@/components/chrome/SiteFooter';
 import { ConsentProvider } from '@/components/consent/ConsentContext';
 import { CookieConsent } from '@/components/consent/CookieConsent';
+import { NavTools } from '@/components/nav/NavTools';
+import { SiteNav } from '@/components/nav/SiteNav';
+import { siteConfig, siteKeywords, siteTitle } from '@/config/site';
+import { BOOT_SCRIPT } from '@/lib/bootScript';
+import type { CssVars } from '@/lib/cssVars';
+import { twitterCard } from '@/lib/twitterCard';
+import { webFontFamily } from '@/lib/webFontFamily';
 
 export const metadata: Metadata = {
     title: {
-        default: 'Stefan Knoch - From Vision to Reality | Software Developer & Technology Consultant',
-        template: '%s | Stefan Knoch',
+        default: siteTitle,
+        template: `%s | ${siteConfig.name}`,
     },
-    description: 'I help businesses transform ambitious ideas into powerful, real-world applications. Combining creativity, strategic insight, and leadership to guide projects from concept to launch.',
-    keywords: [
-        'software developer',
-        'technology consultant',
-        'full-stack development',
-        'React',
-        'TypeScript',
-        'Next.js',
-        'tech leadership',
-        'AI implementation',
-        'software architecture',
-        'team leadership',
-    ],
-    authors: [{ name: 'Stefan Knoch' }],
-    creator: 'Stefan Knoch',
-    publisher: 'Stefan Knoch',
+    description: siteConfig.description,
+    keywords: siteKeywords,
+    authors: [{ name: siteConfig.name, url: siteConfig.url }],
+    creator: siteConfig.name,
+    publisher: siteConfig.name,
     formatDetection: {
         email: false,
         address: false,
         telephone: false,
     },
-    metadataBase: new URL('https://stefanknoch.com'),
+    metadataBase: new URL(siteConfig.url),
     alternates: {
         canonical: '/',
     },
     openGraph: {
         type: 'website',
         locale: 'en_US',
-        url: 'https://stefanknoch.com',
-        title: 'Stefan Knoch - From Vision to Reality | Software Developer & Technology Consultant',
-        description: 'I help businesses transform ambitious ideas into powerful, real-world applications. Combining creativity, strategic insight, and leadership to guide projects from concept to launch.',
-        siteName: 'Stefan Knoch Portfolio',
-        images: [
-            {
-                url: '/og-image.jpg',
-                width: 1200,
-                height: 630,
-                alt: 'Stefan Knoch - Software Developer & Technology Consultant',
-            },
-        ],
+        url: siteConfig.url,
+        title: siteTitle,
+        description: siteConfig.description,
+        siteName: siteConfig.name,
     },
-    twitter: {
-        card: 'summary_large_image',
-        title: 'Stefan Knoch - From Vision to Reality | Software Developer & Technology Consultant',
-        description: 'I help businesses transform ambitious ideas into powerful, real-world applications. Combining creativity, strategic insight, and leadership to guide projects from concept to launch.',
-        images: ['/og-image.jpg'],
-        creator: '@stefanknoch',
-    },
+    twitter: twitterCard(siteTitle, siteConfig.description),
     robots: {
         index: true,
         follow: true,
@@ -76,72 +56,66 @@ export const metadata: Metadata = {
             'max-snippet': -1,
         },
     },
-    verification: {
-        google: 'your-google-verification-code',
-        yandex: 'your-yandex-verification-code',
-        yahoo: 'your-yahoo-verification-code',
-    },
     generator: 'Next.js',
 };
 
-// Note: This is a workaround to avoid the font import issues that occur when using the main layout in Storybook.
-// See: https://github.com/vercel/geist-font/issues/59
-// 'import { GeistSans } from 'geist/font/sans';' needs to remain or else storybook will break (magic)
-const geist = Geist({
+// Display face. "wdth" 75-90 is used for large type, so the width axis must load.
+const displayFont = Bricolage_Grotesque({
     subsets: ['latin'],
+    axes: ['opsz', 'wdth'],
+    display: 'swap',
 });
 
+const bodyFont = Schibsted_Grotesk({
+    subsets: ['latin'],
+    style: ['normal', 'italic'],
+    display: 'swap',
+});
+
+// Used sparingly for code, hashes and data, so it does not need preloading.
+const monoFont = Martian_Mono({
+    subsets: ['latin'],
+    axes: ['wdth'],
+    display: 'swap',
+    preload: false,
+});
+
+/**
+ * The web families the stacks in globals.css start with. Set here rather than
+ * through `next/font`'s `variable`, which would also put its metric-adjusted
+ * Arial face in every stack ahead of the system fallbacks; see `webFontFamily`.
+ */
+const fontFamilies: CssVars = {
+    '--font-bricolage': webFontFamily(displayFont),
+    '--font-schibsted': webFontFamily(bodyFont),
+    '--font-martian': webFontFamily(monoFont),
+};
+
 const RootLayout: FC<{ children: React.ReactNode }> = ({ children }) => {
-    const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
-
     return (
-        <html lang="en" className={geist.className}>
+        // suppressHydrationWarning: the boot script adds `js`/`motion` and the stored
+        // theme to <html> before hydration, so the client className intentionally
+        // differs from the server's.
+        // data-scroll-behavior: globals.css scrolls smoothly; this asks Next to
+        // jump instantly on route changes, which Next 16 stopped doing unasked.
+        <html lang="en" style={fontFamilies} data-scroll-behavior="smooth" suppressHydrationWarning>
             <head>
-                {/* Google Consent Mode V2 - Load before GA4 */}
-                <Script id="google-consent-mode" strategy="beforeInteractive">
-                    {`
-                        window.dataLayer = window.dataLayer || [];
-                        function gtag(){dataLayer.push(arguments);}
-                        
-                        // Initialize consent mode with default settings
-                        gtag('consent', 'default', {
-                            'analytics_storage': 'denied',
-                            'ad_storage': 'denied',
-                            'ad_user_data': 'denied',
-                            'ad_personalization': 'denied',
-                            'personalization_storage': 'denied',
-                            'functionality_storage': 'granted',
-                            'security_storage': 'granted',
-                            'wait_for_update': 500
-                        });
-                    `}
-                </Script>
-
-                {/* Google Analytics 4 */}
-                {GA_MEASUREMENT_ID && (
-                    <>
-                        <Script
-                            src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
-                            strategy="afterInteractive"
-                        />
-                        <Script id="google-analytics" strategy="afterInteractive">
-                            {`
-                                window.dataLayer = window.dataLayer || [];
-                                function gtag(){dataLayer.push(arguments);}
-                                gtag('js', new Date());
-                                gtag('config', '${GA_MEASUREMENT_ID}', {
-                                    page_title: document.title,
-                                    page_location: window.location.href,
-                                });
-                            `}
-                        </Script>
-                    </>
-                )}
+                {/* Pre-paint: stored theme, the motion switch and the armed entrance. See lib/bootScript.ts. */}
+                <script dangerouslySetInnerHTML={{ __html: BOOT_SCRIPT }} />
             </head>
             <body>
                 <ConsentProvider>
+                    {/* The site chrome lives here rather than in each page, so it
+                        stays mounted — palette, theme, cursor and nav state
+                        included — across client-side navigation. Every page
+                        renders its own `<main id="main">` for the skip link. */}
+                    <SiteNav tools={<NavTools />} />
                     {children}
+                    <SiteFooter />
+                    <GlobalChrome />
                     <CookieConsent />
+                    {/* Requests nothing from Google until analytics consent is granted. */}
+                    <GoogleAnalytics />
                     <Analytics />
                     <SpeedInsights />
                 </ConsentProvider>

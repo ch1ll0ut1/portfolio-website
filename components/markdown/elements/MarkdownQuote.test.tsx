@@ -6,7 +6,7 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { MarkdownQuote } from './MarkdownQuote';
-import { type QuoteElement } from '../markdownProcessor';
+import { type QuoteElement } from '../parser/types';
 
 describe('MarkdownQuote Component', () => {
     it('should render blockquote with plain text', () => {
@@ -63,30 +63,6 @@ describe('MarkdownQuote Component', () => {
         expect(link.tagName).toBe('A');
     });
 
-    it('should apply correct CSS classes to blockquote', () => {
-        const element: QuoteElement = {
-            type: 'quote',
-            segments: [{ text: 'Test quote' }],
-        };
-
-        render(<MarkdownQuote element={element} />);
-
-        const blockquote = document.querySelector('blockquote');
-        expect(blockquote).toHaveClass('border-l-2', 'border-slate-300', 'pl-6', 'my-6', 'text-slate-600');
-    });
-
-    it('should apply correct styling classes to blockquote', () => {
-        const element: QuoteElement = {
-            type: 'quote',
-            segments: [{ text: 'Test quote' }],
-        };
-
-        render(<MarkdownQuote element={element} />);
-
-        const blockquote = document.querySelector('blockquote');
-        expect(blockquote).toHaveClass('italic', 'leading-relaxed', 'text-lg');
-    });
-
     it('should handle empty content', () => {
         const element: QuoteElement = {
             type: 'quote',
@@ -109,18 +85,6 @@ describe('MarkdownQuote Component', () => {
         render(<MarkdownQuote element={element} />);
 
         expect(screen.getByText('Quote with & special < characters >')).toBeInTheDocument();
-    });
-
-    it('should handle very long quote content', () => {
-        const longContent = 'This is a very long quote that contains a lot of text and should still be rendered correctly without breaking the layout or causing any issues with the styling';
-        const element: QuoteElement = {
-            type: 'quote',
-            segments: [{ text: longContent }],
-        };
-
-        render(<MarkdownQuote element={element} />);
-
-        expect(screen.getByText(longContent)).toBeInTheDocument();
     });
 
     it('should handle mixed formatting correctly', () => {

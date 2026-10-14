@@ -1,5 +1,7 @@
 import React, { FC } from 'react';
-import { type InlineSegment } from './markdownProcessor';
+import { siteConfig } from '@/config/site';
+import { type InlineSegment } from './parser/types';
+import styles from './Markdown.module.css';
 
 interface Props {
     segments: InlineSegment[];
@@ -8,19 +10,35 @@ interface Props {
 export const InlineContent: FC<Props> = ({ segments }) => {
     const content = segments.map((segment: InlineSegment, segmentIndex: number) => {
         let segmentContent: React.ReactNode = segment.text;
-        const hasFormatting = Boolean(segment.isBold) || Boolean(segment.isItalic) || Boolean(segment.isLink);
+        const hasFormatting = Boolean(segment.isBold)
+          || Boolean(segment.isItalic)
+          || Boolean(segment.isLink)
+          || Boolean(segment.isCode);
 
-        // Handle link first (innermost)
+        // Code is the innermost wrapper: its text is never re-formatted.
+        if (segment.isCode) {
+            segmentContent = (
+                <code key={segmentIndex} className={styles.inlineCode}>
+                    {segmentContent}
+                </code>
+            );
+        }
+
+        // Handle link first (innermost). Only links that leave the site open a
+        // new tab, and they say so to assistive technology.
         if (segment.isLink && segment.href) {
+            const offSite = isOffSite(segment.href);
+
             segmentContent = (
                 <a
                     key={segmentIndex}
                     href={segment.href}
-                    className="text-action hover:text-action/90 underline transition-colors"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    className={styles.link}
+                    target={offSite ? '_blank' : undefined}
+                    rel={offSite ? 'noopener noreferrer' : undefined}
                 >
                     {segmentContent}
+                    {offSite ? <span className="visually-hidden"> (opens in a new tab)</span> : null}
                 </a>
             );
         }
@@ -28,7 +46,7 @@ export const InlineContent: FC<Props> = ({ segments }) => {
         // Wrap with bold if needed
         if (segment.isBold) {
             segmentContent = (
-                <strong key={segmentIndex} className="font-semibold text-primary">
+                <strong key={segmentIndex} className={styles.strong}>
                     {segmentContent}
                 </strong>
             );
@@ -37,7 +55,7 @@ export const InlineContent: FC<Props> = ({ segments }) => {
         // Wrap with italic if needed (outermost)
         if (segment.isItalic) {
             segmentContent = (
-                <i key={segmentIndex} className="italic">
+                <i key={segmentIndex}>
                     {segmentContent}
                 </i>
             );
@@ -52,4 +70,20 @@ export const InlineContent: FC<Props> = ({ segments }) => {
     });
 
     return <>{content}</>;
+};
+
+const SITE_HOST = new URL(siteConfig.url).host.replace(/^www\./, '');
+
+/** An absolute http(s) URL on another host. Relative paths, anchors and `mailto:` stay put. */
+const isOffSite = (href: string) => {
+    if (!/^https?:\/\//i.test(href)) {
+        return false;
+    }
+
+    try {
+        return new URL(href).host.replace(/^www\./, '') !== SITE_HOST;
+    }
+    catch {
+        return true;
+    }
 };

@@ -1,6 +1,6 @@
 # The Burnout Trap: Why Overworking Founders Destroy Their Own Startups
 
-![The tale of the tortoise and the hare](the-tale-of-the-tortoise-and-the-hare.png)
+![The tale of the tortoise and the hare](the-tale-of-the-tortoise-and-the-hare.webp)
 
 Startups love to brag about hustle.  
 But when you hear about young founding employees working **13 hours a day, 5 days a week, for months on end** — it’s not hustle. It’s a red flag.  
@@ -75,7 +75,7 @@ But in **software engineering and design**, it breaks down — because the work 
 
 ## Why Throwing More Developers Doesn’t Fix It
 
-Another trap: fighting slowing progress by **hiring exponentially more developers**.  
+Another trap: fighting slowing progress by **hiring ever more developers**.  
 
 On paper, it looks like 100 developers should build 10× more than 10 developers.  
 In practice, it often looks like this:  
@@ -92,7 +92,7 @@ In practice, it often looks like this:
 
    > "Adding manpower to a late software project makes it later."  
 
-2. **Exponential development costs**  
+2. **Compounding development costs**  
    In a debt-ridden codebase, more people just means more collisions and duplicate hacks.  
 
 3. **The 100 vs. 10 paradox**  
@@ -168,7 +168,7 @@ Tech debt is the cost of quick shortcuts in code. Like financial debt, it accrue
 The sweet spot is **35–45 focused hours**. Beyond that, productivity drops and bug rates increase. More hours give the illusion of speed, not actual progress.  
 
 **Why do big teams sometimes ship slower than small ones?**  
-Because coordination overhead grows exponentially. Without clean code and processes, 100 developers can be *less* effective than 10.  
+Because coordination overhead grows quadratically: every new person adds a communication line to everyone already on the team. Without clean code and processes, 100 developers can be *less* effective than 10.  
 
 ---
 

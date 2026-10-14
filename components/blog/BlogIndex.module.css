@@ -1,0 +1,190 @@
+/* The writing index. Ported from the prototype's `writing` section: a hovered
+   row selects its own title like text in an editor, and its siblings dim. */
+
+.head {
+    display: grid;
+    gap: 18px;
+    max-width: 920px;
+    margin-bottom: clamp(48px, 7vw, 96px);
+}
+
+.kicker {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-variation-settings: 'wdth' 88;
+}
+
+.kicker::after {
+    content: '';
+    width: 2px;
+    height: .95em;
+    margin-left: .4em;
+    background: var(--caret);
+}
+
+:global(.motion) .kicker::after {
+    animation: var(--caret-blink) 1.1s steps(1, end) infinite;
+}
+
+.title {
+    font-size: var(--fs-1);
+}
+
+.lead {
+    max-width: 58ch;
+    color: var(--fg-2);
+    font-size: clamp(1.05rem, 1.4vw, 1.25rem);
+}
+
+/* ==========================================================================
+   Rows
+   ========================================================================== */
+.posts {
+    border-top: 1px solid var(--line);
+}
+
+.post {
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 22px;
+}
+
+.link {
+    position: relative;
+    display: grid;
+    gap: 10px;
+    padding: 28px 48px 14px 0;
+    text-decoration: none;
+    outline-offset: 6px;
+}
+
+/* The row's "go here" chevron. */
+.link::after {
+    content: '';
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    width: 12px;
+    height: 12px;
+    border-top: 2px solid currentColor;
+    border-right: 2px solid currentColor;
+    transform: translateY(-50%) rotate(45deg);
+    opacity: .4;
+    transition:
+        transform var(--dur-s) var(--ease-out),
+        opacity var(--dur-s) var(--ease-ui),
+        color var(--dur-s) var(--ease-ui);
+}
+
+.link:hover::after,
+.link:focus-visible::after {
+    opacity: 1;
+    color: var(--caret-text);
+    transform: translate(6px, -50%) rotate(45deg);
+}
+
+.meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 10px;
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    letter-spacing: .02em;
+    color: var(--muted);
+    font-variation-settings: 'wdth' 88;
+}
+
+/* One unbroken unit: on a narrow row the Featured chip wraps below it instead. */
+.when {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
+}
+
+.dot {
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: currentColor;
+    flex: none;
+}
+
+.featured {
+    padding: 2px 7px;
+    white-space: nowrap;
+    border: 1px solid var(--caret);
+    border-radius: 999px;
+    color: var(--caret-text);
+}
+
+.postTitle {
+    font-family: var(--font-display);
+    font-size: clamp(1.45rem, 2.5vw, 2.05rem);
+    font-weight: 600;
+    line-height: 1.12;
+    letter-spacing: -.03em;
+    color: var(--fg);
+    font-variation-settings: 'wdth' 85;
+}
+
+/* The selection sweeping across the title, drawn as a background so it clones
+   correctly across wrapped lines. */
+.selection {
+    background-image: linear-gradient(var(--select-soft), var(--select-soft));
+    background-repeat: no-repeat;
+    background-size: 0% 100%;
+    background-position: 0 0;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+    padding: 0 .06em;
+    margin: 0 -.06em;
+    border-radius: 2px;
+    transition: background-size var(--dur-s) var(--ease-inout);
+}
+
+.link:hover .selection,
+.link:focus-visible .selection {
+    background-size: 100% 100%;
+}
+
+.excerpt {
+    max-width: 62ch;
+    color: var(--fg-2);
+    transition: color var(--dur-s) var(--ease-ui);
+}
+
+.link:hover .excerpt,
+.link:focus-visible .excerpt {
+    color: var(--fg);
+}
+
+/* A hovered row lifts while the rest of the list steps back. Pointer-gated, so
+   nothing happens on touch where there is no hover to resolve. */
+@media (hover: hover) and (pointer: fine) {
+    .post {
+        transition:
+            opacity var(--dur-s) var(--ease-ui),
+            transform var(--dur-s) var(--ease-ui);
+    }
+
+    .posts:hover .post:not(:hover) {
+        opacity: .45;
+    }
+
+    .post:hover {
+        transform: translateY(-3px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .post:hover {
+        transform: none;
+    }
+}
+

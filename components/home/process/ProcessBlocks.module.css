@@ -1,0 +1,218 @@
+/* The three folded-in blocks below the stepper: working principles, the
+   feature cycle and the fit lists. One stylesheet because they share a single
+   quieter tier of the type scale — smaller than the stepper, denser, and never
+   competing with it for attention.
+
+   Text styles are keyed on classes rather than on element descendants, so a
+   labelled paragraph is never out-specified by its container. */
+
+/* ---------- Shared ---------- */
+.label {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    font-weight: 400;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-variation-settings: 'wdth' 88;
+}
+
+/* A caret standing in the margin, the way a line number would. */
+.label::before {
+    content: '';
+    flex: none;
+    width: 2px;
+    height: 1em;
+    background: var(--caret);
+}
+
+.head {
+    display: grid;
+    gap: 14px;
+    max-width: 62ch;
+}
+
+/* A step below the section's own h2, so the tier reads as supporting detail. */
+.head h3 {
+    font-size: clamp(1.5rem, 2.2vw, 2rem);
+}
+
+.lede {
+    color: var(--fg-2);
+    font-size: var(--fs-small);
+}
+
+/* ---------- Working principles ---------- */
+.principles {
+    display: grid;
+    gap: clamp(22px, 3vw, 32px);
+}
+
+.principleList {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(20px, 3vw, 40px);
+}
+
+.principle {
+    display: grid;
+    gap: 8px;
+    align-content: start;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+}
+
+.principle h4 {
+    font-size: 1.14rem;
+    letter-spacing: -.015em;
+}
+
+.gutter {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    letter-spacing: .04em;
+    color: var(--muted);
+    font-variation-settings: 'wdth' 88;
+}
+
+.gutterNumber {
+    color: var(--caret-text);
+}
+
+.copy {
+    color: var(--fg-2);
+    font-size: .94rem;
+    line-height: 1.58;
+}
+
+/* ---------- Feature cycle ---------- */
+.cycle {
+    display: grid;
+    gap: clamp(22px, 3vw, 32px);
+}
+
+/* Hairlines are drawn by the grid gap showing the list's own background. */
+.cycleList {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1px;
+    background: var(--line);
+    border-block: 1px solid var(--line);
+}
+
+.cycleStep {
+    display: grid;
+    grid-template-columns: 2.1rem minmax(0, 1fr);
+    gap: 10px;
+    align-items: baseline;
+    padding: 14px clamp(12px, 1.6vw, 20px);
+    background: var(--bg);
+}
+
+.cycleNumber {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    color: var(--caret-text);
+    font-variation-settings: 'wdth' 88;
+}
+
+.cycleTitle {
+    font-weight: 600;
+    font-size: .95rem;
+    margin-bottom: 3px;
+}
+
+.cycleDesc {
+    color: var(--fg-2);
+    font-size: .84rem;
+    line-height: 1.5;
+}
+
+/* ---------- Fit ---------- */
+.fit {
+    display: grid;
+    gap: clamp(22px, 3vw, 32px);
+}
+
+.fitLists {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(24px, 4vw, 56px);
+}
+
+.fitList {
+    display: grid;
+    gap: 14px;
+    align-content: start;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+}
+
+.fitList h4 {
+    font-size: 1.05rem;
+    letter-spacing: -.01em;
+}
+
+.fitItems {
+    display: grid;
+    gap: 9px;
+}
+
+.fitItems li {
+    display: grid;
+    grid-template-columns: 14px minmax(0, 1fr);
+    gap: 10px;
+    font-size: .92rem;
+    line-height: 1.5;
+    color: var(--fg-2);
+}
+
+.fitItems li::before {
+    content: '';
+    align-self: center;
+}
+
+/* A caret where the line would be picked up. */
+.isFit li::before {
+    width: 2px;
+    height: 1.05em;
+    margin-left: 6px;
+    background: var(--caret);
+}
+
+/* The same mark struck out: a selection deleted rather than placed. */
+.isUnfit li {
+    color: var(--muted);
+}
+
+.isUnfit li::before {
+    width: 10px;
+    height: 1px;
+    margin-left: 2px;
+    background: currentColor;
+    opacity: .7;
+}
+
+@media (max-width: 900px) {
+    .principleList,
+    .cycleList,
+    .fitLists {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .cycleList {
+        gap: 0;
+        background: none;
+        border-block-width: 1px 0;
+    }
+
+    .cycleStep {
+        border-bottom: 1px solid var(--line);
+    }
+}

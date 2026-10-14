@@ -1,87 +1,53 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import type { Metadata } from 'next';
-import PortfolioPage from '../components/blog/PortfolioPage';
-import { AnalyticsWrapper } from '@/components/analytics/AnalyticsWrapper';
+import { EngagementTracker } from '@/components/analytics/EngagementTracker';
+import { Contact } from '@/components/home/contact/Contact';
+import { Experience } from '@/components/home/experience/Experience';
+import { Hero } from '@/components/home/hero/Hero';
+import { Process } from '@/components/home/process/Process';
+import { Proof } from '@/components/home/proof/Proof';
+import { Services } from '@/components/home/services/Services';
+import { Work } from '@/components/home/work/Work';
+import { Writing } from '@/components/home/writing/Writing';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { siteConfig, siteTitle } from '@/config/site';
+import { personSchema } from '@/lib/structuredData';
+import { twitterCard } from '@/lib/twitterCard';
 
 export const metadata: Metadata = {
-    title: 'From Vision to Reality | Software Developer & Technology Consultant',
-    description: 'I help businesses transform ambitious ideas into powerful, real-world applications. Combining creativity, strategic insight, and leadership to guide projects from concept to launch.',
-    keywords: [
-        'software developer',
-        'technology consultant',
-        'full-stack development',
-        'React',
-        'TypeScript',
-        'Next.js',
-        'tech leadership',
-        'AI implementation',
-        'software architecture',
-        'team leadership',
-    ],
+    // Absolute, so the layout's "| Stefan Knoch" template does not repeat the name.
+    title: { absolute: siteTitle },
+    description: siteConfig.description,
     openGraph: {
-        title: 'From Vision to Reality | Software Developer & Technology Consultant',
-        description: 'I help businesses transform ambitious ideas into powerful, real-world applications. Combining creativity, strategic insight, and leadership to guide projects from concept to launch.',
-        url: 'https://stefanknoch.com',
+        title: siteTitle,
+        description: siteConfig.description,
+        url: siteConfig.url,
         type: 'website',
     },
-    twitter: {
-        title: 'From Vision to Reality | Software Developer & Technology Consultant',
-        description: 'I help businesses transform ambitious ideas into powerful, real-world applications. Combining creativity, strategic insight, and leadership to guide projects from concept to launch.',
-    },
+    twitter: twitterCard(siteTitle, siteConfig.description),
     alternates: {
         canonical: '/',
     },
 };
 
-const Portfolio: FC = () => {
-    return (
-        <>
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{
-                    __html: JSON.stringify({
-                        '@context': 'https://schema.org',
-                        '@type': 'Person',
-                        'name': 'Stefan Knoch',
-                        'jobTitle': 'Software Developer & Technology Consultant',
-                        'description': 'I help businesses transform ambitious ideas into powerful, real-world applications.',
-                        'url': 'https://stefanknoch.com',
-                        'sameAs': [
-                            'https://www.linkedin.com/in/skdevde/',
-                            'https://github.com/ch1ll0ut1',
-                        ],
-                        'knowsAbout': [
-                            'Software Development',
-                            'Full-Stack Development',
-                            'React',
-                            'TypeScript',
-                            'Next.js',
-                            'Team Leadership',
-                            'AI Implementation',
-                            'Software Architecture',
-                        ],
-                        'worksFor': {
-                            '@type': 'Organization',
-                            'name': 'Freelance',
-                        },
-                    }),
-                }}
-            />
+const Home: FC = () => (
+    <>
+        <JsonLd data={personSchema()} />
 
-            <AnalyticsWrapper
-                pageName="Portfolio Homepage"
-                pageType="home"
-                contentId="homepage"
-                scrollConfig={{
-                    milestones: [25, 50, 75, 90],
-                    trackCompletion: true,
-                    targetSelector: '[data-scroll-target]',
-                }}
-            />
+        <EngagementTracker pageType="home" scrollTarget="[data-scroll-target]" />
 
-            <PortfolioPage />
-        </>
-    );
-};
+        {/* Focusable so the skip link moves focus here; see ReadingShell. */}
+        <main id="main" tabIndex={-1} data-scroll-target>
+            <Hero />
+            <Proof />
+            <Work />
+            <Services />
+            <Process />
+            <Experience />
+            <Writing />
+            <Contact />
+        </main>
+    </>
+);
 
-export default Portfolio;
+export default Home;

@@ -8,13 +8,18 @@ import { render, screen } from '@testing-library/react';
 import { Markdown } from './Markdown';
 
 describe('Markdown Component', () => {
-    it('should render headings correctly', () => {
-        const content = '# Heading 1\n## Heading 2';
+    it('drops the leading title, which the page already renders as its h1', () => {
+        render(<Markdown content={'# Post title\n\nIntro\n\n## Section\n\n### Detail'} />);
 
-        render(<Markdown content={content} />);
+        expect(screen.queryByText('Post title')).not.toBeInTheDocument();
+        expect(screen.getAllByRole('heading').map(heading => `${heading.tagName}:${heading.textContent}`))
+            .toEqual(['H2:Section', 'H3:Detail']);
+    });
 
-        expect(screen.getByRole('heading', { level: 4 })).toHaveTextContent('Heading 1');
-        expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent('Heading 2');
+    it('renders a level-1 heading inside the body as an h2', () => {
+        render(<Markdown content={'Intro\n\n# Part one'} />);
+
+        expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent('Part one');
     });
 
     it('should render paragraphs correctly', () => {
@@ -82,7 +87,7 @@ describe('Markdown Component', () => {
     });
 
     it('should render mixed content correctly', () => {
-        const content = '# Title\n\nThis is a paragraph.\n\n- List item\n\n```js\ncode\n```';
+        const content = '## Title\n\nThis is a paragraph.\n\n- List item\n\n```js\ncode\n```';
 
         render(<Markdown content={content} />);
 
@@ -92,50 +97,48 @@ describe('Markdown Component', () => {
         expect(screen.getByTestId('syntax-highlighter')).toBeInTheDocument();
     });
 
-    it('should handle custom className prop', () => {
+    it('should pass a custom className through to the container', () => {
         const content = 'Test content';
 
         render(<Markdown content={content} className="custom-class" />);
 
-        const container = screen.getByText('Test content').closest('.prose');
-        expect(container).toHaveClass('custom-class');
-    });
-
-    it('should apply default prose classes', () => {
-        const content = 'Test content';
-
-        render(<Markdown content={content} />);
-
-        const container = screen.getByText('Test content').closest('.prose');
-        expect(container).toHaveClass('prose', 'prose-lg', 'max-w-none');
+        expect(screen.getByTestId('markdown')).toHaveClass('custom-class');
     });
 
     it('should handle empty content', () => {
         render(<Markdown content="" />);
 
-        const container = document.querySelector('.prose');
+        const container = screen.getByTestId('markdown');
         expect(container).toBeInTheDocument();
-        expect(container?.children.length).toBe(0);
+        expect(container.children.length).toBe(0);
     });
 
     it('should handle content with only whitespace', () => {
-        render(<Markdown content="   \n\n   " />);
+        render(<Markdown content={'   \n\n   '} />);
 
-        const container = document.querySelector('.prose');
-        expect(container).toBeInTheDocument();
-        // Should not render any meaningful content
+        // Whitespace-only input renders spacing, never a paragraph of text.
+        expect(screen.getByTestId('markdown').querySelector('p')).not.toBeInTheDocument();
     });
 
-    it('should render elements in correct order', () => {
-        const content = '# First\n\nParagraph\n\n## Second';
+    it('should load only the first image eagerly', () => {
+        const content = '![First](/first.webp)\n\nText\n\n![Second](/second.webp)';
 
         render(<Markdown content={content} />);
 
-        const container = document.querySelector('.prose');
-        const elements = container?.children;
+        // The first image is usually the largest paint; the rest can wait.
+        expect(screen.getByAltText('First')).not.toHaveAttribute('loading', 'lazy');
+        expect(screen.getByAltText('Second')).toHaveAttribute('loading', 'lazy');
+    });
 
-        expect(elements?.[0]).toHaveTextContent('First');
-        expect(elements?.[1]).toHaveTextContent('Paragraph');
-        expect(elements?.[2]).toHaveTextContent('Second');
+    it('should render elements in correct order', () => {
+        const content = '## First\n\nParagraph\n\n## Second';
+
+        render(<Markdown content={content} />);
+
+        const elements = screen.getByTestId('markdown').children;
+
+        expect(elements[0]).toHaveTextContent('First');
+        expect(elements[1]).toHaveTextContent('Paragraph');
+        expect(elements[2]).toHaveTextContent('Second');
     });
 });

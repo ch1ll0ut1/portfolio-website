@@ -6,7 +6,7 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { MarkdownCodeBlock } from './MarkdownCodeBlock';
-import { type CodeBlockElement } from '../markdownProcessor';
+import { type CodeBlockElement } from '../parser/types';
 
 describe('MarkdownCodeBlock Component', () => {
     it('should render code block with syntax highlighter', () => {
@@ -99,7 +99,7 @@ describe('MarkdownCodeBlock Component', () => {
         expect(codeBlock.textContent).toContain('special');
     });
 
-    it('should have proper container structure', () => {
+    it('should label the block with its language and keep it keyboard reachable', () => {
         const element: CodeBlockElement = {
             type: 'codeBlock',
             language: 'javascript',
@@ -108,8 +108,11 @@ describe('MarkdownCodeBlock Component', () => {
 
         render(<MarkdownCodeBlock element={element} />);
 
-        const container = screen.getByTestId('syntax-highlighter').parentElement;
-        expect(container).toHaveClass('my-6');
+        const block = screen.getByTestId('syntax-highlighter');
+
+        // The block scrolls horizontally instead of widening the page.
+        expect(block).toHaveAttribute('tabindex', '0');
+        expect(block.parentElement).toHaveTextContent('javascript');
     });
 
     it('should handle unknown language gracefully', () => {
@@ -124,6 +127,40 @@ describe('MarkdownCodeBlock Component', () => {
         const codeBlock = screen.getByTestId('syntax-highlighter');
         expect(codeBlock).toBeInTheDocument();
         expect(codeBlock).toHaveAttribute('data-language', 'unknown-language');
+    });
+
+    it.each([
+        ['javascript', 'const answer = 42;', 'keyword'],
+        ['python', 'def answer():\n    return 42', 'keyword'],
+        ['bash', 'echo "hi"', 'string'],
+    ])('should highlight %s with token classes rather than inline styles', (language, content, tokenClass) => {
+        const element: CodeBlockElement = { type: 'codeBlock', language, content };
+
+        render(<MarkdownCodeBlock element={element} />);
+
+        const codeBlock = screen.getByTestId('syntax-highlighter');
+
+        // The theme stylesheet colours tokens by class, in both themes.
+        expect(codeBlock.querySelector(`.token.${tokenClass}`)).not.toBeNull();
+        expect(codeBlock.querySelector('.token[style]')).toBeNull();
+        expect(codeBlock.querySelector('.linenumber[style]')).toBeNull();
+    });
+
+    it('should tag the JavaScript extras the theme colours', () => {
+        const element: CodeBlockElement = {
+            type: 'codeBlock',
+            language: 'javascript',
+            content: 'console.log(res.end());',
+        };
+
+        render(<MarkdownCodeBlock element={element} />);
+
+        const codeBlock = screen.getByTestId('syntax-highlighter');
+
+        // js-extras' roles: a method call takes the property colour, not the
+        // function colour, and `console` is coloured as a class name.
+        expect(codeBlock.querySelector('.token.console.class-name')).toHaveTextContent('console');
+        expect(codeBlock.querySelectorAll('.token.method.property-access')).toHaveLength(2);
     });
 
     it('should handle very long code content', () => {

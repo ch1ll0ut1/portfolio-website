@@ -1,0 +1,6 @@
+/* The "Selected work" section: four stacking case studies, then the index. */
+
+.cases {
+    display: grid;
+    gap: clamp(20px, 3vw, 32px);
+}

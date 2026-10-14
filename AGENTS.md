@@ -10,7 +10,15 @@ pnpm dev            # Start development server
 pnpm build          # Build production (runs lint first)
 pnpm start          # Start production server
 pnpm lint           # Run ESLint
+pnpm exec tsc --noEmit  # Type-check app and tests (one tsconfig covers both)
+pnpm css-types      # Regenerate the *.module.css.d.ts class-name declarations
+pnpm knip           # Report unused files, exports and dependencies
 ```
+
+After adding, renaming or removing a class in a CSS Module, run `pnpm css-types`
+and commit the regenerated `.d.ts`; CI fails on drift (`pnpm css-types --check`).
+Under `noUncheckedIndexedAccess` these declarations are what make `styles.foo` a
+plain `string` — and a misspelt class a type error.
 
 ### Testing
 ```bash
@@ -19,18 +27,31 @@ pnpm test:watch     # Run tests in watch mode
 pnpm test:coverage  # Run tests with coverage report
 ```
 
+### Visual Check
+```bash
+pnpm visual-check   # Sweep every route type in both themes, 1440px and 390px,
+                    # and with reduced motion, against a running dev server
+pnpm a11y-check     # axe-core scan (WCAG 2.2 AA) of every route type in both
+                    # themes, against a running dev server
+```
+
+Both take `--base http://localhost:<port>` and sample articles from the running
+server's `/sitemap.xml`, which lists only published posts. The visual check's
+modules live in `scripts/visual-check/`.
+
 ## Architecture Overview
 
-This is a Next.js 15 portfolio website built with TypeScript, React 19, and Tailwind CSS. The architecture follows modular design principles with clear separation of concerns.
+This is a Next.js 16 portfolio website built with TypeScript, React 19.3 and CSS Modules. The architecture follows modular design principles with clear separation of concerns.
 
 ### Key Technical Stack
-- **Framework**: Next.js 15 with App Router
+- **Framework**: Next.js 16 with App Router, built with Turbopack (the default for `next dev` and `next build`)
 - **Language**: TypeScript with strict configuration
-- **Styling**: Tailwind CSS v4 with PostCSS integration
-- **UI Components**: Radix UI primitives with custom variants
-- **Testing**: Vitest with jsdom environment
+- **Styling**: CSS Modules driven by the design tokens in `app/globals.css`, which also holds the reset and the few global primitives. No CSS framework or PostCSS config
+- **UI Components**: No component library. Global primitive classes (`.wrap`, `.btn`, `.tags`, `.sec-head`) in `app/globals.css`, composed per component in a co-located `.module.css`
+- **Motion**: `lib/motion` — one shared ticker and scroll store behind hooks (`useReveal`, `useScrub`, `useIntro`), all of it inert under reduced motion. Subscription callbacks go through React's `useEffectEvent`
+- **Testing**: Vitest — Node environment by default, jsdom for `.tsx` tests and the DOM-touching `.ts` tests listed in `vitest.config.ts`
 - **Code Quality**: ESLint with TypeScript, stylistic, and import rules
-- **Fonts**: Geist Sans and Geist Mono
+- **Fonts**: Bricolage Grotesque, Schibsted Grotesk and Martian Mono via `next/font/google`
 - **Deployment**: Vercel with automatic optimization
 
 ### Project Structure
@@ -42,41 +63,53 @@ app/                    # Next.js app router pages
 ├── layout.tsx         # Root layout with metadata
 └── page.tsx           # Homepage
 
-components/            # React components organized by domain
-├── blog/             # Blog-specific components
-├── cards/            # Card components (Project, Service)
-├── layout/           # Layout components (Header, Footer, Navigation)  
-├── sections/         # Page sections (Hero, About, etc.)
-└── ui/               # Reusable UI primitives
+assets/fonts/          # Static font cuts (with their OFL licences) for share cards and icons
 
-config/               # Configuration files with TypeScript interfaces
-├── blog.ts           # Blog configuration and types
-├── experience.ts     # Experience/career data
-├── portfolio.ts      # Portfolio projects data
-└── services.ts       # Services offered data
+components/            # React components organized by domain
+├── analytics/        # Page view, scroll and time tracking wrappers
+├── blog/             # Reading routes: index, article, 404 panel
+├── chrome/           # Site-wide overlay: command palette, theme, cursor, progress
+├── consent/          # Cookie banner and preferences dialog
+├── home/             # One directory per homepage section
+│   ├── hero/         # ... contact, experience, process, proof,
+│   └── ...           #     services, work, writing
+├── markdown/         # Markdown renderer, parser and element components
+└── nav/              # Site nav, brand mark, nav tools
+
+config/               # Section data and types, one file per section
+├── blog.ts           # Blog post metadata (`published` and `featured` live here)
+├── sections.ts       # Section ids and nav order
+└── ...               # career, caseStudies, engagements, proof, processSteps, ...
 
 content/              # Markdown content
 └── blog/             # Blog posts in markdown format
 
 lib/                  # Utilities and shared logic
-├── markdownProcessor.ts  # Custom markdown processing
-└── utils.ts          # Utility functions (includes cn helper)
+├── analytics.ts      # GA4 event helpers
+├── content/          # Server-only file reads: post markdown, image sizes
+├── motion/           # Ticker, scroll store and the motion hooks
+└── og/               # Share cards and icons: layout, fonts, `ogPalette` literals
+
+scripts/              # Tooling
+├── a11y-check.mjs    # axe-core accessibility scan
+├── visual-check.mjs  # Playwright visual sweep (entry)
+└── visual-check/     # Its modules: options, routes, sitemap sample, page probes
 ```
 
 ### Component Architecture
 
 Components follow a consistent pattern:
-- **Domain-organized**: Components grouped by feature/domain (blog, cards, sections)
+- **Domain-organized**: Components grouped by feature/domain (blog, chrome, consent, home, nav)
 - **Co-located tests**: Each component has a `.test.tsx` file alongside it
 - **TypeScript interfaces**: Props interfaces named simply as `Props`
 - **Arrow function components**: Using `FC<Props>` pattern
-- **Radix UI integration**: UI primitives use class-variance-authority for variants
 
 ### Content Management
 
 Blog content is managed through:
 - **Markdown files** in `content/blog/` directory
-- **Custom processor** (`lib/markdownProcessor.ts`) for parsing
+- **Custom parser** in `components/markdown/parser/` — pure: block, inline, list and table parsers over the types in `types.ts`, with `parseMarkdown` in `blockParser.ts` as the entry
+- **File reads** in `lib/content/` (server-only): the post markdown and its `cache()`-wrapped lookup, and the image measuring the parser is handed
 - **Syntax highlighting** via react-syntax-highlighter
 - **Type-safe configuration** in `config/blog.ts`
 
@@ -93,12 +126,14 @@ The project enforces strict coding standards:
 
 ### Testing Strategy
 
-- **Vitest** as test runner with jsdom environment
+- **Vitest** as test runner: `.ts` tests run in Node, `.tsx` tests (and the `.ts` tests listed in `DOM_TS_TESTS` in `vitest.config.ts`) in jsdom. A new `.ts` test that touches `document`/`window` goes on that list
+- **No test globals**: tests import `describe`/`it`/`expect`/`vi` from `vitest`; jest-dom matchers come from `test/setup.ts`. `test/itemAt.ts` indexes into a list in a test without a `!`
 - **Testing Library** for React component testing  
 - **Co-located tests** alongside source files
 - **Behavior-focused testing**: Tests focus on component behavior vs implementation details
 - **Coverage reporting** with v8 provider
 - **Test-specific ESLint rules** that relax strict typing for testing
+- **Visual checking** via `pnpm visual-check` (`scripts/visual-check.mjs`), the only visual-regression axis the project has — there is no Storybook and no Chromatic
 
 ### Build Configuration
 
@@ -146,8 +181,18 @@ For complete development standards, testing strategies, and architectural patter
 
 - Build process includes linting, so code must pass ESLint to build successfully
 - All components should have accompanying tests focused on behavior
-- Navigation logic is separated into dedicated Navigation component
-- Markdown content processing uses custom implementation, not external libraries
-- Font loading is handled through Next.js with Geist font family
+- Navigation lives in `components/nav/SiteNav.tsx`, with the global tools it hosts in `components/chrome`
+- Markdown content processing uses custom implementation, not external libraries. The parser stays pure; anything that reads a file goes in `lib/content/`, which is marked server-only
+- Font loading is handled through `next/font/google` (Bricolage Grotesque, Schibsted Grotesk, Martian Mono)
 - The project uses pnpm as package manager, not npm or yarn
 - Components use consolidated structure to reduce over-decomposition
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+## This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

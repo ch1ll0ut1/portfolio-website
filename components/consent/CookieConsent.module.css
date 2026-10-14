@@ -1,0 +1,99 @@
+/* The consent banner: a surface panel docked to the bottom edge, in the same
+   language as the overlay panels — hairline border, raised surface, soft shadow.
+   Motion is gated on the global `.motion` class, so with reduced motion the
+   panel is simply there. */
+.root {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 92;
+    display: flex;
+    justify-content: center;
+    padding: clamp(12px, 2vw, 20px) var(--gutter);
+    padding-bottom: calc(clamp(12px, 2vw, 20px) + env(safe-area-inset-bottom, 0px));
+
+    /* Only the panel is interactive, so the page stays clickable beside it. */
+    pointer-events: none;
+}
+
+.panel {
+    pointer-events: auto;
+    width: min(820px, 100%);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: clamp(16px, 2.4vw, 28px);
+    padding: clamp(16px, 2.2vw, 22px) clamp(18px, 2.4vw, 24px);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+    background: var(--surface);
+    box-shadow: 0 30px 90px -28px rgb(0 0 0 / 55%);
+}
+
+.title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.05rem;
+    letter-spacing: -.01em;
+    margin: 0 0 4px;
+}
+
+.body {
+    margin: 0;
+    color: var(--fg-2);
+    font-size: var(--fs-small);
+    max-width: 62ch;
+}
+
+/* An inline link in body copy needs an affordance at rest, so it carries a
+   quiet underline rather than the hover-in `.ulink` used for standalone links. */
+.link {
+    color: var(--fg);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--fg) 35%, transparent);
+    text-underline-offset: 3px;
+}
+
+.link:hover,
+.link:focus-visible {
+    text-decoration-color: var(--caret);
+}
+
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* Chrome, not a call to action: the buttons sit a size below the page's own. */
+.actions :global(.btn) {
+    min-height: 42px;
+    padding: 0 1.1em;
+    font-size: .92rem;
+}
+
+@media (max-width: 760px) {
+    .panel {
+        grid-template-columns: minmax(0, 1fr);
+        align-items: start;
+    }
+
+    .actions :global(.btn) {
+        flex: 1 1 auto;
+        justify-content: center;
+    }
+}
+
+:global(.motion) .panel {
+    opacity: 0;
+    transform: translateY(14px);
+    transition:
+        opacity var(--dur-s) var(--ease-out),
+        transform var(--dur-s) var(--ease-out);
+}
+
+:global(.motion) .shown .panel {
+    opacity: 1;
+    transform: none;
+}

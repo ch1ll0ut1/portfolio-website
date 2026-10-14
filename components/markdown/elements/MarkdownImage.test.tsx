@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { MarkdownImage } from './MarkdownImage';
-import { ImageElement } from '../markdownProcessor';
+import { ImageElement } from '../parser/types';
 
 // Mock Next.js Image component
 vi.mock('next/image', () => ({
@@ -55,5 +55,47 @@ describe('MarkdownImage', () => {
         // Check that no caption paragraph exists
         const caption = screen.queryByRole('paragraph');
         expect(caption).not.toBeInTheDocument();
+    });
+
+    it('passes the measured size through so the box matches the image', () => {
+        const element: ImageElement = {
+            type: 'image',
+            src: 'portrait.webp',
+            alt: 'Portrait',
+            width: 1024,
+            height: 1536,
+        };
+
+        render(<MarkdownImage element={element} />);
+
+        const image = screen.getByTestId('next-image');
+        expect(image).toHaveAttribute('width', '1024');
+        expect(image).toHaveAttribute('height', '1536');
+    });
+
+    it('loads eagerly at high priority only when asked to', () => {
+        const element: ImageElement = { type: 'image', src: 'a.webp', alt: 'A' };
+
+        const { unmount } = render(<MarkdownImage element={element} />);
+        expect(screen.getByTestId('next-image')).not.toHaveAttribute('loading');
+        expect(screen.getByTestId('next-image')).not.toHaveAttribute('fetchpriority');
+        unmount();
+
+        render(<MarkdownImage element={element} priority />);
+        expect(screen.getByTestId('next-image')).toHaveAttribute('loading', 'eager');
+        expect(screen.getByTestId('next-image')).toHaveAttribute('fetchpriority', 'high');
+    });
+
+    it('should not announce the caption a second time after the alt text', () => {
+        const element: ImageElement = {
+            type: 'image',
+            src: 'diagram.png',
+            alt: 'Request flow through the queue',
+        };
+
+        render(<MarkdownImage element={element} />);
+
+        expect(screen.getByRole('img', { name: 'Request flow through the queue' })).toBeInTheDocument();
+        expect(screen.getByText('Request flow through the queue', { selector: 'figcaption' })).toHaveAttribute('aria-hidden', 'true');
     });
 });

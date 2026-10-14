@@ -6,9 +6,23 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { MarkdownTable } from './MarkdownTable';
-import { type TableElement } from '../markdownProcessor';
+import { type TableElement } from '../parser/types';
 
 describe('MarkdownTable Component', () => {
+    it('should let keyboard users reach the scrolling wrapper, named as a region', () => {
+        const element: TableElement = {
+            type: 'table',
+            headers: [[{ text: 'Header' }]],
+            rows: [[[{ text: 'Cell' }]]],
+        };
+
+        render(<MarkdownTable element={element} />);
+
+        const region = screen.getByRole('region', { name: 'Table' });
+        expect(region).toHaveAttribute('tabindex', '0');
+        expect(region).toContainElement(screen.getByRole('table'));
+    });
+
     it('should render table with headers and rows', () => {
         const element: TableElement = {
             type: 'table',
@@ -121,7 +135,7 @@ describe('MarkdownTable Component', () => {
         expect(tbody?.children.length).toBe(0);
     });
 
-    it('should apply correct CSS classes to container', () => {
+    it('should make the scrolling wrapper reachable by keyboard', () => {
         const element: TableElement = {
             type: 'table',
             headers: [[{ text: 'Header' }]],
@@ -130,80 +144,41 @@ describe('MarkdownTable Component', () => {
 
         render(<MarkdownTable element={element} />);
 
+        // The wrapper scrolls rather than widening the page, so it must be
+        // reachable by keyboard.
         const container = screen.getByRole('table').parentElement;
-        expect(container).toHaveClass('my-6', 'overflow-x-auto');
+        expect(container).toHaveAttribute('tabindex', '0');
     });
 
-    it('should apply correct CSS classes to table', () => {
+    it('should mark header cells up as column headers', () => {
+        const element: TableElement = {
+            type: 'table',
+            headers: [[{ text: 'Header 1' }], [{ text: 'Header 2' }]],
+            rows: [[[{ text: 'Cell' }], [{ text: 'Other' }]]],
+        };
+
+        render(<MarkdownTable element={element} />);
+
+        const headers = screen.getAllByRole('columnheader');
+        expect(headers).toHaveLength(2);
+        headers.forEach((header) => {
+            expect(header).toHaveAttribute('scope', 'col');
+        });
+        expect(headers[0]).toHaveTextContent('Header 1');
+    });
+
+    it('should render each row of cells', () => {
         const element: TableElement = {
             type: 'table',
             headers: [[{ text: 'Header' }]],
-            rows: [[[{ text: 'Cell' }]]],
+            rows: [[[{ text: 'Cell' }]], [[{ text: 'Second' }]]],
         };
 
         render(<MarkdownTable element={element} />);
 
-        const table = screen.getByRole('table');
-        expect(table).toHaveClass('w-full', 'border-collapse', 'border', 'border-slate-300', 'rounded-lg');
-    });
-
-    it('should apply correct CSS classes to header cells', () => {
-        const element: TableElement = {
-            type: 'table',
-            headers: [[{ text: 'Header 1' }]],
-            rows: [],
-        };
-
-        render(<MarkdownTable element={element} />);
-
-        const headerCell = document.querySelector('th');
-        expect(headerCell).toBeInTheDocument();
-        expect(headerCell?.tagName).toBe('TH');
-        expect(headerCell).toHaveClass(
-            'border',
-            'border-slate-300',
-            'px-4',
-            'py-3',
-            'text-left',
-            'font-semibold',
-            'text-primary',
-        );
-        expect(screen.getByText('Header 1')).toBeInTheDocument();
-    });
-
-    it('should apply correct CSS classes to data cells', () => {
-        const element: TableElement = {
-            type: 'table',
-            headers: [[{ text: 'Header' }]],
-            rows: [[[{ text: 'Cell' }]]],
-        };
-
-        render(<MarkdownTable element={element} />);
-
-        const dataCell = document.querySelector('td');
-        expect(dataCell).toBeInTheDocument();
-        expect(dataCell?.tagName).toBe('TD');
-        expect(dataCell).toHaveClass(
-            'border',
-            'border-slate-300',
-            'px-4',
-            'py-3',
-            'text-muted-foreground',
-        );
-        expect(screen.getByText('Cell')).toBeInTheDocument();
-    });
-
-    it('should apply hover effects to rows', () => {
-        const element: TableElement = {
-            type: 'table',
-            headers: [[{ text: 'Header' }]],
-            rows: [[[{ text: 'Cell' }]]],
-        };
-
-        render(<MarkdownTable element={element} />);
-
-        const row = screen.getByText('Cell').closest('tr');
-        expect(row).toHaveClass('hover:bg-slate-50', 'transition-colors');
+        expect(screen.getAllByRole('row')).toHaveLength(3);
+        expect(screen.getByRole('cell', { name: 'Cell' })).toBeInTheDocument();
+        expect(screen.getByRole('cell', { name: 'Second' })).toBeInTheDocument();
     });
 
     it('should handle special characters in cells', () => {

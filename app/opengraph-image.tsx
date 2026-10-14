@@ -1,61 +1,33 @@
-import { ogImageConfig, createOgImage, OgLayout, AccentDot } from '@/lib/opengraphUtils';
+import { engagements } from '@/config/engagements';
+import { siteConfig, siteTitle } from '@/config/site';
+import { createOgImage, ogContentType, ogImageSize } from '@/lib/og/createOgImage';
+import { ogFonts } from '@/lib/og/fonts';
+import { OgHeadline } from '@/lib/og/OgHeadline';
+import { OgLayout } from '@/lib/og/OgLayout';
+import { ogPalette } from '@/lib/og/palette';
 
-export const size = ogImageConfig.size;
-export const contentType = ogImageConfig.contentType;
+export const alt = siteTitle;
+export const size = ogImageSize;
+export const contentType = ogContentType;
+
+/** The phrase of the positioning line the card selects. Must appear in `jobTitle`. */
+const HIGHLIGHT = 'hands-on tech lead';
 
 export default async function Image() {
-    return createOgImage({
-        children: (
-            <OgLayout>
-                {/* Main Title */}
-                <h1
-                    style={{
-                        fontSize: '64px',
-                        fontWeight: 'bold',
-                        textAlign: 'center',
-                        margin: '0 0 20px 0',
-                        lineHeight: '1.1',
-                        maxWidth: '900px',
-                        color: '#FFFFFF',
-                        textShadow: '0 2px 8px rgba(245, 158, 11, 0.3)',
-                    }}
-                >
-                    From Vision to Reality
-                </h1>
-
-                {/* Subtitle */}
-                <p
-                    style={{
-                        fontSize: '32px',
-                        textAlign: 'center',
-                        margin: '0 0 40px 0',
-                        color: '#E5E7EB',
-                        maxWidth: '800px',
-                        lineHeight: '1.3',
-                        fontWeight: '500',
-                    }}
-                >
-                    Software Developer & Technology Consultant
-                </p>
-
-                {/* Tagline */}
-                <div
-                    style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '8px',
-                        fontSize: '20px',
-                        color: '#F59E0B',
-                        fontWeight: '600',
-                    }}
-                >
-                    <span>Innovation</span>
-                    <AccentDot />
-                    <span>Leadership</span>
-                    <AccentDot />
-                    <span>Excellence</span>
-                </div>
-            </OgLayout>
-        ),
-    });
+    return createOgImage(
+        <OgLayout>
+            <OgHeadline text={siteConfig.jobTitle} highlight={HIGHLIGHT} fontSize={80} />
+            <span
+                style={{
+                    marginTop: 36,
+                    fontFamily: ogFonts.body,
+                    fontWeight: 500,
+                    fontSize: 30,
+                    color: ogPalette.fg2,
+                }}
+            >
+                {engagements.map(engagement => engagement.name).join('  ·  ')}
+            </span>
+        </OgLayout>,
+    );
 }

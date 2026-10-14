@@ -1,0 +1,341 @@
+/* Proof: a full-bleed marquee of organisations, then four odometer stats.
+   Ported from the prototype's proof.css.
+
+   The `.motion` guard comes from the boot script on <html>, so every rule that
+   moves something is inert when motion is off and the numbers simply render. */
+
+.proof {
+    padding-block: clamp(40px, 6vw, 72px) clamp(72px, 10vw, 140px);
+    border-top: 1px solid var(--line);
+}
+
+/* ==========================================================================
+   Marquee
+   ========================================================================== */
+.marqueeRoot {
+    position: relative;
+}
+
+/* The edges fade through a static mask rather than per-name opacity, so the
+   only thing that changes per frame is the track's transform. */
+.marquee {
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    padding-block: 8px;
+}
+
+/* Spotlight. In the prototype every name was restyled per frame to
+   `.34 + .66 * smoothstep(k)`, with `k = 1 - min(1, |x - centre| / (.42 * width))`
+   taken at the name's centre, so names sat dim and brightened to full as they
+   crossed the middle. This mask draws the same curve across the viewport
+   instead, sampled every tenth of the falloff and multiplied into the 8%
+   edge fade, so the look is restored while the track's transform stays the
+   only per-frame write. Under it the names are full `--fg`, as in the
+   prototype's live state.
+
+   `--spot-floor` is the dim level at the sides. It is registered so it can
+   ease: hovering the row (which also eases it to a stop) or focusing its
+   pause control lifts the floor to 1, so whatever the visitor is reading is at
+   full strength wherever along the row it sits. */
+@property --spot-floor {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: .34;
+}
+
+.marquee.isLive {
+    --spot-floor: .34;
+    --spot-gain: calc(1 - var(--spot-floor));
+
+    --spotlight: linear-gradient(
+        90deg,
+        transparent,
+        rgb(0 0 0 / var(--spot-floor)) 8.0%,
+        rgb(0 0 0 / calc(var(--spot-floor) + var(--spot-gain) * 0.028)) 12.2%,
+        rgb(0 0 0 / calc(var(--spot-floor) + var(--spot-gain) * 0.104)) 16.4%,
+        rgb(0 0 0 / calc(var(--spot-floor) + var(--spot-gain) * 0.216)) 20.6%,
+        rgb(0 0 0 / calc(var(--spot-floor) + var(--spot-gain) * 0.352)) 24.8%,
+        rgb(0 0 0 / calc(var(--spot-floor) + var(--spot-gain) * 0.500)) 29.0%,
+        rgb(0 0 0 / calc(var(--spot-floor) + var(--spot-gain) * 0.648)) 33.2%,
+        rgb(0 0 0 / calc(var(--spot-floor) + var(--spot-gain) * 0.784)) 37.4%,
+        rgb(0 0 0 / calc(var(--spot-floor) + var(--spot-gain) * 0.896)) 41.6%,
+        rgb(0 0 0 / calc(var(--spot-floor) + var(--spot-gain) * 0.972)) 45.8%,
+        #000 50%,
+        rgb(0 0 0 / calc(var(--spot-floor) + var(--spot-gain) * 0.972)) 54.2%,
+        rgb(0 0 0 / calc(var(--spot-floor) + var(--spot-gain) * 0.896)) 58.4%,
+        rgb(0 0 0 / calc(var(--spot-floor) + var(--spot-gain) * 0.784)) 62.6%,
+        rgb(0 0 0 / calc(var(--spot-floor) + var(--spot-gain) * 0.648)) 66.8%,
+        rgb(0 0 0 / calc(var(--spot-floor) + var(--spot-gain) * 0.500)) 71.0%,
+        rgb(0 0 0 / calc(var(--spot-floor) + var(--spot-gain) * 0.352)) 75.2%,
+        rgb(0 0 0 / calc(var(--spot-floor) + var(--spot-gain) * 0.216)) 79.4%,
+        rgb(0 0 0 / calc(var(--spot-floor) + var(--spot-gain) * 0.104)) 83.6%,
+        rgb(0 0 0 / calc(var(--spot-floor) + var(--spot-gain) * 0.028)) 87.8%,
+        rgb(0 0 0 / var(--spot-floor)) 92.0%,
+        transparent
+    );
+
+    -webkit-mask-image: var(--spotlight);
+    mask-image: var(--spotlight);
+    transition: --spot-floor var(--dur-s) var(--ease-ui);
+}
+
+@media (hover: hover) {
+    .marquee.isLive:hover {
+        --spot-floor: 1;
+    }
+}
+
+.marqueeRoot:focus-within .marquee.isLive {
+    --spot-floor: 1;
+}
+
+/* Paused, the row is something to read rather than something passing by, so
+   the names at the edges keep their full contrast. */
+.marqueeRoot:has(.marqueeToggle[data-paused='true']) .marquee {
+    -webkit-mask-image: none;
+    mask-image: none;
+}
+
+.track {
+    display: flex;
+    width: max-content;
+    gap: clamp(36px, 5vw, 72px);
+    padding-inline: clamp(18px, 2.5vw, 36px);
+}
+
+/* Only promoted to its own layer while the engine is actually moving it. */
+.marquee.isLive .track {
+    will-change: transform;
+}
+
+.item {
+    font-family: var(--font-display);
+    font-size: clamp(1.6rem, 3.4vw, 2.9rem);
+    font-weight: 500;
+    letter-spacing: -.03em;
+    color: var(--muted);
+    white-space: nowrap;
+    font-variation-settings: 'wdth' 80;
+    transition: color var(--dur-s) var(--ease-ui);
+}
+
+/* Moving, the spotlight mask does the dimming, so the names themselves are full
+   strength. At rest (reduced motion, or before the engine starts) they are the
+   prototype's muted grey. */
+.marquee.isLive .item,
+.item:hover {
+    color: var(--fg);
+}
+
+.marqueeToggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 24px;
+    margin: 6px var(--gutter) 0 auto;
+    padding: 2px 4px;
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    color: var(--muted);
+    transition: color var(--dur-xs) var(--ease-ui);
+}
+
+.marqueeToggle:hover,
+.marqueeToggle:focus-visible {
+    color: var(--fg);
+}
+
+/* Two bars while it runs, a play triangle once paused. */
+.marqueeIcon {
+    width: 8px;
+    height: 9px;
+    border-inline: 2.5px solid currentColor;
+}
+
+.marqueeToggle[data-paused='true'] .marqueeIcon {
+    width: 0;
+    height: 0;
+    border-block: 5px solid transparent;
+    border-inline: 8px solid currentColor;
+    border-inline-end-width: 0;
+}
+
+.item::after {
+    content: '';
+    display: inline-block;
+    width: .32em;
+    height: .32em;
+    margin-left: clamp(36px, 5vw, 72px);
+    border-radius: 50%;
+    background: var(--line);
+    vertical-align: .18em;
+}
+
+/* ==========================================================================
+   Stats
+   ========================================================================== */
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin-top: clamp(48px, 7vw, 96px);
+    border-top: 1px solid var(--line);
+}
+
+.stat {
+    position: relative;
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 26px 22px 0 0;
+    border-right: 1px solid var(--line);
+}
+
+.stat:not(:first-child) {
+    padding-left: 22px;
+}
+
+.stat:last-child {
+    border-right: 0;
+}
+
+.label {
+    color: var(--fg-2);
+    font-size: var(--fs-small);
+    max-width: 22ch;
+}
+
+.value {
+    font-family: var(--font-display);
+    font-size: clamp(2.8rem, 6vw, 5.4rem);
+    font-weight: 600;
+    letter-spacing: -.05em;
+    line-height: .95;
+    font-variant-numeric: tabular-nums;
+    font-variation-settings: 'wdth' 75;
+}
+
+/* A caret-coloured line sweeps the cell's top hairline as the digits land. */
+.stat::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -1px;
+    height: 1px;
+    background: var(--caret);
+    transform-origin: 0 50%;
+    transform: scaleX(0);
+    opacity: 0;
+}
+
+:global(.motion) .stat.isIn::before {
+    animation: statline 1.4s var(--ease-inout) calc(var(--si) * 90ms) both;
+}
+
+@keyframes statline {
+    0% {
+        transform: scaleX(0);
+        opacity: 1;
+        transform-origin: 0 50%;
+    }
+
+    50% {
+        transform: scaleX(1);
+        opacity: 1;
+        transform-origin: 0 50%;
+    }
+
+    50.1% {
+        transform-origin: 100% 50%;
+    }
+
+    100% {
+        transform: scaleX(0);
+        opacity: 1;
+        transform-origin: 100% 50%;
+    }
+}
+
+@media (max-width: 760px) {
+    .stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .stat {
+        padding: 22px 14px 22px 0;
+        border-bottom: 1px solid var(--line);
+    }
+
+    .stat:nth-child(2n) {
+        border-right: 0;
+        padding-left: 14px;
+    }
+
+    .stat:nth-child(2n+1) {
+        padding-left: 0;
+    }
+}
+
+/* ==========================================================================
+   Odometer
+
+   One column per digit. Each column holds every digit the reel passes through
+   and is translated `--n` rows up, so the roll is a single CSS transition
+   rather than per-frame JS. At rest the reel already shows the final digit.
+   ========================================================================== */
+.odo {
+    display: inline-flex;
+    align-items: center;
+}
+
+.col {
+    display: inline-block;
+    height: 1.2em;
+    margin-block: -.125em;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(transparent, #000 14%, #000 86%, transparent);
+    mask-image: linear-gradient(transparent, #000 14%, #000 86%, transparent);
+}
+
+.reel {
+    display: flex;
+    flex-direction: column;
+    transform: translate3d(0, calc(var(--n) * -1.2em), 0);
+}
+
+.digit {
+    display: block;
+    height: 1.2em;
+    line-height: 1.2em;
+}
+
+.affix {
+    color: var(--caret-text);
+    line-height: 1;
+}
+
+/* The reel rests on the final number, so no-JS, reduced motion and a stat
+   whose entrance never arms all read 2008. Armed just before it scrolls into
+   view, it drops back to its starting digits while still off screen, as the
+   prototype's `is-armed` did, so the roll starts from what the visitor sees
+   rather than snapping back from the final number. The roll itself is an
+   animation holding its first frame through the stagger delay. */
+:global(.motion) .stat.isArmed .reel {
+    transform: none;
+}
+
+:global(.motion) .stat.isIn .reel {
+    animation: odometer calc(1.1s + var(--k) * .25s) cubic-bezier(.2, .9, .1, 1) calc(var(--si) * 90ms) both;
+}
+
+@keyframes odometer {
+    from {
+        transform: none;
+    }
+
+    to {
+        transform: translate3d(0, calc(var(--n) * -1.2em), 0);
+    }
+}

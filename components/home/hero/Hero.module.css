@@ -1,0 +1,548 @@
+/* ==========================================================================
+   Hero — the editor.
+
+   The headline is a real contenteditable document; the panel beside it shows
+   the live model. Ported from the prototype's hero.css, so the geometry and
+   the timings match the design exactly.
+   ========================================================================== */
+.hero {
+    position: relative;
+    min-height: min(100svh, 980px);
+    display: flex;
+    align-items: center;
+    padding-top: calc(112px + env(safe-area-inset-top, 0px));
+    padding-bottom: clamp(48px, 6vw, 88px);
+    overflow: hidden;
+    isolation: isolate;
+}
+
+.field {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.inner {
+    position: relative;
+    display: grid;
+    align-items: start;
+    transform-origin: 30% 0;
+    grid-template-columns: minmax(0, 1fr) minmax(300px, 400px);
+    grid-template-areas:
+        'status status'
+        'doc tree'
+        'copy tree';
+    column-gap: clamp(32px, 5vw, 88px);
+    row-gap: clamp(28px, 3.6vw, 48px);
+}
+
+/* ---------- status chips ---------- */
+.status {
+    grid-area: status;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 13px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: .85rem;
+    color: var(--fg-2);
+    /* Denser fill instead of a backdrop blur: the field canvas behind it
+       animates, and a blur would be recomputed on every one of its frames. */
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+}
+
+.chip time {
+    color: var(--fg);
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+}
+
+.chipTz {
+    color: var(--muted);
+}
+
+.chipDot {
+    position: relative;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+
+    /* Status green reads the same in both themes, which is why it is the one
+       literal colour here. */
+    background: #3ecf8e;
+}
+
+/* The pulse is a ring that scales out and fades. The prototype grew a
+   box-shadow spread, which is the same picture but repaints every frame, and
+   this one loops forever while the hero is on screen. */
+.chipDot::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: #3ecf8e;
+    opacity: 0;
+}
+
+:global(html.motion) .chipDot::after {
+    animation: live-pulse 2.4s var(--ease-out) infinite;
+}
+
+@keyframes live-pulse {
+    0% {
+        opacity: .5;
+        transform: scale(1);
+    }
+
+    70%,
+    100% {
+        opacity: 0;
+        transform: scale(3.5);
+    }
+}
+
+/* ---------- headline editor ---------- */
+.doc {
+    grid-area: doc;
+    position: relative;
+}
+
+/* The editor inside the page's h1. A span, since a heading only holds
+   phrasing content, laid out as the block the headline always was. */
+.title {
+    display: block;
+    font-size: var(--fs-hero);
+    line-height: .92;
+    letter-spacing: -.045em;
+    font-weight: 640;
+    font-variation-settings: 'wdth' 78, 'opsz' 96;
+    max-width: 11ch;
+    outline: none;
+    caret-color: var(--caret);
+    cursor: text;
+    border-radius: 8px;
+    transition: box-shadow var(--dur-s) var(--ease-ui);
+}
+
+.title:focus-visible {
+    box-shadow: 0 0 0 1px var(--line), 0 0 0 8px color-mix(in srgb, var(--select) 10%, transparent);
+}
+
+/* The highlight reads like a real text selection: a flat block hugging the
+   glyphs, from cap height to just under the baseline, with tight corners. */
+.title mark {
+    --hl: 1;
+
+    background: none;
+    color: inherit;
+    position: relative;
+    z-index: 0;
+    white-space: nowrap;
+}
+
+.title mark::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: .17em -.035em .1em;
+    background: var(--select);
+    border-radius: .035em;
+    transform-origin: left center;
+    transform: scaleX(var(--hl));
+    transition: transform var(--dur-l) var(--ease-out);
+}
+
+.title.isDragging mark::before {
+    transition: none;
+}
+
+/* Replays the wipe after a highlight is applied. Driven by a class rather than
+   an inline style, so applying a mark leaves no attribute residue in the
+   document the visitor is editing. */
+.title mark.sweeping {
+    --hl: 0;
+}
+
+.title b,
+.title strong {
+    font-weight: 800;
+}
+
+.title i,
+.title em {
+    font-style: italic;
+    font-variation-settings: 'wdth' 100;
+}
+
+.title ::selection {
+    background: color-mix(in srgb, var(--caret) 55%, transparent);
+    color: inherit;
+}
+
+/* Intro word masks. The global `.sw` / `.swi` primitives do the clipping; the
+   headline only needs room for its descenders. They exist during the intro and
+   are unwrapped afterwards, so the editor never sees them. */
+.title :global(.sw) {
+    padding: .02em .06em .12em;
+    margin: -.02em -.06em -.12em;
+}
+
+/* Intro start state, painted from the first frame. The boot script arms the
+   page (`is-pre` on <html>) before first paint whenever motion is allowed, and
+   the stage releases it in the same task the intro's animations start in, so
+   the finished hero is never shown and then blanked. The hold is an animation
+   rather than a plain `opacity: 0` so it times out on its own: a bundle that
+   never runs leaves the section readable after 2.5 s, not blank for good.
+   Reduced motion and no-JS never get `is-pre`, so they paint the final state. */
+:global(.is-pre) .title,
+:global(.is-pre) .status > *,
+:global(.is-pre) .lede,
+:global(.is-pre) .ctas > *,
+:global(.is-pre) .tree {
+    animation: intro-hold 2.5s;
+}
+
+@keyframes intro-hold {
+    from,
+    to {
+        opacity: 0;
+    }
+}
+
+/* ---------- the intro's pointer and caret ---------- */
+.ibeam,
+.caret {
+    position: absolute;
+    left: 0;
+    top: 0;
+    pointer-events: none;
+    opacity: 0;
+}
+
+.ibeam {
+    width: 16px;
+    height: 28px;
+    margin: -14px 0 0 -8px;
+    color: var(--fg);
+    filter: drop-shadow(0 0 1.5px var(--bg)) drop-shadow(0 0 1px var(--bg));
+}
+
+.ibeam svg {
+    display: block;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+}
+
+.caret {
+    width: 3px;
+    height: 1em;
+    margin-left: -1px;
+    background: var(--caret);
+    border-radius: 2px;
+}
+
+.caret::after {
+    content: attr(data-label);
+    position: absolute;
+    left: 0;
+    bottom: 100%;
+    margin-bottom: 5px;
+    padding: 3px 7px 4px;
+    border-radius: 4px 4px 4px 0;
+    background: var(--caret-fill);
+    color: var(--on-accent);
+    font-family: var(--font-mono);
+    font-size: .68rem;
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: 0;
+    white-space: nowrap;
+    font-variation-settings: 'wdth' 85;
+    opacity: 0;
+    transform: translateY(4px) scale(.9);
+    transform-origin: 0 100%;
+    transition: opacity var(--dur-xs) var(--ease-ui), transform var(--dur-s) var(--ease-out);
+}
+
+.caret.hasFlag::after {
+    opacity: 1;
+    transform: none;
+}
+
+.caret.isGhost {
+    transition: opacity var(--dur-s) var(--ease-ui);
+}
+
+.caret.isGhost.isOn {
+    opacity: 1;
+}
+
+:global(html.motion) .caret.isGhost.isOn {
+    animation: ghost-blink 1.1s steps(1) .5s infinite;
+}
+
+@keyframes ghost-blink {
+    0%,
+    60% {
+        opacity: 1;
+    }
+
+    61%,
+    100% {
+        opacity: .2;
+    }
+}
+
+/* ---------- copy ---------- */
+.copy {
+    grid-area: copy;
+    display: grid;
+    gap: 28px;
+    min-width: 0;
+}
+
+.lede {
+    font-size: clamp(1.1rem, 1.5vw, 1.35rem);
+    line-height: 1.5;
+    color: var(--fg-2);
+    max-width: 46ch;
+}
+
+.ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+/* ---------- live document model ---------- */
+.tree {
+    grid-area: tree;
+    align-self: start;
+    margin-top: calc(var(--fs-hero) * .08);
+    min-width: 0;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+    /* No backdrop blur over the animating canvas; see `.chip`. */
+    background: color-mix(in srgb, var(--surface) 94%, transparent);
+    overflow: hidden;
+}
+
+.treeBar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--line);
+    font-family: var(--font-mono);
+    font-size: .7rem;
+    color: var(--muted);
+    font-variation-settings: 'wdth' 85;
+}
+
+.treeFile {
+    margin-right: auto;
+}
+
+.treeFile::before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin-right: 8px;
+    border-radius: 2px;
+    background: var(--caret);
+    vertical-align: 0;
+}
+
+.treePos {
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+}
+
+.treeState {
+    color: #3ecf8e;
+    transition: color var(--dur-xs);
+}
+
+.treeState.isDirty {
+    color: var(--caret-text);
+}
+
+.treeCode {
+    margin: 0;
+    padding: 14px 16px;
+    font-size: .74rem;
+    line-height: 1.75;
+    color: var(--fg-2);
+    overflow-x: auto;
+    max-height: 280px;
+    font-variation-settings: 'wdth' 85;
+    tab-size: 2;
+}
+
+.ln {
+    display: inline;
+}
+
+.key {
+    color: var(--ice);
+}
+
+.str {
+    color: var(--fg);
+}
+
+.bool {
+    color: var(--caret-text);
+}
+
+.punct {
+    color: var(--muted);
+}
+
+:global(html.motion) .flash {
+    border-radius: 3px;
+    animation: leaf-flash 1.6s var(--ease-out) both;
+}
+
+@keyframes leaf-flash {
+    0%,
+    25% {
+        background: var(--select-soft);
+        box-shadow: 0 0 0 3px var(--select-soft);
+    }
+
+    100% {
+        background: transparent;
+        box-shadow: 0 0 0 3px transparent;
+    }
+}
+
+.treeHint {
+    padding: 10px 16px 14px;
+    font-size: .8rem;
+    color: var(--muted);
+    border-top: 1px dashed var(--line);
+}
+
+.treeHint kbd {
+    padding: 1px 5px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    color: var(--fg-2);
+}
+
+/* The keyboard way into the editor; the headline itself is not a Tab stop
+   until the visitor opts in here. */
+.editButton {
+    min-height: 24px;
+    margin-top: 6px;
+    color: var(--fg-2);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--fg-2) 35%, transparent);
+    text-underline-offset: 3px;
+}
+
+.editButton:hover,
+.editButton:focus-visible {
+    color: var(--fg);
+    text-decoration-color: var(--caret);
+}
+
+/* ---------- floating format toolbar ---------- */
+.toolbar {
+    position: absolute;
+    z-index: 5;
+    display: flex;
+    gap: 2px;
+    padding: 4px;
+    border-radius: 10px;
+    background: var(--fg);
+    color: var(--bg);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .35);
+    transform: translate(-50%, -100%);
+    transform-origin: 50% 100%;
+}
+
+.toolbar[hidden] {
+    display: none;
+}
+
+.toolbar::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: -5px;
+    width: 10px;
+    height: 10px;
+    margin-left: -5px;
+    background: inherit;
+    border-radius: 2px;
+    transform: rotate(45deg);
+}
+
+.toolbar button {
+    position: relative;
+    z-index: 1;
+    width: 34px;
+    height: 32px;
+    border-radius: 7px;
+    font-size: .95rem;
+    font-family: var(--font-display);
+    transition: background var(--dur-xs) var(--ease-ui);
+}
+
+.toolbar button:hover,
+.toolbar button:focus-visible,
+.toolbar button.isOn {
+    background: color-mix(in srgb, var(--bg) 18%, transparent);
+}
+
+.toolbarHl {
+    padding: 0 3px;
+    background: var(--select);
+    color: var(--on-select);
+    border-radius: 2px;
+}
+
+@media (max-width: 1080px) {
+    .inner {
+        grid-template-columns: minmax(0, 1fr) minmax(280px, 340px);
+    }
+}
+
+@media (max-width: 860px) {
+    .hero {
+        min-height: auto;
+        padding-top: calc(104px + env(safe-area-inset-top, 0px));
+    }
+
+    .inner {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-areas:
+            'status'
+            'doc'
+            'copy'
+            'tree';
+    }
+
+    .tree {
+        margin-top: 0;
+    }
+
+    .treeCode {
+        max-height: 220px;
+    }
+}
