@@ -196,6 +196,16 @@ describe('<CommandPalette>', () => {
         expect(onClose).toHaveBeenCalled();
     });
 
+    // Touch has no Escape key, so the keycap in the search row is a real button.
+    it('should close from the esc button in the search row', async () => {
+        const user = userEvent.setup();
+
+        await mount();
+        await user.click(screen.getByRole('button', { name: 'Close command menu' }));
+
+        expect(onClose).toHaveBeenCalled();
+    });
+
     it('should open as a modal dialog', async () => {
         await mount();
 

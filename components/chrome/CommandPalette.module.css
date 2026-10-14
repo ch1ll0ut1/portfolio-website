@@ -25,7 +25,19 @@
     color: var(--muted);
 }
 
-.search kbd {
+.close {
+    position: relative;
+    flex: none;
+}
+
+/* A fingertip-sized hit area around the small keycap. */
+.close::after {
+    content: '';
+    position: absolute;
+    inset: -8px;
+}
+
+.close kbd {
     color: var(--muted);
 }
 

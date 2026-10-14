@@ -149,7 +149,12 @@ export const CommandPalette: FC<Props> = ({ open, onClose, onOpenShortcuts }) =>
                     }}
                     onKeyDown={handleKeyDown}
                 />
-                <kbd>esc</kbd>
+                {/* A button, not a bare keycap: on touch there is no Escape key,
+                    and a chip that looks pressable has to be. Same control as
+                    the shortcuts list's close. */}
+                <button className={styles.close} type="button" aria-label="Close command menu" onClick={onClose}>
+                    <kbd>esc</kbd>
+                </button>
             </div>
             {/* Keyed by opening, so each one mounts a fresh list and its highlight
                 is placed on the first row rather than sliding back from wherever
