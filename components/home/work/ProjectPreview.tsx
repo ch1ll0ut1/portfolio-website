@@ -15,6 +15,8 @@ const CARD_WIDTH = 248;
 const EDGE_GUTTER = 16;
 const CARD_HEIGHT = 170;
 const FOLLOW = 0.16;
+/** How close the card must come to rest before it stops following, in px. */
+const SETTLED = 0.3;
 
 interface Point {
     x: number;
@@ -39,13 +41,22 @@ export const ProjectPreview: FC<Props> = ({ project }) => {
     const boxRef = useRef<HTMLDivElement>(null);
     const pointerRef = useRef<Point>({ x: 0, y: 0 });
     const positionRef = useRef<Point>({ x: 0, y: 0 });
+    const targetRef = useRef<Point>({ x: 0, y: 0 });
     const shownRef = useRef(false);
     // Kept so the card can fade out still showing what it described. Updated
     // during render, React's pattern for state that follows a prop.
     const [displayed, setDisplayed] = useState(project);
+    // Whether the card is still travelling. It outlives `project`: a hidden
+    // card keeps gliding to where it was heading while it fades, rather than
+    // freezing mid-step, and lets go of the clock once it arrives.
+    const [moving, setMoving] = useState(project !== null);
 
     if (project !== null && project !== displayed) {
         setDisplayed(project);
+    }
+
+    if (project !== null && !moving) {
+        setMoving(true);
     }
 
     useEffect(() => {
@@ -78,6 +89,7 @@ export const ProjectPreview: FC<Props> = ({ project }) => {
 
         shownRef.current = true;
         positionRef.current = target;
+        targetRef.current = target;
         box.style.transform = `translate3d(${target.x.toFixed(1)}px, ${target.y.toFixed(1)}px, 0)`;
     }, [project]);
 
@@ -88,7 +100,13 @@ export const ProjectPreview: FC<Props> = ({ project }) => {
             return;
         }
 
-        const target = targetFor(pointerRef.current);
+        // Hidden, the card settles on the last spot it was heading for over the
+        // list instead of trailing the pointer away from it.
+        if (project !== null) {
+            targetRef.current = targetFor(pointerRef.current);
+        }
+
+        const target = targetRef.current;
         const next = {
             x: lerp(positionRef.current.x, target.x, FOLLOW),
             y: lerp(positionRef.current.y, target.y, FOLLOW),
@@ -96,7 +114,11 @@ export const ProjectPreview: FC<Props> = ({ project }) => {
 
         positionRef.current = next;
         box.style.transform = `translate3d(${next.x.toFixed(1)}px, ${next.y.toFixed(1)}px, 0)`;
-    }, project !== null);
+
+        if (project === null && Math.abs(target.x - next.x) < SETTLED && Math.abs(target.y - next.y) < SETTLED) {
+            setMoving(false);
+        }
+    }, moving);
 
     return (
         <div
