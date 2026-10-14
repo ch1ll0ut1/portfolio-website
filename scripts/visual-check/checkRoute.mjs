@@ -5,13 +5,27 @@
 import { mkdir } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { measureOverflow, sweepPage, waitForReveals } from './pageProbes.mjs';
-import { expectedStatus } from './routes.mjs';
+import { expectedStatus, isMissingArticle } from './routes.mjs';
 
 /** Console noise that is expected and not a defect. */
 const IGNORED_ERRORS = [
     /favicon/i,
     /Download the React DevTools/i,
 ];
+
+/**
+ * React's dev-only warning for a `<script>` it creates on the client, which it
+ * never executes. The `notFound()` in /blog/[slug] escapes Next's server render,
+ * so Next answers with a bare error shell and renders the whole document — the
+ * root layout's boot script included — on the client. Ignored for that one
+ * route only; anywhere else it means a component renders a script. The warning
+ * is dev-only, but the cause is not: the boot script never runs on this page,
+ * in production either, so it loses the stored theme and the `js`/`motion`
+ * classes.
+ */
+const CLIENT_SCRIPT_WARNING = 'Encountered a script tag while rendering React component.';
+
+const isExpectedClientScriptWarning = (route, text) => isMissingArticle(route) && text.startsWith(CLIENT_SCRIPT_WARNING);
 
 const slug = route => (route === '/' ? 'home' : route.replace(/^\/+|\/+$/g, '').replace(/\//g, '-'));
 
@@ -50,7 +64,7 @@ export const checkRoute = async (browser, route, testCase, { base, out }) => {
 
         const text = message.text();
 
-        if (!IGNORED_ERRORS.some(pattern => pattern.test(text))) {
+        if (!IGNORED_ERRORS.some(pattern => pattern.test(text)) && !isExpectedClientScriptWarning(route, text)) {
             errors.push(text);
         }
     });

@@ -17,8 +17,11 @@ const MISSING_ARTICLE_STATUS = 404;
 /** Two articles is enough to catch template-wide breakage. */
 const ARTICLE_SAMPLE = 2;
 
+/** Whether `route` is the swept unknown-slug 404. */
+export const isMissingArticle = route => route === MISSING_ARTICLE;
+
 /** The status a route has to answer with. */
-export const expectedStatus = route => (route === MISSING_ARTICLE ? MISSING_ARTICLE_STATUS : 200);
+export const expectedStatus = route => (isMissingArticle(route) ? MISSING_ARTICLE_STATUS : 200);
 
 /** The newest published articles, as the running site's sitemap lists them. */
 const sampleArticles = async (base) => {
