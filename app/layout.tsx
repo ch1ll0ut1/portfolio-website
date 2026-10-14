@@ -13,7 +13,9 @@ import { NavTools } from '@/components/nav/NavTools';
 import { SiteNav } from '@/components/nav/SiteNav';
 import { siteConfig, siteKeywords, siteTitle } from '@/config/site';
 import { BOOT_SCRIPT } from '@/lib/bootScript';
+import type { CssVars } from '@/lib/cssVars';
 import { twitterCard } from '@/lib/twitterCard';
+import { webFontFamily } from '@/lib/webFontFamily';
 
 export const metadata: Metadata = {
     title: {
@@ -62,14 +64,12 @@ const displayFont = Bricolage_Grotesque({
     subsets: ['latin'],
     axes: ['opsz', 'wdth'],
     display: 'swap',
-    variable: '--font-bricolage',
 });
 
 const bodyFont = Schibsted_Grotesk({
     subsets: ['latin'],
     style: ['normal', 'italic'],
     display: 'swap',
-    variable: '--font-schibsted',
 });
 
 // Used sparingly for code, hashes and data, so it does not need preloading.
@@ -78,10 +78,18 @@ const monoFont = Martian_Mono({
     axes: ['wdth'],
     display: 'swap',
     preload: false,
-    variable: '--font-martian',
 });
 
-const fontVariables = `${displayFont.variable} ${bodyFont.variable} ${monoFont.variable}`;
+/**
+ * The web families the stacks in globals.css start with. Set here rather than
+ * through `next/font`'s `variable`, which would also put its metric-adjusted
+ * Arial face in every stack ahead of the system fallbacks; see `webFontFamily`.
+ */
+const fontFamilies: CssVars = {
+    '--font-bricolage': webFontFamily(displayFont),
+    '--font-schibsted': webFontFamily(bodyFont),
+    '--font-martian': webFontFamily(monoFont),
+};
 
 const RootLayout: FC<{ children: React.ReactNode }> = ({ children }) => {
     return (
@@ -90,7 +98,7 @@ const RootLayout: FC<{ children: React.ReactNode }> = ({ children }) => {
         // differs from the server's.
         // data-scroll-behavior: globals.css scrolls smoothly; this asks Next to
         // jump instantly on route changes, which Next 16 stopped doing unasked.
-        <html lang="en" className={fontVariables} data-scroll-behavior="smooth" suppressHydrationWarning>
+        <html lang="en" style={fontFamilies} data-scroll-behavior="smooth" suppressHydrationWarning>
             <head>
                 {/* Pre-paint: stored theme, the motion switch and the armed entrance. See lib/bootScript.ts. */}
                 <script dangerouslySetInnerHTML={{ __html: BOOT_SCRIPT }} />
