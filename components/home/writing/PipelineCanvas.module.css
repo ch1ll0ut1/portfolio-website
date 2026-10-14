@@ -142,11 +142,9 @@
     animation: gate-wait 1s var(--ease-inout) infinite alternate;
 }
 
+/* No `from`: it starts from the pseudo-element's own "no shadow", so the ring
+   fades in as it grows, as the prototype's does. */
 @keyframes gate-wait {
-    from {
-        box-shadow: 0 0 0 0 color-mix(in srgb, var(--caret) 22%, transparent);
-    }
-
     to {
         box-shadow: 0 0 0 4px color-mix(in srgb, var(--caret) 22%, transparent);
     }
