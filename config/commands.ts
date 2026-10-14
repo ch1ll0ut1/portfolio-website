@@ -114,4 +114,11 @@ export const commands: Command[] = [
         hint: '/blog',
         action: { type: 'route', href: '/blog' },
     },
+    {
+        id: 'contact-form',
+        group: 'Elsewhere',
+        label: 'Contact form',
+        hint: '/contact',
+        action: { type: 'route', href: '/contact' },
+    },
 ];

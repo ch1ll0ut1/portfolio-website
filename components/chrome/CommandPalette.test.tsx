@@ -92,7 +92,7 @@ describe('<CommandPalette>', () => {
         await mount();
         await user.type(screen.getByRole('combobox'), 'elsewhere');
 
-        expect(options()).toHaveLength(3);
+        expect(options()).toHaveLength(4);
     });
 
     it('should show an empty state when nothing matches', async () => {
@@ -155,6 +155,18 @@ describe('<CommandPalette>', () => {
         expect(onClose).toHaveBeenCalled();
         await waitFor(() => {
             expect(push).toHaveBeenCalledWith('/blog');
+        });
+    });
+
+    it('should open the contact form from its command', async () => {
+        const user = userEvent.setup();
+
+        await mount();
+        await user.type(screen.getByRole('combobox'), 'contact form');
+        await user.keyboard('{Enter}');
+
+        await waitFor(() => {
+            expect(push).toHaveBeenCalledWith('/contact');
         });
     });
 

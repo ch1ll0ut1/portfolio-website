@@ -68,6 +68,7 @@ describe('ContactFooter', () => {
         // Assert
         expect(screen.getByRole('link', { name: 'Blog' })).toHaveAttribute('href', '/blog');
         expect(screen.getByRole('link', { name: 'Privacy' })).toHaveAttribute('href', '/privacy');
+        expect(screen.getByRole('link', { name: 'Contact' })).toHaveAttribute('href', '/contact');
     });
 
     it('should keep internal links in the same tab', () => {

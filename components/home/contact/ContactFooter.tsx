@@ -33,6 +33,7 @@ const footerLinks: FooterLink[] = [
     { label: 'LinkedIn', href: links.social.linkedin, external: true, trackingLabel: 'linkedin profile' },
     { label: 'Blog', href: '/blog', external: false },
     { label: 'Privacy', href: '/privacy', external: false },
+    { label: 'Contact', href: '/contact', external: false },
 ];
 
 /**
