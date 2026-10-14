@@ -52,11 +52,13 @@ describe('/blog/[slug]', () => {
             expect(metadata.robots).toBeUndefined();
         });
 
-        it('should keep an unknown slug out of the index', async () => {
+        // Next's own `noindex` on the 404 keeps it out of the index; a value
+        // here would only be a second robots tag.
+        it('should leave the robots tag of an unknown slug to Next', async () => {
             const metadata = await generateMetadata({ params: params('this-article-does-not-exist') });
 
             expect(metadata.title).toBe('Post not found');
-            expect(metadata.robots).toMatchObject({ index: false });
+            expect(metadata.robots).toBeNull();
         });
     });
 

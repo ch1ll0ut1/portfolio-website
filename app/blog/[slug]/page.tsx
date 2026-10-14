@@ -33,16 +33,14 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     const { slug } = await params;
     const data = getBlogPostData(slug);
 
-    // Guards the property reads below. The 404 response is described by
-    // ./not-found.tsx, since Next drops this result once `notFound()` is thrown.
+    // Guards the property reads below. Matches ./not-found.tsx, robots
+    // included: Next sends its own `noindex` with the 404, and a value here
+    // would be a second robots tag (this result does reach the page).
     if (!data) {
         return {
             title: 'Post not found',
             description: 'That article does not exist, or its link has changed.',
-            robots: {
-                index: false,
-                follow: true,
-            },
+            robots: null,
         };
     }
 

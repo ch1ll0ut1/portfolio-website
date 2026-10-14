@@ -6,10 +6,10 @@ import { ReadingShell } from '@/components/blog/ReadingShell';
 export const metadata: Metadata = {
     title: 'Page not found',
     description: 'The page you were looking for does not exist.',
-    robots: {
-        index: false,
-        follow: true,
-    },
+    // Null, not `{ index: false }`: Next already answers every 404 with its
+    // own `<meta name="robots" content="noindex">`, so a value here would only
+    // add a second tag. Null still clears the layout's "index, follow".
+    robots: null,
 };
 
 /**

@@ -1,14 +1,16 @@
 /**
- * Tests for the share metadata of the static routes. Next merges
- * metadata one top-level key at a time, so whatever a page sets for `twitter`
- * or `openGraph` replaces the layout's value whole;
- * these pin what each page ends up with on its own.
+ * Tests for the share and robots metadata of the static routes. Next merges
+ * metadata one top-level key at a time, so whatever a page sets for `twitter`,
+ * `openGraph` or `robots` replaces the layout's value whole; these pin what
+ * each page ends up with on its own.
  */
 
 import type { Metadata } from 'next';
 import { describe, expect, it } from 'vitest';
 import { siteConfig, siteTitle } from '@/config/site';
+import { metadata as postNotFound } from './blog/[slug]/not-found';
 import { metadata as blog } from './blog/page';
+import { metadata as notFound } from './not-found';
 import { metadata as home } from './page';
 import { metadata as privacy } from './privacy/page';
 
@@ -32,5 +34,14 @@ describe('route metadata', () => {
         expect(privacy.openGraph).toMatchObject({ title, description, type: 'website' });
         expect(privacy.twitter).toMatchObject({ title, description });
         expect(privacy.twitter).not.toMatchObject({ title: siteTitle });
+    });
+
+    // Next adds its own `noindex` to every 404; a robots value here would be a
+    // second tag, and leaving it out would inherit the layout's "index, follow".
+    it.each([
+        ['the site 404', notFound],
+        ['the missing-post 404', postNotFound],
+    ])('should leave the robots tag of %s to Next', (_page, metadata) => {
+        expect(metadata.robots).toBeNull();
     });
 });
