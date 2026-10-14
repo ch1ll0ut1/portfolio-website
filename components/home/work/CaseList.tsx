@@ -3,7 +3,8 @@
 import { type FC, useCallback, useRef, useState } from 'react';
 import { caseStudies } from '@/config/caseStudies';
 import { CaseCard } from './CaseCard';
-import { useCaseStack, useStackFocus } from './caseStack';
+import { useCaseStack } from './caseStack';
+import { useStackFocus } from './stackFocus';
 import styles from './Work.module.css';
 
 /**

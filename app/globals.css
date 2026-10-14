@@ -275,6 +275,11 @@
 html {
     -webkit-text-size-adjust: 100%;
     scroll-behavior: smooth;
+
+    /* Fixed UI docked to the bottom edge (the consent banner) publishes its
+       height here, so the browser never scrolls a focused element under it.
+       The body's matching bottom padding gives the end of the page the room. */
+    scroll-padding-bottom: var(--fixed-bottom, 0px);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -293,6 +298,10 @@ body {
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
     overflow-x: clip;
+
+    /* Room to scroll the end of the page, the footer's links included, out
+       from under the same fixed bottom UI. */
+    padding-bottom: var(--fixed-bottom, 0px);
 }
 
 ::selection {

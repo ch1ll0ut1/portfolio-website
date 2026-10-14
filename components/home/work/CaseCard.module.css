@@ -6,6 +6,12 @@
     top: calc(88px + var(--i) * 18px + env(safe-area-inset-top, 0px));
 }
 
+/* The lift that raises a focused link clear of the consent banner (see
+   stackFocus.ts) eases in and out rather than jumping. */
+:global(.motion) .case {
+    transition: transform var(--dur-s) var(--ease-out);
+}
+
 .inner {
     position: relative;
     display: grid;

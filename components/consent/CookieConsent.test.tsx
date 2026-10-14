@@ -105,6 +105,20 @@ describe('<CookieConsent>', () => {
             expect(screen.queryByRole('button', { name: 'Reject all' })).not.toBeInTheDocument();
         });
 
+        it('should keep focus scrolling clear of the banner until a choice is made', async () => {
+            const user = userEvent.setup();
+            const inset = () => document.documentElement.style.getPropertyValue('--fixed-bottom');
+
+            vi.spyOn(HTMLElement.prototype, 'offsetHeight', 'get').mockReturnValue(183);
+            await mountWithBanner();
+
+            expect(inset()).toBe('183px');
+
+            await user.click(screen.getByRole('button', { name: 'Accept all' }));
+
+            expect(inset()).toBe('');
+        });
+
         it('should persist the choice made in the dialog', async () => {
             const user = userEvent.setup();
 

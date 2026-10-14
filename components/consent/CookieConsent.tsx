@@ -15,6 +15,7 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useConsent } from './ConsentContext';
 import { useBannerFocusReturn } from './useBannerFocusReturn';
+import { useFixedBottomInset } from './useFixedBottomInset';
 import styles from './CookieConsent.module.css';
 
 /** Most visitors never open it, so it loads on demand, not with every page. */
@@ -26,6 +27,9 @@ export const CookieConsent: FC = () => {
     const [shown, setShown] = useState(false);
     const bannerRef = useRef<HTMLElement>(null);
     const focus = useBannerFocusReturn(bannerRef, showBanner);
+
+    // Docked over the bottom of the page, so focus scrolling has to stop short of it.
+    useFixedBottomInset(bannerRef, showBanner);
 
     // The entrance transition cannot run from a state the browser never
     // painted, so the panel gains its visible class on the frame after mount.
