@@ -4,6 +4,7 @@
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { commands } from '@/config/commands';
+import { links } from '@/config/links';
 import { OPEN_CONSENT_PREFERENCES_EVENT } from '@/components/consent/ConsentContext';
 import { readPreference, setPreference } from './preferences';
 import { runCommand } from './runCommand';
@@ -13,6 +14,12 @@ const handlers = () => ({ openShortcuts: vi.fn(), navigate: vi.fn() });
 describe('runCommand', () => {
     it('should list a cookie settings command in the palette', () => {
         expect(commands.find(command => command.label === 'Cookie settings')?.action).toEqual({ type: 'cookieSettings' });
+    });
+
+    it('should send contact to LinkedIn rather than offer an email address', () => {
+        expect(commands.find(command => command.id === 'linkedin')?.action)
+            .toEqual({ type: 'external', url: links.social.linkedin });
+        expect(commands.filter(command => /e-?mail/i.test(`${command.label} ${command.hint}`))).toEqual([]);
     });
 
     it('should ask the consent provider to reopen the preferences dialog', () => {

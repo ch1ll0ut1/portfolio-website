@@ -10,7 +10,7 @@
 export { EASE, tween } from './tween';
 export { FINE_POINTER_QUERY, REDUCED_MOTION_QUERY, hasFinePointer, prefersReducedMotion, watchMedia } from './env';
 export { clamp, lerp, mapRange, smoothstep } from './math';
-export { copyText, showToast } from './toast';
+export { showToast } from './toast';
 export { scrambleHash, scrambleInto } from './scramble';
 export { observeInView } from './inView';
 export { emitStage, isIntroDone, onStage, startStage } from './stage';

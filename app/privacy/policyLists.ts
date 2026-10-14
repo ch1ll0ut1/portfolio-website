@@ -16,10 +16,10 @@ export interface PolicyItem {
  * When the policy text last changed. A fixed date: the policy changes when its
  * text does, not when the site is rebuilt.
  */
-export const POLICY_LAST_UPDATED = '2026-10-13';
+export const POLICY_LAST_UPDATED = '2026-10-14';
 
 export const directInformation: PolicyItem[] = [
-    { label: 'Email', text: 'If you write to me, I receive your email address, your name if you include it, and whatever your message contains. The site has no contact form; the address is shown so you can copy it into your own mail program.' },
+    { label: 'Messages', text: 'If you message me on LinkedIn, I receive your name, your LinkedIn profile, and whatever your message contains. The site has no contact form; LinkedIn processes those messages under its own privacy policy.' },
     { label: 'Call bookings', text: 'If you book a call, Calendly collects your name, email address, and any notes you add, and shares them with me so we can meet. Calendly processes that data under its own privacy policy.' },
 ];
 
@@ -30,7 +30,7 @@ export const automaticInformation: PolicyItem[] = [
 ];
 
 export const informationUses: PolicyItem[] = [
-    { label: 'Replying to you', text: 'To answer your email or prepare for a call you booked' },
+    { label: 'Replying to you', text: 'To answer your message or prepare for a call you booked' },
     { label: 'Improving the website', text: 'To see which pages and articles are read, and where visitors lose interest' },
     { label: 'Performance', text: 'To keep the website fast and working across devices' },
     { label: 'Security', text: 'To protect the website against abuse and attacks' },
@@ -63,7 +63,7 @@ export const cookieManagement: PolicyItem[] = [
 ];
 
 export const dataRetention: PolicyItem[] = [
-    { label: 'Emails and bookings', text: 'Kept as long as our conversation or any resulting work needs them, then deleted' },
+    { label: 'Messages and bookings', text: 'Kept as long as our conversation or any resulting work needs them, then deleted' },
     { label: 'Analytics data', text: 'Kept by Google Analytics for no longer than 14 months' },
     { label: 'Server logs', text: 'Kept by Vercel for a short period under its own retention policy' },
     { label: 'Browser storage', text: 'Stays on your device until you clear it or withdraw consent' },
@@ -83,5 +83,5 @@ export const policyChanges: PolicyItem[] = [
 export const legalBases: PolicyItem[] = [
     { label: 'Consent', text: 'For Google Analytics and its cookies' },
     { label: 'Legitimate interest', text: 'For hosting, server logs, security, cookieless statistics, and the essential storage the site needs to work' },
-    { label: 'Steps before a contract', text: 'For replying to your emails and preparing calls about possible work' },
+    { label: 'Steps before a contract', text: 'For replying to your messages and preparing calls about possible work' },
 ];

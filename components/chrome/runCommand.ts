@@ -5,7 +5,7 @@
  * so navigation and overlay handling can be injected rather than imported.
  */
 
-import { copyText, showToast } from '@/lib/motion';
+import { showToast } from '@/lib/motion';
 import type { CommandAction } from '@/config/commands';
 import { requestConsentPreferences } from '@/components/consent/ConsentContext';
 import { openExternal } from './openExternal';
@@ -28,9 +28,6 @@ export const runCommand = (action: CommandAction, handlers: CommandHandlers) => 
             break;
         case 'route':
             handlers.navigate(action.href);
-            break;
-        case 'copy':
-            void copyText(action.text, { label: action.toast });
             break;
         case 'theme':
             toggleTheme();

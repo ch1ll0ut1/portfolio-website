@@ -56,7 +56,7 @@ describe('Contact', () => {
 
         // Assert
         expect(screen.getByRole('link', { name: 'Book a 30-min call' })).toHaveAttribute('href', links.calendly);
-        expect(screen.getByRole('button', { name: /copy email/i })).toBeInTheDocument();
+        expect(screen.getByRole('link', { name: 'Message me on LinkedIn' })).toHaveAttribute('href', links.social.linkedin);
     });
 
     it('should carry the footer', () => {

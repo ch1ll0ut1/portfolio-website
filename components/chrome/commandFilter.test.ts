@@ -21,7 +21,7 @@ const make = (id: string, group: string, label: string, hint = ''): Command => (
 const sample: Command[] = [
     make('work', 'Go to', 'Work', 'G W'),
     make('services', 'Go to', 'Services', 'G S'),
-    make('email', 'Actions', 'Copy email address', 'hello@example.com'),
+    make('cookies', 'Actions', 'Cookie settings', 'Change or withdraw consent'),
 ];
 
 describe('filterCommands', () => {
@@ -34,7 +34,7 @@ describe('filterCommands', () => {
     });
 
     it('should match on the hint', () => {
-        expect(filterCommands(sample, 'example').map(command => command.id)).toEqual(['email']);
+        expect(filterCommands(sample, 'withdraw').map(command => command.id)).toEqual(['cookies']);
     });
 
     it('should match on the group heading', () => {
@@ -56,7 +56,7 @@ describe('groupCommands', () => {
 
         expect(groups.map(group => [group.label, group.items.map(item => item.command.id)])).toEqual([
             ['Go to', ['work', 'services']],
-            ['Actions', ['email']],
+            ['Actions', ['cookies']],
         ]);
     });
 

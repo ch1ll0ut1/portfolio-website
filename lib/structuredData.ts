@@ -35,7 +35,6 @@ export const personSchema = (): JsonLdObject => ({
     'description': siteConfig.description,
     'url': absoluteUrl(),
     'image': absoluteUrl('/opengraph-image'),
-    'email': `mailto:${siteConfig.contactEmail}`,
     'address': {
         '@type': 'PostalAddress',
         'addressLocality': siteConfig.city,

@@ -11,11 +11,6 @@ describe('Site Configuration', () => {
         expect(siteConfig.url).toMatch(/^https:\/\/[^/]+$/);
     });
 
-    it('should have a plausible contact email', () => {
-        // Assert
-        expect(siteConfig.contactEmail).toMatch(/^[^@\s]+@[^@\s]+\.[a-z]+$/);
-    });
-
     it('should mention the start year in the description', () => {
         // Assert
         expect(siteConfig.description).toContain(String(siteConfig.sinceYear));

@@ -158,7 +158,7 @@ export const CommandPalette: FC<Props> = ({ open, onClose, onOpenShortcuts }) =>
                 onHover={setSelected}
                 onRun={run}
             />
-            {expanded ? null : <p className={styles.empty}>No matches. Try “work” or “email”.</p>}
+            {expanded ? null : <p className={styles.empty}>No matches. Try “work” or “linkedin”.</p>}
             <p className="visually-hidden" role="status">{resultStatus(query, filtered.length)}</p>
             <div className={styles.foot} aria-hidden="true">
                 <span>

@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { type BlogPost } from '@/config/blog';
+import { links } from '@/config/links';
 import { siteConfig } from '@/config/site';
 import { blogPostingSchema, blogSchema, personSchema, serializeJsonLd } from './structuredData';
 
@@ -27,7 +28,7 @@ describe('structuredData', () => {
     });
 
     describe('personSchema', () => {
-        it('should describe the site owner with contact and image', () => {
+        it('should describe the site owner with image and profiles', () => {
             // Act
             const schema = personSchema();
 
@@ -36,9 +37,17 @@ describe('structuredData', () => {
                 '@type': 'Person',
                 'name': siteConfig.name,
                 'jobTitle': siteConfig.jobTitle,
-                'email': `mailto:${siteConfig.contactEmail}`,
+                'sameAs': expect.arrayContaining([links.social.linkedin, links.social.github]),
             });
             expect(schema.image).toEqual(expect.stringContaining(siteConfig.url));
+        });
+
+        it('should not publish an email address', () => {
+            // Act
+            const schema = personSchema();
+
+            // Assert
+            expect(schema).not.toHaveProperty('email');
         });
     });
 

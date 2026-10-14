@@ -74,10 +74,10 @@ describe('<CommandPalette>', () => {
         const user = userEvent.setup();
 
         await mount();
-        await user.type(screen.getByRole('combobox'), 'email');
+        await user.type(screen.getByRole('combobox'), 'linkedin');
 
         expect(options()).toHaveLength(1);
-        expect(options()[0]).toHaveTextContent('Copy email address');
+        expect(options()[0]).toHaveTextContent('LinkedIn');
     });
 
     it('should match on a group heading as well as a label', async () => {
@@ -238,7 +238,7 @@ describe('<CommandPalette>', () => {
 
         expect(screen.getByRole('status')).toBeEmptyDOMElement();
 
-        await user.type(screen.getByRole('combobox'), 'email');
+        await user.type(screen.getByRole('combobox'), 'linkedin');
 
         expect(screen.getByRole('status')).toHaveTextContent('1 command');
 
@@ -251,7 +251,7 @@ describe('<CommandPalette>', () => {
         const user = userEvent.setup();
         const view = await mount();
 
-        await user.type(screen.getByRole('combobox'), 'email');
+        await user.type(screen.getByRole('combobox'), 'linkedin');
         view.rerender(<CommandPalette open={false} onClose={onClose} onOpenShortcuts={onOpenShortcuts} />);
         view.rerender(<CommandPalette open onClose={onClose} onOpenShortcuts={onOpenShortcuts} />);
 

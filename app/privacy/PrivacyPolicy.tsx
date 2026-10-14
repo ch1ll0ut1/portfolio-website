@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { links } from '@/config/links';
 import { siteConfig } from '@/config/site';
 import { PolicyList } from './PolicyList';
 import {
@@ -34,6 +35,8 @@ const DATE_FORMAT: Intl.DateTimeFormatOptions = {
 };
 
 const SITE_HOST = new URL(siteConfig.url).host;
+/** The profile URL as it reads in the contact card: host and path, no scheme or trailing slash. */
+const LINKEDIN_LABEL = links.social.linkedin.replace(/^https:\/\/(www\.)?/, '').replace(/\/$/, '');
 
 /** The policy itself, written in the first person and matched to what the site actually does. */
 export const PrivacyPolicy: FC<Props> = ({ lastUpdated }) => {
@@ -108,7 +111,7 @@ export const PrivacyPolicy: FC<Props> = ({ lastUpdated }) => {
                 </p>
                 <PolicyList items={dataRights} />
                 <p className={styles.paragraph}>
-                    To use any of them, email me at the address below. I will reply within 30 days.
+                    To use any of them, message me on LinkedIn, linked below. I will reply within 30 days.
                 </p>
             </section>
 
@@ -168,9 +171,9 @@ export const PrivacyPolicy: FC<Props> = ({ lastUpdated }) => {
                 <div className={styles.card}>
                     <p className={styles.cardName}>{siteConfig.name}</p>
                     <p className={styles.cardLine}>
-                        Email:
+                        LinkedIn:
                         {' '}
-                        <a href={`mailto:${siteConfig.contactEmail}`}>{siteConfig.contactEmail}</a>
+                        <a href={links.social.linkedin} target="_blank" rel="noopener noreferrer">{LINKEDIN_LABEL}</a>
                     </p>
                     <p className={styles.cardLine}>
                         Website:
@@ -178,7 +181,7 @@ export const PrivacyPolicy: FC<Props> = ({ lastUpdated }) => {
                         {SITE_HOST}
                     </p>
                     <p className={styles.cardNote}>
-                        Please put “Privacy request” in the subject line.
+                        Please start your message with “Privacy request”.
                     </p>
                 </div>
             </section>

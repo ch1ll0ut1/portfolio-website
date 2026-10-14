@@ -1,16 +1,15 @@
 /**
- * Site-wide identity: who the site is, where it lives and how to reach him.
+ * Site-wide identity: who the site is and where it lives.
  *
- * Metadata, structured data, the sitemap, robots, the contact surfaces and the
- * console greeting all read from here, so the URL, the email and the
- * positioning line cannot drift apart across files.
+ * Metadata, structured data, the sitemap, robots and the console greeting all
+ * read from here, so the URL and the positioning line cannot drift apart
+ * across files. The ways to reach him live in `links.ts`.
  */
 
 export interface SiteConfig {
     name: string;
     /** Canonical origin, no trailing slash. */
     url: string;
-    contactEmail: string;
     /** Positioning line used in titles, the manifest and structured data. */
     jobTitle: string;
     /** First year of professional software work. Every "years" figure derives from it. */
@@ -32,7 +31,6 @@ const SINCE_YEAR = 2008;
 export const siteConfig: SiteConfig = {
     name: 'Stefan Knoch',
     url: 'https://stefanknoch.com',
-    contactEmail: 'hello@example.com',
     jobTitle: 'Software architect, fractional CTO & hands-on tech lead',
     sinceYear: SINCE_YEAR,
     city: 'Bangkok',

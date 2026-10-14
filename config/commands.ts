@@ -9,9 +9,6 @@
 
 import { chordSections } from './sections';
 import { links } from './links';
-import { siteConfig } from './site';
-
-const contactEmail = siteConfig.contactEmail;
 
 export type CommandAction
     /** Scrolls to a section id from `sections.ts`. */
@@ -20,7 +17,6 @@ export type CommandAction
       | { type: 'external'; url: string }
     /** Navigates within the site. */
       | { type: 'route'; href: string }
-      | { type: 'copy'; text: string; toast: string }
       | { type: 'theme' }
       | { type: 'shortcuts' }
     /** Switches the single-key shortcuts (`t`, `?`, `g` chords) on or off. */
@@ -61,13 +57,6 @@ export const commands: Command[] = [
         label: 'Book a 30-min call',
         hint: 'Calendly',
         action: { type: 'external', url: links.calendly },
-    },
-    {
-        id: 'copy-email',
-        group: 'Actions',
-        label: 'Copy email address',
-        hint: contactEmail,
-        action: { type: 'copy', text: contactEmail, toast: 'Email copied' },
     },
     {
         id: 'switch-theme',

@@ -11,7 +11,7 @@ Tokens live in `app/globals.css`. This file explains how to use them. If the two
 - **Line:** Software architect, fractional CTO & hands-on tech lead.
 - **Long form:** "Software architect, fractional CTO, and hands-on tech lead. Since 2008 I've taken products from the first commit to production, for startups, scale-ups, and the Parliament of Iceland."
 - **Who it speaks to:** founders who need a product built properly, teams without a CTO, and companies hiring a senior or tech-lead engineer. Recruiters arrive from the CV, so the site uses the CV's vocabulary next to the consultancy one.
-- **Source of truth:** `config/site.ts` holds the name, URL, email, positioning line, description, and start year. Year counts are derived from `sinceYear` and are never typed by hand.
+- **Source of truth:** `config/site.ts` holds the name, URL, positioning line, description, and start year; `config/links.ts` holds the profile and booking links. Public contact goes to LinkedIn; the site publishes no email address. Year counts are derived from `sinceYear` and are never typed by hand.
 
 ## 2. Voice
 

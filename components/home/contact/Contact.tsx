@@ -10,8 +10,8 @@ import {
     useStageEvent,
 } from '@/lib/motion';
 import { ContactFooter } from './ContactFooter';
-import { CopyEmail } from './CopyEmail';
 import { CtaMagnet } from './CtaMagnet';
+import { LinkedInMessage } from './LinkedInMessage';
 import { type EdgeReveal, createEdgeReveal } from './edgeReveal';
 import styles from './Contact.module.css';
 
@@ -122,7 +122,7 @@ export const Contact: FC = () => {
                 <p className={styles.lede} ref={ledeRef}>{LEDE}</p>
                 <div className={styles.actions} ref={actionsRef}>
                     <CtaMagnet />
-                    <CopyEmail />
+                    <LinkedInMessage />
                 </div>
             </div>
             <ContactFooter />

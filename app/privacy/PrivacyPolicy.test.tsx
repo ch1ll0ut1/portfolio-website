@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { siteConfig } from '@/config/site';
+import { links } from '@/config/links';
 import { PrivacyPolicy } from './PrivacyPolicy';
 
 describe('PrivacyPolicy', () => {
@@ -14,13 +14,25 @@ describe('PrivacyPolicy', () => {
         expect(time).toHaveAttribute('datetime', '2026-01-01');
     });
 
-    it('should offer the real contact address as a mail link', () => {
+    it('should point privacy requests to LinkedIn in a new tab', () => {
         // Act
         render(<PrivacyPolicy lastUpdated="2026-01-01" />);
 
         // Assert
-        expect(screen.getByRole('link', { name: siteConfig.contactEmail }))
-            .toHaveAttribute('href', `mailto:${siteConfig.contactEmail}`);
+        const link = screen.getByRole('link', { name: /linkedin\.com\/in\/skdevde/ });
+
+        expect(link).toHaveAttribute('href', links.social.linkedin);
+        expect(link).toHaveAttribute('target', '_blank');
+        expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+    });
+
+    it('should not offer an email address', () => {
+        // Act
+        const { container } = render(<PrivacyPolicy lastUpdated="2026-01-01" />);
+
+        // Assert
+        expect(container.querySelector('a[href*="@"]')).not.toBeInTheDocument();
+        expect(container.textContent).not.toMatch(/email me/i);
     });
 
     it('should describe only the essential and analytics categories', () => {
