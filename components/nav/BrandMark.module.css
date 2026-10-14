@@ -1,23 +1,6 @@
 /*
  * The `sk` badge. Ported from the `.brand*` rules in the prototype's `nav.css`.
- *
- * The blink keyframes are declared here rather than reused from the global
- * `caret-blink`: css-loader hashes an animation name even when the module does
- * not declare it, so a reference to a global keyframe silently resolves to
- * nothing. Keep these timings in step with `caret-blink` in `app/globals.css`.
  */
-@keyframes blink {
-    0%,
-    49% {
-        opacity: 1;
-    }
-
-    50%,
-    100% {
-        opacity: 0;
-    }
-}
-
 .brand {
     display: inline-flex;
     align-items: center;
@@ -54,7 +37,7 @@
     margin: 0 0 7px 2px;
     background: var(--caret);
     border-radius: 1px;
-    animation: blink 1.1s steps(1) infinite;
+    animation: var(--caret-blink) 1.1s steps(1) infinite;
 }
 
 .name {

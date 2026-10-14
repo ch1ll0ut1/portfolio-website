@@ -209,6 +209,12 @@
     --dur-s: .45s;
     --dur-m: .9s;
     --dur-l: 1.2s;
+
+    /* The text-caret blink, by name. CSS Modules scope every animation name a
+       module writes, so a module cannot name the global keyframes below; a
+       name passed through a custom property is left alone. Use it as
+       `animation: var(--caret-blink) 1.1s steps(1) infinite`. */
+    --caret-blink: caret-blink;
 }
 
 /* Light theme ships as two parallel rules on purpose: the media query lets the
@@ -390,13 +396,15 @@ pre {
     z-index: 1;
 }
 
+/* On for 56% of the cycle and off for 44%, as the prototype blinks it: a
+   caret that lingers slightly longer than it hides. */
 @keyframes caret-blink {
     0%,
-    49% {
+    55% {
         opacity: 1;
     }
 
-    50%,
+    56%,
     100% {
         opacity: 0;
     }

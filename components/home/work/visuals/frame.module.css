@@ -115,7 +115,7 @@
     height: 14px;
     background: var(--caret);
     border-radius: 1px;
-    animation: blink 1.05s steps(1) infinite;
+    animation: var(--caret-blink) 1.05s steps(1) infinite;
 }
 
 /* Sits in a run of text rather than being positioned, so it needs to tuck in. */
@@ -126,18 +126,6 @@
 
 .caret.caretSolid {
     animation: none;
-}
-
-@keyframes blink {
-    0%,
-    55% {
-        opacity: 1;
-    }
-
-    56%,
-    100% {
-        opacity: 0;
-    }
 }
 
 @media (prefers-reduced-motion: reduce) {

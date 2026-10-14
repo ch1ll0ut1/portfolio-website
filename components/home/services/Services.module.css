@@ -132,22 +132,7 @@
 }
 
 :global(html.motion) .isFeature .name::after {
-    animation: blink 1.1s steps(1) infinite;
-}
-
-/* The blink is declared here rather than reusing the global `caret-blink`:
-   CSS Modules hash every animation name a module references, so a module can
-   only animate its own keyframes. */
-@keyframes blink {
-    0%,
-    55% {
-        opacity: 1;
-    }
-
-    56%,
-    100% {
-        opacity: 0;
-    }
+    animation: var(--caret-blink) 1.1s steps(1) infinite;
 }
 
 .trace {
@@ -326,5 +311,5 @@
 }
 
 :global(html.motion) .note.isDone .caret {
-    animation: blink 1.1s steps(1) infinite;
+    animation: var(--caret-blink) 1.1s steps(1) infinite;
 }
