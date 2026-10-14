@@ -53,7 +53,7 @@ export const SiteNav: FC<Props> = ({ tools }) => {
 
     useHeaderScroll(headerRef, styles.isScrolled, styles.isHidden);
     useSlidingPill(listRef, pillRef, activeId);
-    useNavEntrance(headerRef, styles.isPre);
+    useNavEntrance(headerRef);
     useMagnet(bookRef, { strength: BOOK_MAGNET });
 
     return (

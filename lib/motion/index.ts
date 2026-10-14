@@ -13,7 +13,7 @@ export { clamp, lerp, mapRange, smoothstep } from './math';
 export { showToast } from './toast';
 export { scrambleHash, scrambleInto } from './scramble';
 export { observeInView } from './inView';
-export { emitStage, isIntroDone, onStage, startStage } from './stage';
+export { emitStage, isIntroDone, isIntroPending, onStage, releaseIntro, startStage } from './stage';
 export { registerScrub, scrollState, subscribeScroll, subscribeScrollWhileNear } from './scrollStore';
 export { subscribeTick, tickerCount } from './ticker';
 

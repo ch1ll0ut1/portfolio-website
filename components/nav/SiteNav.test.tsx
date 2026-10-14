@@ -80,26 +80,75 @@ describe('<SiteNav> Component', () => {
         vi.useRealTimers();
     });
 
-    it('should release the entrance pre-state when the intro fires', () => {
-        render(<SiteNav />);
+    describe('entrance', () => {
+        let animate: ReturnType<typeof vi.fn>;
+        let restoreLayout: () => void;
 
-        expect(getHeader()).toHaveClass(styles.isPre);
-
-        act(() => {
-            emitStage('intro');
+        beforeEach(() => {
+            // jsdom has neither the Web Animations API nor layout: give every
+            // element a stand-in `animate` and an offset parent, so the parts
+            // count as shown at this breakpoint.
+            animate = vi.fn(() => ({ cancel: vi.fn() }));
+            Object.defineProperty(HTMLElement.prototype, 'animate', { value: animate, configurable: true, writable: true });
+            Object.defineProperty(HTMLElement.prototype, 'offsetParent', { get: () => document.body, configurable: true });
+            restoreLayout = () => {
+                Reflect.deleteProperty(HTMLElement.prototype, 'animate');
+                Reflect.deleteProperty(HTMLElement.prototype, 'offsetParent');
+            };
         });
 
-        expect(getHeader()).not.toHaveClass(styles.isPre);
-    });
-
-    it('should drop the entrance pre-state even if the intro never fires', () => {
-        render(<SiteNav />);
-
-        act(() => {
-            vi.advanceTimersByTime(3000);
+        afterEach(() => {
+            restoreLayout();
+            document.documentElement.classList.remove('is-pre');
         });
 
-        expect(getHeader()).not.toHaveClass(styles.isPre);
+        it('should drop the header parts in on the intro when the boot script armed the page', () => {
+            document.documentElement.classList.add('is-pre');
+            render(<SiteNav />);
+
+            expect(animate).not.toHaveBeenCalled();
+
+            act(() => {
+                emitStage('intro');
+            });
+
+            const animated = animate.mock.contexts;
+
+            expect(animated).toContain(screen.getByRole('link', { name: /back to top/i }));
+            expect(animated).toContain(screen.getByRole('link', { name: /book a call/i }));
+        });
+
+        it('should not replay the entrance on a page that is no longer armed', () => {
+            render(<SiteNav />);
+
+            act(() => {
+                emitStage('intro');
+            });
+
+            expect(animate).not.toHaveBeenCalled();
+        });
+
+        it('should leave the header in its final state when the page was released before the intro', () => {
+            document.documentElement.classList.add('is-pre');
+            render(<SiteNav />);
+
+            // The hero settled early (a touch, or its failsafe) and released the page.
+            document.documentElement.classList.remove('is-pre');
+
+            act(() => {
+                emitStage('intro');
+            });
+
+            expect(animate).not.toHaveBeenCalled();
+        });
+
+        it('should never hold the start state in markup the header owns', () => {
+            // The start state is keyed off the boot script's class on <html>, so
+            // a header rendered without it is simply the finished header.
+            render(<SiteNav />);
+
+            expect(getHeader().className).toBe(styles.nav);
+        });
     });
 
     it('should render a link for every nav section in config', () => {

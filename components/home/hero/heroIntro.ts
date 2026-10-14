@@ -10,14 +10,20 @@
  * here is allowed to leave the headline altered: the masks are unwrapped and
  * the inline styles removed before the editor takes over.
  *
- * Nothing is ever hidden while waiting for this to start. The headline is
- * split and animated inside one synchronous block, and the animations hold
- * their own first frame (`fill: 'backwards'`), so until the timeline runs the
- * section is simply the finished page. There is no armed state to get stuck
- * in if the bundle never arrives.
+ * The start state is not set here. The boot script arms the page (`is-pre` on
+ * `<html>`) before first paint, and the section's CSS holds the headline and
+ * the cascade hidden off that class, so the finished hero is never painted
+ * only to be blanked when the timeline starts. The stage releases the class
+ * straight after the timeline has started, in the same task, and the
+ * animations hold their own first frame (`fill: 'backwards'`) from there. An
+ * intro cut short before it starts releases the class itself, and the CSS
+ * hold times out on its own if the bundle never runs.
+ *
+ * The intro only plays while the page is still armed, so client navigation
+ * back to the homepage shows the finished hero rather than replaying it.
  */
 
-import { EASE, isIntroDone, onStage, prefersReducedMotion, startStage } from '@/lib/motion';
+import { EASE, isIntroDone, isIntroPending, onStage, releaseIntro, startStage } from '@/lib/motion';
 import { createGhostHint } from './heroGhost';
 import { runSelectionDrag } from './heroSelectionDrag';
 import { splitIntoWordMasks, unwrapWordMasks, wordLineIndices } from './heroWordMasks';
@@ -57,8 +63,6 @@ export interface HeroIntroOptions {
     hooks: HeroIntroHooks;
 }
 
-/** Above this scroll offset the intro is pointless — the hero is behind you. */
-const SCROLL_LIMIT = 80;
 const FAILSAFE_MS = 2500;
 const WORD_DELAY_MS = 60;
 const WORD_STAGGER_MS = 55;
@@ -102,6 +106,9 @@ export const createHeroIntro = ({ root, title, doc, caret, ibeam, classNames, ho
 
         settled = true;
         window.clearTimeout(failsafe);
+        // Settled before the timeline ran (an early touch, or the failsafe):
+        // the section must not stay held in its start state.
+        releaseIntro();
         stopDrag?.();
         stopDrag = null;
 
@@ -205,9 +212,11 @@ export const createHeroIntro = ({ root, title, doc, caret, ibeam, classNames, ho
 
     // The hero owns the page's first frame, so it is also what guarantees the
     // lifecycle is running rather than waiting for another section to start it.
+    // Starting it also releases the armed page when the entrance cannot play
+    // (reduced motion, or loaded scrolled past the hero).
     startStage();
 
-    const willAnimate = !prefersReducedMotion() && window.scrollY < SCROLL_LIMIT;
+    const willAnimate = isIntroPending();
 
     if (willAnimate) {
         // The failsafe settles an intro that never started; it must not cut

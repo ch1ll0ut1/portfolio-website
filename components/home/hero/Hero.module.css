@@ -197,8 +197,27 @@
     margin: -.02em -.06em -.12em;
 }
 
-/* No pre-armed state: the intro's own animations hold their first frame, so
-   nothing in this section is ever hidden waiting for JavaScript to arrive. */
+/* Intro start state, painted from the first frame. The boot script arms the
+   page (`is-pre` on <html>) before first paint whenever motion is allowed, and
+   the stage releases it in the same task the intro's animations start in, so
+   the finished hero is never shown and then blanked. The hold is an animation
+   rather than a plain `opacity: 0` so it times out on its own: a bundle that
+   never runs leaves the section readable after 2.5 s, not blank for good.
+   Reduced motion and no-JS never get `is-pre`, so they paint the final state. */
+:global(.is-pre) .title,
+:global(.is-pre) .status > *,
+:global(.is-pre) .lede,
+:global(.is-pre) .ctas > *,
+:global(.is-pre) .tree {
+    animation: intro-hold 2.5s;
+}
+
+@keyframes intro-hold {
+    from,
+    to {
+        opacity: 0;
+    }
+}
 
 /* ---------- the intro's pointer and caret ---------- */
 .ibeam,

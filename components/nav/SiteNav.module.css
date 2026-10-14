@@ -125,11 +125,20 @@
 }
 
 /*
- * Entrance pre-state. Added by `useNavEntrance` only when the page loads at the
- * top with motion allowed, and always removed again — by the intro signal or by
- * its failsafe — so nothing can be left invisible.
+ * Entrance start state, painted from the first frame: the boot script arms the
+ * page (`is-pre` on <html>) before first paint, and the stage releases it in
+ * the same task `useNavEntrance` starts the drop-in. A hold animation rather
+ * than a plain `opacity: 0`, so the header shows after 2.5 s even if the
+ * bundle never runs.
  */
-.isPre [data-nav-item],
-.isPre [data-nav-tools] > * {
-    opacity: 0;
+:global(.is-pre) .nav [data-nav-item],
+:global(.is-pre) .nav [data-nav-tools] > * {
+    animation: intro-hold 2.5s;
+}
+
+@keyframes intro-hold {
+    from,
+    to {
+        opacity: 0;
+    }
 }

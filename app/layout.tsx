@@ -92,7 +92,7 @@ const RootLayout: FC<{ children: React.ReactNode }> = ({ children }) => {
         // jump instantly on route changes, which Next 16 stopped doing unasked.
         <html lang="en" className={fontVariables} data-scroll-behavior="smooth" suppressHydrationWarning>
             <head>
-                {/* Pre-paint: stored theme and the motion switch. See lib/bootScript.ts. */}
+                {/* Pre-paint: stored theme, the motion switch and the armed entrance. See lib/bootScript.ts. */}
                 <script dangerouslySetInnerHTML={{ __html: BOOT_SCRIPT }} />
             </head>
             <body>

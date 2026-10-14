@@ -21,10 +21,10 @@ const IBEAM_PATH = 'M4 2.5c2.2 0 3.4.6 4 1.6.6-1 1.8-1.6 4-1.6M4 25.5c2.2 0 3.4-
  * The hero: the headline is a working editor, the panel beside it is its live
  * document model.
  *
- * The section renders complete and readable on the server, and stays that way:
- * nothing here is hidden waiting for JavaScript. The intro arms and animates
- * the headline in one block once it runs, so a bundle that never arrives
- * leaves the finished page rather than a blank one.
+ * The section renders complete and readable on the server. With motion
+ * allowed, the boot script arms the page before first paint and the CSS holds
+ * the intro's start state off that, with its own timeout, so a bundle that
+ * never arrives leaves the finished page after a beat rather than a blank one.
  */
 export const Hero: FC = () => {
     const rootRef = useRef<HTMLElement>(null);

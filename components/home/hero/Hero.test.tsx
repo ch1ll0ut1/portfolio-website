@@ -238,9 +238,10 @@ describe('Hero server output', () => {
     });
 
     it('should not ship an armed pre-state class for the intro to clear', () => {
-        // The intro holds its own first frame through `fill: "backwards"`, so
-        // the hero never arms. `is-armed` is the kit's only pre-state class
-        // (added client-side by `useReveal`/`useMaskReveal`, and the one thing
+        // The intro's start state is keyed off `is-pre` on <html>, which the
+        // boot script sets and the stage releases, never off the section's own
+        // markup. `is-armed` is the kit's scroll-reveal pre-state class (added
+        // client-side by `useReveal`/`useMaskReveal`, and the one thing
         // `.motion .rv`/`.mr` rules in globals.css hide on); reaching the
         // server markup would leave this section blank on a stalled bundle.
         expect(markup()).not.toMatch(/\bis-armed\b/);

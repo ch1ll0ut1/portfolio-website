@@ -4,7 +4,6 @@ declare const styles: {
     readonly in: string;
     readonly isActive: string;
     readonly isHidden: string;
-    readonly isPre: string;
     readonly isScrolled: string;
     readonly links: string;
     readonly nav: string;
