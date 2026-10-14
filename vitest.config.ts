@@ -61,18 +61,19 @@ export default defineConfig({
             reporter: ['text', 'json', 'html'],
             include: ['app/**', 'components/**', 'config/**', 'lib/**'],
             exclude: ['.claude/**', '**/*.test.{ts,tsx}', '**/*.d.ts', '**/*.css'],
-            // A ratchet, set just under the measured coverage (65.9% lines,
-            // 66.1% statements, 60% branches, 68.5% functions): a change that
-            // drops it fails CI. Raise it as tests are added; never lower it to
-            // pass. Since Vitest 4 the v8 provider remaps through the AST, so a
-            // file no test loads counts its branches and functions as uncovered
-            // rather than as 100% — hence branches sitting far below the 88%
-            // that Vitest 3 reported for the same tests.
+            // A ratchet, set about a point under the coverage measured on
+            // Vitest 5 (68.5% lines, 68.6% statements, 64.2% branches, 71.1%
+            // functions): a change that drops it fails CI. Raise it as tests
+            // are added; never lower it to pass. Since Vitest 4 the v8 provider
+            // remaps through the AST, so a file no test loads counts its
+            // branches and functions as uncovered rather than as 100% — hence
+            // branches sitting far below the 88% that Vitest 3 reported for
+            // the same tests.
             thresholds: {
-                lines: 65,
-                statements: 65,
-                branches: 59,
-                functions: 68,
+                lines: 67,
+                statements: 67,
+                branches: 63,
+                functions: 70,
             },
         },
     },
