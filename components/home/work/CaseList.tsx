@@ -3,7 +3,7 @@
 import { type FC, useCallback, useRef, useState } from 'react';
 import { caseStudies } from '@/config/caseStudies';
 import { CaseCard } from './CaseCard';
-import { useCaseStack } from './caseStack';
+import { useCaseStack, useStackFocus } from './caseStack';
 import styles from './Work.module.css';
 
 /**
@@ -32,6 +32,7 @@ export const CaseList: FC = () => {
     }, []);
 
     useCaseStack(casesRef, handleCovered);
+    useStackFocus(casesRef);
 
     return (
         <div ref={casesRef} className={styles.cases}>
