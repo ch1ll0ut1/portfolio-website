@@ -41,9 +41,6 @@ interface Timer {
     resolve: () => void;
 }
 
-/** Caps a single step so a long pause cannot jump the narrative forward. */
-const MAX_STEP = 40;
-
 /** Element.getAnimations is absent in jsdom, so it is probed rather than trusted. */
 const stageAnimations = (stage: Element): Animation[] => (
     'getAnimations' in stage ? stage.getAnimations({ subtree: true }) : []
@@ -78,7 +75,9 @@ export const createRunner = (stage: Element, script: IllustrationScript): Runner
     };
 
     const tick = (_timestamp: number, delta: number) => {
-        now += Math.min(delta, MAX_STEP);
+        // The shared ticker already caps a frame at 64ms, so a long pause
+        // cannot jump the narrative forward; the timeline keeps real time.
+        now += delta;
 
         if (timers.length > 0) {
             const due = timers.filter(timer => timer.at <= now);

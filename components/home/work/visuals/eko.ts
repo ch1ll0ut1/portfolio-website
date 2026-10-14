@@ -69,6 +69,8 @@ const BAR_GAP = 8;
 const WORST_LATENCY = 5200;
 const PREWARM_MS = 9000;
 const STEP_MS = 16;
+/** Longest live physics step, in ms. */
+const MAX_PHYSICS_STEP = 40;
 const SPEED_BEFORE = 0.085;
 const SPEED_AFTER = 0.2;
 
@@ -286,8 +288,10 @@ export const buildEko = (
         script: async (runner: RunnerApi) => {
             if (!live) {
                 live = true;
+                // The physics step is capped tighter than the clock, so one
+                // slow frame cannot move a pill far enough to skip a collision.
                 runner.frame((delta) => {
-                    step(delta);
+                    step(Math.min(delta, MAX_PHYSICS_STEP));
                 });
                 setMode(after);
             }
