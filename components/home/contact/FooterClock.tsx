@@ -25,7 +25,7 @@ const formatter = () => {
 /**
  * Live Bangkok time.
  *
- * The markup ships a static placeholder and the real time only arrives after
+ * The markup ships a static placeholder and the real time is filled in on
  * mount, because a server-rendered clock is a guaranteed hydration mismatch.
  * It ticks only while on screen and while the tab is in the foreground, so a
  * footer nobody is looking at costs nothing.
@@ -70,6 +70,10 @@ export const FooterClock: FC = () => {
             sync();
         });
 
+        // Show the real time straight away, as the design does, rather than the
+        // placeholder until the footer first comes on screen; it only ticks
+        // from there while visible.
+        tick();
         observer.observe(element);
         document.addEventListener('visibilitychange', sync);
 
