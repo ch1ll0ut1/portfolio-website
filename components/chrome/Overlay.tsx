@@ -1,6 +1,6 @@
 'use client';
 
-import { type FC, type ReactNode, type RefObject, useEffect, useRef } from 'react';
+import { type FC, type ReactNode, type RefObject, useEffect, useLayoutEffect, useRef } from 'react';
 import { prefersReducedMotion } from '@/lib/motion';
 import styles from './Overlay.module.css';
 
@@ -38,11 +38,17 @@ interface Props {
  * Closing runs in reverse: the dialog leaves the top layer straight away, so
  * focus can go back to wherever it came from, and stays painted under an
  * inert `closing` class until the exit has played.
+ *
+ * The dialog is shown in a layout effect, so it is in the top layer — laid out
+ * and measurable — before any passive effect of its children runs. Content that
+ * measures itself on open (the palette's highlight) does so in a passive
+ * effect: a child's layout effect runs before its parent's, while the dialog is
+ * still `display: none` and every offset reads 0.
  */
 export const Overlay: FC<Props> = ({ open, label, labelledBy, panelClassName, focusRef, onClose, onKeyDown, children }) => {
     const dialogRef = useRef<HTMLDialogElement>(null);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         const dialog = dialogRef.current;
 
         if (!open || !dialog) {

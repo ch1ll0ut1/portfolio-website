@@ -1,6 +1,6 @@
 'use client';
 
-import { type CSSProperties, type FC, useLayoutEffect, useRef } from 'react';
+import { type CSSProperties, type FC, useEffect, useRef } from 'react';
 import type { Command } from '@/config/commands';
 import { groupCommands } from './commandFilter';
 import styles from './CommandPalette.module.css';
@@ -39,6 +39,12 @@ interface Props {
  * changed filter re-places it instantly, since sliding between two unrelated
  * lists would be noise. A fresh opening mounts a fresh list, so the first
  * placement never animates either.
+ *
+ * The rows are measured in a passive effect, not a layout effect: the list
+ * mounts inside the `<dialog>`, and a child's layout effect runs before the
+ * `Overlay`'s layout effect has called `showModal()`, when the dialog is still
+ * `display: none` and every row measures 0. Passive effects run after every
+ * layout effect, and for a key press or click before the frame is painted.
  */
 export const CommandList: FC<Props> = ({ id, optionIdPrefix, commands, selected, intro, onHover, onRun }) => {
     const groups = groupCommands(commands);
@@ -47,7 +53,7 @@ export const CommandList: FC<Props> = ({ id, optionIdPrefix, commands, selected,
     const previousCommands = useRef<Command[] | null>(null);
     const solidTimer = useRef(0);
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         const highlight = highlightRef.current;
         const item = itemRefs.current[selected];
         const animate = previousCommands.current === commands;
@@ -80,7 +86,7 @@ export const CommandList: FC<Props> = ({ id, optionIdPrefix, commands, selected,
         }, SOLID_MS);
     }, [commands, selected]);
 
-    useLayoutEffect(() => () => {
+    useEffect(() => () => {
         window.clearTimeout(solidTimer.current);
     }, []);
 

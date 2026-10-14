@@ -345,6 +345,75 @@ describe('<CommandPalette>', () => {
         expect(highlight()).not.toHaveClass(styles.live);
     });
 
+    describe('measuring the rows', () => {
+        const ROW_HEIGHT = 40;
+        let restoreOffsets: () => void;
+
+        /**
+         * Rows have a size only while their dialog is open, as in a browser,
+         * where a closed `<dialog>` is `display: none` and every offset is 0.
+         * Each option sits one row below the last.
+         */
+        beforeEach(() => {
+            const top = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'offsetTop');
+            const height = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'offsetHeight');
+            const shown = (element: HTMLElement) => element.closest('dialog')?.open === true;
+
+            Object.defineProperty(HTMLElement.prototype, 'offsetTop', {
+                configurable: true,
+                get(this: HTMLElement) {
+                    return shown(this) ? options().indexOf(this) * ROW_HEIGHT : 0;
+                },
+            });
+            Object.defineProperty(HTMLElement.prototype, 'offsetHeight', {
+                configurable: true,
+                get(this: HTMLElement) {
+                    return shown(this) ? ROW_HEIGHT : 0;
+                },
+            });
+            restoreOffsets = () => {
+                if (top && height) {
+                    Object.defineProperty(HTMLElement.prototype, 'offsetTop', top);
+                    Object.defineProperty(HTMLElement.prototype, 'offsetHeight', height);
+                }
+            };
+        });
+
+        afterEach(() => {
+            restoreOffsets();
+        });
+
+        const placement = () => {
+            const style = highlight() instanceof HTMLElement ? (highlight() as HTMLElement).style : null;
+
+            return { y: style?.getPropertyValue('--y'), height: style?.height };
+        };
+
+        it('should size the highlight to the first row as soon as it opens, not after the first key', async () => {
+            await mount();
+
+            expect(placement()).toEqual({ y: '0px', height: `${ROW_HEIGHT}px` });
+            expect(highlight()).not.toHaveClass(styles.live);
+        });
+
+        it('should size the highlight to the first row again on reopen', async () => {
+            const user = userEvent.setup();
+            const view = await mount();
+
+            await user.keyboard('{ArrowDown}{ArrowDown}');
+            expect(placement()).toEqual({ y: `${2 * ROW_HEIGHT}px`, height: `${ROW_HEIGHT}px` });
+
+            view.rerender(<CommandPalette open={false} onClose={onClose} onOpenShortcuts={onOpenShortcuts} />);
+            view.rerender(<CommandPalette open onClose={onClose} onOpenShortcuts={onOpenShortcuts} />);
+
+            await waitFor(() => {
+                expect(screen.getByRole('combobox')).toHaveFocus();
+            });
+            expect(placement()).toEqual({ y: '0px', height: `${ROW_HEIGHT}px` });
+            expect(highlight()).not.toHaveClass(styles.live);
+        });
+    });
+
     it('should close when the backdrop is clicked', async () => {
         const user = userEvent.setup();
         const { container } = await mount();
