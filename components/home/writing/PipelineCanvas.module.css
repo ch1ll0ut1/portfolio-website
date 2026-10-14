@@ -121,19 +121,21 @@
 }
 
 /*
- * The waiting pulse. The prototype grew a `box-shadow` spread, which repaints
- * on every frame of a loop that never ends. This is the same 4px ring drawn
- * once as a pseudo-element and pulsed with transform and opacity instead, so
- * the loop composites.
+ * The waiting pulse: a 4px ring that grows out of the border and back, as the
+ * prototype drew it. The prototype animated the node's own `box-shadow`, which
+ * repaints the node, its label and checkmark on every frame of the loop. Here
+ * the shadow sits on a pseudo-element covering the node's border box, promoted
+ * to its own layer, so each frame repaints only that empty ring layer and
+ * nothing around it. A scaled ring would composite outright, but scaling a
+ * wide, short pill cannot grow it by the same 4px on every side.
  */
 .gate::after {
     content: "";
     position: absolute;
-    inset: -4px;
-    border: 4px solid color-mix(in srgb, var(--caret) 22%, transparent);
-    border-radius: 12px;
-    opacity: 0;
+    inset: -1px;
+    border-radius: inherit;
     pointer-events: none;
+    will-change: transform;
 }
 
 .gate.gateWaiting::after {
@@ -142,13 +144,11 @@
 
 @keyframes gate-wait {
     from {
-        opacity: 0;
-        transform: scale(.97);
+        box-shadow: 0 0 0 0 color-mix(in srgb, var(--caret) 22%, transparent);
     }
 
     to {
-        opacity: 1;
-        transform: scale(1);
+        box-shadow: 0 0 0 4px color-mix(in srgb, var(--caret) 22%, transparent);
     }
 }
 
@@ -157,20 +157,26 @@
     color: var(--ok);
 }
 
-.gate.gateApproved::after {
-    animation: none;
-    opacity: 0;
-}
-
 /*
- * The checkmark's slot is always reserved, so ticking it cannot reflow the
- * flex row. The mark itself is drawn in by its stroke on approval.
+ * The checkmark takes no room at rest: zero wide, with a negative margin that
+ * cancels the row's 6px gap, so "review gate" sits centred in its pill. On
+ * approval the slot slides open and the mark is drawn in by its stroke. The
+ * node is absolutely positioned, so the width change reflows only itself.
  */
 .check {
-    width: 12px;
+    width: 0;
     height: 12px;
     flex: none;
+    margin-right: -6px;
     overflow: visible;
+    transition:
+        width var(--dur-s) var(--ease-out),
+        margin var(--dur-s) var(--ease-out);
+}
+
+.gate.gateApproved .check {
+    width: 12px;
+    margin-right: 0;
 }
 
 .check path {
@@ -249,6 +255,7 @@
     .edges .edge,
     .edges .token,
     .edges .tokenHalo,
+    .check,
     .check path {
         transition: none;
     }
@@ -260,6 +267,6 @@
 
     /* The static frame waits at the gate, so it keeps the ring, just still. */
     .gate.gateWaiting::after {
-        opacity: 1;
+        box-shadow: 0 0 0 4px color-mix(in srgb, var(--caret) 22%, transparent);
     }
 }
