@@ -13,6 +13,7 @@ import { itemAt } from '@/test/itemAt';
 import { installMatchMedia } from '../../test/motionEnv';
 import { CommandPalette } from './CommandPalette';
 import styles from './CommandPalette.module.css';
+import { setPreference } from './preferences';
 
 const push = vi.fn();
 
@@ -47,6 +48,8 @@ describe('<CommandPalette>', () => {
         onOpenShortcuts = vi.fn();
         push.mockClear();
         Element.prototype.scrollIntoView = vi.fn();
+        localStorage.clear();
+        setPreference('singleKeyShortcuts', true);
     });
 
     afterEach(() => {
@@ -204,6 +207,48 @@ describe('<CommandPalette>', () => {
         await user.click(screen.getByRole('button', { name: 'Close command menu' }));
 
         expect(onClose).toHaveBeenCalled();
+    });
+
+    describe('the ? key', () => {
+        it('should open the shortcuts list from an empty search, as the footer says', async () => {
+            const user = userEvent.setup();
+
+            await mount();
+            await user.keyboard('?');
+
+            expect(onOpenShortcuts).toHaveBeenCalledOnce();
+            expect(screen.getByRole('combobox')).toHaveValue('');
+        });
+
+        it('should type a ? once the query has text', async () => {
+            const user = userEvent.setup();
+
+            await mount();
+            await user.type(screen.getByRole('combobox'), 'a?');
+
+            expect(onOpenShortcuts).not.toHaveBeenCalled();
+            expect(screen.getByRole('combobox')).toHaveValue('a?');
+        });
+
+        it('should stay a character, and drop its hint, while single-key shortcuts are off', async () => {
+            const user = userEvent.setup();
+
+            setPreference('singleKeyShortcuts', false);
+            await mount();
+
+            expect(screen.queryByText('?', { selector: 'kbd' })).not.toBeInTheDocument();
+
+            await user.keyboard('?');
+
+            expect(onOpenShortcuts).not.toHaveBeenCalled();
+            expect(screen.getByRole('combobox')).toHaveValue('?');
+        });
+
+        it('should show its hint while single-key shortcuts are on', async () => {
+            await mount();
+
+            expect(screen.getByText('?', { selector: 'kbd' })).toBeInTheDocument();
+        });
     });
 
     it('should open as a modal dialog', async () => {

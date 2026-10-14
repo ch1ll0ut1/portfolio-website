@@ -7,6 +7,7 @@ import { commands } from '@/config/commands';
 import { CommandList } from './CommandList';
 import { Overlay } from './Overlay';
 import { filterCommands } from './commandFilter';
+import { usePreference } from './preferences';
 import { runCommand } from './runCommand';
 import styles from './CommandPalette.module.css';
 
@@ -41,6 +42,7 @@ export const CommandPalette: FC<Props> = ({ open, onClose, onOpenShortcuts }) =>
     const [wasOpen, setWasOpen] = useState(false);
     const [openings, setOpenings] = useState(0);
     const narrow = useMediaQuery(NARROW_QUERY);
+    const singleKeys = usePreference('singleKeyShortcuts');
 
     // Every opening starts from a clean palette. Adjusted during render, as
     // React recommends for state that follows a prop, so the first painted
@@ -107,6 +109,16 @@ export const CommandPalette: FC<Props> = ({ open, onClose, onOpenShortcuts }) =>
     };
 
     const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+        // `?` opens the shortcuts list everywhere else, and the footer says so.
+        // In an empty search box it cannot mean a query yet, so it does the
+        // same here; once something is typed it is just a character.
+        if (event.key === '?' && query === '' && singleKeys) {
+            event.preventDefault();
+            onOpenShortcuts();
+
+            return;
+        }
+
         if (!expanded) {
             return;
         }
@@ -183,11 +195,15 @@ export const CommandPalette: FC<Props> = ({ open, onClose, onOpenShortcuts }) =>
                     {' '}
                     run
                 </span>
-                <span>
-                    <kbd>?</kbd>
-                    {' '}
-                    shortcuts
-                </span>
+                {singleKeys
+                    ? (
+                        <span>
+                            <kbd>?</kbd>
+                            {' '}
+                            shortcuts
+                        </span>
+                    )
+                    : null}
             </div>
         </Overlay>
     );
