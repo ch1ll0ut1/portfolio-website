@@ -10,6 +10,7 @@ import { describe, expect, it } from 'vitest';
 import { siteConfig, siteTitle } from '@/config/site';
 import { metadata as postNotFound } from './blog/[slug]/not-found';
 import { metadata as blog } from './blog/page';
+import { metadata as contact } from './contact/page';
 import { metadata as notFound } from './not-found';
 import { metadata as home } from './page';
 import { metadata as privacy } from './privacy/page';
@@ -18,6 +19,7 @@ const pages: [string, Metadata][] = [
     ['/', home],
     ['/blog', blog],
     ['/privacy', privacy],
+    ['/contact', contact],
 ];
 
 describe('route metadata', () => {
@@ -34,6 +36,18 @@ describe('route metadata', () => {
         expect(privacy.openGraph).toMatchObject({ title, description, type: 'website' });
         expect(privacy.twitter).toMatchObject({ title, description });
         expect(privacy.twitter).not.toMatchObject({ title: siteTitle });
+    });
+
+    it('should describe /contact with its own title, description and canonical URL', () => {
+        const title = `Contact | ${siteConfig.name}`;
+        const description = contact.description;
+
+        expect(description).toEqual(expect.any(String));
+        expect(description).not.toBe(siteConfig.description);
+        expect(contact.title).toBe('Contact');
+        expect(contact.openGraph).toMatchObject({ title, description, type: 'website', url: `${siteConfig.url}/contact` });
+        expect(contact.twitter).toMatchObject({ title, description });
+        expect(contact.alternates).toEqual({ canonical: '/contact' });
     });
 
     // Next adds its own `noindex` to every 404; a robots value here would be a

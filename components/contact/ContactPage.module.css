@@ -1,0 +1,64 @@
+/* The contact page: the privacy policy's measure and header, with the blog
+   index's masked heading. */
+
+.page {
+    max-width: 74ch;
+    margin-inline: auto;
+}
+
+.header {
+    display: grid;
+    gap: 16px;
+    margin-bottom: clamp(32px, 4.5vw, 56px);
+}
+
+.kicker {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-variation-settings: 'wdth' 88;
+}
+
+.kicker::after {
+    content: '';
+    width: 2px;
+    height: .95em;
+    margin-left: .4em;
+    background: var(--caret);
+}
+
+:global(.motion) .kicker::after {
+    animation: var(--caret-blink) 1.1s steps(1, end) infinite;
+}
+
+.title {
+    font-size: var(--fs-1);
+    font-variation-settings: 'wdth' 84;
+}
+
+.lead {
+    max-width: 60ch;
+    color: var(--fg-2);
+    font-size: clamp(1.05rem, 1.4vw, 1.25rem);
+}
+
+.note {
+    color: var(--muted);
+    font-size: var(--fs-small);
+}
+
+.link {
+    color: var(--fg);
+    text-decoration: underline;
+    text-decoration-color: var(--caret);
+    text-decoration-thickness: 2px;
+    text-underline-offset: .2em;
+}
+
+.link:hover {
+    text-decoration-color: currentColor;
+}

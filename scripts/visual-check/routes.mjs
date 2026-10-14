@@ -61,5 +61,5 @@ export const resolveRoutes = async (base) => {
 
     return override
         ? override.split(',').filter(Boolean)
-        : ['/', '/blog', ...await sampleArticles(base), MISSING_ARTICLE, '/privacy'];
+        : ['/', '/blog', ...await sampleArticles(base), MISSING_ARTICLE, '/privacy', '/contact'];
 };

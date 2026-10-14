@@ -13,6 +13,7 @@ describe('sitemap', () => {
         expect(urls).toContain(`${siteConfig.url}/`);
         expect(urls).toContain(`${siteConfig.url}/blog`);
         expect(urls).toContain(`${siteConfig.url}/privacy`);
+        expect(urls).toContain(`${siteConfig.url}/contact`);
         blogPosts.forEach((post) => {
             expect(urls).toContain(`${siteConfig.url}/blog/${post.slug}`);
         });
@@ -38,6 +39,18 @@ describe('sitemap', () => {
         // Assert
         expect(home?.lastModified).toEqual(new Date(siteConfig.staticPagesUpdated));
         expect(first).toEqual(second);
+    });
+});
+
+describe('sitemap contact page', () => {
+    it('should list the contact page without its topic query', () => {
+        // Act
+        const contact = sitemap().filter(entry => new URL(entry.url).pathname === '/contact');
+
+        // Assert
+        expect(contact).toHaveLength(1);
+        expect(contact[0]?.url).toBe(`${siteConfig.url}/contact`);
+        expect(contact[0]?.lastModified).toEqual(new Date(siteConfig.staticPagesUpdated));
     });
 });
 
