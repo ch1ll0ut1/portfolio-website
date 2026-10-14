@@ -49,6 +49,19 @@ const flushFrames = () => {
 
 const getHeader = () => screen.getByRole('banner');
 
+/** A scroll with nothing from the reader behind it, like a jump to a fragment. */
+const jumpTo = (value: number) => {
+    setScrollY(value);
+    fireEvent.scroll(window);
+    flushFrames();
+};
+
+/** The reader scrolling with the wheel. */
+const userScrollTo = (value: number) => {
+    fireEvent.wheel(window, { deltaY: value });
+    jumpTo(value);
+};
+
 describe('<SiteNav> Component', () => {
     let observers: ReturnType<typeof installIntersectionObserver>;
     let restoreMedia: () => void;
@@ -344,9 +357,7 @@ describe('<SiteNav> Component', () => {
     it('should hide on scroll down past the first screen and return on scroll up', () => {
         render(<SiteNav />);
 
-        setScrollY(600);
-        fireEvent.scroll(window);
-        flushFrames();
+        userScrollTo(600);
 
         expect(getHeader()).toHaveClass(styles.isHidden);
         expect(getHeader()).toHaveClass(styles.isScrolled);
@@ -361,9 +372,7 @@ describe('<SiteNav> Component', () => {
     it('should return when something inside it takes focus while hidden', () => {
         render(<SiteNav />);
 
-        setScrollY(600);
-        fireEvent.scroll(window);
-        flushFrames();
+        userScrollTo(600);
 
         expect(getHeader()).toHaveClass(styles.isHidden);
 
@@ -372,5 +381,87 @@ describe('<SiteNav> Component', () => {
         });
 
         expect(getHeader()).not.toHaveClass(styles.isHidden);
+    });
+
+    describe('a jump to a fragment', () => {
+        it('should not hide the header when a deep link lands past the first screen', () => {
+            render(<SiteNav />);
+
+            jumpTo(2400);
+
+            expect(getHeader()).not.toHaveClass(styles.isHidden);
+            expect(getHeader()).toHaveClass(styles.isScrolled);
+        });
+
+        it('should not hide the header when a section link scrolls the page down', () => {
+            itemAt(sectionNodes, 3).scrollIntoView = vi.fn();
+            render(<SiteNav />);
+
+            // A real click presses the pointer on the link, not the scrollbar.
+            const link = screen.getByRole('link', { name: itemAt(navSections, 3).label });
+
+            fireEvent.pointerDown(link);
+            fireEvent.click(link);
+            jumpTo(1800);
+            jumpTo(2400);
+
+            expect(getHeader()).not.toHaveClass(styles.isHidden);
+        });
+
+        it('should still hide once the reader scrolls on from where it landed', () => {
+            render(<SiteNav />);
+
+            jumpTo(2400);
+            userScrollTo(2600);
+
+            expect(getHeader()).toHaveClass(styles.isHidden);
+        });
+    });
+
+    describe('what counts as the reader scrolling', () => {
+        it('should hide on a scrolling key', () => {
+            render(<SiteNav />);
+
+            fireEvent.keyDown(window, { key: 'PageDown' });
+            jumpTo(900);
+
+            expect(getHeader()).toHaveClass(styles.isHidden);
+        });
+
+        it('should not count a key the page already handled', () => {
+            render(<SiteNav />);
+
+            const event = new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, cancelable: true });
+
+            event.preventDefault();
+            window.dispatchEvent(event);
+            jumpTo(900);
+
+            expect(getHeader()).not.toHaveClass(styles.isHidden);
+        });
+
+        it('should hide while the scrollbar is dragged, however long the drag', () => {
+            render(<SiteNav />);
+
+            fireEvent.pointerDown(document.documentElement);
+            act(() => {
+                vi.advanceTimersByTime(2000);
+            });
+            jumpTo(900);
+
+            expect(getHeader()).toHaveClass(styles.isHidden);
+        });
+
+        it('should stop counting a wheel once the page has been still for a moment', () => {
+            render(<SiteNav />);
+
+            fireEvent.wheel(window, { deltaY: 100 });
+            act(() => {
+                vi.advanceTimersByTime(1000);
+            });
+            jumpTo(900);
+
+            expect(getHeader()).not.toHaveClass(styles.isHidden);
+        });
     });
 });
