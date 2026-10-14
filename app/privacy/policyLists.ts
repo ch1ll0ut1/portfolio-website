@@ -37,7 +37,7 @@ export const informationUses: PolicyItem[] = [
 ];
 
 export const storageTypes: PolicyItem[] = [
-    { label: 'Essential storage', text: 'Your cookie choice and your light or dark theme, kept in your browser’s local storage. They never leave your device and cannot be switched off, because the site needs them to remember your choices.' },
+    { label: 'Essential storage', text: 'Your cookie choice, your light or dark theme, and, if you turn them off, the single-key keyboard shortcuts and the custom text cursor. They are kept in your browser’s local storage as cookie-consent, sk-theme, sk-single-key-shortcuts and sk-caret-cursor. They never leave your device, so I never see them, and they cannot be switched off, because the site needs them to remember your choices.' },
     { label: 'Analytics cookies', text: 'Google Analytics cookies (_ga and _ga_*), set only after you accept analytics. Until then, the Google Analytics script is not loaded at all.' },
 ];
 

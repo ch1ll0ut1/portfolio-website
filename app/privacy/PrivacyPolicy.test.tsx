@@ -44,6 +44,19 @@ describe('PrivacyPolicy', () => {
         expect(screen.getByText(/two categories: essential and analytics/i)).toBeInTheDocument();
     });
 
+    // Every key the site writes to localStorage: lib/consentStorage.ts,
+    // components/chrome/themeStore.ts and components/chrome/preferences.ts.
+    it.each(['cookie-consent', 'sk-theme', 'sk-single-key-shortcuts', 'sk-caret-cursor'])(
+        'should name the %s key among the essential storage',
+        (key) => {
+            // Act
+            render(<PrivacyPolicy lastUpdated="2026-01-01" />);
+
+            // Assert
+            expect(screen.getByText(/^Your cookie choice/)).toHaveTextContent(key);
+        },
+    );
+
     it('should be a single document with one top-level heading', () => {
         // Act
         render(<PrivacyPolicy lastUpdated="2026-01-01" />);
