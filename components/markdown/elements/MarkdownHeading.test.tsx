@@ -1,123 +1,48 @@
 /**
- * Tests for MarkdownHeading component.
- * Tests heading level rendering and accessibility.
+ * Tests for MarkdownHeading component: it renders the rank the body outline
+ * assigned, styled by rank.
  */
 
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { MarkdownHeading } from './MarkdownHeading';
-import { type HeadingElement } from '../parser/types';
+import { type HeadingRank, type RankedHeading } from '../bodyOutline';
+
+const heading = (rank: HeadingRank, content: string, level: RankedHeading['level'] = 2): RankedHeading => ({
+    type: 'heading',
+    level,
+    rank,
+    content,
+});
 
 describe('MarkdownHeading Component', () => {
-    it('should render h1 as h4 element', () => {
-        const element: HeadingElement = {
-            type: 'heading',
-            level: 1,
-            content: 'Main Title',
-        };
+    it('renders the element for its rank, not its markdown level', () => {
+        render(<MarkdownHeading element={heading(2, 'Part one', 1)} />);
 
-        render(<MarkdownHeading element={element} />);
-
-        const heading = screen.getByRole('heading', { level: 4 });
-        expect(heading).toBeInTheDocument();
-        expect(heading).toHaveTextContent('Main Title');
+        expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent('Part one');
     });
 
-    it('should render h2 as h2 element', () => {
-        const element: HeadingElement = {
-            type: 'heading',
-            level: 2,
-            content: 'Section Title',
-        };
+    it.each([2, 3, 4, 5, 6] as const)('renders rank %i as that heading level', (rank) => {
+        render(<MarkdownHeading element={heading(rank, `Rank ${rank}`)} />);
 
-        render(<MarkdownHeading element={element} />);
-
-        const heading = screen.getByRole('heading', { level: 2 });
-        expect(heading).toBeInTheDocument();
-        expect(heading).toHaveTextContent('Section Title');
+        expect(screen.getByRole('heading', { level: rank })).toHaveTextContent(`Rank ${rank}`);
     });
 
-    it('should render h3 as h3 element', () => {
-        const element: HeadingElement = {
-            type: 'heading',
-            level: 3,
-            content: 'Subsection Title',
-        };
+    it('shares the h4 style for every rank below h3', () => {
+        render(
+            <>
+                <MarkdownHeading element={heading(4, 'Four')} />
+                <MarkdownHeading element={heading(6, 'Six')} />
+            </>,
+        );
 
-        render(<MarkdownHeading element={element} />);
-
-        const heading = screen.getByRole('heading', { level: 3 });
-        expect(heading).toBeInTheDocument();
-        expect(heading).toHaveTextContent('Subsection Title');
-    });
-
-    it('should render h4-h6 as h4 elements', () => {
-        const levels = [4, 5, 6] as const;
-
-        levels.forEach((level) => {
-            const element: HeadingElement = {
-                type: 'heading',
-                level,
-                content: `Level ${level} Title`,
-            };
-
-            const { unmount } = render(<MarkdownHeading element={element} />);
-
-            const heading = screen.getByRole('heading', { level: 4 });
-            expect(heading).toBeInTheDocument();
-            expect(heading).toHaveTextContent(`Level ${level} Title`);
-
-            unmount();
-        });
-    });
-
-    it('should handle empty content', () => {
-        const element: HeadingElement = {
-            type: 'heading',
-            level: 2,
-            content: '',
-        };
-
-        render(<MarkdownHeading element={element} />);
-
-        const heading = screen.getByRole('heading', { level: 2 });
-        expect(heading).toBeInTheDocument();
-        expect(heading).toHaveTextContent('');
+        expect(screen.getByText('Six').className).toBe(screen.getByText('Four').className);
+        expect(screen.getByText('Four').className).not.toBe('');
     });
 
     it('should handle special characters in content', () => {
-        const element: HeadingElement = {
-            type: 'heading',
-            level: 2,
-            content: 'Title with & special < characters >',
-        };
+        render(<MarkdownHeading element={heading(2, 'Title with & special < characters >')} />);
 
-        render(<MarkdownHeading element={element} />);
-
-        const heading = screen.getByRole('heading', { level: 2 });
-        expect(heading).toHaveTextContent('Title with & special < characters >');
-    });
-
-    it('should map each markdown level onto a heading rank below the page title', () => {
-        const testCases = [
-            { level: 1 as const, expectedRank: 4 },
-            { level: 2 as const, expectedRank: 2 },
-            { level: 3 as const, expectedRank: 3 },
-            { level: 4 as const, expectedRank: 4 },
-        ];
-
-        testCases.forEach(({ level, expectedRank }) => {
-            const element: HeadingElement = {
-                type: 'heading',
-                level,
-                content: `Level ${level}`,
-            };
-
-            const { unmount } = render(<MarkdownHeading element={element} />);
-
-            expect(screen.getByRole('heading', { level: expectedRank })).toHaveTextContent(`Level ${level}`);
-
-            unmount();
-        });
+        expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent('Title with & special < characters >');
     });
 });

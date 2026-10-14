@@ -1,26 +1,20 @@
 import { FC } from 'react';
-import { type HeadingElement } from '../parser/types';
+import { type RankedHeading } from '../bodyOutline';
 import styles from '../Markdown.module.css';
 
 interface Props {
-    element: HeadingElement;
+    element: RankedHeading;
 }
 
 /**
- * The page supplies the `h1`, so a markdown `#` is demoted rather than
- * competing with it. Levels 2 and 3 map straight through; anything deeper
- * renders as an `h4`.
+ * Renders a heading at the rank `bodyOutline` gave it. Ranks 2 and 3 have
+ * their own styles; anything deeper shares the `h4` style, keeping its
+ * semantic level.
  */
 export const MarkdownHeading: FC<Props> = ({ element }) => {
-    const { level, content } = element;
+    const { rank, content } = element;
+    const Tag: `h${typeof rank}` = `h${rank}`;
+    const className = rank === 2 ? styles.h2 : rank === 3 ? styles.h3 : styles.h4;
 
-    if (level === 2) {
-        return <h2 className={styles.h2}>{content}</h2>;
-    }
-
-    if (level === 3) {
-        return <h3 className={styles.h3}>{content}</h3>;
-    }
-
-    return <h4 className={styles.h4}>{content}</h4>;
+    return <Tag className={className}>{content}</Tag>;
 };

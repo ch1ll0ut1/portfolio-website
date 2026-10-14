@@ -8,13 +8,18 @@ import { render, screen } from '@testing-library/react';
 import { Markdown } from './Markdown';
 
 describe('Markdown Component', () => {
-    it('should render headings correctly', () => {
-        const content = '# Heading 1\n## Heading 2';
+    it('drops the leading title, which the page already renders as its h1', () => {
+        render(<Markdown content={'# Post title\n\nIntro\n\n## Section\n\n### Detail'} />);
 
-        render(<Markdown content={content} />);
+        expect(screen.queryByText('Post title')).not.toBeInTheDocument();
+        expect(screen.getAllByRole('heading').map(heading => `${heading.tagName}:${heading.textContent}`))
+            .toEqual(['H2:Section', 'H3:Detail']);
+    });
 
-        expect(screen.getByRole('heading', { level: 4 })).toHaveTextContent('Heading 1');
-        expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent('Heading 2');
+    it('renders a level-1 heading inside the body as an h2', () => {
+        render(<Markdown content={'Intro\n\n# Part one'} />);
+
+        expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent('Part one');
     });
 
     it('should render paragraphs correctly', () => {
@@ -82,7 +87,7 @@ describe('Markdown Component', () => {
     });
 
     it('should render mixed content correctly', () => {
-        const content = '# Title\n\nThis is a paragraph.\n\n- List item\n\n```js\ncode\n```';
+        const content = '## Title\n\nThis is a paragraph.\n\n- List item\n\n```js\ncode\n```';
 
         render(<Markdown content={content} />);
 
@@ -126,7 +131,7 @@ describe('Markdown Component', () => {
     });
 
     it('should render elements in correct order', () => {
-        const content = '# First\n\nParagraph\n\n## Second';
+        const content = '## First\n\nParagraph\n\n## Second';
 
         render(<Markdown content={content} />);
 
