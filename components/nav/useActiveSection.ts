@@ -9,12 +9,6 @@ import { useEffect, useState } from 'react';
  */
 const ROOT_MARGIN = '-45% 0px -50% 0px';
 
-/** The last section seen crossing the band, and the route it was seen on. */
-interface Hit {
-    route: string | null;
-    id: string;
-}
-
 /**
  * Tracks which of the given section ids is currently crossing the viewport
  * middle.
@@ -25,10 +19,21 @@ interface Hit {
  *
  * `route` is the current pathname. The nav lives in the root layout and so
  * outlives client-side navigation: a new route means new section elements to
- * look up, and a highlight from the previous route no longer applies.
+ * look up, and a highlight from the previous route no longer applies — not
+ * even on a return to the same pathname, which renders the page afresh at the
+ * top. The observer's first report for the new elements says what is in the
+ * band now.
  */
 export const useActiveSection = (ids: readonly string[], route: string | null) => {
-    const [hit, setHit] = useState<Hit | null>(null);
+    const [activeId, setActiveId] = useState<string | null>(null);
+    const [seenRoute, setSeenRoute] = useState(route);
+
+    // Reset during render rather than in the effect, so the old route's
+    // highlight is gone on the very render that shows the new route.
+    if (route !== seenRoute) {
+        setSeenRoute(route);
+        setActiveId(null);
+    }
 
     useEffect(() => {
         const targets: HTMLElement[] = [];
@@ -48,7 +53,7 @@ export const useActiveSection = (ids: readonly string[], route: string | null) =
         const observer = new IntersectionObserver((entries) => {
             for (const entry of entries) {
                 if (entry.isIntersecting && entry.target instanceof HTMLElement) {
-                    setHit({ route, id: entry.target.id });
+                    setActiveId(entry.target.id);
                 }
             }
         }, { rootMargin: ROOT_MARGIN });
@@ -62,7 +67,5 @@ export const useActiveSection = (ids: readonly string[], route: string | null) =
         };
     }, [ids, route]);
 
-    // Derived rather than reset in the effect, so the old route's highlight is
-    // gone on the very render that shows the new route.
-    return hit !== null && hit.route === route ? hit.id : null;
+    return activeId;
 };

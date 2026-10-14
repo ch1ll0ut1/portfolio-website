@@ -265,6 +265,45 @@ describe('<SiteNav> Component', () => {
         expect(findObservers().at(-1)).not.toBe(first);
     });
 
+    // Home → a post → the brand mark home: the page comes back at the top, so
+    // the section last seen on the first visit must not light up again.
+    it('should not revive the last highlight when the route returns to the homepage', () => {
+        const findObserver = () => observers.instances.filter(
+            instance => String(instance.options?.rootMargin).includes('-45%'),
+        ).at(-1);
+        const { rerender } = render(<SiteNav />);
+        const first = findObserver();
+
+        act(() => {
+            if (first) {
+                first.element = itemAt(sectionNodes, 2);
+                first.emit(true);
+            }
+        });
+
+        navigation.pathname = '/blog/a-post';
+        rerender(<SiteNav />);
+        navigation.pathname = '/';
+        rerender(<SiteNav />);
+
+        for (const section of navSections) {
+            expect(screen.getByRole('link', { name: section.label })).not.toHaveAttribute('aria-current');
+        }
+
+        const second = findObserver();
+
+        expect(second).not.toBe(first);
+
+        act(() => {
+            if (second) {
+                second.element = itemAt(sectionNodes, 1);
+                second.emit(true);
+            }
+        });
+
+        expect(screen.getByRole('link', { name: itemAt(navSections, 1).label })).toHaveAttribute('aria-current', 'location');
+    });
+
     it('should move the pill to a link that receives focus', () => {
         render(<SiteNav />);
 
