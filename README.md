@@ -15,6 +15,7 @@ A modern, responsive portfolio website built with Next.js 16, React 19, and Type
 - **Performance Optimized** - Server-side rendering and optimized assets
 - **SEO Optimized** - Comprehensive SEO with structured data, Open Graph, and sitemaps
 - **Accessibility** - WCAG AA compliant with proper ARIA labels
+- **Contact form** - `/contact`, a Server Action that works without JavaScript, sent through Resend; spam is kept out by a honeypot, a signed minimum fill time and Vercel BotID, with no third-party captcha
 
 ### **Content Management**
 
@@ -72,6 +73,8 @@ portfolio-website/
 │   ├── blog/                     # Blog pages
 │   │   ├── [slug]/              # Individual blog post pages
 │   │   └── page.tsx             # Blog index page
+│   ├── contact/                  # Contact page and its Server Action
+│   ├── privacy/                  # Privacy policy
 │   ├── globals.css              # Global styles and CSS variables
 │   ├── layout.tsx               # Root layout component
 │   └── page.tsx                 # Home page
@@ -89,6 +92,7 @@ portfolio-website/
 │   │   ├── ThemeToggle.tsx      # Theme switch
 │   │   └── ... (cursor, grain, scroll progress, shortcuts)
 │   ├── consent/                 # Cookie banner and preferences dialog
+│   ├── contact/                 # Contact page body and the form
 │   ├── home/                    # One directory per homepage section
 │   │   ├── hero/                # Headline as a working editor
 │   │   ├── process/             # Pinned stepper and typing terminal
@@ -119,6 +123,7 @@ portfolio-website/
 │       └── ... (one file per post)
 ├── lib/                         # Utility functions
 │   ├── analytics.ts             # GA4 event helpers
+│   ├── contact/                 # Server-only contact form: checks, spam defences, Resend call
 │   ├── content/                 # Server-only reads: post markdown, image sizes
 │   ├── date.ts                  # Date formatting utilities
 │   ├── motion/                  # Ticker, scroll store and the motion hooks
@@ -191,6 +196,20 @@ This project follows the brand guidelines defined in `BRAND.md`:
 
 4. **Open your browser**
    Navigate to [http://localhost:3000](http://localhost:3000)
+
+### **Contact form environment variables**
+
+Set in the Vercel project, never committed. Without them the site still builds
+and the form answers "not set up" (the server log names what is missing).
+
+| Variable | What it is |
+| --- | --- |
+| `RESEND_API_KEY` | Sending-only Resend API key for the site's domain |
+| `CONTACT_TO_EMAIL` | The inbox messages are delivered to |
+| `CONTACT_FORM_SECRET` | Any long random string (e.g. `openssl rand -base64 32`); signs the form's render time |
+
+BotID needs no variable: it runs on Vercel through the project's OIDC token.
+Turn on BotID Deep Analysis under Firewall > Rules if you want it.
 
 ### **Available Scripts**
 

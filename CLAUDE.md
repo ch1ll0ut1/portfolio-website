@@ -70,6 +70,7 @@ components/            # React components organized by domain
 ├── blog/             # Reading routes: index, article, 404 panel
 ├── chrome/           # Site-wide overlay: command palette, theme, cursor, progress
 ├── consent/          # Cookie banner and preferences dialog
+├── contact/          # /contact page body and the form (client)
 ├── home/             # One directory per homepage section
 │   ├── hero/         # ... contact, experience, process, proof,
 │   └── ...           #     services, work, writing
@@ -78,6 +79,7 @@ components/            # React components organized by domain
 
 config/               # Section data and types, one file per section
 ├── blog.ts           # Blog post metadata (`published` and `featured` live here)
+├── contact.ts        # Contact form fields, topics, limits and action states
 ├── sections.ts       # Section ids and nav order
 └── ...               # career, caseStudies, engagements, proof, processSteps, ...
 
@@ -86,6 +88,7 @@ content/              # Markdown content
 
 lib/                  # Utilities and shared logic
 ├── analytics.ts      # GA4 event helpers
+├── contact/          # Server-only contact form: validation, spam checks, Resend call
 ├── content/          # Server-only file reads: post markdown, image sizes
 ├── motion/           # Ticker, scroll store and the motion hooks
 └── og/               # Share cards and icons: layout, fonts, `ogPalette` literals
@@ -112,6 +115,27 @@ Blog content is managed through:
 - **File reads** in `lib/content/` (server-only): the post markdown and its `cache()`-wrapped lookup, and the image measuring the parser is handed
 - **Syntax highlighting** via react-syntax-highlighter
 - **Type-safe configuration** in `config/blog.ts`
+
+### Contact Form
+
+- **`/contact`** renders per request (the only dynamic page): the form carries a
+  signed render time minted per view, and `?topic=privacy` preselects the topic
+  without JavaScript. The CSP stays one static header.
+- **Server Action** in `app/contact/actions.ts`, used through `useActionState`
+  in `components/contact/ContactForm.tsx`; works without JavaScript. The logic
+  is `lib/contact/handleContactSubmission.ts`: honeypot, field validation,
+  config, signed minimum fill time, BotID, then the email.
+- **Resend** through a plain `fetch` (`lib/contact/sendWithResend.ts`), not the
+  SDK. Sender in `config/site.ts`; the recipient only ever from the env.
+- **Vercel BotID**: `withBotId` in `next.config.ts` (same-origin proxy, so the
+  CSP needs nothing new), `initBotId` in `instrumentation-client.ts` protecting
+  `POST /contact`, `checkBotId()` in `lib/contact/botCheck.ts`. Only consulted
+  on Vercel and for JavaScript submissions: native form posts cannot carry its
+  headers.
+- **Spam is dropped silently**: the visitor sees "sent", nothing is sent.
+- **Env vars** (Vercel only): `RESEND_API_KEY`, `CONTACT_TO_EMAIL`,
+  `CONTACT_FORM_SECRET`. Missing any, the build still passes and the form
+  answers "not set up" with a server warning.
 
 ### Code Style Standards
 
