@@ -7,7 +7,7 @@
  */
 
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { act, render, screen, waitFor } from '@testing-library/react';
+import { act, cleanup, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { FINE_POINTER_QUERY, REDUCED_MOTION_QUERY, onStage } from '@/lib/motion';
 import { installMatchMedia } from '../../test/motionEnv';
@@ -130,6 +130,112 @@ describe('<GlobalChrome>', () => {
             expect(screen.getAllByRole('dialog')).toHaveLength(1);
         });
         expect(screen.getByRole('dialog')).toHaveAccessibleName('Command menu');
+    });
+
+    describe('preloading the palette', () => {
+        let idle: IdleRequestCallback[];
+
+        /** The palette's dialog, mounted but closed, is outside the accessibility tree. */
+        const closedPalette = () => document.querySelector('dialog[aria-label="Command menu"]');
+
+        beforeEach(() => {
+            idle = [];
+            vi.stubGlobal('requestIdleCallback', (callback: IdleRequestCallback) => idle.push(callback));
+            vi.stubGlobal('cancelIdleCallback', () => undefined);
+        });
+
+        afterEach(() => {
+            // Unmount first: its cleanup cancels the idle callback stubbed here.
+            cleanup();
+            vi.unstubAllGlobals();
+        });
+
+        const goIdle = () => {
+            act(() => {
+                idle.splice(0).forEach((callback) => {
+                    callback({ didTimeout: false, timeRemaining: () => 10 });
+                });
+            });
+        };
+
+        it('should leave the palette unmounted until the page goes idle', () => {
+            render(<GlobalChrome />);
+
+            expect(closedPalette()).not.toBeInTheDocument();
+        });
+
+        it('should mount the palette, closed, once the page goes idle', async () => {
+            render(<GlobalChrome />);
+            goIdle();
+
+            await waitFor(() => {
+                expect(closedPalette()).toBeInTheDocument();
+            });
+            expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+        });
+
+        it('should mount the shortcuts list, closed, once the page goes idle', async () => {
+            render(<GlobalChrome />);
+            goIdle();
+
+            await waitFor(() => {
+                // The palette's and the shortcuts list's, neither of them open.
+                expect(document.querySelectorAll('dialog:not([open])')).toHaveLength(2);
+            });
+        });
+
+        it('should preload the palette when a pointer reaches its button', async () => {
+            const user = userEvent.setup();
+            const button = trigger('data-cmdk');
+
+            render(<GlobalChrome />);
+            await user.hover(button);
+
+            await waitFor(() => {
+                expect(closedPalette()).toBeInTheDocument();
+            });
+        });
+
+        it('should preload the palette when its button takes focus', async () => {
+            const button = trigger('data-cmdk');
+
+            render(<GlobalChrome />);
+            act(() => {
+                button.focus();
+            });
+
+            await waitFor(() => {
+                expect(closedPalette()).toBeInTheDocument();
+            });
+        });
+
+        it('should ignore a pointer over anything other than the palette button', async () => {
+            const user = userEvent.setup();
+            const other = trigger('data-theme-toggle');
+
+            render(<GlobalChrome />);
+            await user.hover(other);
+            // Long enough for a preload from the module cache to have landed.
+            await new Promise(resolve => setTimeout(resolve, 50));
+
+            expect(closedPalette()).not.toBeInTheDocument();
+        });
+
+        it('should open a preloaded palette on the first ⌘K, with the search field focused', async () => {
+            const user = userEvent.setup();
+
+            render(<GlobalChrome />);
+            goIdle();
+            await waitFor(() => {
+                expect(closedPalette()).toBeInTheDocument();
+            });
+
+            await user.keyboard('{Meta>}k{/Meta}');
+
+            // No waiting: the open is a prop flip on a palette already mounted.
+            expect(screen.getByRole('dialog', { name: 'Command menu' })).toBeInTheDocument();
+            expect(screen.getByRole('combobox', { name: 'Search commands' })).toHaveFocus();
+        });
     });
 
     it('should render the document scroll bar by default', () => {

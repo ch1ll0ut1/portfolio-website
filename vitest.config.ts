@@ -30,6 +30,7 @@ const DOM_TS_TESTS = [
     'lib/motion/toast.test.ts',
     'lib/scrollTracking.test.ts',
     'lib/timeTracking.test.ts',
+    'lib/whenIdle.test.ts',
 ];
 
 /** Never collected: dependencies, and agent worktrees that are full repo checkouts. */

@@ -4,6 +4,7 @@ import { type FC, useCallback, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { usePathname } from 'next/navigation';
 import { emitStage } from '@/lib/motion';
+import { whenIdle } from '@/lib/whenIdle';
 import { CaretCursor } from './CaretCursor';
 import { Grain } from './Grain';
 import { KeyboardChords } from './KeyboardChords';
@@ -15,7 +16,7 @@ import { followThemeAcrossTabs, toggleTheme } from './themeStore';
 /*
  * The overlays are only code the first time someone opens one, so they load
  * on demand instead of shipping with every route. Each loader is a named
- * function so the idle prefetch below warms exactly the chunk `dynamic` uses.
+ * function so the preload below warms exactly the chunk `dynamic` uses.
  */
 const loadPalette = () => import('./CommandPalette').then(module => module.CommandPalette);
 const loadShortcuts = () => import('./ShortcutsOverlay').then(module => module.ShortcutsOverlay);
@@ -23,8 +24,8 @@ const loadShortcuts = () => import('./ShortcutsOverlay').then(module => module.S
 const CommandPalette = dynamic(loadPalette, { ssr: false });
 const ShortcutsOverlay = dynamic(loadShortcuts, { ssr: false });
 
-/** Fallback when the browser has no idle callback (Safari). */
-const PREFETCH_DELAY_MS = 2000;
+/** Anything that opens the palette when clicked. */
+const PALETTE_TRIGGER = '[data-cmdk]';
 
 type OpenOverlay = 'none' | 'palette' | 'shortcuts';
 
@@ -41,53 +42,71 @@ type OpenOverlay = 'none' | 'palette' | 'shortcuts';
  * reaches this component. That keeps the nav free to style its own buttons.
  *
  * Rendered once by the root layout, so an open overlay, the cursor and the
- * prefetched chunks survive client-side navigation. The document-wide reading
+ * preloaded overlays survive client-side navigation. The document-wide reading
  * hairline steps aside while a page claims the strip for its own progress bar.
  */
 export const GlobalChrome: FC = () => {
     const [overlay, setOverlay] = useState<OpenOverlay>('none');
-    // Each overlay mounts on its first open and then stays, so it can still
-    // play its exit and every later open is instant.
-    const [paletteUsed, setPaletteUsed] = useState(false);
-    const [shortcutsUsed, setShortcutsUsed] = useState(false);
+    // Each overlay mounts, closed, as soon as its chunk is in, and then stays.
+    // Mounting is what the first open used to pay for even with the chunk
+    // cached: `dynamic` suspends on its first render, and React holds the
+    // revealed boundary back for a few hundred milliseconds. Done ahead of
+    // time, the first open only flips `open`. Staying mounted also lets an
+    // overlay play its exit.
+    const [paletteMounted, setPaletteMounted] = useState(false);
+    const [shortcutsMounted, setShortcutsMounted] = useState(false);
 
     const close = useCallback(() => {
         setOverlay('none');
     }, []);
 
     const togglePalette = useCallback(() => {
-        setPaletteUsed(true);
+        setPaletteMounted(true);
         setOverlay(current => (current === 'palette' ? 'none' : 'palette'));
     }, []);
 
     const openShortcuts = useCallback(() => {
-        setShortcutsUsed(true);
+        setShortcutsMounted(true);
         setOverlay('shortcuts');
     }, []);
 
-    // Fetch both chunks once the page is idle, so a shortcut pressed later
-    // opens without waiting on the network.
-    useEffect(() => {
-        const prefetch = () => {
-            void loadPalette();
-            void loadShortcuts();
-        };
-
-        // Typed as always present, but Safari has no idle callback.
-        if (typeof window.requestIdleCallback === 'function') {
-            const handle = window.requestIdleCallback(prefetch);
-
-            return () => {
-                window.cancelIdleCallback(handle);
-            };
-        }
-
-        const timer = window.setTimeout(prefetch, PREFETCH_DELAY_MS);
-
-        return () => {
-            window.clearTimeout(timer);
-        };
+    const preloadPalette = useCallback(() => {
+        loadPalette().then(() => {
+            setPaletteMounted(true);
+        }, ignoreFailedPreload);
     }, []);
+
+    // Warm both overlays once the page has loaded and gone idle, so a shortcut
+    // pressed later opens straight away rather than waiting on the network.
+    useEffect(() => whenIdle(() => {
+        preloadPalette();
+        loadShortcuts().then(() => {
+            setShortcutsMounted(true);
+        }, ignoreFailedPreload);
+    }), [preloadPalette]);
+
+    // A pointer arriving on the palette's button, or focus landing on it, is
+    // the earliest sign the palette is about to be wanted.
+    useEffect(() => {
+        const handleIntent = (event: Event) => {
+            if (!(event.target instanceof Element) || !event.target.closest(PALETTE_TRIGGER)) {
+                return;
+            }
+
+            stopListening();
+            preloadPalette();
+        };
+
+        const stopListening = () => {
+            document.removeEventListener('pointerover', handleIntent);
+            document.removeEventListener('focusin', handleIntent);
+        };
+
+        document.addEventListener('pointerover', handleIntent);
+        document.addEventListener('focusin', handleIntent);
+
+        return stopListening;
+    }, [preloadPalette]);
 
     useEffect(() => {
         const handleClick = (event: MouseEvent) => {
@@ -95,7 +114,7 @@ export const GlobalChrome: FC = () => {
                 return;
             }
 
-            if (event.target.closest('[data-cmdk]')) {
+            if (event.target.closest(PALETTE_TRIGGER)) {
                 togglePalette();
 
                 return;
@@ -135,10 +154,10 @@ export const GlobalChrome: FC = () => {
         <>
             <Grain />
             {pageOwnsProgress ? null : <ScrollProgress />}
-            {paletteUsed
+            {paletteMounted
                 ? <CommandPalette open={overlay === 'palette'} onClose={close} onOpenShortcuts={openShortcuts} />
                 : null}
-            {shortcutsUsed ? <ShortcutsOverlay open={overlay === 'shortcuts'} onClose={close} /> : null}
+            {shortcutsMounted ? <ShortcutsOverlay open={overlay === 'shortcuts'} onClose={close} /> : null}
             <KeyboardChords
                 overlayOpen={overlay !== 'none'}
                 onTogglePalette={togglePalette}
@@ -148,3 +167,9 @@ export const GlobalChrome: FC = () => {
         </>
     );
 };
+
+/**
+ * A preload that fails (offline, or a deploy replaced the chunks) is not worth
+ * a console error: opening the overlay asks `dynamic` to load it again.
+ */
+const ignoreFailedPreload = () => undefined;
