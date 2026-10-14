@@ -25,6 +25,71 @@
     padding-block: 8px;
 }
 
+/* Spotlight. In the prototype every name was restyled per frame to
+   `.34 + .66 * smoothstep(k)`, with `k = 1 - min(1, |x - centre| / (.42 * width))`
+   taken at the name's centre, so names sat dim and brightened to full as they
+   crossed the middle. This mask draws the same curve across the viewport
+   instead, sampled every tenth of the falloff and multiplied into the 8%
+   edge fade, so the look is restored while the track's transform stays the
+   only per-frame write. Under it the names are full `--fg`, as in the
+   prototype's live state.
+
+   `--spot-floor` is the dim level at the sides. It is registered so it can
+   ease: hovering the row (which also eases it to a stop) or focusing its
+   pause control lifts the floor to 1, so whatever the visitor is reading is at
+   full strength wherever along the row it sits. */
+@property --spot-floor {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: .34;
+}
+
+.marquee.isLive {
+    --spot-floor: .34;
+    --spot-gain: calc(1 - var(--spot-floor));
+
+    --spotlight: linear-gradient(
+        90deg,
+        transparent,
+        rgb(0 0 0 / var(--spot-floor)) 8.0%,
+        rgb(0 0 0 / calc(var(--spot-floor) + var(--spot-gain) * 0.028)) 12.2%,
+        rgb(0 0 0 / calc(var(--spot-floor) + var(--spot-gain) * 0.104)) 16.4%,
+        rgb(0 0 0 / calc(var(--spot-floor) + var(--spot-gain) * 0.216)) 20.6%,
+        rgb(0 0 0 / calc(var(--spot-floor) + var(--spot-gain) * 0.352)) 24.8%,
+        rgb(0 0 0 / calc(var(--spot-floor) + var(--spot-gain) * 0.500)) 29.0%,
+        rgb(0 0 0 / calc(var(--spot-floor) + var(--spot-gain) * 0.648)) 33.2%,
+        rgb(0 0 0 / calc(var(--spot-floor) + var(--spot-gain) * 0.784)) 37.4%,
+        rgb(0 0 0 / calc(var(--spot-floor) + var(--spot-gain) * 0.896)) 41.6%,
+        rgb(0 0 0 / calc(var(--spot-floor) + var(--spot-gain) * 0.972)) 45.8%,
+        #000 50%,
+        rgb(0 0 0 / calc(var(--spot-floor) + var(--spot-gain) * 0.972)) 54.2%,
+        rgb(0 0 0 / calc(var(--spot-floor) + var(--spot-gain) * 0.896)) 58.4%,
+        rgb(0 0 0 / calc(var(--spot-floor) + var(--spot-gain) * 0.784)) 62.6%,
+        rgb(0 0 0 / calc(var(--spot-floor) + var(--spot-gain) * 0.648)) 66.8%,
+        rgb(0 0 0 / calc(var(--spot-floor) + var(--spot-gain) * 0.500)) 71.0%,
+        rgb(0 0 0 / calc(var(--spot-floor) + var(--spot-gain) * 0.352)) 75.2%,
+        rgb(0 0 0 / calc(var(--spot-floor) + var(--spot-gain) * 0.216)) 79.4%,
+        rgb(0 0 0 / calc(var(--spot-floor) + var(--spot-gain) * 0.104)) 83.6%,
+        rgb(0 0 0 / calc(var(--spot-floor) + var(--spot-gain) * 0.028)) 87.8%,
+        rgb(0 0 0 / var(--spot-floor)) 92.0%,
+        transparent
+    );
+
+    -webkit-mask-image: var(--spotlight);
+    mask-image: var(--spotlight);
+    transition: --spot-floor var(--dur-s) var(--ease-ui);
+}
+
+@media (hover: hover) {
+    .marquee.isLive:hover {
+        --spot-floor: 1;
+    }
+}
+
+.marqueeRoot:focus-within .marquee.isLive {
+    --spot-floor: 1;
+}
+
 /* Paused, the row is something to read rather than something passing by, so
    the names at the edges keep their full contrast. */
 .marqueeRoot:has(.marqueeToggle[data-paused='true']) .marquee {
@@ -49,12 +114,16 @@
     font-size: clamp(1.6rem, 3.4vw, 2.9rem);
     font-weight: 500;
     letter-spacing: -.03em;
-    color: var(--fg-2);
+    color: var(--muted);
     white-space: nowrap;
     font-variation-settings: 'wdth' 80;
     transition: color var(--dur-s) var(--ease-ui);
 }
 
+/* Moving, the spotlight mask does the dimming, so the names themselves are full
+   strength. At rest (reduced motion, or before the engine starts) they are the
+   prototype's muted grey. */
+.marquee.isLive .item,
 .item:hover {
     color: var(--fg);
 }

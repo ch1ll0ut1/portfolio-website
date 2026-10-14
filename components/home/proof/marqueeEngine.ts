@@ -4,7 +4,8 @@
  * The row is rendered twice, so translating it by the width of one copy and
  * wrapping is a seamless loop. Speed comes from scroll velocity and direction
  * from scroll direction. The only per-frame write is the track's transform:
- * the edges fade through a static CSS mask, so no name is ever restyled.
+ * the centre spotlight and the edge fade are one static CSS mask on the
+ * viewport, keyed off `liveClass`, so no name is ever restyled.
  *
  * The clock runs only while the row is on screen, the tab is visible and the
  * visitor has not paused it; the scroll subscription is held only while the row

@@ -11,7 +11,9 @@ interface Props {
 }
 
 /**
- * Full-bleed row of organisation names that drifts with the scroll.
+ * Full-bleed row of organisation names that drifts with the scroll. While it
+ * moves, the names sit dim and brighten as they cross the centre, through a
+ * static mask on the viewport (see `Proof.module.css`).
  *
  * The row is rendered twice so the loop has somewhere to wrap to; the second
  * copy is hidden from assistive technology. It moves on its own, so it carries

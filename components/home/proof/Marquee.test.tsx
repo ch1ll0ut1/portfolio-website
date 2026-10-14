@@ -93,6 +93,19 @@ describe('Marquee', () => {
         expect(screen.queryByRole('button')).not.toBeInTheDocument();
     });
 
+    it('should keep the spotlight off a row that does not move', () => {
+        // Arrange: the spotlight mask and the names' full-strength colour both
+        // hang off the live class, so a still row reads as a plain muted list.
+        restoreMedia();
+        restoreMedia = installMatchMedia([REDUCED_MOTION_QUERY]);
+
+        // Act
+        const { container } = render(<Marquee names={names} />);
+
+        // Assert
+        expect(container.querySelector(`.${styles.marquee}`)).not.toHaveClass(styles.isLive);
+    });
+
     it('should stop the clock while paused and run it again on play', async () => {
         // Arrange
         const user = userEvent.setup();
