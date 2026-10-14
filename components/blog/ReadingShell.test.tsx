@@ -23,6 +23,23 @@ describe('ReadingShell Component', () => {
         expect(main).toHaveTextContent('Page content');
     });
 
+    it('should take focus from the skip link without becoming a Tab stop', () => {
+        // Arrange
+        render(
+            <ReadingShell>
+                <p>Page content</p>
+            </ReadingShell>,
+        );
+        const main = screen.getByRole('main');
+
+        // Act
+        main.focus();
+
+        // Assert
+        expect(main).toHaveFocus();
+        expect(main).toHaveAttribute('tabindex', '-1');
+    });
+
     it('should leave the site chrome to the root layout', () => {
         // Arrange
         render(

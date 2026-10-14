@@ -36,7 +36,8 @@ const Home: FC = () => (
 
         <EngagementTracker pageType="home" scrollTarget="[data-scroll-target]" />
 
-        <main id="main" data-scroll-target>
+        {/* Focusable so the skip link moves focus here; see ReadingShell. */}
+        <main id="main" tabIndex={-1} data-scroll-target>
             <Hero />
             <Proof />
             <Work />

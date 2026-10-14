@@ -357,8 +357,9 @@ button {
     border-radius: 4px;
 }
 
-/* Landmarks the palette and the `g` chords move focus to. They are where
-   reading continues, not controls, so they take focus without a ring. */
+/* Landmarks the skip link, the palette and the `g` chords move focus to.
+   They are where reading continues, not controls, so they take focus without
+   a ring. */
 main[tabindex='-1']:focus,
 section[tabindex='-1']:focus {
     outline: none;
