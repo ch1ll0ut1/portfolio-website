@@ -88,19 +88,9 @@ export const Contact: FC = () => {
             markRef.current?.classList.add(styles.isArmed);
         },
         onEnter: sweep,
-        onIntro: () => {
-            const mark = markRef.current;
-
-            if (!mark) {
-                return;
-            }
-
-            // Force the armed state to paint before the sweep is scheduled, so
-            // the selection never appears finished and then restarts.
-            mark.classList.add(styles.isArmed);
-            mark.getBoundingClientRect();
-            sweep();
-        },
+        // Already on screen at load: the selection is already there, so it
+        // stays put rather than being wiped and swept again, as in the design.
+        onIntro: () => undefined,
         onReduced: () => undefined,
     });
 

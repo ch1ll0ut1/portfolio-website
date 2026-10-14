@@ -24,7 +24,8 @@ const SETTLE_S = 1.9;
  *
  * The card rises into place, then its bullet markers draw left to right one by
  * one. The featured card sits on the raised surface, parks a blinking caret
- * after its name and has its border traced once as it arrives.
+ * after its name and has its border traced once as it scrolls in. A card
+ * already on screen at load is left at rest.
  *
  * Every state the entrance passes through is a class on the card: with motion
  * off the markup renders in its finished state and nothing here changes it.
@@ -71,9 +72,11 @@ export const ServiceCard: FC<Props> = ({ engagement, index }) => {
                 }, (delay + SETTLE_S) * 1000);
             });
         },
-        // Already on screen at load: no rise, but the border still gets traced
-        // once as part of the page's intro.
-        onIntro: startTrace,
+        // Already on screen at load: left at rest, as the design does. The
+        // rise and the border trace are an arrival, and this card has not
+        // arrived; it was already there. A no-op rather than nothing, since
+        // without an intro path the entrance would run straight away.
+        onIntro: () => undefined,
     });
 
     useEffect(() => () => {

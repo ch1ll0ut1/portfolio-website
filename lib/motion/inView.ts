@@ -25,6 +25,12 @@ export interface InViewOptions {
      * already looking at it.
      */
     onIntro?: () => void;
+    /**
+     * Run when the element reaches the screen before it could be armed:
+     * scrolled in faster than the arm margin, or from above. It is otherwise
+     * left as it is, so this is for content whose resting state needs a nudge.
+     */
+    onSkip?: () => void;
     /** Run instead of everything else under reduced motion. Defaults to onEnter. */
     onReduced?: () => void;
     /** rootMargin for the firing observer. */
@@ -115,6 +121,7 @@ export const observeInView = (element: HTMLElement, options: InViewOptions) => {
             // Leave it alone rather than hiding visible content.
             if (isOnScreen(element)) {
                 armObserver.disconnect();
+                options.onSkip?.();
 
                 return;
             }

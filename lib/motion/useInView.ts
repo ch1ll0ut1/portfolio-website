@@ -26,6 +26,7 @@ export const useInView = (ref: RefObject<HTMLElement | null>, options: InViewOpt
             onArm: () => { latest().onArm?.(); },
             onEnter: () => { latest().onEnter?.(); },
             onIntro: initial.onIntro ? () => { latest().onIntro?.(); } : undefined,
+            onSkip: () => { latest().onSkip?.(); },
             onReduced: initial.onReduced ? () => { latest().onReduced?.(); } : undefined,
         });
     }, [ref]);

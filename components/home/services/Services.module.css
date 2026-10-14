@@ -266,7 +266,9 @@
 }
 
 /* The selection band sits behind the word, inside the paragraph's own stacking
-   context, and is drawn at rest so the finished state needs no JS. */
+   context. Drawn at rest without motion; with it, the band waits undrawn until
+   the paragraph is selected and then sweeps in, also when the paragraph was
+   already on screen at load. */
 .selected::before {
     content: '';
     position: absolute;
@@ -283,13 +285,13 @@
     right: -.1em;
 }
 
-:global(html.motion) .note.isWriting .selected::before {
+:global(html.motion) .note .selected::before {
     transform: scaleX(0);
     transition: transform .28s var(--ease-inout);
     transition-delay: calc(var(--si, 0) * 45ms);
 }
 
-:global(html.motion) .note.isWriting.isSelected .selected::before {
+:global(html.motion) .note.isSelected .selected::before {
     transform: none;
 }
 

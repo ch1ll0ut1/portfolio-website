@@ -2,12 +2,13 @@
  * Tests for the services section.
  */
 
-import { afterAll, afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import { engagementNote, engagements, engagementsHeading } from '@/config/engagements';
 import { itemAt } from '@/test/itemAt';
 import { installIntersectionObserver, installMatchMedia, settleIntro } from '../../../test/motionEnv';
 import { Services } from './Services';
+import styles from './Services.module.css';
 
 /** The motion kit waits on web fonts, which jsdom does not implement. */
 const stubFonts = () => {
@@ -144,5 +145,35 @@ describe('Services', () => {
         decorations.forEach((decoration) => {
             expect(decoration.textContent).toBe('');
         });
+    });
+
+    it('should leave a card already on screen at load at rest, its border untraced', async () => {
+        // Arrange: everything on screen, and an animate() to watch, which jsdom lacks.
+        const animate = vi.fn(() => ({ finished: new Promise(() => undefined), cancel: () => undefined }));
+        const rect = vi.spyOn(Element.prototype, 'getBoundingClientRect').mockReturnValue(
+            DOMRect.fromRect({ x: 0, y: 100, width: 300, height: 200 }),
+        );
+
+        Object.defineProperty(Element.prototype, 'animate', { value: animate, configurable: true, writable: true });
+
+        try {
+            // Act
+            render(<Services />);
+            await settleIntro();
+
+            // Assert
+            const featured = engagements.find(engagement => engagement.featured);
+            const card = cardFor(featured?.id ?? '');
+            const trace = card.querySelector(`.${styles.trace}`);
+
+            expect(trace).toBeInTheDocument();
+            expect(card).not.toHaveClass(styles.isArmed);
+            expect(card).not.toHaveClass(styles.isIn);
+            expect(animate.mock.contexts).not.toContain(trace);
+        }
+        finally {
+            rect.mockRestore();
+            Reflect.deleteProperty(Element.prototype, 'animate');
+        }
     });
 });

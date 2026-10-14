@@ -6,7 +6,7 @@ import { afterAll, afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { render } from '@testing-library/react';
 import { engagementNote } from '@/config/engagements';
 import { REDUCED_MOTION_QUERY } from '@/lib/motion';
-import { installIntersectionObserver, installMatchMedia, settleIntro } from '../../../test/motionEnv';
+import { installIntersectionObserver, installMatchMedia, settleIntro, stubRect } from '../../../test/motionEnv';
 import { TypedParagraph } from './TypedParagraph';
 import styles from './Services.module.css';
 
@@ -86,5 +86,23 @@ describe('TypedParagraph', () => {
         expect(paragraph).toHaveClass(styles.isSelected);
         expect(paragraph).not.toHaveClass(styles.isWriting);
         expect(readableText(paragraph)).toBe(fullText);
+    });
+
+    it('should take its selection, unwritten, when it reaches the screen before it could be armed', () => {
+        // Arrange: off screen at setup, then on screen by the time the arm
+        // observer reacts, as when scrolling up onto it from #contact.
+        restoreMedia = installMatchMedia([]);
+        const { container } = render(<TypedParagraph />);
+        const paragraph = noteParagraph(container);
+        const armObserver = observers.instances.find(instance => String(instance.options?.rootMargin).includes('45%'));
+
+        stubRect(paragraph, { top: 100, bottom: 300, height: 200 });
+
+        // Act
+        armObserver?.emit(true);
+
+        // Assert
+        expect(paragraph).toHaveClass(styles.isSelected);
+        expect(paragraph).not.toHaveClass(styles.isWriting);
     });
 });

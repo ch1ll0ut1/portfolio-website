@@ -28,8 +28,9 @@ const isElement = (element: HTMLElement | null): element is HTMLElement => eleme
  *
  * Nothing is ever hidden — unwritten words are dimmed, not removed — so the
  * paragraph reads as ordinary text to assistive tech throughout. Under reduced
- * motion, or if it is already on screen when the page loads, it goes straight
- * to the finished, fully selected state.
+ * motion it rests in the finished, fully selected state. Already on screen
+ * when the page loads, it is left fully written and the band sweeps in with
+ * the page's intro, as in the design.
  */
 export const TypedParagraph: FC = () => {
     const paragraphRef = useRef<HTMLParagraphElement>(null);
@@ -97,6 +98,9 @@ export const TypedParagraph: FC = () => {
             engineRef.current?.start();
         },
         onIntro: finish,
+        // Scrolled onto from above, say after landing on #contact: never
+        // written, so it just gets its selection.
+        onSkip: finish,
         onReduced: finish,
     });
 

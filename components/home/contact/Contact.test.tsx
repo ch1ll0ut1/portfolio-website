@@ -2,11 +2,12 @@
  * Tests for the contact section.
  */
 
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { links } from '@/config/links';
-import { installIntersectionObserver, installMatchMedia } from '../../../test/motionEnv';
+import { installIntersectionObserver, installMatchMedia, settleIntro } from '../../../test/motionEnv';
 import { Contact } from './Contact';
+import styles from './Contact.module.css';
 
 describe('Contact', () => {
     let observers: ReturnType<typeof installIntersectionObserver>;
@@ -66,5 +67,31 @@ describe('Contact', () => {
         // Assert
         expect(screen.getByRole('contentinfo')).toBeInTheDocument();
         expect(screen.getByRole('link', { name: 'Back to top' })).toBeInTheDocument();
+    });
+
+    it('should leave the headline selection drawn, not sweep it again, when on screen at load', async () => {
+        // Arrange
+        const rect = vi.spyOn(Element.prototype, 'getBoundingClientRect').mockReturnValue(
+            DOMRect.fromRect({ x: 0, y: 100, width: 300, height: 200 }),
+        );
+
+        try {
+            // Act
+            render(<Contact />);
+            await settleIntro();
+            // Past the delay a sweep would have started after.
+            await new Promise((resolve) => {
+                setTimeout(resolve, 700);
+            });
+
+            // Assert
+            const mark = screen.getByRole('heading', { level: 2 }).querySelector('mark');
+
+            expect(mark).not.toHaveClass(styles.isArmed);
+            expect(mark).not.toHaveClass(styles.isSweep);
+        }
+        finally {
+            rect.mockRestore();
+        }
     });
 });

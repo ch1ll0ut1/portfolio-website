@@ -84,6 +84,32 @@ describe('observeInView', () => {
         expect(armObserver()?.disconnected).toBe(true);
     });
 
+    it('should report an element that reached the screen before it could be armed', () => {
+        const onSkip = vi.fn();
+
+        offScreen();
+        observeInView(element, { onSkip });
+
+        expect(onSkip).not.toHaveBeenCalled();
+
+        onScreen();
+        armObserver()?.emit(true);
+
+        expect(onSkip).toHaveBeenCalledTimes(1);
+    });
+
+    it('should not report an armed element as skipped', () => {
+        const onSkip = vi.fn();
+
+        offScreen();
+        observeInView(element, { onSkip });
+        armObserver()?.emit(true);
+        onScreen();
+        fireObserver()?.emit(true);
+
+        expect(onSkip).not.toHaveBeenCalled();
+    });
+
     it('should fire only once even if entry is reported repeatedly', () => {
         const onEnter = vi.fn();
 
