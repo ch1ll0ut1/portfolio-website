@@ -25,6 +25,11 @@
  * hijack, no off-site form posts, no framing, and every other fetch pinned to
  * this origin and Google Analytics' collection endpoints.
  *
+ * Vercel BotID, which guards the contact form, needs no entry: `withBotId`
+ * (next.config.ts) proxies its challenge script and API through this origin,
+ * so `'self'` covers them. A production build was checked for violations
+ * while the challenge ran, in Chromium and WebKit.
+ *
  * The boot script's hash is exported, not used: a browser that sees a hash or
  * nonce in `script-src` ignores `'unsafe-inline'`, which would block Next's
  * payload scripts. It is ready for the day the payload can be hashed or

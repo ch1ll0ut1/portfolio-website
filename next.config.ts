@@ -1,4 +1,5 @@
 import type { NextConfig } from 'next';
+import { withBotId } from 'botid/next/config';
 import { CSP_HEADER_NAME, LOCAL_HOST_CONDITION, buildContentSecurityPolicy } from './lib/contentSecurityPolicy';
 
 const dev = process.env.NODE_ENV !== 'production';
@@ -73,4 +74,12 @@ const nextConfig: NextConfig = {
     },
 };
 
-export default nextConfig;
+/*
+ * BotID adds two rewrites that proxy its challenge script and API through
+ * this origin (so the CSP's `'self'` already covers them, and ad blockers do
+ * not), and a header rule for that proxied path. Its rule comes after the
+ * ones above, so on that one path its `frame-ancestors 'self'` CSP and
+ * `X-Frame-Options: SAMEORIGIN` replace the site's: the challenge may frame
+ * its own page on this origin. See instrumentation-client.ts.
+ */
+export default withBotId(nextConfig);

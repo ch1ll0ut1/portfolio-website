@@ -24,8 +24,21 @@ const local = parse(buildContentSecurityPolicy({ dev: false, local: true }));
 /** Next's host matching for `has`/`missing`: the Host header minus its port, anchored. */
 const matchesHost = (condition: { value: string }, host: string) => new RegExp(`^${condition.value}$`).test(host.split(':', 1)[0] ?? '');
 
-/** The CSP a production `next.config.ts` sends for a request to `host`, from every rule that matches it. */
-const policiesFor = async (host: string) => {
+/** Whether a header rule's `source` (only the `/:path*` suffix form is used) covers `path`. */
+const matchesSource = (source: string, path: string) => {
+    const prefix = source.replace(/\/:path\*$/, '');
+
+    return path === prefix || path.startsWith(`${prefix}/`);
+};
+
+/** BotID's proxied challenge path, from `withBotId`. */
+const BOTID_PATH = '/149e9513-01fa-4fb0-aad4-566afd725d1b/2d206a39-8ed7-437e-a3be-862e0f06eea3/a-4-a/c.js';
+
+/**
+ * The CSP a production `next.config.ts` sends for a request to `host` and
+ * `path`, from every rule that matches it, in order (the last one wins).
+ */
+const policiesFor = async (host: string, path = '/contact') => {
     // Read fresh under a production NODE_ENV, which the config reads on load.
     vi.resetModules();
 
@@ -33,6 +46,7 @@ const policiesFor = async (host: string) => {
     const rules = await nextConfig.headers?.() ?? [];
 
     return rules
+        .filter(rule => matchesSource(rule.source, path))
         .filter(rule => (rule.has ?? []).every(condition => condition.type === 'host' && matchesHost(condition, host)))
         .filter(rule => !(rule.missing ?? []).some(condition => condition.type === 'host' && matchesHost(condition, host)))
         .flatMap(rule => rule.headers.filter(header => header.key === CSP_HEADER_NAME))
@@ -136,6 +150,16 @@ describe('next.config.ts headers', () => {
         expect(policies).toHaveLength(1);
         expect(policies[0]?.has('upgrade-insecure-requests')).toBe(false);
         expect(policies[0]?.get('script-src')).not.toContain(keyword('unsafe-eval'));
+    });
+
+    // withBotId appends its own rule for the proxied challenge, after the
+    // site's; Next lets the last matching header win, so the challenge may be
+    // framed by this origin and nothing else.
+    it('should let BotID\'s proxied path be framed by this origin only', async () => {
+        const policies = await policiesFor('stefanknoch.com', BOTID_PATH);
+
+        expect(policies).toHaveLength(2);
+        expect(policies.at(-1)).toEqual(new Map([['frame-ancestors', [keyword('self')]]]));
     });
 });
 
