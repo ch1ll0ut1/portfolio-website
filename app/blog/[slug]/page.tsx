@@ -9,6 +9,7 @@ import { JsonLd } from '@/components/seo/JsonLd';
 import { absoluteUrl, siteConfig } from '@/config/site';
 import { getBlogPostData } from '@/lib/content/blogPosts';
 import { blogPostingSchema } from '@/lib/structuredData';
+import { twitterCard } from '@/lib/twitterCard';
 
 /*
  * `dynamicParams` stays at its default on purpose. Every post is generated at
@@ -65,11 +66,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
             authors: [siteConfig.name],
             tags: post.tags,
         },
-        twitter: {
-            card: 'summary_large_image',
-            title: post.title,
-            description: post.excerpt,
-        },
+        twitter: twitterCard(post.title, post.excerpt),
         alternates: {
             canonical: `/blog/${slug}`,
         },

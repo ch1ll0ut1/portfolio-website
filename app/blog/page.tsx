@@ -6,6 +6,7 @@ import { ReadingShell } from '@/components/blog/ReadingShell';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { absoluteUrl, siteConfig } from '@/config/site';
 import { blogSchema } from '@/lib/structuredData';
+import { twitterCard } from '@/lib/twitterCard';
 
 const TITLE = 'Blog — Software engineering, tech leadership, and AI';
 const DESCRIPTION = 'Writing on software engineering, technical leadership, hiring, and building software with AI, from years of shipping products and leading teams.';
@@ -30,10 +31,7 @@ export const metadata: Metadata = {
         url: absoluteUrl('/blog'),
         type: 'website',
     },
-    twitter: {
-        title: TITLE,
-        description: DESCRIPTION,
-    },
+    twitter: twitterCard(TITLE, DESCRIPTION),
     alternates: {
         canonical: '/blog',
     },

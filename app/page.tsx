@@ -12,6 +12,7 @@ import { Writing } from '@/components/home/writing/Writing';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { siteConfig, siteTitle } from '@/config/site';
 import { personSchema } from '@/lib/structuredData';
+import { twitterCard } from '@/lib/twitterCard';
 
 export const metadata: Metadata = {
     // Absolute, so the layout's "| Stefan Knoch" template does not repeat the name.
@@ -23,10 +24,7 @@ export const metadata: Metadata = {
         url: siteConfig.url,
         type: 'website',
     },
-    twitter: {
-        title: siteTitle,
-        description: siteConfig.description,
-    },
+    twitter: twitterCard(siteTitle, siteConfig.description),
     alternates: {
         canonical: '/',
     },

@@ -13,6 +13,7 @@ import { NavTools } from '@/components/nav/NavTools';
 import { SiteNav } from '@/components/nav/SiteNav';
 import { siteConfig, siteKeywords, siteTitle } from '@/config/site';
 import { BOOT_SCRIPT } from '@/lib/bootScript';
+import { twitterCard } from '@/lib/twitterCard';
 
 export const metadata: Metadata = {
     title: {
@@ -41,11 +42,7 @@ export const metadata: Metadata = {
         description: siteConfig.description,
         siteName: siteConfig.name,
     },
-    twitter: {
-        card: 'summary_large_image',
-        title: siteTitle,
-        description: siteConfig.description,
-    },
+    twitter: twitterCard(siteTitle, siteConfig.description),
     robots: {
         index: true,
         follow: true,
