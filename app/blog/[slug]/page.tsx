@@ -82,6 +82,7 @@ const BlogPost: FC<{ params: Promise<{ slug: string }> }> = async ({ params }) =
 
     // Renders ./not-found.tsx with a real 404. Returning the panel from here
     // answered 200, which made every stale link indexable as real content.
+    // ./layout.tsx keeps the throw from failing the document's server render.
     if (!data) {
         notFound();
     }
