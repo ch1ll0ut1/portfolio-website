@@ -39,6 +39,7 @@ export const CommandPalette: FC<Props> = ({ open, onClose, onOpenShortcuts }) =>
     const [selected, setSelected] = useState(0);
     const [intro, setIntro] = useState(false);
     const [wasOpen, setWasOpen] = useState(false);
+    const [openings, setOpenings] = useState(0);
     const narrow = useMediaQuery(NARROW_QUERY);
 
     // Every opening starts from a clean palette. Adjusted during render, as
@@ -51,6 +52,7 @@ export const CommandPalette: FC<Props> = ({ open, onClose, onOpenShortcuts }) =>
             setQuery('');
             setSelected(0);
             setIntro(true);
+            setOpenings(count => count + 1);
         }
     }
 
@@ -149,7 +151,11 @@ export const CommandPalette: FC<Props> = ({ open, onClose, onOpenShortcuts }) =>
                 />
                 <kbd>esc</kbd>
             </div>
+            {/* Keyed by opening, so each one mounts a fresh list and its highlight
+                is placed on the first row rather than sliding back from wherever
+                the last session left it. */}
             <CommandList
+                key={openings}
                 id={LIST_ID}
                 optionIdPrefix={OPTION_PREFIX}
                 commands={filtered}

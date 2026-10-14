@@ -37,7 +37,8 @@ interface Props {
  * rows instead of a background on each row, so moving down the list reads as a
  * single object travelling. It animates only when the selection moved; a
  * changed filter re-places it instantly, since sliding between two unrelated
- * lists would be noise.
+ * lists would be noise. A fresh opening mounts a fresh list, so the first
+ * placement never animates either.
  */
 export const CommandList: FC<Props> = ({ id, optionIdPrefix, commands, selected, intro, onHover, onRun }) => {
     const groups = groupCommands(commands);

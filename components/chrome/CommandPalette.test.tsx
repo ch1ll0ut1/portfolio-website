@@ -12,6 +12,7 @@ import userEvent from '@testing-library/user-event';
 import { itemAt } from '@/test/itemAt';
 import { installMatchMedia } from '../../test/motionEnv';
 import { CommandPalette } from './CommandPalette';
+import styles from './CommandPalette.module.css';
 
 const push = vi.fn();
 
@@ -21,6 +22,8 @@ vi.mock('next/navigation', () => ({
 
 const options = () => screen.getAllByRole('option');
 const selectedOption = () => options().find(option => option.getAttribute('aria-selected') === 'true');
+/** The sliding selection highlight: the listbox's one decorative child. */
+const highlight = () => screen.getByRole('listbox').querySelector('[aria-hidden="true"]');
 
 describe('<CommandPalette>', () => {
     let restoreMedia: () => void;
@@ -259,6 +262,32 @@ describe('<CommandPalette>', () => {
             expect(screen.getByRole('combobox')).toHaveValue('');
         });
         expect(selectedOption()).toHaveTextContent('Work');
+    });
+
+    it('should slide the highlight when the arrows move the selection', async () => {
+        const user = userEvent.setup();
+
+        await mount();
+
+        expect(highlight()).not.toHaveClass(styles.live);
+
+        await user.keyboard('{ArrowDown}');
+
+        expect(highlight()).toHaveClass(styles.live);
+    });
+
+    it('should place the highlight on the first row without sliding when it reopens', async () => {
+        const user = userEvent.setup();
+        const view = await mount();
+
+        await user.keyboard('{ArrowDown}{ArrowDown}{ArrowDown}');
+        view.rerender(<CommandPalette open={false} onClose={onClose} onOpenShortcuts={onOpenShortcuts} />);
+        view.rerender(<CommandPalette open onClose={onClose} onOpenShortcuts={onOpenShortcuts} />);
+
+        await waitFor(() => {
+            expect(selectedOption()).toHaveTextContent('Work');
+        });
+        expect(highlight()).not.toHaveClass(styles.live);
     });
 
     it('should close when the backdrop is clicked', async () => {
