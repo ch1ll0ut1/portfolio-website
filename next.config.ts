@@ -1,15 +1,20 @@
 import type { NextConfig } from 'next';
-import { CSP_HEADER_NAME, buildContentSecurityPolicy } from './lib/contentSecurityPolicy';
+import { CSP_HEADER_NAME, LOCAL_HOST_CONDITION, buildContentSecurityPolicy } from './lib/contentSecurityPolicy';
+
+const dev = process.env.NODE_ENV !== 'production';
 
 /**
  * Sent with every response. Static pages keep their CSP this way too: headers
  * from config are attached at the edge, not rendered into the page. The policy
  * and its trade-offs live in lib/contentSecurityPolicy.ts.
+ *
+ * Built twice, as two static policies: a request to a local host (a production
+ * build run on a laptop) gets the one without `upgrade-insecure-requests`.
  */
-const SECURITY_HEADERS = [
+const securityHeaders = (local: boolean) => [
     {
         key: CSP_HEADER_NAME,
-        value: buildContentSecurityPolicy({ dev: process.env.NODE_ENV !== 'production' }),
+        value: buildContentSecurityPolicy({ dev, local }),
     },
     // Never let the browser guess a content type from the bytes.
     { key: 'X-Content-Type-Options', value: 'nosniff' },
@@ -56,7 +61,13 @@ const nextConfig: NextConfig = {
         return [
             {
                 source: '/:path*',
-                headers: SECURITY_HEADERS,
+                missing: [LOCAL_HOST_CONDITION],
+                headers: securityHeaders(false),
+            },
+            {
+                source: '/:path*',
+                has: [LOCAL_HOST_CONDITION],
+                headers: securityHeaders(true),
             },
         ];
     },

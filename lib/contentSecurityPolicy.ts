@@ -68,12 +68,28 @@ const GOOGLE_COLLECT_MIRROR = 'https://www.google.com';
  */
 const VERCEL_DEBUG_SCRIPTS = 'https://va.vercel-scripts.com';
 
+/**
+ * The hosts a build is served on locally, as a `has`/`missing` condition for
+ * `next.config.ts` headers. Next matches the value as `^value$` against the
+ * Host header without its port, hence the group around the alternation.
+ */
+export const LOCAL_HOST_CONDITION = {
+    type: 'host',
+    value: '(?:localhost|[a-z0-9-]+\\.localhost|127\\.0\\.0\\.1)',
+} as const;
+
 interface Options {
     /** Development server: React's dev build needs `eval` for its call stacks. */
     dev: boolean;
+    /**
+     * Served on a local host (see `LOCAL_HOST_CONDITION`). Keeps
+     * `upgrade-insecure-requests` off, which on plain-HTTP localhost makes
+     * Safari request every script, stylesheet and font over https and fail.
+     */
+    local?: boolean;
 }
 
-export const buildContentSecurityPolicy = ({ dev }: Options) => {
+export const buildContentSecurityPolicy = ({ dev, local = false }: Options) => {
     const directives: [string, ...string[]][] = [
         ['default-src', keyword('self')],
         [
@@ -96,9 +112,11 @@ export const buildContentSecurityPolicy = ({ dev }: Options) => {
         ['frame-ancestors', keyword('none')],
     ];
 
-    // Left off in development, where some browsers (Safari) would upgrade the
-    // plain-HTTP dev server's own requests and fail them.
-    if (!dev) {
+    // Left off in development and on a local production build, both plain
+    // HTTP, where Safari would upgrade the server's own requests and fail
+    // them (Chromium leaves localhost alone; WebKit does not). Deployed,
+    // HSTS already keeps the site on https; this covers any stray http URL.
+    if (!dev && !local) {
         directives.push(['upgrade-insecure-requests']);
     }
 

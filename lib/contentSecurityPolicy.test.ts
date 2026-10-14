@@ -6,9 +6,9 @@
 import { createHash } from 'node:crypto';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { BOOT_SCRIPT } from './bootScript';
-import { BOOT_SCRIPT_HASH, buildContentSecurityPolicy, keyword } from './contentSecurityPolicy';
+import { BOOT_SCRIPT_HASH, CSP_HEADER_NAME, LOCAL_HOST_CONDITION, buildContentSecurityPolicy, keyword } from './contentSecurityPolicy';
 
 /** Splits a policy into its directives, keyed by name. */
 const parse = (policy: string) => new Map(policy.split('; ').map((directive) => {
@@ -19,6 +19,25 @@ const parse = (policy: string) => new Map(policy.split('; ').map((directive) => 
 
 const production = parse(buildContentSecurityPolicy({ dev: false }));
 const development = parse(buildContentSecurityPolicy({ dev: true }));
+const local = parse(buildContentSecurityPolicy({ dev: false, local: true }));
+
+/** Next's host matching for `has`/`missing`: the Host header minus its port, anchored. */
+const matchesHost = (condition: { value: string }, host: string) => new RegExp(`^${condition.value}$`).test(host.split(':', 1)[0] ?? '');
+
+/** The CSP a production `next.config.ts` sends for a request to `host`, from every rule that matches it. */
+const policiesFor = async (host: string) => {
+    // Read fresh under a production NODE_ENV, which the config reads on load.
+    vi.resetModules();
+
+    const { default: nextConfig } = await import('../next.config');
+    const rules = await nextConfig.headers?.() ?? [];
+
+    return rules
+        .filter(rule => (rule.has ?? []).every(condition => condition.type === 'host' && matchesHost(condition, host)))
+        .filter(rule => !(rule.missing ?? []).some(condition => condition.type === 'host' && matchesHost(condition, host)))
+        .flatMap(rule => rule.headers.filter(header => header.key === CSP_HEADER_NAME))
+        .map(header => parse(header.value));
+};
 
 describe('buildContentSecurityPolicy', () => {
     it('should lock down everything that has no reason to load', () => {
@@ -28,6 +47,21 @@ describe('buildContentSecurityPolicy', () => {
         expect(production.get('form-action')).toEqual([keyword('self')]);
         expect(production.get('frame-ancestors')).toEqual([keyword('none')]);
         expect(production.has('upgrade-insecure-requests')).toBe(true);
+    });
+
+    // WebKit applies the upgrade to http://localhost too, so a local
+    // production build would request its own assets over https and fail.
+    it('should leave out upgrade-insecure-requests on a local host and in development', () => {
+        expect(local.has('upgrade-insecure-requests')).toBe(false);
+        expect(development.has('upgrade-insecure-requests')).toBe(false);
+    });
+
+    it('should otherwise send a local host the production policy', () => {
+        const withoutUpgrade = new Map(production);
+
+        withoutUpgrade.delete('upgrade-insecure-requests');
+
+        expect(local).toEqual(withoutUpgrade);
     });
 
     it('should never allow eval in production', () => {
@@ -63,6 +97,45 @@ describe('buildContentSecurityPolicy', () => {
         const hosts = (production.get('script-src') ?? []).filter(source => source.startsWith('https://'));
 
         expect(hosts).toEqual(['https://*.googletagmanager.com']);
+    });
+});
+
+describe('LOCAL_HOST_CONDITION', () => {
+    it.each(['localhost', 'localhost:3000', '127.0.0.1:3334', 'preview.localhost'])('should match %s', (host) => {
+        expect(matchesHost(LOCAL_HOST_CONDITION, host)).toBe(true);
+    });
+
+    it.each(['stefanknoch.com', 'www.stefanknoch.com', 'localhost.example.com', 'notlocalhost', 'portfolio.vercel.app'])(
+        'should not match %s',
+        (host) => {
+            expect(matchesHost(LOCAL_HOST_CONDITION, host)).toBe(false);
+        },
+    );
+});
+
+describe('next.config.ts headers', () => {
+    beforeAll(() => {
+        vi.stubEnv('NODE_ENV', 'production');
+    });
+
+    afterAll(() => {
+        vi.unstubAllEnvs();
+    });
+
+    it('should send the deployed site the policy with the upgrade', async () => {
+        const policies = await policiesFor('stefanknoch.com');
+
+        expect(policies).toHaveLength(1);
+        expect(policies[0]?.has('upgrade-insecure-requests')).toBe(true);
+        expect(policies[0]?.get('script-src')).not.toContain(keyword('unsafe-eval'));
+    });
+
+    it('should send a local production build the policy without it', async () => {
+        const policies = await policiesFor('localhost:3334');
+
+        expect(policies).toHaveLength(1);
+        expect(policies[0]?.has('upgrade-insecure-requests')).toBe(false);
+        expect(policies[0]?.get('script-src')).not.toContain(keyword('unsafe-eval'));
     });
 });
 
