@@ -1,8 +1,10 @@
 /**
  * Tests for loading gtag.js behind consent.
  *
- * `next/script` is replaced by a plain element so the test can see whether
- * the script would be requested at all.
+ * `next/script` is replaced by an inert stand-in that records the `src` it
+ * was given, so the test can see whether the script would be requested at
+ * all. It is not a `<script>`: React warns about those on the client, and
+ * the real `next/script` injects its tag outside React's tree anyway.
  */
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -15,7 +17,7 @@ import { CookieConsent } from '@/components/consent/CookieConsent';
 import { GoogleAnalytics } from './GoogleAnalytics';
 
 vi.mock('next/script', () => {
-    const FakeScript: FC<{ src: string }> = ({ src }) => <script data-testid="gtag-script" data-src={src} />;
+    const FakeScript: FC<{ src: string }> = ({ src }) => <span hidden data-testid="gtag-script" data-src={src} />;
 
     return { default: FakeScript };
 });
@@ -28,6 +30,9 @@ const renderWithConsent = () => render(
         <GoogleAnalytics />
     </ConsentProvider>,
 );
+
+/** The `gtag` calls queued for gtag.js, as plain arrays. */
+const queuedCalls = () => (window.dataLayer ?? []).map(entry => Array.from(entry as ArrayLike<unknown>));
 
 const storeChoice = (analytics: boolean) => {
     localStorage.setItem(CONSENT_KEY, JSON.stringify({ version: CONSENT_VERSION, consent: { analytics, essential: true } }));
@@ -81,6 +86,7 @@ describe('<GoogleAnalytics>', () => {
         // Assert
         expect(screen.getByTestId('gtag-script'))
             .toHaveAttribute('data-src', `https://www.googletagmanager.com/gtag/js?id=${MEASUREMENT_ID}`);
+        expect(queuedCalls()).toContainEqual(['config', MEASUREMENT_ID, expect.any(Object)]);
     });
 
     it('should load the script after hydration for a returning visitor who consented', async () => {
