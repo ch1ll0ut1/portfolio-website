@@ -10,6 +10,7 @@ import { absoluteUrl } from '@/config/site';
 import { baseOpenGraph } from '@/lib/baseOpenGraph';
 import { getBlogPostData } from '@/lib/content/blogPosts';
 import { bangkokDateTime } from '@/lib/date';
+import { feedAlternateTypes } from '@/lib/feed';
 import { blogPostBreadcrumbs, blogPostingSchema, breadcrumbSchema, jsonLdGraph } from '@/lib/structuredData';
 import { twitterCard } from '@/lib/twitterCard';
 
@@ -66,6 +67,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
         twitter: twitterCard(post.title, post.excerpt),
         alternates: {
             canonical: `/blog/${slug}`,
+            types: feedAlternateTypes,
         },
     };
 }

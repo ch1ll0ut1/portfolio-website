@@ -8,6 +8,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { notFound } from 'next/navigation';
 import { blogPosts } from '@/config/blog';
 import { absoluteUrl, siteConfig } from '@/config/site';
+import { feedAlternateTypes } from '@/lib/feed';
 import { itemAt } from '@/test/itemAt';
 // Imported once at module scope rather than inside each test: loading the
 // route pulls in the whole article graph, and a cold load inside a test body
@@ -38,7 +39,7 @@ describe('/blog/[slug]', () => {
 
             expect(metadata.title).toBe(post.title);
             expect(metadata.description).toBe(post.excerpt);
-            expect(metadata.alternates?.canonical).toBe(`/blog/${post.slug}`);
+            expect(metadata.alternates).toEqual({ canonical: `/blog/${post.slug}`, types: feedAlternateTypes });
             expect(metadata.openGraph).toMatchObject({
                 title: post.title,
                 description: post.excerpt,
