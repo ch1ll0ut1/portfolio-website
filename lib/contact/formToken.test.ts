@@ -33,6 +33,16 @@ describe('checkFormToken', () => {
         expect(checkFormToken(token, SECRET, ISSUED + MAX_TOKEN_AGE_MS + 1)).toBe('expired');
     });
 
+    it('should keep a token for two hours, so it cannot be reused for a day', () => {
+        // Arrange
+        const token = signFormToken(SECRET, ISSUED);
+        const hour = 60 * 60 * 1_000;
+
+        // Act & Assert
+        expect(checkFormToken(token, SECRET, ISSUED + hour)).toBe('ok');
+        expect(checkFormToken(token, SECRET, ISSUED + 2 * hour + 1)).toBe('expired');
+    });
+
     it('should reject a token whose time was changed after signing', () => {
         // Arrange: claim the form was rendered a minute earlier than it was.
         const [, signature] = signFormToken(SECRET, ISSUED).split('.');
