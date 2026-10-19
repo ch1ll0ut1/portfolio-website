@@ -60,7 +60,7 @@ export const DocumentModelPanel: FC<Props> = ({ doc, baseline, position, state, 
                 {headlineJsonLines(doc, baseline).map(line => (
                     <Fragment key={line.id}>
                         {line.indent}
-                        <span className={`${styles.ln} ${line.flash ? styles.flash : ''}`}>
+                        <span className={`${styles.ln} ${line.leaf ? styles.leaf : ''} ${line.flash ? styles.flash : ''}`}>
                             {line.tokens.map((token, index) => (
                                 <span key={index} className={TOKEN_CLASS[token.kind]}>{token.text}</span>
                             ))}

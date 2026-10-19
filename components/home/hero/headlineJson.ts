@@ -20,6 +20,8 @@ export interface JsonLine {
     id: string;
     indent: string;
     tokens: JsonToken[];
+    /** One of the document's children, rather than the JSON around them. */
+    leaf: boolean;
     /** Leaf lines that are new since the baseline flash once. */
     flash: boolean;
 }
@@ -38,20 +40,22 @@ const bool = (text: string): JsonToken => ({ kind: 'bool', text });
  */
 export const headlineJsonLines = (doc: HeadingDoc, baseline: string[]): JsonLine[] => {
     const lines: JsonLine[] = [
-        { id: 'open', indent: '', tokens: [punct('{')], flash: false },
+        { id: 'open', indent: '', tokens: [punct('{')], leaf: false, flash: false },
         {
             id: 'type',
             indent: '  ',
             tokens: [key('type'), punct(': '), str('heading'), punct(',')],
+            leaf: false,
             flash: false,
         },
         {
             id: 'level',
             indent: '  ',
             tokens: [key('level'), punct(': '), bool('1'), punct(',')],
+            leaf: false,
             flash: false,
         },
-        { id: 'children', indent: '  ', tokens: [key('children'), punct(': [')], flash: false },
+        { id: 'children', indent: '  ', tokens: [key('children'), punct(': [')], leaf: false, flash: false },
     ];
 
     doc.children.forEach((leaf, index) => {
@@ -75,12 +79,13 @@ export const headlineJsonLines = (doc: HeadingDoc, baseline: string[]): JsonLine
             id: `leaf-${index}-${identity}`,
             indent: '    ',
             tokens,
+            leaf: true,
             flash: baseline.length > 0 && !baseline.includes(identity),
         });
     });
 
-    lines.push({ id: 'close-children', indent: '  ', tokens: [punct(']')], flash: false });
-    lines.push({ id: 'close', indent: '', tokens: [punct('}')], flash: false });
+    lines.push({ id: 'close-children', indent: '  ', tokens: [punct(']')], leaf: false, flash: false });
+    lines.push({ id: 'close', indent: '', tokens: [punct('}')], leaf: false, flash: false });
 
     return lines;
 };

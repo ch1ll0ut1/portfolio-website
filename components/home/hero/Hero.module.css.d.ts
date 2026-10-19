@@ -22,6 +22,7 @@ declare const styles: {
     readonly key: string;
     readonly kicker: string;
     readonly kickerPart: string;
+    readonly leaf: string;
     readonly lede: string;
     readonly ln: string;
     readonly punct: string;

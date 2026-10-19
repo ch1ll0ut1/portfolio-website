@@ -38,10 +38,11 @@ describe('headlineJsonLines', () => {
         expect(JSON.parse(textOf(lines)).children[0].text).toBe('say "hi"');
     });
 
-    it('should emit one line per leaf', () => {
-        const leafLines = headlineJsonLines(doc(), []).filter(line => line.id.startsWith('leaf-'));
+    it('should emit one line per leaf, marked as a leaf', () => {
+        const leafLines = headlineJsonLines(doc(), []).filter(line => line.leaf);
 
         expect(leafLines).toHaveLength(3);
+        expect(leafLines.every(line => line.id.startsWith('leaf-'))).toBe(true);
     });
 
     it('should flash nothing when there is no baseline', () => {
