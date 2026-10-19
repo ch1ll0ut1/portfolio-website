@@ -1,6 +1,9 @@
 /**
  * The four case studies in the "Selected work" section.
  *
+ * Each also has its own page at `/work/<slug>`, whose longer copy lives in
+ * `caseStudyDetails.ts`.
+ *
  * Each one reads problem → what I did → result, the structure the brief asks
  * for. The `id` doubles as the key of the illustration that runs in the case's
  * visual well, so adding a case means adding a matching visual module.
@@ -24,6 +27,8 @@ export interface CaseLink {
 export interface CaseStudy {
     /** Anchor-safe id, and the illustration key. */
     id: CaseVisualId;
+    /** URL segment of the case's own page, `/work/<slug>`. Keyword-bearing, and never changed once live. */
+    slug: string;
     /** Years worked, as shown. */
     years: string;
     /** Role held on the project. */
@@ -44,6 +49,7 @@ export interface CaseStudy {
 export const caseStudies: CaseStudy[] = [
     {
         id: 'edithing',
+        slug: 'parliament-of-iceland-legislative-editor',
         years: '2023–2025',
         role: 'Lead architect',
         title: 'Edithing',
@@ -60,18 +66,20 @@ export const caseStudies: CaseStudy[] = [
     },
     {
         id: 'bluereceipt',
+        slug: 'bluereceipt-shopify-sms-marketing-platform',
         years: '2020–2021',
         role: 'Technical co-founder',
         title: 'BlueReceipt',
         client: 'SMS marketing for Shopify brands',
         problem: 'Marketing automation, collaborative editing, Shopify, and Twilio all had to agree on one data model, while thousands of SMS went out without tripping spam blocks or running up costs.',
         did: 'Built a fully typed data layer from database schema to a generated frontend SDK, including a custom ORM, and one automation pipeline for schema sync, API docs, SDK generation, visual tests, and deploys. Chose ECS over serverless on AWS CDK, and set the standards for a team of six.',
-        result: 'A whole class of integration bugs eliminated: a schema change fails the build, not production.',
+        result: 'A whole class of bugs caught before customers ever saw them: when one part of the system changed, everything that relied on it was checked before release.',
         tags: ['TypeScript', 'Koa', 'GraphQL', 'MySQL', 'AWS CDK', 'ECS'],
         metric: { value: 'DB → UI', label: 'one typed data layer' },
     },
     {
         id: 'socialbee',
+        slug: 'social-bee-tech-department-from-zero',
         years: '2022–2023',
         role: 'Technical lead & product architect',
         title: 'Social-Bee',
@@ -84,6 +92,7 @@ export const caseStudies: CaseStudy[] = [
     },
     {
         id: 'eko',
+        slug: 'eko-real-time-messaging-performance',
         years: '2015–2017',
         role: 'Senior full-stack developer',
         title: 'Eko',
@@ -95,3 +104,9 @@ export const caseStudies: CaseStudy[] = [
         metric: { value: '2×', label: 'messaging performance' },
     },
 ];
+
+/** The case study whose page is `/work/<slug>`, if there is one. */
+export const findCaseStudy = (slug: string) => caseStudies.find(study => study.slug === slug);
+
+/** The path of a case study's own page. */
+export const caseStudyPath = (study: CaseStudy) => `/work/${study.slug}`;
