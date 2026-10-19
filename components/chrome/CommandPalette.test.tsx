@@ -9,6 +9,7 @@
 import { type Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { commands } from '@/config/commands';
 import { itemAt } from '@/test/itemAt';
 import { installMatchMedia } from '../../test/motionEnv';
 import { CommandPalette } from './CommandPalette';
@@ -92,7 +93,7 @@ describe('<CommandPalette>', () => {
         await mount();
         await user.type(screen.getByRole('combobox'), 'elsewhere');
 
-        expect(options()).toHaveLength(4);
+        expect(options()).toHaveLength(commands.filter(command => command.group === 'Elsewhere').length);
     });
 
     it('should show an empty state when nothing matches', async () => {

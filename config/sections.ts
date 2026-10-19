@@ -15,16 +15,22 @@ export interface SiteSection {
     chord: string;
     /** Whether the section appears in the nav's link row. */
     inNav: boolean;
+    /**
+     * A page of its own the nav links to instead of the homepage section, so
+     * the header carries a crawlable link to it. The palette and the chords
+     * still jump to the section.
+     */
+    page?: string;
 }
 
 export const sections: SiteSection[] = [
     { id: 'top', label: 'Top', chord: 'h', inNav: false },
     { id: 'proof', label: 'Proof', chord: '', inNav: false },
     { id: 'work', label: 'Work', chord: 'w', inNav: true },
-    { id: 'services', label: 'Services', chord: 's', inNav: true },
+    { id: 'services', label: 'Services', chord: 's', inNav: true, page: '/services' },
     { id: 'process', label: 'Process', chord: 'p', inNav: true },
     { id: 'experience', label: 'Experience', chord: 'e', inNav: true },
-    { id: 'writing', label: 'Writing', chord: 'b', inNav: true },
+    { id: 'writing', label: 'Writing', chord: 'b', inNav: true, page: '/blog' },
     { id: 'contact', label: 'Contact', chord: 'c', inNav: false },
 ];
 
