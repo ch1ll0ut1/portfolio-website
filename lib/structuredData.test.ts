@@ -201,7 +201,7 @@ describe('structuredData', () => {
 
             // Assert
             expect(schema.url).toBe(`${siteConfig.url}/blog/a-post`);
-            expect(schema.image).toBe(`${siteConfig.url}/blog/a-post/opengraph-image/card`);
+            expect(schema.image).toBe(`${siteConfig.url}/blog/a-post/card.png`);
         });
 
         it('should date the post in Bangkok time', () => {

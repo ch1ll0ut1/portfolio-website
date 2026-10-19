@@ -53,6 +53,10 @@ describe('/blog/[slug]', () => {
                 tags: post.tags,
             });
             expect(metadata.twitter).toMatchObject({ card: 'summary_large_image', title: post.title });
+            // The post's own card, described by its title on both networks.
+            const card = { url: `/blog/${post.slug}/card.png`, alt: post.title };
+            expect(metadata.openGraph?.images).toEqual([expect.objectContaining(card)]);
+            expect(metadata.twitter?.images).toEqual([expect.objectContaining(card)]);
             expect(metadata.robots).toBeUndefined();
             expect(metadata).not.toHaveProperty('keywords');
         });

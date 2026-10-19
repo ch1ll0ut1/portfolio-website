@@ -11,6 +11,7 @@ import { baseOpenGraph } from '@/lib/baseOpenGraph';
 import { getBlogPostData } from '@/lib/content/blogPosts';
 import { bangkokDateTime } from '@/lib/date';
 import { feedAlternateTypes } from '@/lib/feed';
+import { postCardImage } from '@/lib/og/postCard';
 import { blogPostBreadcrumbs, blogPostingSchema, breadcrumbSchema, jsonLdGraph } from '@/lib/structuredData';
 import { twitterCard } from '@/lib/twitterCard';
 
@@ -63,8 +64,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
             // The author's profile page: Open Graph wants a URL here, not a name.
             authors: [absoluteUrl('/')],
             tags: post.tags,
+            images: [postCardImage(post)],
         },
-        twitter: twitterCard(post.title, post.excerpt),
+        twitter: { ...twitterCard(post.title, post.excerpt), images: [postCardImage(post)] },
         alternates: {
             canonical: `/blog/${slug}`,
             types: feedAlternateTypes,
