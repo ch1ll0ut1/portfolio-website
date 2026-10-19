@@ -86,14 +86,25 @@
 }
 
 :global(.motion) .panel {
-    opacity: 0;
-    transform: translateY(14px);
-    transition:
-        opacity var(--dur-s) var(--ease-out),
-        transform var(--dur-s) var(--ease-out);
+    animation: banner-in var(--dur-s) var(--ease-out) backwards;
 }
 
-:global(.motion) .shown .panel {
-    opacity: 1;
-    transform: none;
+/* A rise without a fade, so the banner is content from its first frame. It is
+   in the server HTML, so this plays from first paint, not after hydration. */
+@keyframes banner-in {
+    from {
+        transform: translateY(14px);
+    }
+}
+
+/* Server-rendered before the stored choice can be read. Shown only once the
+   boot script has run and found no stored choice: never to a returning
+   visitor, and never without JavaScript, where its buttons could not work.
+   The client drops the class once it has read storage itself. */
+.pending {
+    display: none;
+}
+
+:global(.js:not(.has-consent)) .pending {
+    display: flex;
 }
