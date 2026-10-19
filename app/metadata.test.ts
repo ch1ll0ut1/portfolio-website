@@ -15,6 +15,7 @@ import { metadata as notFound } from './not-found';
 import { metadata as layout, viewport } from './layout';
 import { metadata as home } from './page';
 import { metadata as privacy } from './privacy/page';
+import { metadata as services } from './services/page';
 
 // The layout loads its faces through next/font, which only runs inside Next.
 vi.mock('next/font/google', () => {
@@ -28,6 +29,7 @@ const pages: [string, Metadata][] = [
     ['/blog', blog],
     ['/privacy', privacy],
     ['/contact', contact],
+    ['/services', services],
 ];
 
 describe('route metadata', () => {
