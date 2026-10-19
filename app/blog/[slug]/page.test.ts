@@ -45,11 +45,14 @@ describe('/blog/[slug]', () => {
                 url: absoluteUrl(`/blog/${post.slug}`),
                 type: 'article',
                 publishedTime: post.date,
+                siteName: siteConfig.name,
+                locale: 'en_US',
                 authors: [siteConfig.name],
                 tags: post.tags,
             });
             expect(metadata.twitter).toMatchObject({ card: 'summary_large_image', title: post.title });
             expect(metadata.robots).toBeUndefined();
+            expect(metadata).not.toHaveProperty('keywords');
         });
 
         // Next's own `noindex` on the 404 keeps it out of the index; a value

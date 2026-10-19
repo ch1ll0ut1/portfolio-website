@@ -6,14 +6,22 @@
  */
 
 import type { Metadata } from 'next';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { siteConfig, siteTitle } from '@/config/site';
 import { metadata as postNotFound } from './blog/[slug]/not-found';
 import { metadata as blog } from './blog/page';
 import { metadata as contact } from './contact/page';
 import { metadata as notFound } from './not-found';
+import { metadata as layout, viewport } from './layout';
 import { metadata as home } from './page';
 import { metadata as privacy } from './privacy/page';
+
+// The layout loads its faces through next/font, which only runs inside Next.
+vi.mock('next/font/google', () => {
+    const font = () => ({ className: '', style: { fontFamily: 'Font' } });
+
+    return { Bricolage_Grotesque: font, Martian_Mono: font, Schibsted_Grotesk: font };
+});
 
 const pages: [string, Metadata][] = [
     ['/', home],
@@ -25,6 +33,23 @@ const pages: [string, Metadata][] = [
 describe('route metadata', () => {
     it.each(pages)('should give %s the large-image card', (_route, metadata) => {
         expect(metadata.twitter).toMatchObject({ card: 'summary_large_image' });
+    });
+
+    // Next replaces the layout's `openGraph` whole, so each page carries these itself.
+    it.each(pages)('should give %s the site name and locale on its share card', (_route, metadata) => {
+        expect(metadata.openGraph).toMatchObject({ siteName: siteConfig.name, locale: 'en_US' });
+    });
+
+    it.each(pages)('should give %s a canonical URL of its own', (route, metadata) => {
+        expect(metadata.alternates).toMatchObject({ canonical: route });
+    });
+
+    it.each([...pages, ['layout', layout] as [string, Metadata]])('should set no meta keywords on %s', (_route, metadata) => {
+        expect(metadata).not.toHaveProperty('keywords');
+    });
+
+    it('should title the homepage with the positioning, within 60 characters', () => {
+        expect(home.title).toEqual({ absolute: 'Stefan Knoch — Software Architect & Tech Lead' });
     });
 
     it('should describe /privacy with its own title and description on every network', () => {
@@ -48,6 +73,22 @@ describe('route metadata', () => {
         expect(contact.openGraph).toMatchObject({ title, description, type: 'website', url: `${siteConfig.url}/contact` });
         expect(contact.twitter).toMatchObject({ title, description });
         expect(contact.alternates).toEqual({ canonical: '/contact' });
+    });
+
+    // A canonical in the layout would reach the 404 and error pages too.
+    it('should leave the canonical URL and the generator tag out of the layout', () => {
+        expect(layout.alternates).toBeUndefined();
+        expect(layout).not.toHaveProperty('generator');
+        expect(layout.openGraph).toMatchObject({ siteName: siteConfig.name, locale: 'en_US' });
+        expect(layout.openGraph).not.toHaveProperty('url');
+    });
+
+    it('should colour the browser chrome for both themes', () => {
+        expect(viewport.colorScheme).toBe('dark light');
+        expect(viewport.themeColor).toEqual([
+            { media: '(prefers-color-scheme: dark)', color: '#0f171d' },
+            { media: '(prefers-color-scheme: light)', color: '#edf1f2' },
+        ]);
     });
 
     // Next adds its own `noindex` to every 404; a robots value here would be a

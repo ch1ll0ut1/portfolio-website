@@ -50,27 +50,6 @@ export const siteConfig: SiteConfig = {
 };
 
 /**
- * Meta keywords. Search engines mostly ignore them, but they cost nothing and
- * keep the CV's vocabulary next to the consultancy one.
- */
-export const siteKeywords: string[] = [
-    'software architect',
-    'fractional CTO',
-    'tech lead',
-    'hands-on tech lead',
-    'senior full-stack engineer',
-    'founding engineer',
-    'architecture review',
-    'TypeScript',
-    'React',
-    'Next.js',
-    'Node.js',
-    'AWS',
-    'rich text editors',
-    'Bangkok',
-];
-
-/**
  * The full title used for the homepage and as the site's default title: the
  * name and `jobTitle`, title-cased the way a search result shows it.
  */

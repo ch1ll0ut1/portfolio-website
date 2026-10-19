@@ -5,6 +5,7 @@ import { BlogIndex } from '@/components/blog/BlogIndex';
 import { ReadingShell } from '@/components/blog/ReadingShell';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { absoluteUrl, siteConfig } from '@/config/site';
+import { baseOpenGraph } from '@/lib/baseOpenGraph';
 import { blogSchema } from '@/lib/structuredData';
 import { twitterCard } from '@/lib/twitterCard';
 
@@ -15,17 +16,8 @@ export const metadata: Metadata = {
     // Absolute, so the layout's "| Stefan Knoch" template is not stacked onto a second separator.
     title: { absolute: `${TITLE} | ${siteConfig.name}` },
     description: DESCRIPTION,
-    keywords: [
-        'software engineering blog',
-        'tech leadership',
-        'hiring developers',
-        'startups',
-        'AI-assisted development',
-        'software architecture',
-        'TypeScript',
-        'React',
-    ],
     openGraph: {
+        ...baseOpenGraph,
         title: TITLE,
         description: DESCRIPTION,
         url: absoluteUrl('/blog'),

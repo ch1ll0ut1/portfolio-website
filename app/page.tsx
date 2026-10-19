@@ -11,6 +11,7 @@ import { Work } from '@/components/home/work/Work';
 import { Writing } from '@/components/home/writing/Writing';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { siteConfig, siteTitle } from '@/config/site';
+import { baseOpenGraph } from '@/lib/baseOpenGraph';
 import { personSchema } from '@/lib/structuredData';
 import { twitterCard } from '@/lib/twitterCard';
 
@@ -19,6 +20,7 @@ export const metadata: Metadata = {
     title: { absolute: siteTitle },
     description: siteConfig.description,
     openGraph: {
+        ...baseOpenGraph,
         title: siteTitle,
         description: siteConfig.description,
         url: siteConfig.url,

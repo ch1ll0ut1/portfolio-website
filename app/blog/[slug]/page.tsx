@@ -7,6 +7,7 @@ import { Article } from '@/components/blog/Article';
 import { ReadingShell } from '@/components/blog/ReadingShell';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { absoluteUrl, siteConfig } from '@/config/site';
+import { baseOpenGraph } from '@/lib/baseOpenGraph';
 import { getBlogPostData } from '@/lib/content/blogPosts';
 import { blogPostingSchema } from '@/lib/structuredData';
 import { twitterCard } from '@/lib/twitterCard';
@@ -49,13 +50,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     return {
         title: post.title,
         description: post.excerpt,
-        keywords: [
-            ...post.tags,
-            'software development',
-            'technology',
-            'blog post',
-        ],
         openGraph: {
+            ...baseOpenGraph,
             title: post.title,
             description: post.excerpt,
             url: absoluteUrl(`/blog/${slug}`),

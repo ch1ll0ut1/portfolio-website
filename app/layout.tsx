@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { Analytics } from '@vercel/analytics/next';
 import { Bricolage_Grotesque, Martian_Mono, Schibsted_Grotesk } from 'next/font/google';
@@ -11,11 +11,16 @@ import { ConsentProvider } from '@/components/consent/ConsentContext';
 import { CookieConsent } from '@/components/consent/CookieConsent';
 import { NavTools } from '@/components/nav/NavTools';
 import { SiteNav } from '@/components/nav/SiteNav';
-import { siteConfig, siteKeywords, siteTitle } from '@/config/site';
+import { siteConfig, siteTitle } from '@/config/site';
+import { baseOpenGraph } from '@/lib/baseOpenGraph';
 import { BOOT_SCRIPT } from '@/lib/bootScript';
 import type { CssVars } from '@/lib/cssVars';
+import { ogPalette } from '@/lib/og/palette';
 import { twitterCard } from '@/lib/twitterCard';
 import { webFontFamily } from '@/lib/webFontFamily';
+
+/** `--bg` of the light theme in app/globals.css; the dark one is `ogPalette.bg`. */
+const LIGHT_BACKGROUND = '#edf1f2';
 
 export const metadata: Metadata = {
     title: {
@@ -23,7 +28,6 @@ export const metadata: Metadata = {
         template: `%s | ${siteConfig.name}`,
     },
     description: siteConfig.description,
-    keywords: siteKeywords,
     authors: [{ name: siteConfig.name, url: siteConfig.url }],
     creator: siteConfig.name,
     publisher: siteConfig.name,
@@ -33,16 +37,13 @@ export const metadata: Metadata = {
         telephone: false,
     },
     metadataBase: new URL(siteConfig.url),
-    alternates: {
-        canonical: '/',
-    },
+    // No canonical or share URL here: every page sets its own, and one set
+    // here would also land on the 404 and error pages, pointing them home.
     openGraph: {
+        ...baseOpenGraph,
         type: 'website',
-        locale: 'en_US',
-        url: siteConfig.url,
         title: siteTitle,
         description: siteConfig.description,
-        siteName: siteConfig.name,
     },
     twitter: twitterCard(siteTitle, siteConfig.description),
     robots: {
@@ -56,7 +57,18 @@ export const metadata: Metadata = {
             'max-snippet': -1,
         },
     },
-    generator: 'Next.js',
+};
+
+/**
+ * The browser chrome follows the page background of each theme: `--bg` in
+ * app/globals.css, dark by default and light under a light OS preference.
+ */
+export const viewport: Viewport = {
+    themeColor: [
+        { media: '(prefers-color-scheme: dark)', color: ogPalette.bg },
+        { media: '(prefers-color-scheme: light)', color: LIGHT_BACKGROUND },
+    ],
+    colorScheme: 'dark light',
 };
 
 // Display face. "wdth" 75-90 is used for large type, so the width axis must load.

@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { ContactPage } from '@/components/contact/ContactPage';
 import { ReadingShell } from '@/components/blog/ReadingShell';
 import { absoluteUrl, siteConfig } from '@/config/site';
+import { baseOpenGraph } from '@/lib/baseOpenGraph';
 import { twitterCard } from '@/lib/twitterCard';
 import { issueContactToken, sendContactMessage } from './actions';
 
@@ -16,6 +17,7 @@ export const metadata: Metadata = {
     title: TITLE,
     description: DESCRIPTION,
     openGraph: {
+        ...baseOpenGraph,
         title: SHARE_TITLE,
         description: DESCRIPTION,
         url: absoluteUrl('/contact'),
