@@ -1,5 +1,6 @@
 import { type FC } from 'react';
-import { caseStudies } from '@/config/caseStudies';
+import Link from 'next/link';
+import { caseStudies, caseStudyPath } from '@/config/caseStudies';
 import type { ServicesPageCopy } from '@/config/services/types';
 import styles from './ServicesPage.module.css';
 
@@ -7,7 +8,10 @@ interface Props {
     copy: ServicesPageCopy;
 }
 
-/** A few case studies, told as outcomes. The project names come from `config/caseStudies.ts`. */
+/**
+ * A few case studies, told as outcomes, each linking on to its own page. The
+ * project names come from `config/caseStudies.ts`.
+ */
 export const Outcomes: FC<Props> = ({ copy }) => (
     <section className={styles.band} aria-labelledby="outcomes-title">
         <div className={styles.bandHead}>
@@ -15,15 +19,24 @@ export const Outcomes: FC<Props> = ({ copy }) => (
             <p>{copy.outcomes.lede}</p>
         </div>
         <ul className={styles.outcomes}>
-            {copy.outcomes.items.map(item => (
-                <li key={item.caseId} className={styles.outcome}>
-                    <h3>{caseTitle(item.caseId)}</h3>
-                    <p className={styles.outcomeClient}>{item.client}</p>
-                    <p>{item.outcome}</p>
-                </li>
-            ))}
+            {copy.outcomes.items.map((item) => {
+                const study = caseStudies.find(candidate => candidate.id === item.caseId);
+                const title = study?.title ?? item.caseId;
+
+                return (
+                    <li key={item.caseId} className={styles.outcome}>
+                        <h3>{title}</h3>
+                        <p className={styles.outcomeClient}>{item.client}</p>
+                        <p>{item.outcome}</p>
+                        {study && (
+                            <Link className={`${styles.outcomeLink} ulink`} href={caseStudyPath(study)}>
+                                {copy.outcomes.linkLabel}
+                                <span className="visually-hidden">{`: ${title}`}</span>
+                            </Link>
+                        )}
+                    </li>
+                );
+            })}
         </ul>
     </section>
 );
-
-const caseTitle = (id: string) => caseStudies.find(study => study.id === id)?.title ?? id;

@@ -164,6 +164,7 @@ export const servicesDe: ServicesPageCopy = {
     outcomes: {
         title: 'Was dabei herauskam',
         lede: 'Drei Projekte, drei verschiedene Probleme.',
+        linkLabel: 'Zur Fallstudie (Englisch)',
         items: [
             { caseId: 'eko', client: 'Mitarbeiterkommunikation, über 28 Mio. USD finanziert', outcome: 'Die Nachrichten-Performance hat sich verdoppelt, und die spürbare Verzögerung für die Nutzer war weg.' },
             { caseId: 'socialbee', client: 'Plattform für Zugewanderte, Deutschland', outcome: 'Ein komplettes technisches Fundament, von der Plattform bis zur AWS-Infrastruktur, und ein eigenes Team, das ich eingestellt und begleitet habe.' },

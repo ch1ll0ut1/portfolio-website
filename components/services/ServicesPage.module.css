@@ -246,6 +246,12 @@
     font-size: var(--fs-micro);
 }
 
+.outcomeLink {
+    justify-self: start;
+    font-weight: 600;
+    color: var(--fg);
+}
+
 @media (max-width: 900px) {
     .zones {
         grid-template-columns: minmax(0, 1fr);
