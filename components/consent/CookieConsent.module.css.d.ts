@@ -4,8 +4,8 @@ declare const styles: {
     readonly body: string;
     readonly link: string;
     readonly panel: string;
+    readonly pending: string;
     readonly root: string;
-    readonly shown: string;
     readonly title: string;
 };
 export default styles;

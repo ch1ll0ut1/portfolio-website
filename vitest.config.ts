@@ -22,6 +22,7 @@ const DOM_TS_TESTS = [
     'components/home/work/visuals/runner.test.ts',
     'components/nav/retypeMark.test.ts',
     'lib/analytics.test.ts',
+    'lib/bootScript.test.ts',
     'lib/consentStorage.test.ts',
     'lib/motion/inView.test.ts',
     'lib/motion/scramble.test.ts',

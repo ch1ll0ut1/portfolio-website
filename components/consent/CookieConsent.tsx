@@ -6,11 +6,18 @@
  * primitives, so it reads as site chrome in both themes. The dialog is
  * rendered here too, but opens independently of the banner, so it can be
  * reopened from the footer or the command palette after the first choice.
+ *
+ * The banner is part of the server HTML, so a first visit paints it with the
+ * page rather than after hydration. The server cannot know the stored choice,
+ * so until the client has read it the banner renders `pending`: shown only
+ * once the boot script has run (`js` on <html>) and found no stored choice
+ * (no `has-consent`), and with no focus or inset bookkeeping of its own, as
+ * for a returning visitor it is about to go away unseen.
  */
 
 'use client';
 
-import { type FC, useEffect, useRef, useState } from 'react';
+import { type FC, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useConsent } from './ConsentContext';
@@ -23,45 +30,34 @@ const loadPreferences = () => import('./ConsentPreferencesModal').then(module =>
 const ConsentPreferencesModal = dynamic(loadPreferences, { ssr: false });
 
 export const CookieConsent: FC = () => {
-    const { showBanner, preferencesOpen, acceptAll, rejectAll, openPreferences, closePreferences } = useConsent();
-    const [shown, setShown] = useState(false);
+    const { consent, showBanner, preferencesOpen, acceptAll, rejectAll, openPreferences, closePreferences } = useConsent();
+    /** The stored choice is not read yet: the server render, and hydration. */
+    const pending = consent === null;
     const bannerRef = useRef<HTMLElement>(null);
     const focus = useBannerFocusReturn(bannerRef, showBanner);
 
     // Docked over the bottom of the page, so focus scrolling has to stop short of it.
     useFixedBottomInset(bannerRef, showBanner);
 
-    // The entrance transition cannot run from a state the browser never
-    // painted, so the panel gains its visible class on the frame after mount.
     useEffect(() => {
-        if (!showBanner) {
-            return;
-        }
-
-        const frame = requestAnimationFrame(() => {
-            setShown(true);
-        });
-
         // A banner on screen offers "Customize", so have the dialog ready.
-        void loadPreferences();
-
-        return () => {
-            cancelAnimationFrame(frame);
-        };
+        if (showBanner) {
+            void loadPreferences();
+        }
     }, [showBanner]);
 
     const preferences = preferencesOpen
         ? <ConsentPreferencesModal onClose={closePreferences} onSave={closePreferences} />
         : null;
 
-    if (!showBanner) {
+    if (!showBanner && !pending) {
         return preferences;
     }
 
     return (
         <>
             <section
-                className={shown ? `${styles.root} ${styles.shown}` : styles.root}
+                className={pending ? `${styles.root} ${styles.pending}` : styles.root}
                 aria-labelledby="consent-banner-title"
                 ref={bannerRef}
                 onFocus={focus.onFocus}

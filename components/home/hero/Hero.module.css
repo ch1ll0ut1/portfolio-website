@@ -147,7 +147,11 @@
     letter-spacing: -.045em;
     font-weight: 640;
     font-variation-settings: 'wdth' 78, 'opsz' 96;
-    max-width: 11ch;
+    /* 11ch of the display face, written in em: a `ch` width goes stale for a
+       few hundred ms after the web font swaps in on a busy main thread, and
+       the headline, painted from the first frame, would fold onto one line and
+       back, shifting everything under it. */
+    max-width: 4.571em;
     outline: none;
     caret-color: var(--caret);
     cursor: text;
@@ -210,33 +214,86 @@
     color: inherit;
 }
 
-/* Intro word masks. The global `.sw` / `.swi` primitives do the clipping; the
-   headline only needs room for its descenders. They exist during the intro and
-   are unwrapped afterwards, so the editor never sees them. */
+/* Intro word units. `splitIntoWordMasks` wraps each word in the global
+   `.sw` / `.swi` pair so the words can rise one by one, but here they rise
+   from where the headline is already painted rather than out of a clip: a
+   clipped word is not painted at all, and the headline is the page's largest
+   content. They exist during the intro and are unwrapped afterwards, so the
+   editor never sees them. */
 .title :global(.sw) {
-    padding: .02em .06em .12em;
-    margin: -.02em -.06em -.12em;
+    overflow: visible;
 }
 
 /* Intro start state, painted from the first frame. The boot script arms the
    page (`is-pre` on <html>) before first paint whenever motion is allowed, and
    the stage releases it in the same task the intro's animations start in, so
-   the finished hero is never shown and then blanked. The hold is an animation
-   rather than a plain `opacity: 0` so it times out on its own: a bundle that
-   never runs leaves the section readable after 2.5 s, not blank for good.
-   Reduced motion and no-JS never get `is-pre`, so they paint the final state. */
-:global(.is-pre) .title,
+   the finished hero is never shown and then blanked.
+
+   The headline, the lede and the document panel are the page's largest
+   content, so they are held visible, only lowered by `--intro-y`: the intro
+   reads that offset back and rises them from it, so its first frame is the
+   one already on screen. The chips and the calls to action, which are small,
+   are held hidden and fade in.
+
+   Both holds are animations rather than plain declarations so they time out on
+   their own: a bundle that never runs leaves the section readable after 2.5 s,
+   the lowered content settling into place by itself. Reduced motion and no-JS
+   never get `is-pre`, so they paint the final state. */
 :global(.is-pre) .status > *,
-:global(.is-pre) .lede,
-:global(.is-pre) .ctas > *,
-:global(.is-pre) .tree {
+:global(.is-pre) .ctas > * {
     animation: intro-hold 2.5s;
+}
+
+:global(.is-pre) .title,
+:global(.is-pre) .lede,
+:global(.is-pre) .tree {
+    animation: intro-lower 3.1s;
+}
+
+:global(.is-pre) .title {
+    --intro-y: .3em;
+}
+
+/* The intro collapses the highlight and drags it back across the phrase, so
+   the painted headline holds it unselected rather than showing it only to
+   take it away. Timed out with the rest, it wipes in on its own. */
+:global(.is-pre) .title mark::before {
+    animation: intro-unmarked 3.1s;
+}
+
+:global(.is-pre) .lede {
+    --intro-y: 24px;
+}
+
+:global(.is-pre) .tree {
+    --intro-y: 30px;
 }
 
 @keyframes intro-hold {
     from,
     to {
         opacity: 0;
+    }
+}
+
+/* Held for 2.5 s of the 3.1, then a 600 ms ease into place. */
+@keyframes intro-lower {
+    0%,
+    80.6% {
+        transform: translate3d(0, var(--intro-y), 0);
+        animation-timing-function: var(--ease-out);
+    }
+
+    to {
+        transform: none;
+    }
+}
+
+@keyframes intro-unmarked {
+    0%,
+    80.6% {
+        transform: scaleX(0);
+        animation-timing-function: var(--ease-out);
     }
 }
 
