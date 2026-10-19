@@ -1,8 +1,8 @@
 /**
  * The hero's scripted intro.
  *
- * The headline's words rise out of their masks while the rest of the section
- * cascades in, then an I-beam drags a selection across the highlighted phrase
+ * The headline's words rise into place one by one while the rest of the
+ * section cascades in, then an I-beam drags a selection across the highlighted phrase
  * and releases it — the page introducing itself by using its own editor.
  *
  * Three things end the timeline: it finishing, the visitor touching the
@@ -11,10 +11,14 @@
  * the inline styles removed before the editor takes over.
  *
  * The start state is not set here. The boot script arms the page (`is-pre` on
- * `<html>`) before first paint, and the section's CSS holds the headline and
- * the cascade hidden off that class, so the finished hero is never painted
- * only to be blanked when the timeline starts. The stage releases the class
- * straight after the timeline has started, in the same task, and the
+ * `<html>`) before first paint, and the section's CSS holds the hero off that
+ * class: the headline, lede and document panel visible but lowered, so the
+ * page's largest content paints at once, and the chips and calls to action
+ * hidden. The headline, lede and panel rise from wherever that hold has them
+ * (read back from the computed transform), so the timeline's first frame is
+ * the one already painted; anything whose hold has already timed out is left
+ * where it is rather than snapped back to the start. The stage releases the
+ * class straight after the timeline has started, in the same task, and the
  * animations hold their own first frame (`fill: 'backwards'`) from there. An
  * intro cut short before it starts releases the class itself, and the CSS
  * hold times out on its own if the bundle never runs.
@@ -87,8 +91,10 @@ export const createHeroIntro = ({ root, title, doc, caret, ibeam, classNames, ho
         }
     };
 
-    const rise = (element: Element | null, delay: number, distance = 24, duration = 900) => {
-        if (!element) {
+    /** Fades and lifts an element the CSS holds hidden. */
+    const rise = (element: Element | null, delay: number, distance: number, duration = 900) => {
+        // A hold that timed out before the timeline started has already shown it.
+        if (!element || getComputedStyle(element).opacity === '1') {
             return;
         }
 
@@ -96,6 +102,20 @@ export const createHeroIntro = ({ root, title, doc, caret, ibeam, classNames, ho
             { opacity: 0, transform: `translate3d(0, ${distance}px, 0)` },
             { opacity: 1, transform: 'none' },
         ], { duration, delay, easing: EASE.out, fill: 'backwards' }));
+    };
+
+    /** Moves elements from a held transform into place. */
+    const lift = (elements: Element[], from: string | null, delay: (index: number) => number, duration: number) => {
+        if (from === null) {
+            return;
+        }
+
+        elements.forEach((element, index) => {
+            animations.push(element.animate(
+                [{ transform: from }, { transform: 'none' }],
+                { duration, delay: delay(index), easing: EASE.out, fill: 'backwards' },
+            ));
+        });
     };
 
     /** The end state, reached by every path out of the intro. */
@@ -133,15 +153,21 @@ export const createHeroIntro = ({ root, title, doc, caret, ibeam, classNames, ho
         ghost.schedule();
     };
 
+    const liftHeld = (element: Element | null, delay: number, duration: number) => {
+        if (element) {
+            lift([element], heldTransform(element), () => delay, duration);
+        }
+    };
+
     const cascade = () => {
         root.querySelectorAll(`.${classNames.status} > *`).forEach((element, index) => {
             rise(element, index * 60, 14, 800);
         });
-        rise(root.querySelector(`.${classNames.lede}`), 380);
+        liftHeld(root.querySelector(`.${classNames.lede}`), 380, 900);
         root.querySelectorAll(`.${classNames.ctas} > *`).forEach((element, index) => {
             rise(element, 460 + index * 60, 18);
         });
-        rise(root.querySelector(`.${classNames.tree}`), 560, 30, 1000);
+        liftHeld(root.querySelector(`.${classNames.tree}`), 560, 1000);
     };
 
     const run = () => {
@@ -151,26 +177,24 @@ export const createHeroIntro = ({ root, title, doc, caret, ibeam, classNames, ho
 
         started = true;
 
-        // Split and animate in one block: the browser never paints the split
-        // headline, so the masks cost nothing visually, and the model only
-        // collapses to a single leaf once the timeline that re-splits it is
-        // actually running.
+        // Read before the split, while the CSS still holds the headline: each
+        // word rises from the offset the whole headline was painted at.
+        const from = heldTransform(title);
+
+        // Split and animate in one block, so the split headline is only ever
+        // painted in motion, and the model only collapses to a single leaf
+        // once the timeline that re-splits it is actually running.
         units = splitIntoWordMasks(title);
         hooks.onArmed();
 
         const lines = wordLineIndices(units);
 
-        units.forEach((unit, index) => {
-            animations.push(unit.animate(
-                [{ transform: 'translateY(112%)' }, { transform: 'none' }],
-                {
-                    duration: WORD_RISE_MS,
-                    delay: WORD_DELAY_MS + index * WORD_STAGGER_MS + (lines[index] ?? 0) * LINE_STAGGER_MS,
-                    easing: EASE.out,
-                    fill: 'backwards',
-                },
-            ));
-        });
+        lift(
+            units,
+            from,
+            index => WORD_DELAY_MS + index * WORD_STAGGER_MS + (lines[index] ?? 0) * LINE_STAGGER_MS,
+            WORD_RISE_MS,
+        );
 
         const mark = title.querySelector('mark');
 
@@ -263,4 +287,14 @@ export const createHeroIntro = ({ root, title, doc, caret, ibeam, classNames, ho
             title.classList.remove(classNames.isDragging);
         },
     };
+};
+
+/**
+ * The transform the CSS start state holds an element at, or `null` once that
+ * hold has timed out and the element is already in place.
+ */
+const heldTransform = (element: Element) => {
+    const { transform } = getComputedStyle(element);
+
+    return transform === '' || transform === 'none' ? null : transform;
 };

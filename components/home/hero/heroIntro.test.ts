@@ -7,7 +7,7 @@
  * module singleton, so each test imports a fresh copy alongside the intro.
  */
 
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { type Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { installMatchMedia } from '../../../test/motionEnv';
 import type { HeroIntroHooks } from './heroIntro';
 
@@ -79,20 +79,23 @@ const fireIntro = async () => {
 
 describe('createHeroIntro', () => {
     let restoreMedia: () => void;
+    let animate: Mock<(keyframes: Keyframe[]) => { cancel: () => void; finish: () => void }>;
 
     beforeEach(() => {
+        animate = vi.fn(() => ({ cancel: vi.fn(), finish: vi.fn() }));
         vi.useFakeTimers();
         restoreMedia = installMatchMedia([]);
         Object.defineProperty(window, 'scrollY', { value: 0, configurable: true, writable: true });
         // jsdom has no Web Animations API.
         Object.defineProperty(Element.prototype, 'animate', {
-            value: vi.fn(() => ({ cancel: vi.fn(), finish: vi.fn() })),
+            value: animate,
             configurable: true,
             writable: true,
         });
     });
 
     afterEach(() => {
+        vi.restoreAllMocks();
         Reflect.deleteProperty(Element.prototype, 'animate');
         html.classList.remove('is-pre', 'is-ready');
         document.body.innerHTML = '';
@@ -154,6 +157,50 @@ describe('createHeroIntro', () => {
         expect(intro.willAnimate).toBe(false);
         expect(html).not.toHaveClass('is-pre');
         expect(hooks.onSettled).toHaveBeenCalledTimes(1);
+        intro.destroy();
+    });
+
+    it('should rise the headline words, lede and panel from the offset the CSS holds them at', async () => {
+        const held = 'matrix(1, 0, 0, 1, 0, 24)';
+
+        vi.spyOn(window, 'getComputedStyle').mockReturnValue({ transform: held, opacity: '0' } as CSSStyleDeclaration);
+        html.classList.add('is-pre');
+        const { intro, root, title } = await startIntro();
+
+        await fireIntro();
+
+        const startOf = (element: Element | null) => {
+            const index = animate.mock.contexts.indexOf(element);
+
+            return animate.mock.calls[index]?.[0];
+        };
+        const words = Array.from(title.querySelectorAll('.swi'));
+
+        expect(words.length).toBeGreaterThan(0);
+
+        // Transform only, from the painted offset: the first frame is the held paint.
+        for (const element of [...words, root.querySelector('.lede'), root.querySelector('.tree')]) {
+            expect(startOf(element)).toEqual([{ transform: held }, { transform: 'none' }]);
+        }
+
+        // The chips are held hidden, so they still fade in.
+        expect(startOf(root.querySelector('.status > *'))).toEqual([
+            { opacity: 0, transform: 'translate3d(0, 14px, 0)' },
+            { opacity: 1, transform: 'none' },
+        ]);
+        intro.destroy();
+    });
+
+    it('should leave the hero in place when its hold timed out before the intro', async () => {
+        vi.spyOn(window, 'getComputedStyle').mockReturnValue({ transform: 'none', opacity: '1' } as CSSStyleDeclaration);
+        html.classList.add('is-pre');
+        const { intro, hooks } = await startIntro();
+
+        await fireIntro();
+
+        // Nothing is moved back to a start state the visitor has already seen past.
+        expect(hooks.onArmed).toHaveBeenCalledTimes(1);
+        expect(animate).not.toHaveBeenCalled();
         intro.destroy();
     });
 
