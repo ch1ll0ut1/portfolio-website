@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { blogPosts } from '@/config/blog';
 import { siteConfig } from '@/config/site';
+import { listBlogPosts } from '@/lib/content/blogPosts';
 import { createOgImage, ogContentType, ogImageSize } from '@/lib/og/createOgImage';
 import { OgHeadline } from '@/lib/og/OgHeadline';
 import { OgLayout } from '@/lib/og/OgLayout';
@@ -25,7 +26,7 @@ export async function generateStaticParams() {
 
 export default async function Image({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
-    const post = blogPosts.find(p => p.slug === slug);
+    const post = listBlogPosts().find(p => p.slug === slug);
 
     // Unreachable with `dynamicParams` off; narrows `post` for the render.
     if (!post) {

@@ -1,11 +1,11 @@
 import { FC } from 'react';
 import Link from 'next/link';
-import { type BlogPost } from '@/config/blog';
+import { type ListedPost } from '@/config/blog';
 import { formatDate } from '@/lib/date';
 import styles from './BlogIndex.module.css';
 
 interface Props {
-    post: BlogPost;
+    post: ListedPost;
 }
 
 /** Beyond this the pills wrap into a block and stop reading as metadata. */

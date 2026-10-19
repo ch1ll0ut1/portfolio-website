@@ -7,7 +7,7 @@
 import { describe, it, expect, afterAll, beforeAll } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { Article } from './Article';
-import { type BlogPost } from '@/config/blog';
+import { type BlogPost, type ListedPost } from '@/config/blog';
 import { formatDate } from '@/lib/date';
 import { installMatchMedia } from '@/test/motionEnv';
 
@@ -25,7 +25,7 @@ const content = [
     '| Cell | Value |',
 ].join('\n');
 
-const post: BlogPost & { content: string } = {
+const post: ListedPost & { content: string } = {
     id: '1',
     title: 'Why Good Software Engineering Is Expensive',
     excerpt: 'AI can generate code, but it cannot replace engineering judgment.',

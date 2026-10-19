@@ -7,11 +7,11 @@
 import { describe, it, expect, afterAll, beforeAll } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { BlogIndex } from './BlogIndex';
-import { blogPosts, type BlogPost } from '@/config/blog';
+import { blogPosts, type ListedPost } from '@/config/blog';
 import { formatDate } from '@/lib/date';
 import { installMatchMedia } from '@/test/motionEnv';
 
-const mockPosts: BlogPost[] = [
+const mockPosts: ListedPost[] = [
     {
         id: '1',
         title: 'First Post',
@@ -61,7 +61,7 @@ describe('BlogIndex Component', () => {
 
     it('should render every published post the config provides', () => {
         // Arrange
-        render(<BlogIndex posts={blogPosts} />);
+        render(<BlogIndex posts={blogPosts.map(post => ({ ...post, readTime: '1 min read' }))} />);
 
         // Assert
         blogPosts.forEach((post) => {

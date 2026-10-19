@@ -1,13 +1,13 @@
 import { FC } from 'react';
 import Link from 'next/link';
-import { type BlogPost, lastModified } from '@/config/blog';
+import { type ListedPost, lastModified } from '@/config/blog';
 import { formatDate } from '@/lib/date';
 import { MaskHeading } from './MaskHeading';
 import { Reveal } from '@/components/motion/Reveal';
 import styles from './Article.module.css';
 
 interface Props {
-    post: BlogPost;
+    post: ListedPost;
 }
 
 export const ArticleHeader: FC<Props> = ({ post }) => {

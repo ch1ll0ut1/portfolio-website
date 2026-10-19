@@ -1,6 +1,7 @@
 /**
  * Reads blog posts from `content/blog/`: the markdown behind each entry in
- * `config/blog.ts`, and the neighbours the article links to.
+ * `config/blog.ts`, the read time counted from it, and the neighbours the
+ * article links to.
  */
 
 // Next's own copy of the `server-only` marker: the build fails if a client
@@ -9,7 +10,8 @@ import 'next/dist/compiled/server-only';
 import fs from 'fs';
 import path from 'path';
 import { cache } from 'react';
-import { blogPosts } from '@/config/blog';
+import { blogPosts, type ListedPost } from '@/config/blog';
+import { readingTime } from './readingTime';
 
 /**
  * Reads a post's markdown from the content directory, trimmed.
@@ -33,6 +35,15 @@ export function readPostMarkdown(slug: string): string | null {
 }
 
 /**
+ * Every post in the index, newest first, each with the read time of its
+ * markdown. Cached per render, so a page listing posts reads each file once.
+ */
+export const listBlogPosts = cache((): ListedPost[] => blogPosts.map(post => ({
+    ...post,
+    readTime: readingTime(readPostMarkdown(post.slug) ?? ''),
+})));
+
+/**
  * Gets blog post data and content from configuration and markdown files.
  * Returns the post metadata, its markdown, and its neighbours in the index,
  * or `null` for a slug with no published entry or no file.
@@ -40,8 +51,9 @@ export function readPostMarkdown(slug: string): string | null {
  * Cached per render, so `generateMetadata` and the page share one file read.
  */
 export const getBlogPostData = cache((slug: string) => {
-    const index = blogPosts.findIndex(p => p.slug === slug);
-    const postMetadata = blogPosts[index];
+    const posts = listBlogPosts();
+    const index = posts.findIndex(p => p.slug === slug);
+    const postMetadata = posts[index];
     if (postMetadata === undefined) {
         return null;
     }
@@ -51,7 +63,7 @@ export const getBlogPostData = cache((slug: string) => {
     // The index is newest first, so the entry before this one is the newer post.
     return {
         post: { ...postMetadata, content: markdownContent },
-        newer: blogPosts[index - 1],
-        older: blogPosts[index + 1],
+        newer: posts[index - 1],
+        older: posts[index + 1],
     };
 });

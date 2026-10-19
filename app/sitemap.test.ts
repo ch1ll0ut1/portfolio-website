@@ -114,7 +114,6 @@ describe('sitemap with drafts', () => {
         title: slug,
         excerpt: '',
         date,
-        readTime: '1 min read',
         tags: [],
         slug,
         published,

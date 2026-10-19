@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { type BlogPost } from '@/config/blog';
+import { type BlogPost, type ListedPost } from '@/config/blog';
 import { Markdown } from '@/components/markdown/Markdown';
 import { ArticleHeader } from './ArticleHeader';
 import { ArticlePager } from './ArticlePager';
@@ -7,7 +7,7 @@ import { ReadingProgress } from './ReadingProgress';
 import styles from './Article.module.css';
 
 interface Props {
-    post: BlogPost & { content: string };
+    post: ListedPost & { content: string };
     /** The next post up the index, i.e. published more recently. */
     newer?: BlogPost;
     /** The next post down the index. */

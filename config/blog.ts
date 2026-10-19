@@ -12,12 +12,19 @@ export interface BlogPost {
     date: string;
     /** The last meaningful content change, when there was one after `date`. */
     updated?: string;
-    readTime: string;
     tags: string[];
     slug: string;
     published: boolean;
     /** Highlighted in the homepage's writing section. */
     featured?: boolean;
+}
+
+/**
+ * A post as the reading pages list it: its read time is counted from the
+ * markdown at build time (`lib/content/blogPosts.ts`), never written by hand.
+ */
+export interface ListedPost extends BlogPost {
+    readTime: string;
 }
 
 /**
@@ -29,7 +36,6 @@ const rawBlogPosts: BlogPost[] = [
         title: 'How to Use AI to Build Apps at 10× Speed',
         excerpt: 'A practical, real-world guide to combining ChatGPT, v0, Claude Code, and Cursor IDE to massively speed up app development.',
         date: '2025-08-14',
-        readTime: '10 min read',
         tags: ['AI', 'Productivity', 'Development', 'Cursor', 'Claude Code', 'v0', 'ChatGPT'],
         slug: 'how-to-use-ai-to-build-apps-10x-speed',
         published: true,
@@ -40,7 +46,6 @@ const rawBlogPosts: BlogPost[] = [
         excerpt: 'A seasoned TypeScript developer compares Node.js and Python, exploring why explicit, modular code often beats hidden framework magic for long-term maintainability.',
         date: '2025-08-15',
         updated: '2026-10-13',
-        readTime: '5 min read',
         tags: ['Node.js', 'Python', 'TypeScript', 'FastAPI', 'Django', 'Clean Code', 'Framework Magic', 'Backend Development'],
         slug: 'nodejs-vs-python-framework-magic',
         published: true,
@@ -50,7 +55,6 @@ const rawBlogPosts: BlogPost[] = [
         title: 'How to Hire Your First Developer (Without Making the Classic Mistakes)',
         excerpt: 'A practical guide for non-technical founders and managers on hiring their first developer the right way — with clear steps, realistic tests, and expert advice.',
         date: '2025-08-16',
-        readTime: '8 min read',
         tags: ['Hiring', 'Developers', 'Startup', 'Fractional CTO', 'Consulting', 'Technical Leadership'],
         slug: 'how-to-hire-your-first-developer',
         published: true,
@@ -62,7 +66,6 @@ const rawBlogPosts: BlogPost[] = [
         excerpt: 'Hiring a Product Owner too early is one of the common mistakes startups and new tech departments make. Here\'s why they don\'t add value in the early stage, and when they actually do.',
         date: '2025-08-16',
         updated: '2026-10-13',
-        readTime: '9 min read',
         tags: ['Product Management', 'Tech Leadership', 'Startups', 'Hiring'],
         slug: 'why-startups-dont-need-product-owners',
         published: true,
@@ -72,7 +75,6 @@ const rawBlogPosts: BlogPost[] = [
         title: 'How to Build a Startup Dev Team for Real-World Success',
         excerpt: 'Smartest isn\'t always best. Learn how to hire developers for a startup by balancing archetypes, technical skills, and soft skills for real-world success.',
         date: '2025-08-19',
-        readTime: '11 min read',
         tags: ['Startups', 'Team Building', 'Hiring Developers', 'Leadership', 'Software Teams'],
         slug: 'how-to-build-a-startup-dev-team-for-real-world-success',
         published: true,
@@ -83,7 +85,6 @@ const rawBlogPosts: BlogPost[] = [
         excerpt: 'Why 13-hour days don’t make startups faster — they cause burnout, tech debt, and wasted talent. Here’s what overwork really signals, who it attracts, and why even 100 developers can’t save a bad culture.',
         date: '2025-08-20',
         updated: '2026-10-13',
-        readTime: '12 min read',
         tags: ['Startups', 'Tech Leadership', 'Burnout', 'Engineering Culture', 'Hiring'],
         slug: 'startup-burnout-trap',
         published: true,
@@ -94,7 +95,6 @@ const rawBlogPosts: BlogPost[] = [
         excerpt: 'AI is no longer just autocomplete — it’s a workflow accelerator. These 10 AI workflows will make developers in 2025 work at 3–10× speed.',
         date: '2025-08-26',
         updated: '2026-10-13',
-        readTime: '12 min read',
         tags: ['AI', 'Developer Productivity', 'Workflows', 'Cursor', 'Claude Code', 'ChatGPT', 'Automation'],
         slug: '10-ai-workflows-every-developer-should-know-2025',
         published: true,
@@ -104,7 +104,6 @@ const rawBlogPosts: BlogPost[] = [
         title: 'Why Good Software Engineering Is Expensive',
         excerpt: 'AI can generate code, but it cannot replace engineering judgment. Good software is expensive because bad software becomes even more expensive later — through bugs, rewrites, frustrated users, and technical debt.',
         date: '2026-05-15',
-        readTime: '14 min read',
         tags: ['Software Engineering', 'AI', 'Technical Leadership', 'UX', 'Startups', 'Product Development', 'Vibe Coding', 'Technical Debt', 'Engineering Culture'],
         slug: 'why-good-software-engineering-is-expensive',
         published: true,

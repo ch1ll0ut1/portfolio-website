@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { type BlogPost, blogIndexHeading } from '@/config/blog';
+import { type ListedPost, blogIndexHeading } from '@/config/blog';
 import { yearsShipping } from '@/config/site';
 import { PostRow } from './PostRow';
 import { MaskHeading } from './MaskHeading';
@@ -7,7 +7,7 @@ import { Reveal } from '@/components/motion/Reveal';
 import styles from './BlogIndex.module.css';
 
 interface Props {
-    posts: BlogPost[];
+    posts: ListedPost[];
 }
 
 /**

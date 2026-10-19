@@ -22,7 +22,6 @@ const post: BlogPost = {
     title: 'A post',
     excerpt: 'What it says.',
     date: '2026-01-02',
-    readTime: '3 min read',
     tags: ['One', 'Two'],
     slug: 'a-post',
     published: true,
