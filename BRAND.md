@@ -88,6 +88,7 @@ The scale is fluid (`--fs-hero` down to `--fs-micro`). Layout is one editorial c
 - **Editor motifs:** a blinking caret, a selection highlight, an editable hero headline, the career as a `git log --graph`, the process as a terminal transcript, and a command palette (⌘K).
 - **Motion is hand-written**, with no animation libraries. It eases out (`--ease-out`) and uses short durations (`--dur-xs` to `--dur-l`).
 - **Content first.** Every section reads as plain markup without JavaScript. Animation only reveals content that is already there.
+- **The largest content is moved, never hidden.** The hero headline, lede and code panel are never set to opacity 0, `visibility: hidden` or clipped before or while they animate; the intro only offsets them. Chrome skips hidden or clipped elements as Largest Contentful Paint candidates, so hiding them would push LCP back to the end of the intro. `heroLcpGuard.test.ts` enforces this.
 - **Reduced motion is respected everywhere.** The `.motion` class gates every animated rule, so a reduced-motion visitor gets the static page.
 
 ## 7. Don'ts

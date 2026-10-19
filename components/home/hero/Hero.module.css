@@ -269,6 +269,15 @@
     --intro-y: 30px;
 }
 
+/* The server renders the panel with the finished model's three leaves, and
+   the intro collapses them to one before it drags the highlight back in. The
+   leaves are held invisible rather than shown only to be swapped: the panel
+   keeps its lines and its size, so nothing shifts and the panel stays a
+   candidate for the largest paint. Timed out with the rest. */
+:global(.is-pre) .leaf {
+    animation: intro-unleafed 2.5s;
+}
+
 @keyframes intro-hold {
     from,
     to {
@@ -286,6 +295,13 @@
 
     to {
         transform: none;
+    }
+}
+
+@keyframes intro-unleafed {
+    from,
+    to {
+        visibility: hidden;
     }
 }
 
