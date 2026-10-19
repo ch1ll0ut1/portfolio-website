@@ -1,7 +1,8 @@
 'use client';
 
 import { type FC, useRef } from 'react';
-import type { CaseStudy } from '@/config/caseStudies';
+import Link from 'next/link';
+import { type CaseStudy, caseStudyPath } from '@/config/caseStudies';
 import type { CssVars } from '@/lib/cssVars';
 import { useMaskReveal, useReveal } from '@/lib/motion';
 import { CaseVisual } from './visuals/CaseVisual';
@@ -16,7 +17,8 @@ interface Props {
 }
 
 /**
- * One case study, read as problem → what I did → result.
+ * One case study, read as problem → what I did → result, with a link to the
+ * case's own page for the longer story.
  *
  * `data-stack-card` and `data-stack-inner` are the contract with `caseStack`:
  * it finds the cards by the first and scales the second. `data-reveal` marks
@@ -58,16 +60,23 @@ export const CaseCard: FC<Props> = ({ study, index, covered }) => {
                     <ul className="tags">
                         {study.tags.map(tag => <li key={tag}>{tag}</li>)}
                     </ul>
-                    {study.link && (
-                        <a
-                            className={`${styles.link} ulink`}
-                            href={study.link.href}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            {study.link.label}
-                        </a>
-                    )}
+                    <div className={styles.links}>
+                        <Link className={`${styles.link} ulink`} href={caseStudyPath(study)}>
+                            Read the case study
+                            {' '}
+                            <span className="visually-hidden">{`about ${study.title}`}</span>
+                        </Link>
+                        {study.link && (
+                            <a
+                                className={`${styles.link} ${styles.linkSecondary} ulink`}
+                                href={study.link.href}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                {study.link.label}
+                            </a>
+                        )}
+                    </div>
                 </div>
                 <CaseVisual id={study.id} metric={study.metric} covered={covered} />
             </div>

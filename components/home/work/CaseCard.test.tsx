@@ -82,6 +82,20 @@ describe('CaseCard', () => {
         expect(screen.getByText(study.metric.label)).toBeInTheDocument();
     });
 
+    it('should link to the case study page with a name that says which case', () => {
+        // Arrange
+        const study = itemAt(caseStudies, 1);
+
+        // Act
+        render(<CaseCard study={study} index={1} covered={false} />);
+
+        // Assert
+        const link = screen.getByRole('link', { name: `Read the case study about ${study.title}` });
+
+        expect(link).toHaveAttribute('href', `/work/${study.slug}`);
+        expect(link).not.toHaveAttribute('target');
+    });
+
     it('should render an outbound link when the case has one', () => {
         // Arrange
         const study = itemAt(caseStudies, 0);
@@ -95,7 +109,7 @@ describe('CaseCard', () => {
         expect(screen.getByRole('link', { name: link?.label })).toHaveAttribute('href', link?.href);
     });
 
-    it('should not render a link for a case without one', () => {
+    it('should link only to its own page when the case has no outbound link', () => {
         // Arrange
         const study = itemAt(caseStudies, 3);
 
@@ -104,7 +118,19 @@ describe('CaseCard', () => {
 
         // Assert
         expect(study.link).toBeUndefined();
-        expect(screen.queryByRole('link')).toBeNull();
+        expect(screen.getAllByRole('link').map(link => link.getAttribute('href'))).toEqual([`/work/${study.slug}`]);
+    });
+
+    it('should not nest one link inside another', () => {
+        // Arrange
+        const study = itemAt(caseStudies, 0);
+
+        // Act
+        const { container } = render(<CaseCard study={study} index={0} covered={false} />);
+
+        // Assert
+        expect(container.querySelector('a a')).toBeNull();
+        expect(container.querySelector('article')?.closest('a')).toBeNull();
     });
 
     it('should hide the decorative illustration from assistive technology', () => {

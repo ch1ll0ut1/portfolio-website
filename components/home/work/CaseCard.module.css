@@ -95,12 +95,24 @@
     max-width: 56ch;
 }
 
-.link {
-    align-self: flex-start;
+/* The way on: the case's own page, then any outbound link. Pinned to the
+   bottom of the text column. */
+.links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 28px;
     margin-top: auto;
+}
+
+.link {
     font-weight: 600;
     text-decoration: none;
     color: var(--fg);
+}
+
+.linkSecondary {
+    font-weight: 500;
+    color: var(--fg-2);
 }
 
 @media (max-width: 900px) {

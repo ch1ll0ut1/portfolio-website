@@ -4,6 +4,8 @@ declare const styles: {
     readonly client: string;
     readonly inner: string;
     readonly link: string;
+    readonly linkSecondary: string;
+    readonly links: string;
     readonly meta: string;
     readonly story: string;
     readonly text: string;
