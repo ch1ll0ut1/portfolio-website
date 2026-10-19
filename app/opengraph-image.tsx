@@ -26,7 +26,7 @@ export default async function Image() {
                     color: ogPalette.fg2,
                 }}
             >
-                {engagements.map(engagement => engagement.name).join('  ·  ')}
+                {engagements.map(engagement => engagement.short).join('  ·  ')}
             </span>
         </OgLayout>,
     );

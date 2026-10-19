@@ -1,21 +1,38 @@
 /**
- * The three engagement models offered on the homepage's services section.
+ * The three ways to work together: the homepage's services cards, the share
+ * card, the homepage's `Offer` structured data and the English `/services`
+ * page all read them from here.
  *
- * Copy is the design's, verbatim. One engagement is marked `featured`, which is
- * what earns it the raised surface, the parked caret and the traced border.
+ * Each one is named by the buyer's problem; the trade term it is searched by
+ * rides along as `subtitle`. One engagement is marked `featured`, which is what
+ * earns it the raised surface, the parked caret and the traced border.
  */
 
+import {
+    FIRST_VERSION_RANGE_USD,
+    RESCUE_RANGE_USD,
+    TECH_LEAD_MIN_HOURS_PER_MONTH,
+    usdRangeEn,
+} from './pricing';
+
+/** Anchor ids on `/services` and `/de/leistungen`, shared by both. */
+export type EngagementId = 'rescue' | 'build' | 'tech-lead';
+
 export interface Engagement {
-    /** Stable key for list rendering and tests. */
-    id: string;
-    /** Engagement name, used as the card's heading. */
+    /** Stable key, and the section anchor on the services pages. */
+    id: EngagementId;
+    /** The buyer's problem, used as the card's heading. */
     name: string;
+    /** The trade term a search uses for it, shown small under the name. */
+    subtitle: string;
+    /** A two- or three-word name, for the share card and structured data. */
+    short: string;
     /** Who the engagement is for. */
     who: string;
-    /** What the engagement covers. */
+    /** What the engagement covers, in plain words. */
     bullets: string[];
-    /** Commercial shape — cadence, length or scope. */
-    format: string;
+    /** The typical size of the engagement: a range or a minimum. */
+    range: string;
     /** The recommended engagement. Exactly one is true. */
     featured: boolean;
 }
@@ -29,65 +46,77 @@ export interface EngagementNoteSegment {
 
 export const engagements: Engagement[] = [
     {
-        id: 'fractional-cto',
-        name: 'Fractional CTO',
-        who: 'For teams without a CTO, or between two of them.',
+        id: 'rescue',
+        name: 'Fix or take over your app',
+        subtitle: 'Code audit, security review & rescue',
+        short: 'App rescue',
+        who: 'For apps that are broken, stuck, or left behind by the last developer, including ones built with AI tools.',
         bullets: [
-            'Technology roadmap and architecture decisions',
-            'Hiring plan, interviews, and team setup',
-            'Delivery process that ships every week',
-            'Build-vs-buy, infrastructure cost, and compliance calls (GDPR, HIPAA)',
+            'A plain-English health and security check, in about a week',
+            'A fix plan ranked by cost, so you decide what is worth fixing',
+            'Code, accounts, and access moved into your name',
+            'Fixes shipped every week, starting with the riskiest',
         ],
-        format: '1–3 days a week, monthly retainer',
+        range: `Most rescues ${usdRangeEn(RESCUE_RANGE_USD)}`,
         featured: false,
     },
     {
-        id: 'founding-engineer',
-        name: 'Founding engineer',
-        who: 'For founders who need the product built properly from the first commit.',
+        id: 'build',
+        name: 'Build your app or MVP properly',
+        subtitle: 'Full-stack MVP development · founding engineer',
+        short: 'MVP builds',
+        who: 'For founders with an idea, or a prototype that now has to become a real product.',
         bullets: [
-            'Architecture, backend, frontend, and cloud, end to end',
-            'Next.js, React, Node.js, PostgreSQL, and AWS or Vercel',
-            'Tests, CI/CD, and monitoring from day one',
-            'Shipped to production in weekly increments',
+            'A product plan in about a week: what to build first, and what it costs',
+            'A working version you can click through every week',
+            'Built on accounts you own, from the first day',
+            'AI features where they actually help your users',
         ],
-        format: 'Contract, three months or longer',
+        range: `Most first versions ${usdRangeEn(FIRST_VERSION_RANGE_USD)}`,
         featured: true,
     },
     {
-        id: 'architecture-review',
-        name: 'Architecture review',
-        who: 'For codebases that have stopped moving, including AI-generated ones.',
+        id: 'tech-lead',
+        name: 'A senior tech lead on your side',
+        subtitle: 'Fractional CTO · part-time tech lead',
+        short: 'Fractional CTO',
+        who: 'For businesses with developers but no senior technical lead, or nobody technical in-house at all.',
         bullets: [
-            'Read-through of code, data model, and infrastructure',
-            'Written report of risks, ranked by cost',
-            'Fix plan your team can run without me',
-            'Optional hands-on rescue of the critical path',
+            'Reviews of your developers’ code and plans',
+            'Help hiring developers you can trust',
+            'A roadmap and budget in plain English',
+            'A weekly call, and someone on your side in vendor meetings',
         ],
-        format: 'Fixed scope, about two weeks',
+        range: `From about ${TECH_LEAD_MIN_HOURS_PER_MONTH} hours a month, cancel any time`,
         featured: false,
     },
 ];
 
 export const engagementsHeading = {
-    title: 'Three ways to work together',
-    lede: 'Pick the shape that fits where your product is. I either do the work myself or build and lead the team that does it, setting high technical standards and mentoring with patience.',
+    title: 'How I can help',
+    lede: 'Pick the one that matches where you are. Every engagement starts with a free call and a written plan.',
 };
 
 export const engagementNote: EngagementNoteSegment[] = [
     {
-        text: 'Every engagement runs on an AI-augmented workflow I use daily: Claude Code with custom skills, agent pipelines, and project knowledge bases. You get',
+        text: 'I use modern AI tools inside a reviewed process:',
         selected: false,
     },
     {
-        text: 'senior judgment on every decision',
+        text: 'senior quality, faster.',
         selected: true,
     },
     {
-        text: 'and more of it per week.',
+        text: 'Every line is checked by me.',
         selected: false,
     },
 ];
 
-/** The label that precedes every card's format line. */
-export const formatLabel = 'Format';
+/** The label that precedes every card's range line. */
+export const rangeLabel = 'Typical';
+
+/** The card's link to its section on `/services`. */
+export const engagementLink = {
+    label: 'How it works and what it costs',
+    href: (id: EngagementId) => `/services#${id}`,
+};

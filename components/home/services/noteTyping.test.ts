@@ -24,7 +24,7 @@ describe('splitNoteWords', () => {
         const selected = words.filter(word => word.selected);
 
         // Assert
-        expect(selected.map(word => word.text).join(' ')).toBe('senior judgment on every decision');
+        expect(selected.map(word => word.text).join(' ')).toBe('senior quality, faster.');
     });
 
     it('should number the selected words in reading order', () => {
@@ -33,7 +33,7 @@ describe('splitNoteWords', () => {
         const indices = words.filter(word => word.selected).map(word => word.selectIndex);
 
         // Assert
-        expect(indices).toEqual([0, 1, 2, 3, 4]);
+        expect(indices).toEqual([0, 1, 2]);
     });
 
     it('should leave unselected words without a selection index', () => {
