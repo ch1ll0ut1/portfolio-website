@@ -74,6 +74,21 @@ const GOOGLE_COLLECT_MIRROR = 'https://www.google.com';
 const VERCEL_DEBUG_SCRIPTS = 'https://va.vercel-scripts.com';
 
 /**
+ * The Vercel Toolbar, which Vercel injects into preview deployments only.
+ * Sources per directive from Vercel's documented CSP for it
+ * (vercel.com/docs/vercel-toolbar/managing-toolbar); its inline styles are
+ * already covered by `style-src 'unsafe-inline'`.
+ */
+const VERCEL_TOOLBAR = {
+    script: ['https://vercel.live'],
+    style: ['https://vercel.live'],
+    img: ['https://vercel.live', 'https://vercel.com', 'blob:'],
+    font: ['https://vercel.live', 'https://assets.vercel.com'],
+    connect: ['https://vercel.live', 'wss://ws-us3.pusher.com'],
+    frame: ['https://vercel.live'],
+};
+
+/**
  * The hosts a build is served on locally, as a `has`/`missing` condition for
  * `next.config.ts` headers. Next matches the value as `^value$` against the
  * Host header without its port, hence the group around the alternation.
@@ -92,9 +107,15 @@ interface Options {
      * Safari request every script, stylesheet and font over https and fail.
      */
     local?: boolean;
+    /**
+     * A Vercel preview deployment (`VERCEL_ENV === 'preview'` at build time).
+     * Adds the Vercel Toolbar's sources; production never gets them.
+     */
+    preview?: boolean;
 }
 
-export const buildContentSecurityPolicy = ({ dev, local = false }: Options) => {
+export const buildContentSecurityPolicy = ({ dev, local = false, preview = false }: Options) => {
+    const toolbar = (sources: string[]) => (preview ? sources : []);
     const directives: [string, ...string[]][] = [
         ['default-src', keyword('self')],
         [
@@ -103,19 +124,26 @@ export const buildContentSecurityPolicy = ({ dev, local = false }: Options) => {
             keyword('unsafe-inline'),
             GOOGLE_TAG,
             ...(dev ? [keyword('unsafe-eval'), VERCEL_DEBUG_SCRIPTS] : []),
+            ...toolbar(VERCEL_TOOLBAR.script),
         ],
         // React renders `style` attributes, and next/font and next/image
         // write inline styles of their own.
-        ['style-src', keyword('self'), keyword('unsafe-inline')],
+        ['style-src', keyword('self'), keyword('unsafe-inline'), ...toolbar(VERCEL_TOOLBAR.style)],
         // `data:` for the grain texture and next/image's blur placeholders.
-        ['img-src', keyword('self'), 'data:', ...GOOGLE_ANALYTICS],
-        ['font-src', keyword('self')],
-        ['connect-src', keyword('self'), ...GOOGLE_ANALYTICS, GOOGLE_COLLECT_MIRROR],
+        ['img-src', keyword('self'), 'data:', ...GOOGLE_ANALYTICS, ...toolbar(VERCEL_TOOLBAR.img)],
+        ['font-src', keyword('self'), ...toolbar(VERCEL_TOOLBAR.font)],
+        ['connect-src', keyword('self'), ...GOOGLE_ANALYTICS, GOOGLE_COLLECT_MIRROR, ...toolbar(VERCEL_TOOLBAR.connect)],
         ['object-src', keyword('none')],
         ['base-uri', keyword('self')],
         ['form-action', keyword('self')],
         ['frame-ancestors', keyword('none')],
     ];
+
+    // Without it, frames fall back to `default-src 'self'`. That `'self'` is
+    // repeated so a preview may frame what production may, plus the toolbar.
+    if (preview) {
+        directives.push(['frame-src', keyword('self'), ...VERCEL_TOOLBAR.frame]);
+    }
 
     // Left off in development and on a local production build, both plain
     // HTTP, where Safari would upgrade the server's own requests and fail
