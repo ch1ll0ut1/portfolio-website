@@ -42,22 +42,16 @@
     gap: 4px;
 }
 
+/* The steps the pinned stepper is not on are dimmed by colour, not opacity:
+   a faded step still has to read at 4.5:1, and `--muted` is the quietest
+   text colour that does on every band. Active steps take the full text
+   colours back, and done steps sit in between. */
 .step {
     display: grid;
     grid-template-columns: 2.6rem minmax(0, 1fr);
     gap: 14px;
     padding: 16px 0;
     border-top: 1px solid var(--line);
-    opacity: .38;
-    transition: opacity var(--dur-s) var(--ease-ui);
-}
-
-.step.isActive {
-    opacity: 1;
-}
-
-.step.isDone {
-    opacity: .6;
 }
 
 .step h3 {
@@ -66,10 +60,31 @@
     letter-spacing: -.02em;
 }
 
+.step h3,
 .step p {
-    color: var(--fg-2);
+    color: var(--muted);
+    transition: color var(--dur-s) var(--ease-ui);
+}
+
+.step .badge {
+    color: var(--muted);
+}
+
+.step p {
     font-size: .98rem;
     max-width: 48ch;
+}
+
+.step.isDone h3 {
+    color: var(--fg-2);
+}
+
+.step.isActive h3 {
+    color: var(--fg);
+}
+
+.step.isActive p {
+    color: var(--fg-2);
 }
 
 /* Number badge: outline (next) -> caret fill (active) -> check (done) */

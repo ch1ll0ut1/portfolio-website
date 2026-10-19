@@ -17,6 +17,7 @@ declare const styles: {
     readonly notes: string;
     readonly outcome: string;
     readonly outcomeClient: string;
+    readonly outcomeLink: string;
     readonly outcomes: string;
     readonly processSteps: string;
     readonly situation: string;

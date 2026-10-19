@@ -115,6 +115,8 @@ export interface ServicesPageCopy {
     outcomes: {
         title: string;
         lede: string;
+        /** Each outcome's link to its case study page; the project's name follows, visually hidden. */
+        linkLabel: string;
         items: OutcomeCopy[];
     };
     fit: {

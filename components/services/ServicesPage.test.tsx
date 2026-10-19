@@ -4,6 +4,7 @@
 
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
+import { caseStudies, caseStudyPath } from '@/config/caseStudies';
 import { links } from '@/config/links';
 import { servicesDe } from '@/config/services/de';
 import { servicesEn } from '@/config/services/en';
@@ -96,5 +97,16 @@ describe('ServicesPage', () => {
         render(<ServicesPage copy={servicesDe} />);
 
         expect(screen.getByRole('heading', { level: 3, name: 'Edithing' })).toBeInTheDocument();
+    });
+
+    it('should link each outcome to its case study page', () => {
+        render(<ServicesPage copy={servicesEn} />);
+
+        caseStudies
+            .filter(study => servicesEn.outcomes.items.some(item => item.caseId === study.id))
+            .forEach((study) => {
+                expect(screen.getByRole('link', { name: `${servicesEn.outcomes.linkLabel}: ${study.title}` }))
+                    .toHaveAttribute('href', caseStudyPath(study));
+            });
     });
 });

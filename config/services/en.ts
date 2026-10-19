@@ -164,6 +164,7 @@ export const servicesEn: ServicesPageCopy = {
     outcomes: {
         title: 'What came out of it',
         lede: 'Three projects, three different problems.',
+        linkLabel: 'Read the case study',
         items: OUTCOME_CASES.map(outcomeOf),
     },
     fit: {
