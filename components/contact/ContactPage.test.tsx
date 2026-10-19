@@ -21,7 +21,7 @@ describe('ContactPage', () => {
     });
 
     const renderPage = () => render(
-        <ContactPage action={vi.fn()} initialTopic="general" initialToken="token" />,
+        <ContactPage action={vi.fn()} issueToken={() => Promise.resolve('token')} />,
     );
 
     it('should be one page with one top-level heading', () => {

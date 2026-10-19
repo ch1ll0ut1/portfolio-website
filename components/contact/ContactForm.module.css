@@ -10,6 +10,52 @@
     background: var(--bg-2);
 }
 
+/* The fields' own column. A fieldset, so one `disabled` covers every control
+   until the form can be sent; its browser chrome is taken off. */
+.fields {
+    display: grid;
+    gap: clamp(20px, 2.6vw, 28px);
+    min-inline-size: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+/* Without JavaScript the form stays disabled for good: say so, and grey it
+   out. With JavaScript it is disabled only while its token loads, too briefly
+   to be worth a visible change. */
+.noscript {
+    padding: 14px 16px;
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--caret);
+    border-radius: var(--radius-s);
+    background: var(--surface);
+    color: var(--fg);
+}
+
+.noscript a {
+    color: var(--fg);
+    text-decoration: underline;
+    text-decoration-color: var(--caret);
+    text-decoration-thickness: 2px;
+    text-underline-offset: .2em;
+}
+
+.noscript a:hover {
+    text-decoration-color: currentColor;
+}
+
+@media (scripting: none) {
+    .fields {
+        opacity: .55;
+    }
+}
+
+.fields:disabled .input,
+.fields:disabled button {
+    cursor: not-allowed;
+}
+
 .field {
     display: grid;
     gap: 8px;

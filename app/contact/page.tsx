@@ -2,11 +2,9 @@ import { FC } from 'react';
 import type { Metadata } from 'next';
 import { ContactPage } from '@/components/contact/ContactPage';
 import { ReadingShell } from '@/components/blog/ReadingShell';
-import { DEFAULT_CONTACT_TOPIC, isContactTopic } from '@/config/contact';
 import { absoluteUrl, siteConfig } from '@/config/site';
-import { issueFormToken } from '@/lib/contact/issueFormToken';
 import { twitterCard } from '@/lib/twitterCard';
-import { sendContactMessage } from './actions';
+import { issueContactToken, sendContactMessage } from './actions';
 
 const TITLE = 'Contact';
 const DESCRIPTION = 'Send Stefan Knoch a message: project enquiries, general questions and privacy requests.';
@@ -33,28 +31,15 @@ export const metadata: Metadata = {
     },
 };
 
-interface Props {
-    searchParams: Promise<{ topic?: string | string[] }>;
-}
-
 /**
- * Rendered per request, unlike the other pages: the form carries a signed
- * render time that must be minted per view (and be in the HTML, for visitors
- * without JavaScript), and `?topic=` preselects the topic without JavaScript
- * too. The CSP is unaffected; it is a static header for every route.
+ * Prerendered like every other page. Nothing in it is per request: the form
+ * asks for its signed token when it mounts, and reads `?topic=` in the
+ * browser. Both need JavaScript, which the form needs anyway (BotID).
  */
-const Contact: FC<Props> = async ({ searchParams }) => {
-    const { topic } = await searchParams;
-
-    return (
-        <ReadingShell>
-            <ContactPage
-                action={sendContactMessage}
-                initialTopic={isContactTopic(topic) ? topic : DEFAULT_CONTACT_TOPIC}
-                initialToken={issueFormToken()}
-            />
-        </ReadingShell>
-    );
-};
+const Contact: FC = () => (
+    <ReadingShell>
+        <ContactPage action={sendContactMessage} issueToken={issueContactToken} />
+    </ReadingShell>
+);
 
 export default Contact;

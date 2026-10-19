@@ -3,12 +3,14 @@ declare const styles: {
     readonly alert: string;
     readonly error: string;
     readonly field: string;
+    readonly fields: string;
     readonly footer: string;
     readonly form: string;
     readonly hint: string;
     readonly input: string;
     readonly label: string;
     readonly messages: string;
+    readonly noscript: string;
     readonly optional: string;
     readonly select: string;
     readonly status: string;
