@@ -59,6 +59,20 @@ describe('BlogIndex Component', () => {
         });
     });
 
+    it('should give each post title an h2 inside its link', () => {
+        // Arrange
+        render(<BlogIndex posts={mockPosts} />);
+
+        // Act
+        const titles = screen.getAllByRole('heading', { level: 2 });
+
+        // Assert
+        expect(titles.map(title => title.textContent)).toEqual(['First Post', 'Second Post']);
+        titles.forEach((title) => {
+            expect(title.closest('a')).not.toBeNull();
+        });
+    });
+
     it('should render every published post the config provides', () => {
         // Arrange
         render(<BlogIndex posts={blogPosts.map(post => ({ ...post, readTime: '1 min read' }))} />);
