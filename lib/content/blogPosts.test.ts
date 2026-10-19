@@ -47,6 +47,18 @@ describe('getBlogPostData', () => {
         expect(data?.older?.slug).toBe(itemAt(blogPosts, 2).slug);
     });
 
+    it('should suggest related posts other than the post and its neighbours', () => {
+        const middle = itemAt(blogPosts, 1);
+        const data = getBlogPostData(middle.slug);
+        const shown = [middle.slug, data?.newer?.slug, data?.older?.slug];
+
+        expect(data?.related.length).toBeGreaterThan(0);
+        data?.related.forEach((post) => {
+            expect(shown).not.toContain(post.slug);
+            expect(post.readTime).toMatch(/^\d+ min read$/);
+        });
+    });
+
     it('should leave the newest post without a newer neighbour', () => {
         const data = getBlogPostData(itemAt(blogPosts, 0).slug);
 

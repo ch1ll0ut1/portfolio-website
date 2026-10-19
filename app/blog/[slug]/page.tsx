@@ -81,7 +81,7 @@ const BlogPost: FC<{ params: Promise<{ slug: string }> }> = async ({ params }) =
         notFound();
     }
 
-    const { post, newer, older } = data;
+    const { post, newer, older, related } = data;
 
     return (
         <>
@@ -90,7 +90,7 @@ const BlogPost: FC<{ params: Promise<{ slug: string }> }> = async ({ params }) =
             <EngagementTracker pageType="blog_post" scrollTarget="article" />
 
             <ReadingShell>
-                <Article post={post} newer={newer} older={older} />
+                <Article post={post} newer={newer} older={older} related={related} />
             </ReadingShell>
         </>
     );

@@ -11,7 +11,11 @@ import fs from 'fs';
 import path from 'path';
 import { cache } from 'react';
 import { blogPosts, type ListedPost } from '@/config/blog';
+import { relatedPosts } from '@/lib/relatedPosts';
 import { readingTime } from './readingTime';
+
+/** How many related posts an article suggests, besides its neighbours. */
+const RELATED_COUNT = 3;
 
 /**
  * Reads a post's markdown from the content directory, trimmed.
@@ -45,8 +49,9 @@ export const listBlogPosts = cache((): ListedPost[] => blogPosts.map(post => ({
 
 /**
  * Gets blog post data and content from configuration and markdown files.
- * Returns the post metadata, its markdown, and its neighbours in the index,
- * or `null` for a slug with no published entry or no file.
+ * Returns the post metadata, its markdown, its neighbours in the index and
+ * the posts closest to it by tags (neighbours left out), or `null` for a slug
+ * with no published entry or no file.
  *
  * Cached per render, so `generateMetadata` and the page share one file read.
  */
@@ -61,9 +66,14 @@ export const getBlogPostData = cache((slug: string) => {
     if (!markdownContent) return null;
 
     // The index is newest first, so the entry before this one is the newer post.
+    const newer = posts[index - 1];
+    const older = posts[index + 1];
+    const neighbours = [newer, older].flatMap(neighbour => (neighbour ? [neighbour.slug] : []));
+
     return {
         post: { ...postMetadata, content: markdownContent },
-        newer: posts[index - 1],
-        older: posts[index + 1],
+        newer,
+        older,
+        related: relatedPosts(postMetadata, posts, RELATED_COUNT, neighbours),
     };
 });

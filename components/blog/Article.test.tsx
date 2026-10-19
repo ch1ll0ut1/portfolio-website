@@ -145,6 +145,17 @@ describe('Article Component', () => {
         expect(screen.getByRole('link', { name: 'All articles' })).toHaveAttribute('href', '/blog');
     });
 
+    it('should close the body with the author card and suggest related posts', () => {
+        // Arrange
+        const related = { ...post, id: '4', title: 'A Related Post', slug: 'a-related-post' };
+        render(<Article post={post} related={[related]} />);
+
+        // Assert
+        expect(screen.getByRole('complementary', { name: 'About the author' })).toBeInTheDocument();
+        expect(screen.getByRole('region', { name: 'Related posts' })).toBeInTheDocument();
+        expect(screen.getByRole('link', { name: /A Related Post/ })).toHaveAttribute('href', '/blog/a-related-post');
+    });
+
     it('should omit a neighbour link that does not exist', () => {
         // Arrange
         render(<Article post={post} older={older} />);
