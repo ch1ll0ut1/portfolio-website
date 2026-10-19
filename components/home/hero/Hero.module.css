@@ -126,7 +126,11 @@
     letter-spacing: -.045em;
     font-weight: 640;
     font-variation-settings: 'wdth' 78, 'opsz' 96;
-    max-width: 11ch;
+    /* 11ch of the display face, written in em: a `ch` width goes stale for a
+       few hundred ms after the web font swaps in on a busy main thread, and
+       the headline, painted from the first frame, would fold onto one line and
+       back, shifting everything under it. */
+    max-width: 4.571em;
     outline: none;
     caret-color: var(--caret);
     cursor: text;
