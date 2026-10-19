@@ -1,4 +1,4 @@
-# Node.js vs Python: When Framework Magic Stops Feeling Magical
+# Node.js vs Python: The Cost of Framework Magic
 
 ![A magic wand between the Node.js and Python logos](nodejs-vs-python-framework-magic.webp)
 

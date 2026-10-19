@@ -1,4 +1,4 @@
-# 10 AI Workflows Every Developer Should Know in 2025
+# 10 AI Workflows Every Developer Should Know
 
 ![10 Workflows which AI can help you with](ai-boosted-development-workflows.webp)
 

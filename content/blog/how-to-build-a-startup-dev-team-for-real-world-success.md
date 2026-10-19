@@ -1,4 +1,4 @@
-# How to Build a Startup Dev Team for Real-World Success
+# How to Build a Startup Dev Team That Works
 
 ![Seven developer archetypes: the Architect, the Glue, the Finisher, the Cheerleader, the Skeptic, the Builder and the Explorer](how-to-build-a-startup-dev-team-for-real-world-success.webp)
 

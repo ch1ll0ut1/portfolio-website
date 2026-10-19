@@ -1,4 +1,4 @@
-# How to Hire Your First Developer (Without Making the Classic Mistakes)
+# How to Hire Your First Developer
 
 ![A founder and a developer shaking hands next to a page of code](how-to-hire-your-first-developer.webp)
 
