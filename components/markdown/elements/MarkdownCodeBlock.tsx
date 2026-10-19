@@ -1,7 +1,42 @@
-import React, { FC } from 'react';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { type CodeBlockElement } from '../markdownProcessor';
+import { FC } from 'react';
+import SyntaxHighlighter from 'react-syntax-highlighter/dist/esm/prism-light';
+import bash from 'react-syntax-highlighter/dist/esm/languages/prism/bash';
+import javascript from 'react-syntax-highlighter/dist/esm/languages/prism/javascript';
+import jsExtras from 'react-syntax-highlighter/dist/esm/languages/prism/js-extras';
+import python from 'react-syntax-highlighter/dist/esm/languages/prism/python';
+import { type CodeBlockElement } from '../parser/types';
+import styles from '../Markdown.module.css';
+import theme from '../CodeTheme.module.css';
+
+/**
+ * Only the grammars the posts use. A fence in any other language still
+ * renders, as plain unhighlighted code, until its grammar is registered here.
+ *
+ * Imported from its own entry, not the package index: since v16 every
+ * highlighter shares one refractor instance, and the index also evaluates the
+ * full Prism build, which registers every grammar on it first (wherever the
+ * index is not tree-shaken, as in tests). js-extras then runs a second time
+ * on a grammar that already has it, and method calls lose their
+ * `method property-access` roles and change colour.
+ */
+SyntaxHighlighter.registerLanguage('bash', bash);
+SyntaxHighlighter.registerLanguage('javascript', javascript);
+// Not a language of its own: it extends the JavaScript grammar with tokens
+// (`console`, known globals, ...) the full Prism build has always coloured.
+SyntaxHighlighter.registerLanguage('js-extras', jsExtras);
+SyntaxHighlighter.registerLanguage('python', python);
+
+/**
+ * Cancels the highlighter's built-in inline gutter styles, which it applies
+ * even with inline styles off. `CodeTheme.module.css` lays the gutter out.
+ */
+const NO_INLINE_LINE_NUMBER_STYLE = {
+    display: undefined,
+    minWidth: undefined,
+    paddingRight: undefined,
+    textAlign: undefined,
+    userSelect: undefined,
+};
 
 interface Props {
     element: CodeBlockElement;
@@ -9,16 +44,16 @@ interface Props {
 
 export const MarkdownCodeBlock: FC<Props> = ({ element }) => {
     return (
-        <div className="my-6">
+        <div className={styles.code}>
+            <div className={styles.codeHead}>{element.language}</div>
             <SyntaxHighlighter
                 language={element.language}
-                style={oneDark}
+                useInlineStyles={false}
                 showLineNumbers
-                customStyle={{
-                    margin: 0,
-                    borderRadius: '0.5rem',
-                    fontSize: '0.875rem',
-                }}
+                lineNumberStyle={NO_INLINE_LINE_NUMBER_STYLE}
+                codeTagProps={{ className: `language-${element.language}` }}
+                className={`${styles.pre} ${theme.theme}`}
+                tabIndex={0}
                 data-testid="syntax-highlighter"
                 data-language={element.language}
             >

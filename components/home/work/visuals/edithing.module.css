@@ -1,0 +1,195 @@
+/* Edithing: a legal document tree that renumbers itself. */
+
+.rows {
+    position: absolute;
+    inset: 0 0 30px 0;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(#000 82%, transparent);
+    mask-image: linear-gradient(#000 82%, transparent);
+}
+
+.gutter {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 32px;
+    border-right: 1px solid var(--line);
+}
+
+.ln {
+    position: absolute;
+    right: 8px;
+    top: 0;
+    height: 26px;
+    line-height: 26px;
+    font-size: 9.5px;
+    color: var(--muted);
+    opacity: .6;
+    transition: color .3s, opacity .3s;
+}
+
+.ln.lnOn {
+    color: var(--fg);
+    opacity: 1;
+}
+
+.inner {
+    transition: transform .6s var(--ease-out);
+}
+
+.row {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 26px;
+    transition: transform .7s var(--ease-out), opacity .45s var(--ease-ui);
+}
+
+.row.rowNew {
+    opacity: 0;
+}
+
+.row.rowGone {
+    opacity: 0;
+    transition: opacity .18s linear;
+}
+
+.guide {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--line);
+}
+
+.lbl {
+    position: absolute;
+    top: 4px;
+    height: 18px;
+    overflow: hidden;
+    border-radius: 4px;
+    transition: background .5s;
+}
+
+.lbl span {
+    position: absolute;
+    left: 0;
+    top: 0;
+    line-height: 18px;
+    white-space: nowrap;
+    padding: 0 3px;
+    margin-left: -3px;
+}
+
+.lbl.lblRenum {
+    background: var(--select-soft);
+}
+
+.lbl.lblRenum span {
+    color: var(--select);
+}
+
+.rowCh .lbl span {
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 650;
+    color: var(--fg);
+    letter-spacing: -.01em;
+}
+
+.rowGr .lbl span {
+    color: var(--fg);
+}
+
+.rowMgr .lbl span {
+    color: var(--muted);
+    font-size: 10px;
+}
+
+.bar {
+    position: absolute;
+    top: 10px;
+    height: 6px;
+    border-radius: 3px;
+    background: color-mix(in srgb, var(--fg) 17%, transparent);
+    transform-origin: 0 50%;
+}
+
+.rowCh .bar {
+    top: 9px;
+    height: 8px;
+    background: color-mix(in srgb, var(--fg) 34%, transparent);
+}
+
+.rowGr .bar {
+    background: color-mix(in srgb, var(--fg) 26%, transparent);
+}
+
+.sel {
+    position: absolute;
+    left: 36px;
+    top: 0;
+    width: 310px;
+    height: 52px;
+    background: var(--select-soft);
+    border-radius: 4px;
+    transform-origin: 0 0;
+    transform: scaleX(0);
+    opacity: 0;
+    transition: opacity .18s linear;
+}
+
+.caretPos {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 16px;
+    transition: transform .45s var(--ease-out);
+}
+
+/* Doubled class so it outranks the shared frame caret whatever the sheet order. */
+.caretPos.caretTyping {
+    transition: none;
+    animation: none;
+}
+
+.key {
+    position: absolute;
+    left: 0;
+    top: 0;
+    padding: 3px 6px 4px;
+    border: 1px solid var(--line);
+    border-bottom-width: 2px;
+    border-radius: 5px;
+    background: var(--bg);
+    color: var(--fg);
+    font-size: 10px;
+    opacity: 0;
+}
+
+.foot {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 12px 0 14px;
+    border-top: 1px solid var(--line);
+    font-size: 9.5px;
+    color: var(--muted);
+    white-space: nowrap;
+}
+
+.crumbs b {
+    font-weight: 400;
+    color: var(--fg);
+}
+
+.crumbs s {
+    text-decoration: none;
+    opacity: .5;
+    margin: 0 5px;
+}

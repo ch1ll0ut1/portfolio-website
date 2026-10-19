@@ -1,0 +1,124 @@
+/*
+ * The career graph's two layers. Ported from the prototype's `experience.css`.
+ *
+ * `--log-lane` and `--log-gutter` are declared on `.log` in
+ * `Experience.module.css` and inherit down here, so both layers and the commit
+ * rows share one lane width.
+ *
+ * The clip-path reveal and the pulse animation are gated on `html.motion`,
+ * which the boot script in `app/layout.tsx` only sets when motion is allowed.
+ * Reduced motion therefore gets the finished graph from the very first paint
+ * instead of an empty gutter.
+ */
+
+.graph {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: var(--log-gutter);
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+}
+
+.graph path {
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+}
+
+.node {
+    stroke-width: 2;
+    fill: var(--bg);
+}
+
+/* Track layer: hairline lanes and hollow nodes, always visible. */
+.track path {
+    stroke: var(--line);
+}
+
+.track .node {
+    stroke: var(--line);
+}
+
+/* Ink layer: coloured lanes and filled commits, revealed as the reading line descends. */
+:global(html.motion) .ink {
+    clip-path: inset(0 0 var(--ink, 100%) 0);
+}
+
+.laneMain {
+    stroke: var(--fg-2);
+}
+
+.laneIndie {
+    stroke: var(--select);
+}
+
+.nodeMain {
+    stroke: var(--fg-2);
+}
+
+.nodeIndie {
+    stroke: var(--select);
+}
+
+/* The newest commit is HEAD, so its node takes the caret colour. */
+.nodeHead {
+    stroke: var(--caret);
+}
+
+.dotMain {
+    fill: var(--fg-2);
+}
+
+.dotIndie {
+    fill: var(--select);
+}
+
+/* Pulse ring, fired when the ink or the pointer reaches a commit. */
+.ring {
+    fill: none;
+    stroke-width: 1.5;
+    opacity: 0;
+    transform-box: fill-box;
+    transform-origin: center;
+}
+
+.ringMain {
+    stroke: var(--fg-2);
+}
+
+.ringIndie {
+    stroke: var(--select);
+}
+
+:global(html.motion) .ring.isPulse {
+    animation: pulse-out .9s var(--ease-out);
+}
+
+@keyframes pulse-out {
+    from {
+        opacity: .9;
+        transform: scale(1);
+    }
+
+    to {
+        opacity: 0;
+        transform: scale(2.8);
+    }
+}
+
+/* The write head: a caret-coloured point riding the end of the ink. */
+.head {
+    opacity: 0;
+    transition: opacity var(--dur-xs) var(--ease-ui);
+}
+
+.headDot {
+    fill: var(--caret);
+}
+
+.headHalo {
+    fill: var(--caret);
+    opacity: .18;
+}

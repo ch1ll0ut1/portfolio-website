@@ -1,0 +1,8 @@
+/* The reading frame. Top padding clears a fixed site nav; the page reads the
+   same when no header is slotted in. */
+
+.main {
+    display: block;
+    min-height: 70vh;
+    padding-block: clamp(104px, 12vw, 164px) clamp(72px, 9vw, 120px);
+}

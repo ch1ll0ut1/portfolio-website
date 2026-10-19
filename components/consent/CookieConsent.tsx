@@ -1,90 +1,112 @@
 /**
- * Cookie consent banner component.
- * Lightweight, GDPR-compliant consent management styled to match the site design.
+ * Cookie consent banner and preferences dialog.
+ *
+ * Presentation only — every consent decision is taken by `ConsentContext`.
+ * The banner is a bottom-docked surface panel using the global button
+ * primitives, so it reads as site chrome in both themes. The dialog is
+ * rendered here too, but opens independently of the banner, so it can be
+ * reopened from the footer or the command palette after the first choice.
+ *
+ * The banner is part of the server HTML, so a first visit paints it with the
+ * page rather than after hydration. The server cannot know the stored choice,
+ * so until the client has read it the banner renders `pending`: shown only
+ * once the boot script has run (`js` on <html>) and found no stored choice
+ * (no `has-consent`), and with no focus or inset bookkeeping of its own, as
+ * for a returning visitor it is about to go away unseen.
  */
 
 'use client';
 
-import React, { FC, useState } from 'react';
+import { type FC, useEffect, useRef } from 'react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { Settings, Cookie } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
 import { useConsent } from './ConsentContext';
-import { ConsentPreferencesModal } from './ConsentPreferencesModal';
+import { useBannerFocusReturn } from './useBannerFocusReturn';
+import { useFixedBottomInset } from './useFixedBottomInset';
+import styles from './CookieConsent.module.css';
+
+/** Most visitors never open it, so it loads on demand, not with every page. */
+const loadPreferences = () => import('./ConsentPreferencesModal').then(module => module.ConsentPreferencesModal);
+const ConsentPreferencesModal = dynamic(loadPreferences, { ssr: false });
 
 export const CookieConsent: FC = () => {
-    const { showBanner, acceptAll, rejectAll, hideBanner } = useConsent();
-    const [showPreferences, setShowPreferences] = useState(false);
+    const { consent, showBanner, preferencesOpen, acceptAll, rejectAll, openPreferences, closePreferences } = useConsent();
+    /** The stored choice is not read yet: the server render, and hydration. */
+    const pending = consent === null;
+    const bannerRef = useRef<HTMLElement>(null);
+    const focus = useBannerFocusReturn(bannerRef, showBanner);
 
-    if (!showBanner) return null;
+    // Docked over the bottom of the page, so focus scrolling has to stop short of it.
+    useFixedBottomInset(bannerRef, showBanner);
+
+    useEffect(() => {
+        // A banner on screen offers "Customize", so have the dialog ready.
+        if (showBanner) {
+            void loadPreferences();
+        }
+    }, [showBanner]);
+
+    const preferences = preferencesOpen
+        ? <ConsentPreferencesModal onClose={closePreferences} onSave={closePreferences} />
+        : null;
+
+    if (!showBanner && !pending) {
+        return preferences;
+    }
 
     return (
         <>
-            {/* Main consent banner */}
-            <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-lg">
-                <div className="max-w-6xl mx-auto p-6">
-                    <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
-                        <div className="flex items-start gap-3 flex-1">
-                            <Cookie className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
-                            <div className="flex-1">
-                                <h3 className="font-semibold text-gray-900 mb-1">
-                                    Cookie Preferences
-                                </h3>
-                                <p className="text-sm text-gray-600 leading-relaxed">
-                                    I use cookies to enhance your experience and analyze website usage.
-                                    You can accept all cookies or customize your preferences. Essential cookies are always enabled.
-                                    {' '}
-                                    <Link
-                                        href="/privacy"
-                                        className="text-primary hover:text-primary/80 underline"
-                                    >
-                                        Learn more
-                                    </Link>
-                                </p>
-                            </div>
-                        </div>
+            <section
+                className={pending ? `${styles.root} ${styles.pending}` : styles.root}
+                aria-labelledby="consent-banner-title"
+                ref={bannerRef}
+                onFocus={focus.onFocus}
+            >
+                <div className={styles.panel}>
+                    <div>
+                        <h2 className={styles.title} id="consent-banner-title">Cookie preferences</h2>
+                        <p className={styles.body}>
+                            I use cookies to understand how the site is used. Essential cookies are always
+                            on; analytics cookies are up to you, and you can change your mind any time
+                            under Cookie settings in the footer.
+                            {' '}
+                            <Link className={styles.link} href="/privacy">Privacy policy</Link>
+                        </p>
+                    </div>
 
-                        <div className="flex items-center gap-3 flex-shrink-0">
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => { setShowPreferences(true); }}
-                                className="whitespace-nowrap"
-                            >
-                                <Settings className="h-4 w-4 mr-2" />
-                                Customize
-                            </Button>
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={rejectAll}
-                                className="whitespace-nowrap"
-                            >
-                                Reject All
-                            </Button>
-                            <Button
-                                variant="default"
-                                size="sm"
-                                onClick={acceptAll}
-                                className="whitespace-nowrap bg-action text-action-foreground hover:bg-action/90"
-                            >
-                                Accept All
-                            </Button>
-                        </div>
+                    <div className={styles.actions}>
+                        <button
+                            className="btn"
+                            type="button"
+                            onClick={openPreferences}
+                        >
+                            <span className="btn__label">Customize</span>
+                        </button>
+                        <button
+                            className="btn"
+                            type="button"
+                            onClick={() => {
+                                focus.returnFocus();
+                                rejectAll();
+                            }}
+                        >
+                            <span className="btn__label">Reject all</span>
+                        </button>
+                        <button
+                            className="btn btn--primary"
+                            type="button"
+                            onClick={() => {
+                                focus.returnFocus();
+                                acceptAll();
+                            }}
+                        >
+                            <span className="btn__label">Accept all</span>
+                        </button>
                     </div>
                 </div>
-            </div>
+            </section>
 
-            {/* Preferences modal */}
-            {showPreferences && (
-                <ConsentPreferencesModal
-                    onClose={() => { setShowPreferences(false); }}
-                    onSave={() => {
-                        setShowPreferences(false);
-                        hideBanner();
-                    }}
-                />
-            )}
+            {preferences}
         </>
     );
 };

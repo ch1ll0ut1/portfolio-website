@@ -1,0 +1,98 @@
+/* The custom cursor: a caret that grows into a text selection around whatever
+   it touches. Every piece is a transform-only layer the engine writes to. */
+.cursor {
+    position: fixed;
+    inset: 0;
+    z-index: 99;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .25s var(--ease-ui);
+}
+
+.cursor.visible {
+    opacity: 1;
+}
+
+.cursor i {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    transform-origin: 0 0;
+}
+
+/* Permanent on purpose, and only on the pieces that are actually transformed
+   every frame. The engine releases the clock once the cursor settles, so
+   without the hint each pointer move would re-promote these layers. */
+.bar,
+.dot,
+.serif {
+    will-change: transform;
+}
+
+/* The selection wash. A box sized to the selection and moved by transform,
+   so only its own pixels repaint. Strict containment keeps its per-frame
+   resize from touching anything else's layout. */
+.fill {
+    width: 0;
+    height: 0;
+    contain: strict;
+    background: color-mix(in srgb, var(--select) 16%, transparent);
+    opacity: 0;
+}
+
+.bar {
+    width: 2px;
+    height: 20px;
+    border-radius: 1px;
+    background: var(--caret);
+    transition: background-color .25s var(--ease-ui);
+}
+
+/* The selection's drag handles. */
+.dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--select);
+}
+
+/* I-beam crossbars. */
+.serif {
+    width: 8px;
+    height: 2px;
+    border-radius: 1px;
+    background: var(--caret);
+    opacity: 0;
+    transition: opacity .15s var(--ease-ui);
+}
+
+.cursor.select .bar {
+    background: var(--select);
+}
+
+.cursor.ibeam .serif {
+    opacity: 1;
+}
+
+.cursor.idle .lead,
+.cursor.idle.ibeam .serif {
+    animation: var(--caret-blink) 1.1s steps(1) infinite;
+}
+
+.cursor.native {
+    opacity: 0 !important;
+}
+
+/* With the custom cursor live, the OS cursor goes away everywhere except the
+   controls the browser draws itself. */
+.hasCursor,
+.hasCursor *:not(input):not(textarea):not(select):not(iframe) {
+    cursor: none !important;
+}
+
+.hasCursor [data-cursor="native"],
+.hasCursor [data-cursor="native"] * {
+    cursor: auto !important;
+}
+

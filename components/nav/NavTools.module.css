@@ -1,0 +1,50 @@
+/* The ⌘K and theme buttons that sit in the nav's tools row.
+   Both carry only the attributes GlobalChrome listens for, so the nav owns
+   their appearance without importing anything from the chrome layer. */
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 40px;
+    min-width: 40px;
+    padding: 0 12px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--fg-2);
+    transition:
+        color var(--dur-xs) var(--ease-ui),
+        border-color var(--dur-xs) var(--ease-ui);
+}
+
+.theme {
+    padding: 0;
+}
+
+.button:hover,
+.button:focus-visible {
+    color: var(--fg);
+    border-color: var(--fg-2);
+}
+
+/* The written-out label only appears once the nav links collapse, where this
+   button becomes the way into the section list. */
+.label {
+    display: none;
+    font-size: .88rem;
+    font-weight: 500;
+}
+
+.shortcut {
+    color: var(--fg-2);
+}
+
+@media (max-width: 960px) {
+    .label {
+        display: inline;
+    }
+
+    .shortcut {
+        display: none;
+    }
+}

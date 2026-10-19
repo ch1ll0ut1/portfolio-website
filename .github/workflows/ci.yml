@@ -2,50 +2,55 @@ name: 'CI/CD Pipeline'
 
 on:
   push:
-    branches: [main, develop]
+    branches: ['**']
   pull_request:
     branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+        uses: actions/checkout@v7
 
+      # Reads the pnpm version from the `packageManager` field in package.json
       - name: Install pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10
+        uses: pnpm/action-setup@v6
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
-          node-version: 20
+          node-version-file: '.nvmrc'
           cache: 'pnpm'
 
       - name: Install dependencies
-        run: pnpm install
-
-      - name: Install Playwright browsers
-        run: pnpm exec playwright install --with-deps chromium
-
-      - name: Type check
-        run: pnpm tsc --noEmit
+        run: pnpm install --frozen-lockfile
 
       - name: Lint
         run: pnpm lint
 
+      # Unused files, exports and dependencies
+      - name: Check for dead code
+        run: pnpm knip
+
+      # The committed CSS Module declarations must match the stylesheets
+      - name: Check CSS Module types
+        run: pnpm css-types --check
+
+      - name: Type check
+        run: pnpm exec tsc --noEmit
+
+      # With coverage, so the thresholds in vitest.config.ts are enforced
       - name: Run tests
-        run: pnpm test
+        run: pnpm test:coverage
 
+      # `pnpm build` would re-run lint and tsc, which the steps above already did
       - name: Build application
-        run: pnpm build
-
-      - name: Publish to Chromatic
-        uses: chromaui/action@latest
-        with:
-          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+        run: pnpm exec next build

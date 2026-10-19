@@ -1,0 +1,108 @@
+/**
+ * Tests for the closing paragraph of the services section.
+ */
+
+import { afterAll, afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { render } from '@testing-library/react';
+import { engagementNote } from '@/config/engagements';
+import { REDUCED_MOTION_QUERY } from '@/lib/motion';
+import { installIntersectionObserver, installMatchMedia, settleIntro, stubRect } from '../../../test/motionEnv';
+import { TypedParagraph } from './TypedParagraph';
+import styles from './Services.module.css';
+
+const stubFonts = () => {
+    Object.defineProperty(document, 'fonts', {
+        value: { ready: new Promise(() => undefined) },
+        configurable: true,
+        writable: true,
+    });
+};
+
+const fullText = engagementNote.map(segment => segment.text).join(' ');
+
+const noteParagraph = (container: HTMLElement) => {
+    const paragraph = container.querySelector('[data-note="services"]');
+
+    if (!(paragraph instanceof HTMLElement)) {
+        throw new Error('No closing paragraph rendered');
+    }
+
+    return paragraph;
+};
+
+const readableText = (paragraph: HTMLElement) => paragraph.textContent.replace(/\s+/g, ' ').trim();
+
+describe('TypedParagraph', () => {
+    let observers: ReturnType<typeof installIntersectionObserver>;
+    let restoreMedia: () => void;
+
+    beforeEach(() => {
+        stubFonts();
+        observers = installIntersectionObserver();
+    });
+
+    // The fonts above never settle, so the intro waits on its failsafe timer.
+    afterAll(settleIntro);
+
+    afterEach(() => {
+        observers.restore();
+        restoreMedia();
+    });
+
+    it('should render every word of the paragraph as text', () => {
+        // Arrange
+        restoreMedia = installMatchMedia([]);
+
+        // Act
+        const { container } = render(<TypedParagraph />);
+
+        // Assert
+        expect(readableText(noteParagraph(container))).toBe(fullText);
+    });
+
+    it('should mark the selected phrase so it can be highlighted', () => {
+        // Arrange
+        restoreMedia = installMatchMedia([]);
+        const selected = engagementNote.filter(segment => segment.selected);
+        const expectedWords = selected.flatMap(segment => segment.text.split(' '));
+
+        // Act
+        const { container } = render(<TypedParagraph />);
+        const marked = container.querySelectorAll(`.${styles.selected}`);
+
+        // Assert
+        expect(Array.from(marked).map(word => word.textContent)).toEqual(expectedWords);
+    });
+
+    it('should skip the typing and show the finished state under reduced motion', () => {
+        // Arrange
+        restoreMedia = installMatchMedia([REDUCED_MOTION_QUERY]);
+
+        // Act
+        const { container } = render(<TypedParagraph />);
+        const paragraph = noteParagraph(container);
+
+        // Assert
+        expect(paragraph).toHaveClass(styles.isSelected);
+        expect(paragraph).not.toHaveClass(styles.isWriting);
+        expect(readableText(paragraph)).toBe(fullText);
+    });
+
+    it('should take its selection, unwritten, when it reaches the screen before it could be armed', () => {
+        // Arrange: off screen at setup, then on screen by the time the arm
+        // observer reacts, as when scrolling up onto it from #contact.
+        restoreMedia = installMatchMedia([]);
+        const { container } = render(<TypedParagraph />);
+        const paragraph = noteParagraph(container);
+        const armObserver = observers.instances.find(instance => String(instance.options?.rootMargin).includes('45%'));
+
+        stubRect(paragraph, { top: 100, bottom: 300, height: 200 });
+
+        // Act
+        armObserver?.emit(true);
+
+        // Assert
+        expect(paragraph).toHaveClass(styles.isSelected);
+        expect(paragraph).not.toHaveClass(styles.isWriting);
+    });
+});

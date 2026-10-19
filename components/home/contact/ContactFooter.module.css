@@ -1,0 +1,147 @@
+/*
+ * The footer rows below the wordmark. Ported from the prototype's `.footer*`
+ * rules (the wordmark's own rules live in `FooterWordmark.module.css`).
+ */
+
+.footer {
+    margin-top: clamp(96px, 14vw, 200px);
+    padding-bottom: calc(28px + env(safe-area-inset-bottom, 0px));
+}
+
+.row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: end;
+    gap: 18px 28px;
+    margin-top: 28px;
+    padding-top: 22px;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: var(--fs-small);
+}
+
+.meta {
+    display: grid;
+    gap: 2px;
+}
+
+.links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+}
+
+.links a {
+    text-decoration: none;
+    color: var(--fg-2);
+}
+
+/* A button, since it opens a dialog rather than going anywhere, dressed as
+   the links beside it. */
+.linkButton {
+    padding: 0 0 2px;
+    border: 0;
+    background-color: transparent;
+    color: var(--fg-2);
+    font: inherit;
+    cursor: pointer;
+}
+
+.links a:hover,
+.links a:focus-visible,
+.linkButton:hover,
+.linkButton:focus-visible {
+    color: var(--fg);
+}
+
+.meta a {
+    color: var(--fg-2);
+}
+
+.meta a:hover,
+.meta a:focus-visible {
+    color: var(--fg);
+}
+
+.end {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px 22px;
+}
+
+.clock {
+    font-variant-numeric: tabular-nums;
+}
+
+.clock time {
+    color: var(--fg-2);
+    font-weight: 600;
+}
+
+.top {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: var(--fg-2);
+    font-weight: 600;
+}
+
+.topIcon {
+    display: inline-grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    overflow: hidden;
+    transition: border-color var(--dur-xs) var(--ease-ui), background var(--dur-xs) var(--ease-ui);
+}
+
+.topIcon svg {
+    grid-area: 1 / 1;
+    transition: transform .45s var(--ease-out);
+}
+
+.topIcon svg + svg {
+    transform: translateY(160%);
+}
+
+.top:hover,
+.top:focus-visible {
+    color: var(--fg);
+}
+
+.top:hover .topIcon,
+.top:focus-visible .topIcon {
+    border-color: var(--caret);
+}
+
+.top:hover .topIcon svg:first-child,
+.top:focus-visible .topIcon svg:first-child {
+    transform: translateY(-160%);
+}
+
+.top:hover .topIcon svg + svg,
+.top:focus-visible .topIcon svg + svg {
+    transform: none;
+}
+
+@media (max-width: 899px) {
+    .row {
+        grid-template-columns: minmax(0, 1fr);
+        align-items: start;
+    }
+
+    .end {
+        justify-content: space-between;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .topIcon svg {
+        transition: none;
+    }
+}

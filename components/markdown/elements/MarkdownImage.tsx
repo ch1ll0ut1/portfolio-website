@@ -1,38 +1,49 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import Image from 'next/image';
-import { ImageElement } from '../markdownProcessor';
+import { blogImagePath } from '../blogImage';
+import { ImageElement } from '../parser/types';
+import styles from '../Markdown.module.css';
 
 interface Props {
     element: ImageElement;
+    /**
+     * Loads eagerly at high priority. Meant for the first image of a post,
+     * which sits near the top and is usually the largest paint.
+     */
+    priority?: boolean;
 }
 
-export const MarkdownImage: FC<Props> = ({ element }) => {
-    const { src, alt } = element;
+/** Only for an image whose file could not be measured at build time. */
+const FALLBACK_WIDTH = 800;
+const FALLBACK_HEIGHT = 600;
 
-    // Convert relative paths to absolute paths for blog images
-    const imagePath = src.startsWith('/') ? src : `/images/blog/${src}`;
+/**
+ * The article column: full width (less the gutters) on narrow screens, capped
+ * by the prose measure of about 770px above that.
+ */
+const SIZES = '(max-width: 860px) 100vw, 780px';
+
+export const MarkdownImage: FC<Props> = ({ element, priority = false }) => {
+    const { src, alt, width = FALLBACK_WIDTH, height = FALLBACK_HEIGHT } = element;
 
     return (
-        <div className="my-8">
+        <figure className={styles.figure}>
             <Image
-                src={imagePath}
+                src={blogImagePath(src)}
                 alt={alt}
-                width={800}
-                height={600}
-                className="rounded-lg shadow-lg"
-                style={{
-                    width: '100%',
-                    height: 'auto',
-                }}
-                priority={undefined}
-                loading="lazy"
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 800px"
+                width={width}
+                height={height}
+                className={styles.image}
+                // Next 16 deprecates `priority`; eager plus high fetch priority
+                // is what its docs recommend for the LCP image instead.
+                loading={priority ? 'eager' : undefined}
+                fetchPriority={priority ? 'high' : undefined}
+                sizes={SIZES}
             />
-            {alt && (
-                <p className="text-center text-sm text-gray-600 mt-2 italic">
-                    {alt}
-                </p>
-            )}
-        </div>
+            {/* Posts write one text per image, used as both alt and caption. The
+                caption is hidden from assistive technology so the image is not
+                announced twice; its alt carries the same words. */}
+            {alt && <figcaption className={styles.caption} aria-hidden="true">{alt}</figcaption>}
+        </figure>
     );
 };

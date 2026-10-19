@@ -1,0 +1,270 @@
+/*
+ * The decorative pipeline canvas. Ported from the `.now__canvas`, `.flow__*`
+ * and `.node*` rules in the prototype's `writing.css`.
+ *
+ * `--ok` is the one colour not in the token set: the "approved" green. It is
+ * redefined for the light theme rather than hard-coded once.
+ */
+
+.canvas {
+    --ok: #3fcf8e;
+
+    position: relative;
+    height: 200px;
+    border-radius: var(--radius-s);
+    border: 1px solid var(--line);
+    background-color: var(--bg);
+    background-image: radial-gradient(var(--line) 1px, transparent 1.2px);
+    background-size: 16px 16px;
+    overflow: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+@media (prefers-color-scheme: light) {
+    :global(:root:not([data-theme='dark'])) .canvas {
+        --ok: #13865a;
+    }
+}
+
+:global(:root[data-theme='light']) .canvas {
+    --ok: #13865a;
+}
+
+/* ==========================================================================
+   Edges and the travelling token
+   ========================================================================== */
+.edges {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+}
+
+.edges .edge {
+    fill: none;
+    stroke: var(--line);
+    stroke-width: 1.5;
+    stroke-dasharray: 3 4;
+    transition: stroke var(--dur-s) var(--ease-ui);
+}
+
+.edges .edgeDone {
+    stroke: var(--muted);
+    stroke-dasharray: none;
+}
+
+.edges .edgeLive {
+    stroke: var(--select);
+    stroke-dasharray: none;
+}
+
+.edges .token {
+    fill: var(--select);
+    opacity: 0;
+    transition: opacity var(--dur-xs);
+}
+
+.edges .tokenHalo {
+    fill: var(--select-soft);
+    opacity: 0;
+    transition: opacity var(--dur-xs);
+}
+
+.edges .token.tokenOn,
+.edges .tokenHalo.tokenOn {
+    opacity: 1;
+}
+
+/* ==========================================================================
+   Nodes
+   ========================================================================== */
+.node {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--surface);
+    font-family: var(--font-mono);
+    font-size: .68rem;
+    line-height: 1.2;
+    white-space: nowrap;
+    color: var(--fg-2);
+    font-variation-settings: 'wdth' 85;
+    transition:
+        border-color var(--dur-s) var(--ease-ui),
+        color var(--dur-s) var(--ease-ui),
+        box-shadow var(--dur-s) var(--ease-ui);
+}
+
+.node.nodeRunning {
+    border-color: var(--select);
+    color: var(--fg);
+    box-shadow: 0 0 0 3px var(--select-soft);
+}
+
+.node.nodeDone {
+    color: var(--fg);
+}
+
+.node.gate {
+    border-color: var(--caret);
+    color: var(--caret-text);
+}
+
+/*
+ * The waiting pulse: a 4px ring that grows out of the border and back, as the
+ * prototype drew it. The prototype animated the node's own `box-shadow`, which
+ * repaints the node, its label and checkmark on every frame of the loop. Here
+ * the shadow sits on a pseudo-element covering the node's border box, promoted
+ * to its own layer, so each frame repaints only that empty ring layer and
+ * nothing around it. A scaled ring would composite outright, but scaling a
+ * wide, short pill cannot grow it by the same 4px on every side.
+ */
+.gate::after {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    pointer-events: none;
+    will-change: transform;
+}
+
+.gate.gateWaiting::after {
+    animation: gate-wait 1s var(--ease-inout) infinite alternate;
+}
+
+/* No `from`: it starts from the pseudo-element's own "no shadow", so the ring
+   fades in as it grows, as the prototype's does. */
+@keyframes gate-wait {
+    to {
+        box-shadow: 0 0 0 4px color-mix(in srgb, var(--caret) 22%, transparent);
+    }
+}
+
+.node.gate.gateApproved {
+    border-color: var(--ok);
+    color: var(--ok);
+}
+
+/*
+ * The checkmark takes no room at rest: zero wide, with a negative margin that
+ * cancels the row's 6px gap, so "review gate" sits centred in its pill. On
+ * approval the slot slides open and the mark is drawn in by its stroke. The
+ * node is absolutely positioned, so the width change reflows only itself.
+ */
+.check {
+    width: 0;
+    height: 12px;
+    flex: none;
+    margin-right: -6px;
+    overflow: visible;
+    transition:
+        width var(--dur-s) var(--ease-out),
+        margin var(--dur-s) var(--ease-out);
+}
+
+.gate.gateApproved .check {
+    width: 12px;
+    margin-right: 0;
+}
+
+.check path {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 12;
+    stroke-dashoffset: 12;
+    transition: stroke-dashoffset var(--dur-s) var(--ease-out) .08s;
+}
+
+.gate.gateApproved .check path {
+    stroke-dashoffset: 0;
+}
+
+/*
+ * Dragging, enabled from JS on fine pointers only. The nodes also get
+ * `data-cursor="select"` there, which is what actually signals the affordance:
+ * the custom caret cursor hides the OS one. `cursor: grab` is the fallback for
+ * when that cursor is not mounted, which is the reduced-motion case.
+ */
+.draggable .node {
+    cursor: grab;
+    touch-action: none;
+}
+
+.draggable .node.dragging {
+    cursor: grabbing;
+    z-index: 2;
+    box-shadow: 0 8px 24px -10px color-mix(in srgb, var(--fg) 40%, transparent);
+}
+
+/* ==========================================================================
+   Status readout
+   ========================================================================== */
+.status {
+    position: absolute;
+    left: 12px;
+    bottom: 9px;
+    font-family: var(--font-mono);
+    font-size: .62rem;
+    color: var(--muted);
+    font-variation-settings: 'wdth' 85;
+    pointer-events: none;
+}
+
+.status::before {
+    content: "$ ";
+    color: var(--caret-text);
+}
+
+.state {
+    display: inline-block;
+}
+
+.state.stateSwap {
+    animation: state-in var(--dur-s) var(--ease-out);
+}
+
+@keyframes state-in {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .node,
+    .edges .edge,
+    .edges .token,
+    .edges .tokenHalo,
+    .check,
+    .check path {
+        transition: none;
+    }
+
+    .gate.gateWaiting::after,
+    .state.stateSwap {
+        animation: none;
+    }
+
+    /* The static frame waits at the gate, so it keeps the ring, just still. */
+    .gate.gateWaiting::after {
+        box-shadow: 0 0 0 4px color-mix(in srgb, var(--caret) 22%, transparent);
+    }
+}

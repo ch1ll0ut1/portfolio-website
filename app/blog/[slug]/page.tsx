@@ -1,11 +1,27 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import type { Metadata } from 'next';
-import { Button } from '@/components/ui/Button';
-import Link from 'next/link';
-import BlogPostPage from '../../../components/blog/BlogPostPage';
-import { blogPosts } from '@/config/blog';
-import { readMarkdownFile } from '@/components/markdown/markdownProcessor';
-import { AnalyticsWrapper } from '@/components/analytics/AnalyticsWrapper';
+import { notFound } from 'next/navigation';
+import { blogPosts, lastModified } from '@/config/blog';
+import { EngagementTracker } from '@/components/analytics/EngagementTracker';
+import { Article } from '@/components/blog/Article';
+import { ReadingShell } from '@/components/blog/ReadingShell';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { absoluteUrl } from '@/config/site';
+import { baseOpenGraph } from '@/lib/baseOpenGraph';
+import { getBlogPostData } from '@/lib/content/blogPosts';
+import { bangkokDateTime } from '@/lib/date';
+import { feedAlternateTypes } from '@/lib/feed';
+import { postCardImage } from '@/lib/og/postCard';
+import { blogPostBreadcrumbs, blogPostingSchema, breadcrumbSchema, jsonLdGraph } from '@/lib/structuredData';
+import { twitterCard } from '@/lib/twitterCard';
+
+/*
+ * `dynamicParams` stays at its default on purpose. Every post is generated at
+ * build time anyway, but with `false` Next answers an unknown slug from the
+ * root not-found page, skipping ./not-found.tsx and its "All articles" way
+ * back. Left on, an unknown slug renders here, hits `notFound()` and gets the
+ * post-specific 404.
+ */
 
 /**
  * Generates static params for all blog posts to enable static generation.
@@ -15,135 +31,71 @@ export async function generateStaticParams() {
 }
 
 /**
- * Gets blog post data and content from configuration and markdown files.
- * Returns post metadata and parsed markdown content.
- */
-function getBlogPostData(slug: string) {
-    const postMetadata = blogPosts.find(p => p.slug === slug);
-    if (!postMetadata) return null;
-
-    const markdownContent = readMarkdownFile(slug);
-    if (!markdownContent) return null;
-
-    return {
-        ...postMetadata,
-        content: markdownContent,
-    };
-}
-
-/**
  * Generates metadata for individual blog posts
  */
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
     const { slug } = await params;
-    const post = getBlogPostData(slug);
+    const data = getBlogPostData(slug);
 
-    if (!post) {
+    // Guards the property reads below. Matches ./not-found.tsx, robots
+    // included: Next sends its own `noindex` with the 404, and a value here
+    // would be a second robots tag (this result does reach the page).
+    if (!data) {
         return {
-            title: 'Post Not Found',
-            description: 'The requested blog post could not be found.',
+            title: 'Post not found',
+            description: 'That article does not exist, or its link has changed.',
+            robots: null,
         };
     }
+
+    const { post } = data;
 
     return {
         title: post.title,
         description: post.excerpt,
-        keywords: [
-            ...post.tags,
-            'software development',
-            'technology',
-            'blog post',
-        ],
         openGraph: {
+            ...baseOpenGraph,
             title: post.title,
             description: post.excerpt,
-            url: `https://stefanknoch.com/blog/${slug}`,
+            url: absoluteUrl(`/blog/${slug}`),
             type: 'article',
-            publishedTime: post.date,
-            authors: ['Stefan Knoch'],
+            publishedTime: bangkokDateTime(post.date),
+            modifiedTime: bangkokDateTime(lastModified(post)),
+            // The author's profile page: Open Graph wants a URL here, not a name.
+            authors: [absoluteUrl('/')],
             tags: post.tags,
+            images: [postCardImage(post)],
         },
-        twitter: {
-            card: 'summary_large_image',
-            title: post.title,
-            description: post.excerpt,
-        },
+        twitter: { ...twitterCard(post.title, post.excerpt), images: [postCardImage(post)] },
         alternates: {
             canonical: `/blog/${slug}`,
+            types: feedAlternateTypes,
         },
     };
 }
 
 const BlogPost: FC<{ params: Promise<{ slug: string }> }> = async ({ params }) => {
     const { slug } = await params;
-    const post = getBlogPostData(slug);
+    const data = getBlogPostData(slug);
 
-    if (!post) {
-        return (
-            <div className="min-h-screen bg-gradient-to-br from-slate-50 to-white flex items-center justify-center">
-                <div className="text-center">
-                    <h1 className="text-4xl font-bold text-primary mb-4">Post Not Found</h1>
-                    <Link href="/blog">
-                        <Button>Back to Blog</Button>
-                    </Link>
-                </div>
-            </div>
-        );
+    // Renders ./not-found.tsx with a real 404. Returning the panel from here
+    // answered 200, which made every stale link indexable as real content.
+    // ./layout.tsx keeps the throw from failing the document's server render.
+    if (!data) {
+        notFound();
     }
+
+    const { post, newer, older, related } = data;
 
     return (
         <>
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{
-                    __html: JSON.stringify({
-                        '@context': 'https://schema.org',
-                        '@type': 'BlogPosting',
-                        'headline': post.title,
-                        'description': post.excerpt,
-                        'author': {
-                            '@type': 'Person',
-                            'name': 'Stefan Knoch',
-                            'url': 'https://stefanknoch.com',
-                        },
-                        'publisher': {
-                            '@type': 'Organization',
-                            'name': 'Stefan Knoch',
-                            'logo': {
-                                '@type': 'ImageObject',
-                                'url': 'https://stefanknoch.com/logo.png',
-                            },
-                        },
-                        'datePublished': post.date,
-                        'dateModified': post.date,
-                        'mainEntityOfPage': {
-                            '@type': 'WebPage',
-                            '@id': `https://stefanknoch.com/blog/${slug}`,
-                        },
-                        'url': `https://stefanknoch.com/blog/${slug}`,
-                        'articleSection': 'Technology',
-                        'keywords': post.tags.join(', '),
-                        'inLanguage': 'en-US',
-                        'isAccessibleForFree': true,
-                    }),
-                }}
-            />
+            <JsonLd data={jsonLdGraph(blogPostingSchema(post), breadcrumbSchema(blogPostBreadcrumbs(post)))} />
 
-            <AnalyticsWrapper
-                pageName={post.title}
-                pageType="blog_post"
-                contentId={post.slug}
-                additionalData={{
-                    reading_time_estimate: post.readTime,
-                }}
-                scrollConfig={{
-                    milestones: [25, 50, 75, 90],
-                    trackCompletion: true,
-                    targetSelector: 'article',
-                }}
-            />
+            <EngagementTracker pageType="blog_post" scrollTarget="article" />
 
-            <BlogPostPage post={post} />
+            <ReadingShell>
+                <Article post={post} newer={newer} older={older} related={related} />
+            </ReadingShell>
         </>
     );
 };
