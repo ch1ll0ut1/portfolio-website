@@ -88,13 +88,14 @@ describe('ContactFooter', () => {
         expect(screen.getByRole('link', { name: 'Back to top' })).toHaveAttribute('href', '#top');
     });
 
-    it('should render the copyright and the colophon', () => {
+    it('should render the copyright and a link to the source', () => {
         // Act
         render(<ContactFooter />);
 
         // Assert
         expect(screen.getByText('© 2026 Stefan Knoch')).toBeInTheDocument();
-        expect(screen.getByText('Hand-written front end: no animation libraries.')).toBeInTheDocument();
+        expect(screen.getByRole('link', { name: 'Source on GitHub' }))
+            .toHaveAttribute('href', 'https://github.com/ch1ll0ut1/portfolio-website');
     });
 
     it('should report a click on an external profile', async () => {
