@@ -12,7 +12,7 @@ import { Writing } from '@/components/home/writing/Writing';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { siteConfig, siteTitle } from '@/config/site';
 import { baseOpenGraph } from '@/lib/baseOpenGraph';
-import { personSchema } from '@/lib/structuredData';
+import { jsonLdGraph, personSchema, profilePageSchema, websiteSchema } from '@/lib/structuredData';
 import { twitterCard } from '@/lib/twitterCard';
 
 export const metadata: Metadata = {
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
 
 const Home: FC = () => (
     <>
-        <JsonLd data={personSchema()} />
+        <JsonLd data={jsonLdGraph(websiteSchema(), profilePageSchema(), personSchema())} />
 
         <EngagementTracker pageType="home" scrollTarget="[data-scroll-target]" />
 

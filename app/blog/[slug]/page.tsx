@@ -9,7 +9,8 @@ import { JsonLd } from '@/components/seo/JsonLd';
 import { absoluteUrl, siteConfig } from '@/config/site';
 import { baseOpenGraph } from '@/lib/baseOpenGraph';
 import { getBlogPostData } from '@/lib/content/blogPosts';
-import { blogPostingSchema } from '@/lib/structuredData';
+import { bangkokDateTime } from '@/lib/date';
+import { blogPostBreadcrumbs, blogPostingSchema, breadcrumbSchema, jsonLdGraph } from '@/lib/structuredData';
 import { twitterCard } from '@/lib/twitterCard';
 
 /*
@@ -56,7 +57,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
             description: post.excerpt,
             url: absoluteUrl(`/blog/${slug}`),
             type: 'article',
-            publishedTime: post.date,
+            publishedTime: bangkokDateTime(post.date),
             authors: [siteConfig.name],
             tags: post.tags,
         },
@@ -82,7 +83,7 @@ const BlogPost: FC<{ params: Promise<{ slug: string }> }> = async ({ params }) =
 
     return (
         <>
-            <JsonLd data={blogPostingSchema(post)} />
+            <JsonLd data={jsonLdGraph(blogPostingSchema(post), breadcrumbSchema(blogPostBreadcrumbs(post)))} />
 
             <EngagementTracker pageType="blog_post" scrollTarget="article" />
 

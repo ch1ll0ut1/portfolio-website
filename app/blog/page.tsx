@@ -6,7 +6,7 @@ import { ReadingShell } from '@/components/blog/ReadingShell';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { absoluteUrl, siteConfig } from '@/config/site';
 import { baseOpenGraph } from '@/lib/baseOpenGraph';
-import { blogSchema } from '@/lib/structuredData';
+import { blogSchema, jsonLdGraph } from '@/lib/structuredData';
 import { twitterCard } from '@/lib/twitterCard';
 
 const TITLE = 'Blog — Software engineering, tech leadership, and AI';
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
 const Blog: FC = () => {
     return (
         <>
-            <JsonLd data={blogSchema(blogPosts)} />
+            <JsonLd data={jsonLdGraph(blogSchema(blogPosts))} />
 
             <ReadingShell>
                 <BlogIndex posts={blogPosts} />

@@ -23,3 +23,11 @@ export function formatDate(dateString: string): string {
         day: 'numeric',
     });
 }
+
+/**
+ * A calendar date (`YYYY-MM-DD`) as an ISO 8601 date-time at midnight in
+ * Bangkok, where the posts are written. Structured data and `article:` share
+ * tags want a full date-time; a bare date leaves the time zone to whoever
+ * reads it.
+ */
+export const bangkokDateTime = (date: string) => `${date}T00:00:00+07:00`;

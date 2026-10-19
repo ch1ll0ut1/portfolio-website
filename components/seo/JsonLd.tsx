@@ -6,7 +6,7 @@ interface Props {
 }
 
 /**
- * Emits one schema.org object as an inline JSON-LD script. A server component:
+ * Emits one JSON-LD document (see `jsonLdGraph`) as an inline script. A server component:
  * the script is static markup, so nothing ships to the client for it.
  */
 export const JsonLd: FC<Props> = ({ data }) => (

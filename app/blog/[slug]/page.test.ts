@@ -44,7 +44,7 @@ describe('/blog/[slug]', () => {
                 description: post.excerpt,
                 url: absoluteUrl(`/blog/${post.slug}`),
                 type: 'article',
-                publishedTime: post.date,
+                publishedTime: `${post.date}T00:00:00+07:00`,
                 siteName: siteConfig.name,
                 locale: 'en_US',
                 authors: [siteConfig.name],
