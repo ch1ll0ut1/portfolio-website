@@ -4,6 +4,8 @@ import { siteConfig } from './config/site';
 import { CSP_HEADER_NAME, LOCAL_HOST_CONDITION, buildContentSecurityPolicy } from './lib/contentSecurityPolicy';
 
 const dev = process.env.NODE_ENV !== 'production';
+/** Read at build time: each Vercel deployment builds on its own. */
+const preview = process.env.VERCEL_ENV === 'preview';
 
 /**
  * Sent with every response. Static pages keep their CSP this way too: headers
@@ -12,11 +14,12 @@ const dev = process.env.NODE_ENV !== 'production';
  *
  * Built twice, as two static policies: a request to a local host (a production
  * build run on a laptop) gets the one without `upgrade-insecure-requests`.
+ * A preview deployment's build adds the Vercel Toolbar's sources to both.
  */
 const securityHeaders = (local: boolean) => [
     {
         key: CSP_HEADER_NAME,
-        value: buildContentSecurityPolicy({ dev, local }),
+        value: buildContentSecurityPolicy({ dev, local, preview }),
     },
     // Never let the browser guess a content type from the bytes.
     { key: 'X-Content-Type-Options', value: 'nosniff' },

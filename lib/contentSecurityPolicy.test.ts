@@ -6,9 +6,12 @@
 import { createHash } from 'node:crypto';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { BOOT_SCRIPT } from './bootScript';
 import { BOOT_SCRIPT_HASH, CSP_HEADER_NAME, LOCAL_HOST_CONDITION, buildContentSecurityPolicy, keyword } from './contentSecurityPolicy';
+
+/** Every source the Vercel Toolbar adds, as Vercel's docs list them. */
+const VERCEL_TOOLBAR_SOURCES = new Set(['https://vercel.live', 'https://vercel.com', 'https://assets.vercel.com', 'wss://ws-us3.pusher.com', 'blob:']);
 
 /** Splits a policy into its directives, keyed by name. */
 const parse = (policy: string) => new Map(policy.split('; ').map((directive) => {
@@ -20,6 +23,10 @@ const parse = (policy: string) => new Map(policy.split('; ').map((directive) => 
 const production = parse(buildContentSecurityPolicy({ dev: false }));
 const development = parse(buildContentSecurityPolicy({ dev: true }));
 const local = parse(buildContentSecurityPolicy({ dev: false, local: true }));
+const preview = parse(buildContentSecurityPolicy({ dev: false, preview: true }));
+
+/** Whether any directive of a policy names a Vercel Toolbar host. */
+const namesToolbar = (policy: Map<string, string[]>) => [...policy.values()].flat().some(source => source.includes('vercel.'));
 
 /** Next's host matching for `has`/`missing`: the Host header minus its port, anchored. */
 const matchesHost = (condition: { value: string }, host: string) => new RegExp(`^${condition.value}$`).test(host.split(':', 1)[0] ?? '');
@@ -112,6 +119,33 @@ describe('buildContentSecurityPolicy', () => {
 
         expect(hosts).toEqual(['https://*.googletagmanager.com']);
     });
+
+    it('should leave the Vercel Toolbar out unless it is a preview', () => {
+        expect(buildContentSecurityPolicy({ dev: false, preview: false })).toBe(buildContentSecurityPolicy({ dev: false }));
+        expect(namesToolbar(production)).toBe(false);
+        expect(namesToolbar(local)).toBe(false);
+        expect(production.has('frame-src')).toBe(false);
+    });
+
+    // Vercel injects its toolbar into preview deployments; these are the
+    // sources its documented CSP asks for.
+    it('should allow the Vercel Toolbar on a preview', () => {
+        expect(preview.get('script-src')).toContain('https://vercel.live');
+        expect(preview.get('style-src')).toContain('https://vercel.live');
+        expect(preview.get('img-src')).toEqual(expect.arrayContaining(['https://vercel.live', 'https://vercel.com', 'data:', 'blob:']));
+        expect(preview.get('font-src')).toEqual(expect.arrayContaining(['https://vercel.live', 'https://assets.vercel.com']));
+        expect(preview.get('connect-src')).toEqual(expect.arrayContaining(['https://vercel.live', 'wss://ws-us3.pusher.com']));
+        expect(preview.get('frame-src')).toEqual([keyword('self'), 'https://vercel.live']);
+    });
+
+    it('should otherwise send a preview the production policy', () => {
+        const withoutToolbar = new Map([...preview]
+            .filter(([name]) => name !== 'frame-src')
+            .map(([name, sources]) => [name, sources.filter(source => !VERCEL_TOOLBAR_SOURCES.has(source))]));
+
+        expect(withoutToolbar).toEqual(production);
+        expect(preview.get('script-src')).not.toContain(keyword('unsafe-eval'));
+    });
 });
 
 describe('LOCAL_HOST_CONDITION', () => {
@@ -128,11 +162,12 @@ describe('LOCAL_HOST_CONDITION', () => {
 });
 
 describe('next.config.ts headers', () => {
-    beforeAll(() => {
+    beforeEach(() => {
         vi.stubEnv('NODE_ENV', 'production');
+        vi.stubEnv('VERCEL_ENV', undefined);
     });
 
-    afterAll(() => {
+    afterEach(() => {
         vi.unstubAllEnvs();
     });
 
@@ -142,6 +177,24 @@ describe('next.config.ts headers', () => {
         expect(policies).toHaveLength(1);
         expect(policies[0]?.has('upgrade-insecure-requests')).toBe(true);
         expect(policies[0]?.get('script-src')).not.toContain(keyword('unsafe-eval'));
+    });
+
+    it.each([undefined, 'production', 'development'])('should leave the Vercel Toolbar out when VERCEL_ENV is %s', async (environment) => {
+        vi.stubEnv('VERCEL_ENV', environment);
+
+        const policies = [...await policiesFor('stefanknoch.com'), ...await policiesFor('localhost:3334')];
+
+        expect(policies).toHaveLength(2);
+        expect(policies.some(namesToolbar)).toBe(false);
+    });
+
+    it('should allow the Vercel Toolbar on a preview build', async () => {
+        vi.stubEnv('VERCEL_ENV', 'preview');
+
+        const policies = await policiesFor('portfolio-git-branch.vercel.app');
+
+        expect(policies).toHaveLength(1);
+        expect(policies[0]).toEqual(preview);
     });
 
     it('should send a local production build the policy without it', async () => {
