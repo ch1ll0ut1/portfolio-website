@@ -63,6 +63,38 @@
     font-variation-settings: 'wdth' 90;
 }
 
+/* Every heading has an id and a link to itself. Scrolled to, it stops below
+   the fixed nav (72px tall) rather than under it. */
+.anchored {
+    scroll-margin-top: 96px;
+}
+
+/* The "#" is drawn here, so the heading's text content stays its own. It
+   shows while the heading is hovered or the link has keyboard focus. */
+.anchor {
+    margin-left: .32em;
+    color: var(--muted);
+    text-decoration: none;
+    opacity: 0;
+    transition:
+        opacity var(--dur-xs) var(--ease-ui),
+        color var(--dur-xs) var(--ease-ui);
+}
+
+.anchor::before {
+    content: '#';
+}
+
+.anchored:hover .anchor,
+.anchor:focus-visible {
+    opacity: 1;
+}
+
+.anchor:hover,
+.anchor:focus-visible {
+    color: var(--caret-text);
+}
+
 /* ==========================================================================
    Body text
    ========================================================================== */

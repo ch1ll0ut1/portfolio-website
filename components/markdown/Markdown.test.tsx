@@ -22,6 +22,13 @@ describe('Markdown Component', () => {
         expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent('Part one');
     });
 
+    it('gives every heading an id unique within the document', () => {
+        render(<Markdown content={'## FAQ\n\nOne\n\n## FAQ\n\n### Why “magic”?'} />);
+
+        expect(screen.getAllByRole('heading').map(heading => heading.id))
+            .toEqual(['faq', 'faq-2', 'why-magic']);
+    });
+
     it('should render paragraphs correctly', () => {
         const content = 'First paragraph\n\nSecond paragraph';
 
