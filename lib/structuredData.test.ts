@@ -213,6 +213,15 @@ describe('structuredData', () => {
             expect(schema.datePublished).toBe('2026-01-02T00:00:00+07:00');
             expect(schema.dateModified).toBe('2026-01-02T00:00:00+07:00');
         });
+
+        it('should date the modification by the post\'s update when it has one', () => {
+            // Act
+            const schema = blogPostingSchema({ ...post, updated: '2026-03-04' });
+
+            // Assert
+            expect(schema.datePublished).toBe('2026-01-02T00:00:00+07:00');
+            expect(schema.dateModified).toBe('2026-03-04T00:00:00+07:00');
+        });
     });
 
     describe('blogSchema', () => {

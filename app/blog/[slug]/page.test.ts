@@ -45,6 +45,7 @@ describe('/blog/[slug]', () => {
                 url: absoluteUrl(`/blog/${post.slug}`),
                 type: 'article',
                 publishedTime: `${post.date}T00:00:00+07:00`,
+                modifiedTime: `${post.updated ?? post.date}T00:00:00+07:00`,
                 siteName: siteConfig.name,
                 locale: 'en_US',
                 authors: [siteConfig.name],
@@ -53,6 +54,18 @@ describe('/blog/[slug]', () => {
             expect(metadata.twitter).toMatchObject({ card: 'summary_large_image', title: post.title });
             expect(metadata.robots).toBeUndefined();
             expect(metadata).not.toHaveProperty('keywords');
+        });
+
+        it('should date a revised post\'s card by its update', async () => {
+            const post = blogPosts.find(entry => entry.updated !== undefined);
+
+            const metadata = await generateMetadata({ params: params(post?.slug ?? '') });
+
+            expect(post).toBeDefined();
+            expect(metadata.openGraph).toMatchObject({
+                publishedTime: `${post?.date}T00:00:00+07:00`,
+                modifiedTime: `${post?.updated}T00:00:00+07:00`,
+            });
         });
 
         // Next's own `noindex` on the 404 keeps it out of the index; a value

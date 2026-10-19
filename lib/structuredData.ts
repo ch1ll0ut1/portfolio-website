@@ -12,7 +12,7 @@
  * on every page.
  */
 
-import { type BlogPost } from '@/config/blog';
+import { type BlogPost, lastModified } from '@/config/blog';
 import { links } from '@/config/links';
 import { absoluteUrl, siteConfig, siteTitle } from '@/config/site';
 import { bangkokDateTime } from './date';
@@ -138,6 +138,7 @@ export const blogSchema = (posts: BlogPost[]): JsonLdObject => ({
         'description': post.excerpt,
         'author': authorRef(),
         'datePublished': bangkokDateTime(post.date),
+        'dateModified': bangkokDateTime(lastModified(post)),
         'url': absoluteUrl(`/blog/${post.slug}`),
         'mainEntityOfPage': {
             '@type': 'WebPage',
@@ -159,7 +160,7 @@ export const blogPostingSchema = (post: BlogPost): JsonLdObject => {
         // A personal site: the author is the publisher, so no organization logo is needed.
         'publisher': authorRef(),
         'datePublished': bangkokDateTime(post.date),
-        'dateModified': bangkokDateTime(post.date),
+        'dateModified': bangkokDateTime(lastModified(post)),
         'mainEntityOfPage': {
             '@type': 'WebPage',
             '@id': url,

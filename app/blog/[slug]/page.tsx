@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { blogPosts } from '@/config/blog';
+import { blogPosts, lastModified } from '@/config/blog';
 import { EngagementTracker } from '@/components/analytics/EngagementTracker';
 import { Article } from '@/components/blog/Article';
 import { ReadingShell } from '@/components/blog/ReadingShell';
@@ -58,6 +58,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
             url: absoluteUrl(`/blog/${slug}`),
             type: 'article',
             publishedTime: bangkokDateTime(post.date),
+            modifiedTime: bangkokDateTime(lastModified(post)),
             authors: [siteConfig.name],
             tags: post.tags,
         },

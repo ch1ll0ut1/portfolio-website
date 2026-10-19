@@ -87,6 +87,27 @@ describe('Article Component', () => {
         expect(time).toHaveAttribute('datetime', post.date);
     });
 
+    it('should say when a post was updated after it was published', () => {
+        // Arrange
+        render(<Article post={{ ...post, updated: '2026-10-13' }} />);
+
+        // Act
+        const updated = screen.getByText(formatDate('2026-10-13'));
+
+        // Assert
+        expect(updated.tagName).toBe('TIME');
+        expect(updated).toHaveAttribute('datetime', '2026-10-13');
+        expect(updated.parentElement).toHaveTextContent(`Updated ${formatDate('2026-10-13')}`);
+    });
+
+    it('should not show an update for a post that was never revised', () => {
+        // Arrange
+        render(<Article post={post} />);
+
+        // Assert
+        expect(screen.queryByText(/Updated/)).not.toBeInTheDocument();
+    });
+
     it('should render the markdown content of the post', () => {
         // Arrange
         render(<Article post={post} />);

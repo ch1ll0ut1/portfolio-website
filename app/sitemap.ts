@@ -1,11 +1,11 @@
 import { MetadataRoute } from 'next';
-import { blogPosts } from '@/config/blog';
+import { blogPosts, lastModified } from '@/config/blog';
 import { absoluteUrl, siteConfig } from '@/config/site';
 
 /**
  * Every indexable page with a real last-modified date: posts carry their own,
  * and the static pages share one fixed date so a deploy alone does not mark
- * them changed. The blog index changes when its newest post does.
+ * them changed. The blog index changes when any of its posts does.
  *
  * Only published posts are listed, whatever the environment: the dev server
  * shows drafts, but the sitemap is what tooling reads as "the posts this site
@@ -17,8 +17,8 @@ import { absoluteUrl, siteConfig } from '@/config/site';
 export default function sitemap(): MetadataRoute.Sitemap {
     const posts = blogPosts.filter(post => post.published);
     const staticUpdated = new Date(siteConfig.staticPagesUpdated);
-    const newestPost = posts.at(0);
-    const blogUpdated = newestPost ? new Date(newestPost.date) : staticUpdated;
+    const newestChange = posts.map(lastModified).sort().at(-1);
+    const blogUpdated = newestChange ? new Date(newestChange) : staticUpdated;
 
     const staticPages: MetadataRoute.Sitemap = [
         {
@@ -41,7 +41,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
     const blogPages: MetadataRoute.Sitemap = posts.map(post => ({
         url: absoluteUrl(`/blog/${post.slug}`),
-        lastModified: new Date(post.date),
+        lastModified: new Date(lastModified(post)),
     }));
 
     return [...staticPages, ...blogPages];
