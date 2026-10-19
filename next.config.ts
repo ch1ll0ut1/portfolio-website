@@ -1,5 +1,6 @@
 import type { NextConfig } from 'next';
 import { withBotId } from 'botid/next/config';
+import { siteConfig } from './config/site';
 import { CSP_HEADER_NAME, LOCAL_HOST_CONDITION, buildContentSecurityPolicy } from './lib/contentSecurityPolicy';
 
 const dev = process.env.NODE_ENV !== 'production';
@@ -47,6 +48,13 @@ const securityHeaders = (local: boolean) => [
     { key: 'Strict-Transport-Security', value: 'max-age=63072000' },
 ];
 
+/**
+ * The project's own Vercel domain. It serves the same build as the apex, so
+ * every request to it is sent on to the canonical origin rather than leaving
+ * search engines a second copy of each page to choose from.
+ */
+const VERCEL_PROJECT_HOST = 'stefan-knoch-portfolio.vercel.app';
+
 const nextConfig: NextConfig = {
     poweredByHeader: false,
     compress: true,
@@ -57,6 +65,16 @@ const nextConfig: NextConfig = {
         // Keep optimized variants for a month instead of 60 seconds. Blog art
         // does not change in place; replaced artwork gets a new file name.
         minimumCacheTTL: 2678400,
+    },
+    async redirects() {
+        return [
+            {
+                source: '/:path*',
+                has: [{ type: 'host', value: VERCEL_PROJECT_HOST.replaceAll('.', '\\.') }],
+                destination: `${siteConfig.url}/:path*`,
+                permanent: true,
+            },
+        ];
     },
     async headers() {
         return [
