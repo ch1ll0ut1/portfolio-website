@@ -85,6 +85,9 @@ export const handleContactSubmission = async (
     }
 
     if (await isRateLimited(requestHeaders)) {
+        // Logged like a drop, without the visitor's data, so limit hits show in the logs.
+        console.info('[contact] Refused a submission: the Firewall rate limit was hit.');
+
         return failed(contactMessages.rateLimited, values, token);
     }
 

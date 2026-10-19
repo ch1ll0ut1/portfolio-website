@@ -158,6 +158,8 @@ describe('handleContactSubmission', () => {
             // Assert
             expect(state).toMatchObject({ status: 'failed', message: contactMessages.rateLimited });
             expect(contactMessages.rateLimited).toContain('LinkedIn');
+            expect(console.info).toHaveBeenCalledWith('[contact] Refused a submission: the Firewall rate limit was hit.');
+            expect(console.info).not.toHaveBeenCalledWith(expect.stringContaining('ada@example.com'));
             expect(verifySubmitter).not.toHaveBeenCalled();
             expect(sendWithResend).not.toHaveBeenCalled();
         });
