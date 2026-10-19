@@ -67,7 +67,7 @@ One powerful solution is to bring in a **fractional CTO or tech lead** to guide 
 - Help you screen candidates and run fair evaluations.  
 - Set up the right foundation so your first hire is successful long-term.  
 
-👉 If you’re at this stage and want guidance, you can schedule a consultation with me at [stefanknoch.com](https://stefanknoch.com). I help founders and businesses hire their first developers, build the right tech foundation, and avoid costly missteps.  
+👉 If you’re at this stage and want guidance, [book a consultation with me](/contact). I help founders and businesses hire their first developers, build the right tech foundation, and avoid costly missteps.  
 
 ---
 
@@ -76,3 +76,5 @@ One powerful solution is to bring in a **fractional CTO or tech lead** to guide 
 Hiring your first developer isn’t about finding the mythical “perfect programmer.” It’s about finding the right match for your current needs — someone who can deliver, communicate enough to collaborate, and grow with your vision.  
 
 Start with clarity, test realistically, and don’t be afraid to get expert help in the process. Do it right, and your first tech hire will become the cornerstone of everything you build next.  
+
+And once you are ready to grow past that first hire, [How to Build a Startup Dev Team That Works](/blog/how-to-build-a-startup-dev-team-for-real-world-success) covers what comes next.

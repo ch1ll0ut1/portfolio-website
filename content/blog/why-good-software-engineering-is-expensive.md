@@ -457,7 +457,7 @@ And it requires respect for the people who will actually use the software.
 
 ## My Approach to AI-Assisted Development
 
-I use AI heavily in my own work.
+I use AI heavily in my own work, and I have written up [the workflow I use to build apps with it](/blog/how-to-use-ai-to-build-apps-10x-speed).
 
 But I use it as an engineering tool, not as a replacement for engineering.
 
@@ -529,6 +529,8 @@ The product has to work.
 The user has to feel understood.
 
 The system has to survive real-world use.
+
+What to test in an interview instead is in [How to Build a Startup Dev Team That Works](/blog/how-to-build-a-startup-dev-team-for-real-world-success).
 
 ---
 

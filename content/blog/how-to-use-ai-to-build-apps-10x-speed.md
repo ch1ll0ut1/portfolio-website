@@ -145,6 +145,8 @@ The key is:
 
 That’s how I get to **10× speed** without burning out or drowning in AI mistakes.
 
+Building features is only one part of the job, though. For the rest of the cycle, from planning to reviews and deployment, see [10 AI Workflows Every Developer Should Know](/blog/10-ai-workflows-every-developer-should-know-2025).
+
 ---
 
 *If you try this workflow, let me know how it goes. I’m still refining mine, and the more battle stories, the better.*

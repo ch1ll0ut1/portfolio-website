@@ -5,7 +5,7 @@
 Artificial Intelligence in 2025 is no longer a curiosity.  
 It’s not just “autocomplete for code.” It’s a **set of workflows that can accelerate every phase of software development**, from brainstorming to deployment.
 
-In the past two years, we’ve seen developers who embrace AI work at **3–10× speed** without sacrificing quality. I’ve personally built products in days that would have taken weeks — but only once I discovered *how to use AI correctly*.  
+In the past two years, we’ve seen developers who embrace AI work at **3–10× speed** without sacrificing quality. I’ve personally built products in days that would have taken weeks — but only once I discovered [how to use AI correctly](/blog/how-to-use-ai-to-build-apps-10x-speed).  
 
 This article is a deep dive into the **10 most powerful AI workflows every developer should know in 2025**.  
 

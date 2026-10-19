@@ -63,6 +63,8 @@ No one is just one archetype. A Builder might also be a Finisher, so they not on
 
 In small startup teams especially, people wear multiple hats. The key isn’t fitting people into boxes — it’s making sure you don’t end up with a team of only Builders, or only Architects. That’s when you feel what’s missing.
 
+The same goes beyond engineering: an early team rarely needs people who only manage, which is why [startups don’t need Product Owners](/blog/why-startups-dont-need-product-owners) yet.
+
 ---
 
 ### A Real Example of Building a Balanced Team
