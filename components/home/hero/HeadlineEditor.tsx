@@ -74,9 +74,10 @@ const HeadlineEditorView: FC<Props> = ({ titleRef, hintId, onInput, onKeyDown, o
         <h1 aria-label={HEADING_NAME}>
             <span className={styles.kicker}>
                 {heroKicker.map((part, index) => (
+                    // The separator trails its part, so a wrapped line never starts with one.
                     <span key={part} className={styles.kickerPart}>
-                        {index > 0 && <span aria-hidden="true">{KICKER_SEPARATOR}</span>}
                         {part}
+                        {index < heroKicker.length - 1 && KICKER_SEPARATOR}
                     </span>
                 ))}
             </span>
