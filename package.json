@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",
+    "@vercel/firewall": "^1.2.6",
     "@vercel/speed-insights": "^2.0.0",
     "botid": "^1.5.11",
     "image-size": "^2.0.4",

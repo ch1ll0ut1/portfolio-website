@@ -46,3 +46,13 @@ export const readContactConfig = (env: Env = process.env): { config: ContactConf
 
     return { missing: values.filter(([, value]) => !value).map(([name]) => name) };
 };
+
+/**
+ * Whether this is running on Vercel, where BotID and the Firewall exist.
+ *
+ * Read from the process environment only, which Vercel's runtime sets and a
+ * request cannot touch: no header, cookie or field reaches this. Off Vercel
+ * (`next dev`, or `next start` on a laptop) both checks are skipped, so the
+ * form can be tried end to end locally.
+ */
+export const runsOnVercel = (env: Env = process.env) => env.VERCEL === '1';

@@ -1,16 +1,23 @@
 /**
  * Tests for the contact form's Server Action logic, end to end but for the
- * two edges: BotID and the Resend call are mocked, so nothing is sent.
+ * edges: BotID, the Firewall rate limit and the Resend call are mocked, so
+ * nothing is sent. The Vercel-only path is simulated by stubbing `VERCEL=1`.
  */
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { siteConfig } from '@/config/site';
-import { isBotSubmission } from './botCheck';
+import { verifySubmitter } from './botCheck';
 import { MAX_TOKEN_AGE_MS, MIN_FILL_MS, checkFormToken, signFormToken } from './formToken';
 import { contactMessages, handleContactSubmission } from './handleContactSubmission';
+import { isRateLimited } from './rateLimit';
 import { sendWithResend } from './sendWithResend';
 
-vi.mock('./botCheck', () => ({ isBotSubmission: vi.fn() }));
+// `isJavaScriptSubmission` stays real: it only reads a header.
+vi.mock('./botCheck', async importOriginal => ({
+    ...await importOriginal<typeof import('./botCheck')>(),
+    verifySubmitter: vi.fn(),
+}));
+vi.mock('./rateLimit', () => ({ isRateLimited: vi.fn() }));
 vi.mock('./sendWithResend', () => ({ sendWithResend: vi.fn() }));
 
 const SECRET = 'test-form-secret';
@@ -44,7 +51,10 @@ describe('handleContactSubmission', () => {
         vi.stubEnv('RESEND_API_KEY', 're_test_key');
         vi.stubEnv('CONTACT_TO_EMAIL', 'inbox@example.com');
         vi.stubEnv('CONTACT_FORM_SECRET', SECRET);
-        vi.mocked(isBotSubmission).mockResolvedValue(false);
+        // Off Vercel unless a test says otherwise, wherever the suite runs.
+        vi.stubEnv('VERCEL', '');
+        vi.mocked(verifySubmitter).mockResolvedValue('human');
+        vi.mocked(isRateLimited).mockResolvedValue(false);
         vi.mocked(sendWithResend).mockResolvedValue(true);
         vi.spyOn(console, 'info').mockImplementation(() => undefined);
         vi.spyOn(console, 'warn').mockImplementation(() => undefined);
@@ -53,7 +63,8 @@ describe('handleContactSubmission', () => {
     afterEach(() => {
         vi.unstubAllEnvs();
         vi.restoreAllMocks();
-        vi.mocked(isBotSubmission).mockReset();
+        vi.mocked(verifySubmitter).mockReset();
+        vi.mocked(isRateLimited).mockReset();
         vi.mocked(sendWithResend).mockReset();
     });
 
@@ -73,12 +84,94 @@ describe('handleContactSubmission', () => {
         }));
     });
 
-    it('should hand the request headers to the BotID check', async () => {
+    it('should hand the request headers to the rate limit, and ask BotID', async () => {
         // Act
         await handleContactSubmission(submission(), HEADERS, NOW);
 
         // Assert
-        expect(isBotSubmission).toHaveBeenCalledWith(HEADERS);
+        expect(isRateLimited).toHaveBeenCalledWith(HEADERS);
+        expect(verifySubmitter).toHaveBeenCalledTimes(1);
+    });
+
+    describe('on Vercel', () => {
+        beforeEach(() => {
+            vi.stubEnv('VERCEL', '1');
+        });
+
+        it('should send a JavaScript submission that passes the rate limit and BotID', async () => {
+            // Act
+            const state = await handleContactSubmission(submission(), HEADERS, NOW);
+
+            // Assert
+            expect(state).toEqual({ status: 'sent' });
+            expect(sendWithResend).toHaveBeenCalledTimes(1);
+        });
+
+        it('should drop a native form post, which BotID never saw, before any paid check', async () => {
+            // Act
+            const state = await handleContactSubmission(submission(), new Headers(), NOW);
+
+            // Assert
+            expect(state).toEqual({ status: 'sent' });
+            expect(sendWithResend).not.toHaveBeenCalled();
+            expect(isRateLimited).not.toHaveBeenCalled();
+            expect(verifySubmitter).not.toHaveBeenCalled();
+            expect(console.info).toHaveBeenCalledWith(expect.stringContaining('without JavaScript'));
+        });
+
+        it('should drop a submission BotID calls a bot', async () => {
+            // Arrange
+            vi.mocked(verifySubmitter).mockResolvedValue('bot');
+
+            // Act
+            const state = await handleContactSubmission(submission(), HEADERS, NOW);
+
+            // Assert
+            expect(state).toEqual({ status: 'sent' });
+            expect(sendWithResend).not.toHaveBeenCalled();
+        });
+
+        it('should tell the visitor, and keep their input, when BotID cannot check them', async () => {
+            // Arrange
+            vi.mocked(verifySubmitter).mockResolvedValue('unavailable');
+
+            // Act
+            const state = await handleContactSubmission(submission(), HEADERS, NOW);
+
+            // Assert
+            expect(state).toMatchObject({
+                status: 'failed',
+                message: contactMessages.botCheckFailed,
+                values: { name: 'Ada Lovelace' },
+            });
+            expect(contactMessages.botCheckFailed).toContain('LinkedIn');
+            expect(sendWithResend).not.toHaveBeenCalled();
+        });
+
+        it('should tell a rate-limited visitor to try later, before asking BotID', async () => {
+            // Arrange
+            vi.mocked(isRateLimited).mockResolvedValue(true);
+
+            // Act
+            const state = await handleContactSubmission(submission(), HEADERS, NOW);
+
+            // Assert
+            expect(state).toMatchObject({ status: 'failed', message: contactMessages.rateLimited });
+            expect(contactMessages.rateLimited).toContain('LinkedIn');
+            expect(verifySubmitter).not.toHaveBeenCalled();
+            expect(sendWithResend).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('off Vercel', () => {
+        it('should accept a native form post, so the form can be tried locally', async () => {
+            // Act
+            const state = await handleContactSubmission(submission(), new Headers(), NOW);
+
+            // Assert
+            expect(state).toEqual({ status: 'sent' });
+            expect(sendWithResend).toHaveBeenCalledTimes(1);
+        });
     });
 
     describe('without configuration', () => {
@@ -136,18 +229,6 @@ describe('handleContactSubmission', () => {
         ])('should drop a submission whose token is %s', async (_case, token) => {
             // Act
             const state = await handleContactSubmission(submission({ 'form-token': token }), HEADERS, NOW);
-
-            // Assert
-            expect(state).toEqual({ status: 'sent' });
-            expect(sendWithResend).not.toHaveBeenCalled();
-        });
-
-        it('should drop a submission BotID calls a bot', async () => {
-            // Arrange
-            vi.mocked(isBotSubmission).mockResolvedValue(true);
-
-            // Act
-            const state = await handleContactSubmission(submission(), HEADERS, NOW);
 
             // Assert
             expect(state).toEqual({ status: 'sent' });
@@ -224,12 +305,21 @@ describe('handleContactSubmission', () => {
             expect(state).toMatchObject({ status: 'invalid', errors: { email: expect.any(String) } });
         });
 
-        it('should not ask BotID about an incomplete message', async () => {
+        it('should not ask the rate limit or BotID about an incomplete message', async () => {
             // Act
             await handleContactSubmission(submission({ message: '' }), HEADERS, NOW);
 
             // Assert
-            expect(isBotSubmission).not.toHaveBeenCalled();
+            expect(isRateLimited).not.toHaveBeenCalled();
+            expect(verifySubmitter).not.toHaveBeenCalled();
+        });
+
+        it('should not ask BotID about a token sent too fast', async () => {
+            // Act
+            await handleContactSubmission(submission({ 'form-token': openedAgo(MIN_FILL_MS - 1) }), HEADERS, NOW);
+
+            // Assert
+            expect(verifySubmitter).not.toHaveBeenCalled();
         });
 
         it('should drop a filled honeypot before looking at the fields', async () => {

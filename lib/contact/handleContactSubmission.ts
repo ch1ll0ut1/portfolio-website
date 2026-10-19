@@ -6,11 +6,16 @@
  *    before the rest so the form can be tried locally without any keys, and
  *    so BotID (billed per check) is only asked about a complete message.
  * 3. Configuration: without the env vars there is nothing to send with.
- * 4. The signed fill time, then BotID.
- * 5. The email.
+ * 4. The signed fill time.
+ * 5. On Vercel only: a native post (no JavaScript, so no BotID) is dropped,
+ *    then the Firewall rate limit, then BotID. Cheapest first, so the paid
+ *    BotID check only sees what got past the rest.
+ * 6. The email.
  *
- * Spam (1 and 4) is dropped silently: it is told "sent", so a bot learns
- * nothing to adjust, and nothing is sent.
+ * Spam (1, 4, the native post and a BotID "bot") is dropped silently: it is
+ * told "sent", so a bot learns nothing to adjust, and nothing is sent. A rate
+ * limit or a failed BotID check is told so, with LinkedIn as the way round:
+ * those can happen to a real person, who must not think a message was sent.
  *
  * Kept apart from the `'use server'` module so it can be tested with a plain
  * `FormData` and `Headers`, without a request.
@@ -19,16 +24,19 @@
 import 'next/dist/compiled/server-only';
 import { type ContactState, type ContactValues, contactFieldNames } from '@/config/contact';
 import { siteConfig } from '@/config/site';
-import { isBotSubmission } from './botCheck';
+import { isJavaScriptSubmission, verifySubmitter } from './botCheck';
 import { composeContactEmail } from './composeEmail';
-import { readContactConfig } from './contactConfig';
+import { readContactConfig, runsOnVercel } from './contactConfig';
 import { MIN_FILL_MS, checkFormToken, signFormToken } from './formToken';
+import { isRateLimited } from './rateLimit';
 import { sendWithResend } from './sendWithResend';
 import { readContactValues, textField, validateContactValues } from './validateSubmission';
 
 export const contactMessages = {
     notConfigured: 'The contact form is not set up right now. Please message me on LinkedIn instead.',
-    expired: 'This form was open for over a day, so I could not accept it. Please send it again.',
+    expired: 'This form was open for over two hours, so I could not accept it. Please send it again.',
+    rateLimited: 'You have sent several messages in a short time, so I could not accept this one. Please try again later, or message me on LinkedIn.',
+    botCheckFailed: 'Sorry, I could not check that this message came from a person, so it was not sent. Please try again in a moment, or message me on LinkedIn.',
     sendFailed: 'Sorry, your message could not be sent. Please try again in a moment, or message me on LinkedIn.',
 } as const;
 
@@ -72,8 +80,22 @@ export const handleContactSubmission = async (
         return failed(contactMessages.expired, values, signFormToken(config.secret, now.getTime() - MIN_FILL_MS));
     }
 
-    if (await isBotSubmission(requestHeaders)) {
+    if (runsOnVercel() && !isJavaScriptSubmission(requestHeaders)) {
+        return dropped('it was posted without JavaScript, so BotID could not check it');
+    }
+
+    if (await isRateLimited(requestHeaders)) {
+        return failed(contactMessages.rateLimited, values, token);
+    }
+
+    const submitter = await verifySubmitter();
+
+    if (submitter === 'bot') {
         return dropped('BotID classified it as a bot');
+    }
+
+    if (submitter === 'unavailable') {
+        return failed(contactMessages.botCheckFailed, values, token);
     }
 
     const sent = await sendWithResend({
