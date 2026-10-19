@@ -1,6 +1,6 @@
 # How to Build a Startup Dev Team for Real-World Success
 
-![How to Build a Startup Dev Team for Real-World Success](how-to-build-a-startup-dev-team-for-real-world-success.webp)
+![Seven developer archetypes: the Architect, the Glue, the Finisher, the Cheerleader, the Skeptic, the Builder and the Explorer](how-to-build-a-startup-dev-team-for-real-world-success.webp)
 
 There’s a common trap founders fall into when hiring developers for a startup: they think they need to hire only the *smartest*. The myth goes something like this: if you stack your team with the brightest people you can find, you’ll automatically win.
 

@@ -1,6 +1,4 @@
-> AI can generate code, but it cannot replace engineering judgment. Good software is expensive because bad software becomes even more expensive later — through bugs, rewrites, frustrated users, and technical debt.
-
-![Why Good Software Engineering Is Expensive](why-good-software-engineering-is-expensive.webp)
+![A crumbling tower of broken screens beside a well-built one, with an engineer at a blueprint between them](why-good-software-engineering-is-expensive.webp)
 
 There’s a strange belief spreading through the tech industry right now:
 
