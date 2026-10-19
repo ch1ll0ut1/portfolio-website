@@ -145,7 +145,9 @@ export const PrivacyPolicy: FC<Props> = ({ lastUpdated }) => {
                 <p className={styles.paragraph}>
                     I am based in Thailand, and some of my providers are in the United States. Data may therefore be
                     processed outside your country. These providers protect such transfers with safeguards such as
-                    the European Commission’s Standard Contractual Clauses or adequacy decisions.
+                    the European Commission’s Standard Contractual Clauses or adequacy decisions. Contact form
+                    messages go through Resend in Japan, which has an EU adequacy decision (Commission Implementing
+                    Decision (EU) 2019/419), so that transfer needs no further safeguards.
                 </p>
             </section>
 

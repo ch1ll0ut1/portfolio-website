@@ -35,9 +35,20 @@ describe('PrivacyPolicy', () => {
 
         // Assert
         expect(screen.getByText(/I receive your name, your email address, the topic you picked, and your message/))
-            .toHaveTextContent(/through Resend, from its EU region, straight to my email inbox/);
+            .toHaveTextContent(/through Resend, from its Tokyo region \(Japan\), straight to my email inbox/);
         expect(screen.getByText(/Kept in my inbox only as long as I need them to answer you, then deleted/)).toBeInTheDocument();
+        expect(screen.getByText(/Commission Implementing Decision \(EU\) 2019\/419/)).toHaveTextContent(/Resend in Japan/);
         expect(screen.getByText(/Contact form \(Art\. 6\(1\)\(b\) and \(f\) GDPR\)/)).toBeInTheDocument();
+    });
+
+    it('should say the form needs JavaScript for BotID, and that it is rate limited by IP', () => {
+        // Act
+        render(<PrivacyPolicy lastUpdated="2026-01-01" />);
+
+        // Assert
+        const spam = screen.getByText(/Vercel BotID runs an invisible check/);
+        expect(spam).toHaveTextContent(/the form only works with JavaScript/);
+        expect(spam).toHaveTextContent(/counts the messages sent from your IP address/);
     });
 
     it('should list Resend among the service providers, next to Vercel', () => {

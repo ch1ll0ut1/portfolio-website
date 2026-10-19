@@ -16,11 +16,11 @@ export interface PolicyItem {
  * When the policy text last changed. A fixed date: the policy changes when its
  * text does, not when the site is rebuilt.
  */
-export const POLICY_LAST_UPDATED = '2026-10-14';
+export const POLICY_LAST_UPDATED = '2026-10-19';
 
 export const directInformation: PolicyItem[] = [
-    { label: 'Contact form', text: 'If you send me a message through the contact form, I receive your name, your email address, the topic you picked, and your message, to answer you. The form sends them through Resend, from its EU region, straight to my email inbox; the website itself keeps no copy.' },
-    { label: 'Spam protection', text: 'When you send the contact form, Vercel BotID runs an invisible check in your browser to tell people from bots, and Vercel processes the technical signals that check needs (such as browser and device characteristics). They are used for that check only.' },
+    { label: 'Contact form', text: 'If you send me a message through the contact form, I receive your name, your email address, the topic you picked, and your message, to answer you. The form sends them through Resend, from its Tokyo region (Japan), straight to my email inbox; the website itself keeps no copy.' },
+    { label: 'Spam protection', text: 'When you send the contact form, Vercel BotID runs an invisible check in your browser to tell people from bots, and Vercel processes the technical signals that check needs (such as browser and device characteristics). That check is why the form only works with JavaScript. Vercel\'s firewall also counts the messages sent from your IP address, so that one address cannot send more than a few in a short time. Both are used to keep spam out only.' },
     { label: 'LinkedIn messages', text: 'If you message me on LinkedIn, I receive your name, your LinkedIn profile, and whatever your message contains. LinkedIn processes those messages under its own privacy policy.' },
     { label: 'Call bookings', text: 'If you book a call, Calendly collects your name, email address, and any notes you add, and shares them with me so we can meet. Calendly processes that data under its own privacy policy.' },
 ];
@@ -44,8 +44,8 @@ export const storageTypes: PolicyItem[] = [
 ];
 
 export const serviceProviders: PolicyItem[] = [
-    { label: 'Vercel', text: 'Hosts the website, provides the cookieless Web Analytics and Speed Insights statistics, and runs the BotID check that keeps bots out of the contact form.' },
-    { label: 'Resend', text: 'Delivers contact form messages to my inbox, sending from its EU region (Ireland). It keeps its own delivery logs for a limited period under its own retention policy.' },
+    { label: 'Vercel', text: 'Hosts the website, provides the cookieless Web Analytics and Speed Insights statistics, and runs the BotID check and the rate limit that keep spam out of the contact form.' },
+    { label: 'Resend', text: 'Delivers contact form messages to my inbox, sending from its Tokyo region (Japan). It keeps its own delivery logs for a limited period under its own retention policy.' },
     { label: 'Google Analytics', text: 'Measures how the website is used, only after you accept analytics. Google signals and ad personalization are turned off, and no advertising data is collected.' },
     { label: 'Calendly', text: 'Handles call bookings if you choose to book one.' },
 ];
