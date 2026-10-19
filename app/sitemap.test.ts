@@ -1,5 +1,6 @@
 import { afterEach, describe, it, expect, vi } from 'vitest';
 import { blogPosts, type BlogPost } from '@/config/blog';
+import { caseStudies } from '@/config/caseStudies';
 import { siteConfig } from '@/config/site';
 import sitemap from './sitemap';
 import robots from './robots';
@@ -40,6 +41,20 @@ describe('sitemap', () => {
         // Assert
         expect(home?.lastModified).toEqual(new Date(siteConfig.staticPagesUpdated));
         expect(first).toEqual(second);
+    });
+});
+
+describe('sitemap case studies', () => {
+    it('should list every case study page with the static pages\' date', () => {
+        // Act
+        const entries = sitemap();
+
+        // Assert
+        caseStudies.forEach((study) => {
+            const entry = entries.find(item => item.url === `${siteConfig.url}/work/${study.slug}`);
+
+            expect(entry?.lastModified).toEqual(new Date(siteConfig.staticPagesUpdated));
+        });
     });
 });
 

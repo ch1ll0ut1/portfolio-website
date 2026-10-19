@@ -12,6 +12,7 @@
 
 import { AxeBuilder } from '@axe-core/playwright';
 import { chromium } from 'playwright';
+import { caseStudyPages } from './visual-check/caseStudyPages.mjs';
 import { publishedArticles } from './visual-check/publishedArticles.mjs';
 
 const argOf = (name, fallback) => {
@@ -28,6 +29,9 @@ const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
 /** The newest published post, from the same sitemap the visual check samples. */
 const newestArticle = async () => (await publishedArticles(BASE)).slice(0, 1);
 
+/** The first case study page, sampled the same way. */
+const firstCaseStudy = async () => (await caseStudyPages(BASE)).slice(0, 1);
+
 const routes = async () => {
     const listed = argOf('routes', '');
 
@@ -35,7 +39,7 @@ const routes = async () => {
         return listed.split(',');
     }
 
-    return ['/', '/blog', ...await newestArticle(), '/privacy', '/contact'];
+    return ['/', '/blog', ...await newestArticle(), ...await firstCaseStudy(), '/privacy', '/contact'];
 };
 
 const scan = async (browser, route, theme) => {

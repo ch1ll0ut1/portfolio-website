@@ -3,6 +3,7 @@
  */
 
 import { argOf } from './options.mjs';
+import { caseStudyPages } from './caseStudyPages.mjs';
 import { publishedArticles } from './publishedArticles.mjs';
 
 /** Exercises the not-found branch of /blog/[slug]. */
@@ -55,11 +56,25 @@ const sampleArticles = async (base) => {
     return articles.slice(0, ARTICLE_SAMPLE);
 };
 
+/**
+ * Two case studies, between them showing both optional parts: the first has
+ * an outbound link and no team size, the second the other way round.
+ */
+const sampleCaseStudies = async (base) => {
+    const cases = await caseStudyPages(base);
+
+    if (cases.length === 0) {
+        throw new Error(`expected case study pages in ${base}/sitemap.xml, found none`);
+    }
+
+    return cases.slice(0, 2);
+};
+
 /** Every route type by default; `--routes` narrows it for a quick check. */
 export const resolveRoutes = async (base) => {
     const override = argOf('routes', '');
 
     return override
         ? override.split(',').filter(Boolean)
-        : ['/', '/blog', ...await sampleArticles(base), MISSING_ARTICLE, '/privacy', '/contact'];
+        : ['/', '/blog', ...await sampleArticles(base), MISSING_ARTICLE, ...await sampleCaseStudies(base), '/privacy', '/contact'];
 };

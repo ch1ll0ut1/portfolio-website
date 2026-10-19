@@ -1,11 +1,13 @@
 import { MetadataRoute } from 'next';
 import { blogPosts } from '@/config/blog';
+import { caseStudies, caseStudyPath } from '@/config/caseStudies';
 import { absoluteUrl, siteConfig } from '@/config/site';
 
 /**
  * Every indexable page with a real last-modified date: posts carry their own,
  * and the static pages share one fixed date so a deploy alone does not mark
- * them changed. The blog index changes when its newest post does.
+ * them changed. The blog index changes when its newest post does. The case
+ * study pages count as static pages.
  *
  * Only published posts are listed, whatever the environment: the dev server
  * shows drafts, but the sitemap is what tooling reads as "the posts this site
@@ -44,5 +46,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
         lastModified: new Date(post.date),
     }));
 
-    return [...staticPages, ...blogPages];
+    const casePages: MetadataRoute.Sitemap = caseStudies.map(study => ({
+        url: absoluteUrl(caseStudyPath(study)),
+        lastModified: staticUpdated,
+    }));
+
+    return [...staticPages, ...blogPages, ...casePages];
 }
