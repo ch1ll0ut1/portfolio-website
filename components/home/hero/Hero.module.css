@@ -233,6 +233,13 @@
     --intro-y: .3em;
 }
 
+/* The intro collapses the highlight and drags it back across the phrase, so
+   the painted headline holds it unselected rather than showing it only to
+   take it away. Timed out with the rest, it wipes in on its own. */
+:global(.is-pre) .title mark::before {
+    animation: intro-unmarked 3.1s;
+}
+
 :global(.is-pre) .lede {
     --intro-y: 24px;
 }
@@ -258,6 +265,14 @@
 
     to {
         transform: none;
+    }
+}
+
+@keyframes intro-unmarked {
+    0%,
+    80.6% {
+        transform: scaleX(0);
+        animation-timing-function: var(--ease-out);
     }
 }
 
