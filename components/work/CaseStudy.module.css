@@ -1,0 +1,300 @@
+/* A case study page: the blog article's header and breadcrumb, then the story
+   as labelled rows like the homepage card's, and a way on at the end. */
+
+.page {
+    max-width: 980px;
+    margin-inline: auto;
+}
+
+.header {
+    display: grid;
+    gap: 20px;
+    margin-bottom: clamp(48px, 6vw, 80px);
+}
+
+/* ==========================================================================
+   Breadcrumb (matches the article's in components/blog/Article.module.css)
+   ========================================================================== */
+.crumbs ol {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    color: var(--muted);
+    font-variation-settings: 'wdth' 88;
+}
+
+.crumb {
+    text-decoration: none;
+    transition: color var(--dur-xs) var(--ease-ui);
+}
+
+.crumb:hover,
+.crumb:focus-visible {
+    color: var(--caret-text);
+}
+
+.crumbSep {
+    opacity: .5;
+}
+
+.crumbCurrent {
+    max-width: 38ch;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--fg-2);
+}
+
+/* ==========================================================================
+   Masthead
+   ========================================================================== */
+.kicker {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-variation-settings: 'wdth' 88;
+}
+
+.kicker::after {
+    content: '';
+    width: 2px;
+    height: .95em;
+    margin-left: .4em;
+    background: var(--caret);
+}
+
+:global(.motion) .kicker::after {
+    animation: var(--caret-blink) 1.1s steps(1, end) infinite;
+}
+
+.title {
+    max-width: 22ch;
+    font-size: clamp(2.2rem, 5.4vw, 4.2rem);
+    font-variation-settings: 'wdth' 80;
+}
+
+.lede {
+    max-width: 62ch;
+    color: var(--fg-2);
+    font-size: clamp(1.05rem, 1.4vw, 1.25rem);
+}
+
+/* The key facts beside the headline number, in one raised band. */
+.facts {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 24px 40px;
+    align-items: end;
+    margin-top: 12px;
+    padding: clamp(20px, 3vw, 32px);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+    background: var(--bg-2);
+}
+
+.factList {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 18px 28px;
+}
+
+.factList dt {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    letter-spacing: .04em;
+    color: var(--muted);
+    font-variation-settings: 'wdth' 88;
+}
+
+.factList dd {
+    margin: 4px 0 0;
+    color: var(--fg);
+}
+
+.metric {
+    display: grid;
+    justify-items: end;
+    text-align: right;
+}
+
+.metricValue {
+    font-family: var(--font-display);
+    font-size: clamp(2.6rem, 5vw, 4rem);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -.04em;
+    color: var(--caret-text);
+    font-variation-settings: 'wdth' 76;
+}
+
+.metricLabel {
+    margin-top: 6px;
+    font-size: var(--fs-small);
+    color: var(--fg-2);
+}
+
+/* ==========================================================================
+   Story
+   ========================================================================== */
+.section {
+    display: grid;
+    grid-template-columns: minmax(0, 13rem) minmax(0, 1fr);
+    gap: 16px 40px;
+    padding-block: clamp(28px, 3.6vw, 40px);
+    border-top: 1px solid var(--line);
+}
+
+.sectionTitle {
+    font-size: var(--fs-3);
+    font-variation-settings: 'wdth' 88;
+}
+
+.body {
+    display: grid;
+    gap: 14px;
+    max-width: 64ch;
+    color: var(--fg-2);
+    font-size: var(--fs-body);
+    line-height: 1.65;
+}
+
+.points {
+    display: grid;
+    gap: 12px;
+}
+
+.points li {
+    position: relative;
+    padding-left: 22px;
+}
+
+.points li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: .7em;
+    width: 10px;
+    height: 2px;
+    background: var(--caret);
+}
+
+.source {
+    justify-self: start;
+    font-weight: 600;
+    color: var(--fg);
+}
+
+/* ==========================================================================
+   Next steps
+   ========================================================================== */
+.next {
+    display: grid;
+    gap: 20px;
+    margin-top: clamp(40px, 6vw, 72px);
+    padding: clamp(24px, 4vw, 48px);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-l);
+    background: var(--bg-2);
+}
+
+.nextTitle {
+    font-size: var(--fs-2);
+    font-variation-settings: 'wdth' 84;
+}
+
+.nextBody {
+    max-width: 58ch;
+    color: var(--fg-2);
+}
+
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.others {
+    display: grid;
+    gap: 20px;
+    margin-top: clamp(48px, 6vw, 80px);
+}
+
+.othersTitle {
+    font-size: var(--fs-3);
+    font-variation-settings: 'wdth' 88;
+}
+
+.otherList {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+}
+
+.otherLink {
+    display: grid;
+    gap: 8px;
+    align-content: start;
+    height: 100%;
+    padding: 18px 20px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+    background: var(--bg-2);
+    text-decoration: none;
+    transition:
+        border-color var(--dur-s) var(--ease-ui),
+        transform var(--dur-s) var(--ease-ui);
+}
+
+.otherLink:hover,
+.otherLink:focus-visible {
+    border-color: var(--fg-2);
+    transform: translateY(-2px);
+}
+
+.otherClient {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    letter-spacing: .04em;
+    color: var(--caret-text);
+    font-variation-settings: 'wdth' 88;
+}
+
+.otherTitle {
+    color: var(--fg);
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -.02em;
+    font-variation-settings: 'wdth' 88;
+}
+
+@media (max-width: 720px) {
+    .facts {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .metric {
+        justify-items: start;
+        text-align: left;
+        order: -1;
+    }
+
+    .section {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .otherLink:hover,
+    .otherLink:focus-visible {
+        transform: none;
+    }
+}
