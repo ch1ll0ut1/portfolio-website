@@ -1,6 +1,7 @@
 import { MetadataRoute } from 'next';
 import { blogPosts } from '@/config/blog';
 import { absoluteUrl, siteConfig } from '@/config/site';
+import { servicesLanguages } from '@/lib/servicesPage';
 
 /**
  * Every indexable page with a real last-modified date: posts carry their own,
@@ -29,6 +30,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
             url: absoluteUrl('/blog'),
             lastModified: blogUpdated,
         },
+        ...servicesPages(staticUpdated),
         {
             url: absoluteUrl('/contact'),
             lastModified: staticUpdated,
@@ -46,3 +48,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
     return [...staticPages, ...blogPages];
 }
+
+/** The English and the German services page, each listing both as its translations. */
+const servicesPages = (lastModified: Date): MetadataRoute.Sitemap => {
+    const languages = {
+        en: absoluteUrl(servicesLanguages.en),
+        de: absoluteUrl(servicesLanguages.de),
+    };
+
+    return [servicesLanguages.en, servicesLanguages.de].map(path => ({
+        url: absoluteUrl(path),
+        lastModified,
+        alternates: { languages },
+    }));
+};

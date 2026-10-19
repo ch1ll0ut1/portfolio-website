@@ -156,3 +156,20 @@ describe('robots', () => {
         expect(result.sitemap).toBe(`${siteConfig.url}/sitemap.xml`);
     });
 });
+
+describe('sitemap services pages', () => {
+    it('should list the English and German services pages as each other’s translations', () => {
+        // Act
+        const entries = sitemap().filter(entry => ['/services', '/de/leistungen'].includes(new URL(entry.url).pathname));
+        const languages = {
+            en: `${siteConfig.url}/services`,
+            de: `${siteConfig.url}/de/leistungen`,
+        };
+
+        // Assert
+        expect(entries).toHaveLength(2);
+        entries.forEach((entry) => {
+            expect(entry.alternates).toEqual({ languages });
+        });
+    });
+});
