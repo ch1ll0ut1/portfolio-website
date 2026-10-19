@@ -10,6 +10,9 @@ import { absoluteUrl, siteConfig } from '@/config/site';
  * Only published posts are listed, whatever the environment: the dev server
  * shows drafts, but the sitemap is what tooling reads as "the posts this site
  * serves" (the visual and accessibility checks sample it).
+ *
+ * No `changeFrequency` or `priority`: Google ignores both, and only an honest
+ * `lastModified` moves anything.
  */
 export default function sitemap(): MetadataRoute.Sitemap {
     const posts = blogPosts.filter(post => post.published);
@@ -21,34 +24,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
         {
             url: absoluteUrl('/'),
             lastModified: staticUpdated,
-            changeFrequency: 'monthly',
-            priority: 1,
         },
         {
             url: absoluteUrl('/blog'),
             lastModified: blogUpdated,
-            changeFrequency: 'weekly',
-            priority: 0.8,
         },
         {
             url: absoluteUrl('/contact'),
             lastModified: staticUpdated,
-            changeFrequency: 'yearly',
-            priority: 0.4,
         },
         {
             url: absoluteUrl('/privacy'),
             lastModified: staticUpdated,
-            changeFrequency: 'yearly',
-            priority: 0.3,
         },
     ];
 
     const blogPages: MetadataRoute.Sitemap = posts.map(post => ({
         url: absoluteUrl(`/blog/${post.slug}`),
         lastModified: new Date(post.date),
-        changeFrequency: 'yearly',
-        priority: 0.6,
     }));
 
     return [...staticPages, ...blogPages];

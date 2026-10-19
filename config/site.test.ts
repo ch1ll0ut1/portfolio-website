@@ -24,7 +24,14 @@ describe('Site Configuration', () => {
 
     it('should build the title from the name and the positioning line', () => {
         // Assert
-        expect(siteTitle).toBe(`${siteConfig.name} — ${siteConfig.jobTitle}`);
+        expect(siteTitle.toLowerCase()).toBe(`${siteConfig.name} — ${siteConfig.jobTitle}`.toLowerCase());
+        expect(siteTitle.length).toBeLessThanOrEqual(60);
+    });
+
+    it('should keep the description to the length a search result shows', () => {
+        // Assert
+        expect(siteConfig.description.length).toBeGreaterThanOrEqual(140);
+        expect(siteConfig.description.length).toBeLessThanOrEqual(160);
     });
 
     describe('yearsShipping', () => {
@@ -52,9 +59,16 @@ describe('Site Configuration', () => {
             expect(absoluteUrl('/blog/some-post')).toBe(`${siteConfig.url}/blog/some-post`);
         });
 
-        it('should default to the homepage', () => {
+        it('should default to the homepage, as the bare origin its canonical link uses', () => {
             // Assert
-            expect(absoluteUrl()).toBe(`${siteConfig.url}/`);
+            expect(absoluteUrl()).toBe(siteConfig.url);
+            expect(absoluteUrl('/')).toBe(siteConfig.url);
+        });
+
+        it('should keep a fragment or query on the homepage', () => {
+            // Assert
+            expect(absoluteUrl('/#person')).toBe(`${siteConfig.url}/#person`);
+            expect(absoluteUrl('/?a=1')).toBe(`${siteConfig.url}/?a=1`);
         });
     });
 });

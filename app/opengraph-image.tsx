@@ -11,7 +11,7 @@ export const size = ogImageSize;
 export const contentType = ogContentType;
 
 /** The phrase of the positioning line the card selects. Must appear in `jobTitle`. */
-const HIGHLIGHT = 'hands-on tech lead';
+const HIGHLIGHT = 'tech lead';
 
 export default async function Image() {
     return createOgImage(

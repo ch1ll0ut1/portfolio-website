@@ -16,4 +16,12 @@ describe('manifest', () => {
         expect(icons.some(icon => icon.purpose === 'maskable')).toBe(true);
         expect(icons.map(icon => icon.sizes)).toContain('512x512');
     });
+
+    it('should not lock the installed app to one orientation', () => {
+        // Act
+        const result = manifest();
+
+        // Assert
+        expect(result).not.toHaveProperty('orientation');
+    });
 });

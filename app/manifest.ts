@@ -21,7 +21,6 @@ export default function manifest(): MetadataRoute.Manifest {
         categories: ['business', 'productivity', 'technology'],
         lang: 'en',
         dir: 'ltr',
-        orientation: 'portrait',
         scope: '/',
     };
 }

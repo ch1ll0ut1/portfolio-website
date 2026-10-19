@@ -10,7 +10,8 @@ describe('sitemap', () => {
         const urls = sitemap().map(entry => entry.url);
 
         // Assert
-        expect(urls).toContain(`${siteConfig.url}/`);
+        // The bare origin, as the homepage's canonical link writes it.
+        expect(urls).toContain(siteConfig.url);
         expect(urls).toContain(`${siteConfig.url}/blog`);
         expect(urls).toContain(`${siteConfig.url}/privacy`);
         expect(urls).toContain(`${siteConfig.url}/contact`);
@@ -34,7 +35,7 @@ describe('sitemap', () => {
         // Act
         const first = sitemap();
         const second = sitemap();
-        const home = first.find(entry => entry.url === `${siteConfig.url}/`);
+        const home = first.find(entry => entry.url === siteConfig.url);
 
         // Assert
         expect(home?.lastModified).toEqual(new Date(siteConfig.staticPagesUpdated));
@@ -55,6 +56,17 @@ describe('sitemap contact page', () => {
 });
 
 describe('sitemap URLs and dates', () => {
+    it('should leave out changeFrequency and priority, which Google ignores', () => {
+        // Act
+        const entries = sitemap();
+
+        // Assert
+        entries.forEach((entry) => {
+            expect(entry).not.toHaveProperty('changeFrequency');
+            expect(entry).not.toHaveProperty('priority');
+        });
+    });
+
     it('should give every entry an absolute https URL on the canonical origin', () => {
         // Act
         const entries = sitemap();
