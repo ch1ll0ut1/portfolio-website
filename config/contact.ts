@@ -5,6 +5,12 @@
  * touches secrets or the network lives in `lib/contact/`.
  */
 
+/**
+ * What to send and when to expect an answer: the homepage's contact band and
+ * the `/contact` page both say it.
+ */
+export const contactInvitation = 'Tell me what you’re building and where it’s stuck. I reply within a day, from Bangkok (UTC+7), which covers the full European working day, US mornings, and all of Asia.';
+
 export const contactTopics = [
     { value: 'general', label: 'General' },
     { value: 'project', label: 'Project' },

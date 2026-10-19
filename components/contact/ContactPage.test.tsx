@@ -4,9 +4,10 @@
 
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
+import { contactInvitation } from '@/config/contact';
 import { links } from '@/config/links';
 import { installMatchMedia } from '@/test/motionEnv';
-import { ContactPage } from './ContactPage';
+import { CONTACT_HEADING, ContactPage } from './ContactPage';
 
 describe('ContactPage', () => {
     // The masked heading's motion hooks read `matchMedia`, which jsdom lacks.
@@ -30,6 +31,15 @@ describe('ContactPage', () => {
 
         // Assert
         expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
+        expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(CONTACT_HEADING);
+    });
+
+    it('should say what to send and how soon I reply', () => {
+        // Act
+        renderPage();
+
+        // Assert
+        expect(screen.getByText(contactInvitation)).toBeInTheDocument();
     });
 
     it('should point to LinkedIn first, in a new tab', () => {

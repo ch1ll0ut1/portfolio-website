@@ -9,13 +9,13 @@ import {
     useReveal,
     useStageEvent,
 } from '@/lib/motion';
+import { contactInvitation } from '@/config/contact';
 import { ContactFooter } from './ContactFooter';
 import { CtaMagnet } from './CtaMagnet';
 import { LinkedInMessage } from './LinkedInMessage';
 import { type EdgeReveal, createEdgeReveal } from './edgeReveal';
 import styles from './Contact.module.css';
 
-const LEDE = 'Tell me what you’re building and where it’s stuck. I reply within a day, from Bangkok (UTC+7), and overlap with Europe and Asia working hours.';
 /** Matches the band in which `edgeGeometry` writes at all. */
 const EDGE_NEAR_MARGIN = '100% 0px 120% 0px';
 /** Head start the mask reveal gets before the selection sweeps. */
@@ -109,7 +109,7 @@ export const Contact: FC = () => {
                     <mark className={styles.mark} ref={markRef}>hard part</mark>
                     .
                 </h2>
-                <p className={styles.lede} ref={ledeRef}>{LEDE}</p>
+                <p className={styles.lede} ref={ledeRef}>{contactInvitation}</p>
                 <div className={styles.actions} ref={actionsRef}>
                     <CtaMagnet />
                     <LinkedInMessage />

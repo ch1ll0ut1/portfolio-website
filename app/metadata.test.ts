@@ -64,12 +64,13 @@ describe('route metadata', () => {
     });
 
     it('should describe /contact with its own title, description and canonical URL', () => {
-        const title = `Contact | ${siteConfig.name}`;
+        const title = `Contact ${siteConfig.name} — hire a software architect & tech lead`;
         const description = contact.description;
 
         expect(description).toEqual(expect.any(String));
         expect(description).not.toBe(siteConfig.description);
-        expect(contact.title).toBe('Contact');
+        expect(contact.title).toEqual({ absolute: title });
+        expect(title.length).toBeLessThanOrEqual(60);
         expect(contact.openGraph).toMatchObject({ title, description, type: 'website', url: `${siteConfig.url}/contact` });
         expect(contact.twitter).toMatchObject({ title, description });
         expect(contact.alternates).toEqual({ canonical: '/contact' });
