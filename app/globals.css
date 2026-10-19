@@ -157,6 +157,25 @@
     }
 }
 
+/* The system monospace, widened to Martian Mono's advance while the web font
+   is still loading. Martian Mono is not preloaded, and every system mono runs
+   about 8% narrower, so text set in the fallback breaks onto fewer lines and
+   reflows when the web font swaps in: the hero's kicker, inside the h1, then
+   pushed the whole hero down. A monospace's advance is the same for every
+   glyph, so one size-adjust matches line breaks exactly: 0.652em, Martian
+   Mono at the `wdth` 88 the kicker uses, over the 0.6em of the system monos
+   listed (Consolas, at 0.55em, is left out). The range stops at Latin-1 and
+   general punctuation, the glyphs Martian Mono's subset has, so an arrow or a
+   key symbol it lacks still falls through to the unscaled system face. Named
+   apart from next/font's own `Martian Mono Fallback`, the Arial face the
+   stacks leave out (see lib/webFontFamily.ts). */
+@font-face {
+    font-family: 'Martian Mono Local';
+    src: local('Menlo Regular'), local('Menlo-Regular'), local('DejaVu Sans Mono'), local('Droid Sans Mono'), local('Roboto Mono'), local('Courier New');
+    size-adjust: 108.67%;
+    unicode-range: U+0000-00FF, U+2000-206F;
+}
+
 /* ==========================================================================
    Design tokens — "editor" brand.
    One editorial column on a 12-col grid; the caret and the text selection are
@@ -185,7 +204,7 @@
 
     --font-display: var(--font-bricolage), 'Avenir Next', 'Segoe UI', system-ui, sans-serif;
     --font-body: var(--font-schibsted), 'Helvetica Neue', Arial, system-ui, sans-serif;
-    --font-mono: var(--font-martian), ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+    --font-mono: var(--font-martian), 'Martian Mono Local', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
 
     --fs-hero: clamp(3.4rem, 10.5vw, 10.5rem);
     --fs-1: clamp(2.4rem, 6vw, 5.25rem);
