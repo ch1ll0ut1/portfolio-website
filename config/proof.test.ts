@@ -75,8 +75,8 @@ describe('Proof Configuration', () => {
 
             // Assert
             expect(byId.get('since')?.value).toBe(String(siteConfig.sinceYear));
-            // Slimwiki, DirectMail and Edithing.
-            expect(byId.get('editors')?.value).toBe('3');
+            // Break Media Solutions, 2011–2013.
+            expect(byId.get('team-size')?.value).toBe('12');
             expect(byId.get('teams')?.value).toBe('3');
             expect(byId.get('messaging')?.value).toBe('2');
             expect(byId.get('messaging')?.suffix).toBe('×');

@@ -38,7 +38,8 @@ export const proofClients: string[] = [
 export const proofStats: ProofStat[] = [
     // Rolls up from 1990 rather than 0, so the year reads as a year the whole way.
     { id: 'since', label: 'Shipping software since', value: String(siteConfig.sinceYear), from: '1990' },
-    { id: 'editors', label: 'Production rich text editors built', value: '3', from: '0' },
     { id: 'teams', label: 'Tech teams built from zero', value: '3', from: '0' },
+    // A distributed team of twelve developers at Break Media Solutions.
+    { id: 'team-size', label: 'Developers in the largest team I led', value: '12', from: '00' },
     { id: 'messaging', label: 'Messaging performance at Eko', value: '2', from: '0', suffix: '×' },
 ];
