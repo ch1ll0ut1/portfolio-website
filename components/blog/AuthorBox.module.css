@@ -1,0 +1,52 @@
+/* The author card closing an article, held at the body's measure. */
+
+.box {
+    display: grid;
+    gap: 12px;
+    max-width: 70ch;
+    margin-top: clamp(48px, 6vw, 72px);
+    padding: clamp(22px, 3vw, 32px);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+    background: var(--bg-2);
+}
+
+.kicker {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--caret-text);
+    font-variation-settings: 'wdth' 88;
+}
+
+.name {
+    color: var(--fg);
+    font-family: var(--font-display);
+    font-size: var(--fs-3);
+    line-height: 1.15;
+    letter-spacing: -.02em;
+    font-variation-settings: 'wdth' 86;
+}
+
+.nameLink {
+    text-decoration: none;
+    transition: color var(--dur-xs) var(--ease-ui);
+}
+
+.nameLink:hover,
+.nameLink:focus-visible {
+    color: var(--caret-text);
+}
+
+.bio {
+    color: var(--fg-2);
+    line-height: 1.65;
+}
+
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 8px;
+}

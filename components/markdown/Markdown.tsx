@@ -2,6 +2,7 @@ import { FC } from 'react';
 import { readImageDimensions } from '@/lib/content/blogImages';
 import { parseMarkdown } from './parser/blockParser';
 import { bodyOutline } from './bodyOutline';
+import { createSlugger } from './headingSlugger';
 import { MarkdownHeading } from './elements/MarkdownHeading';
 import { MarkdownCodeBlock } from './elements/MarkdownCodeBlock';
 import { MarkdownList } from './elements/MarkdownList';
@@ -20,13 +21,15 @@ interface Props {
 export const Markdown: FC<Props> = ({ content, className = '' }) => {
     const elements = bodyOutline(parseMarkdown(content, readImageDimensions));
     const firstImage = elements.findIndex(element => element.type === 'image');
+    // Per render, so heading ids are unique within this document only.
+    const headingId = createSlugger();
 
     return (
         <div className={`${styles.prose} ${className}`.trim()} data-testid="markdown">
             {elements.map((element, index) => {
                 switch (element.type) {
                     case 'heading':
-                        return <MarkdownHeading key={index} element={element} />;
+                        return <MarkdownHeading key={index} element={element} id={headingId(element.content)} />;
 
                     case 'codeBlock':
                         return <MarkdownCodeBlock key={index} element={element} />;

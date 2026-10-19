@@ -1,11 +1,12 @@
 import { FC } from 'react';
 import type { Metadata } from 'next';
-import { blogPosts } from '@/config/blog';
 import { BlogIndex } from '@/components/blog/BlogIndex';
 import { ReadingShell } from '@/components/blog/ReadingShell';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { absoluteUrl, siteConfig } from '@/config/site';
 import { baseOpenGraph } from '@/lib/baseOpenGraph';
+import { listBlogPosts } from '@/lib/content/blogPosts';
+import { feedAlternateTypes } from '@/lib/feed';
 import { blogSchema, jsonLdGraph } from '@/lib/structuredData';
 import { twitterCard } from '@/lib/twitterCard';
 
@@ -26,16 +27,19 @@ export const metadata: Metadata = {
     twitter: twitterCard(TITLE, DESCRIPTION),
     alternates: {
         canonical: '/blog',
+        types: feedAlternateTypes,
     },
 };
 
 const Blog: FC = () => {
+    const posts = listBlogPosts();
+
     return (
         <>
-            <JsonLd data={jsonLdGraph(blogSchema(blogPosts))} />
+            <JsonLd data={jsonLdGraph(blogSchema(posts))} />
 
             <ReadingShell>
-                <BlogIndex posts={blogPosts} />
+                <BlogIndex posts={posts} />
             </ReadingShell>
         </>
     );

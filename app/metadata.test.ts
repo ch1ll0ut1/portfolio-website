@@ -8,6 +8,7 @@
 import type { Metadata } from 'next';
 import { describe, expect, it, vi } from 'vitest';
 import { siteConfig, siteTitle } from '@/config/site';
+import { feedAlternateTypes } from '@/lib/feed';
 import { metadata as postNotFound } from './blog/[slug]/not-found';
 import { metadata as blog } from './blog/page';
 import { metadata as contact } from './contact/page';
@@ -50,6 +51,10 @@ describe('route metadata', () => {
         expect(metadata).not.toHaveProperty('keywords');
     });
 
+    it('should announce the RSS feed on the writing index', () => {
+        expect(blog.alternates).toEqual({ canonical: '/blog', types: feedAlternateTypes });
+    });
+
     it('should title the homepage with the positioning, within 60 characters', () => {
         expect(home.title).toEqual({ absolute: 'Stefan Knoch — Software Architect & Tech Lead' });
     });
@@ -80,7 +85,7 @@ describe('route metadata', () => {
 
     // A canonical in the layout would reach the 404 and error pages too.
     it('should leave the canonical URL and the generator tag out of the layout', () => {
-        expect(layout.alternates).toBeUndefined();
+        expect(layout.alternates).toEqual({ types: feedAlternateTypes });
         expect(layout).not.toHaveProperty('generator');
         expect(layout.openGraph).toMatchObject({ siteName: siteConfig.name, locale: 'en_US' });
         expect(layout.openGraph).not.toHaveProperty('url');

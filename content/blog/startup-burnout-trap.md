@@ -1,4 +1,4 @@
-# The Burnout Trap: Why Overworking Founders Destroy Their Own Startups
+# The Burnout Trap: How Overwork Kills Startups
 
 ![The tale of the tortoise and the hare](the-tale-of-the-tortoise-and-the-hare.webp)
 
@@ -58,7 +58,7 @@ But in **software engineering and design**, it breaks down — because the work 
   A fresh engineer designs elegant systems. An exhausted one hacks fragile code. More hours often mean **more rework tomorrow**.  
 
 - **Tech debt is invisible (until it explodes)**  
-  From the outside, features ship quickly. But inside, shortcuts pile up like unpaid credit cards. Eventually, every “simple feature” becomes a nightmare ([Node.js vs Python: When Framework Magic Stops Feeling Magical](/blog/nodejs-vs-python-framework-magic)).  
+  From the outside, features ship quickly. But inside, shortcuts pile up like unpaid credit cards. Eventually, every “simple feature” becomes a nightmare ([Node.js vs Python: The Cost of Framework Magic](/blog/nodejs-vs-python-framework-magic)).  
 
 - **Overwork destroys ROI**  
   A rested designer makes intuitive UIs. A burned-out one produces messy layouts that increase support costs and kill conversions.  
@@ -140,7 +140,7 @@ If you want your startup to *last*, here’s how to build pace without burnout:
    Ruthlessly prioritize. Shipping a smaller, solid product beats a bloated, buggy one.  
 
 2. **Hire generalists first**  
-   A senior fullstack engineer and a generalist designer will do more for you than five narrow specialists.  (see [How to Build a Startup Dev Team for Real-World Success](/blog/how-to-build-a-startup-dev-team-for-real-world-success))  
+   A senior fullstack engineer and a generalist designer will do more for you than five narrow specialists.  (see [How to Build a Startup Dev Team That Works](/blog/how-to-build-a-startup-dev-team-for-real-world-success))  
 
 3. **Leverage tools, not hours**  
    Use automation, CI/CD, and [AI-assisted workflows](/blog/how-to-use-ai-to-build-apps-10x-speed). These give leverage without draining people.  

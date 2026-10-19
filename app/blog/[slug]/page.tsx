@@ -1,15 +1,17 @@
 import { FC } from 'react';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { blogPosts } from '@/config/blog';
+import { blogPosts, lastModified } from '@/config/blog';
 import { EngagementTracker } from '@/components/analytics/EngagementTracker';
 import { Article } from '@/components/blog/Article';
 import { ReadingShell } from '@/components/blog/ReadingShell';
 import { JsonLd } from '@/components/seo/JsonLd';
-import { absoluteUrl, siteConfig } from '@/config/site';
+import { absoluteUrl } from '@/config/site';
 import { baseOpenGraph } from '@/lib/baseOpenGraph';
 import { getBlogPostData } from '@/lib/content/blogPosts';
 import { bangkokDateTime } from '@/lib/date';
+import { feedAlternateTypes } from '@/lib/feed';
+import { postCardImage } from '@/lib/og/postCard';
 import { blogPostBreadcrumbs, blogPostingSchema, breadcrumbSchema, jsonLdGraph } from '@/lib/structuredData';
 import { twitterCard } from '@/lib/twitterCard';
 
@@ -58,12 +60,16 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
             url: absoluteUrl(`/blog/${slug}`),
             type: 'article',
             publishedTime: bangkokDateTime(post.date),
-            authors: [siteConfig.name],
+            modifiedTime: bangkokDateTime(lastModified(post)),
+            // The author's profile page: Open Graph wants a URL here, not a name.
+            authors: [absoluteUrl('/')],
             tags: post.tags,
+            images: [postCardImage(post)],
         },
-        twitter: twitterCard(post.title, post.excerpt),
+        twitter: { ...twitterCard(post.title, post.excerpt), images: [postCardImage(post)] },
         alternates: {
             canonical: `/blog/${slug}`,
+            types: feedAlternateTypes,
         },
     };
 }
@@ -79,7 +85,7 @@ const BlogPost: FC<{ params: Promise<{ slug: string }> }> = async ({ params }) =
         notFound();
     }
 
-    const { post, newer, older } = data;
+    const { post, newer, older, related } = data;
 
     return (
         <>
@@ -88,7 +94,7 @@ const BlogPost: FC<{ params: Promise<{ slug: string }> }> = async ({ params }) =
             <EngagementTracker pageType="blog_post" scrollTarget="article" />
 
             <ReadingShell>
-                <Article post={post} newer={newer} older={older} />
+                <Article post={post} newer={newer} older={older} related={related} />
             </ReadingShell>
         </>
     );

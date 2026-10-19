@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next';
-import { blogPosts } from '@/config/blog';
+import { blogPosts, lastModified } from '@/config/blog';
 import { caseStudies, caseStudyPath } from '@/config/caseStudies';
 import { absoluteUrl, siteConfig } from '@/config/site';
 import { servicesLanguages } from '@/lib/servicesPage';
@@ -7,7 +7,7 @@ import { servicesLanguages } from '@/lib/servicesPage';
 /**
  * Every indexable page with a real last-modified date: posts carry their own,
  * and the static pages share one fixed date so a deploy alone does not mark
- * them changed. The blog index changes when its newest post does. The case
+ * them changed. The blog index changes when any of its posts does. The case
  * study pages count as static pages.
  *
  * Only published posts are listed, whatever the environment: the dev server
@@ -20,8 +20,8 @@ import { servicesLanguages } from '@/lib/servicesPage';
 export default function sitemap(): MetadataRoute.Sitemap {
     const posts = blogPosts.filter(post => post.published);
     const staticUpdated = new Date(siteConfig.staticPagesUpdated);
-    const newestPost = posts.at(0);
-    const blogUpdated = newestPost ? new Date(newestPost.date) : staticUpdated;
+    const newestChange = posts.map(lastModified).sort().at(-1);
+    const blogUpdated = newestChange ? new Date(newestChange) : staticUpdated;
 
     const staticPages: MetadataRoute.Sitemap = [
         {
@@ -45,7 +45,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
     const blogPages: MetadataRoute.Sitemap = posts.map(post => ({
         url: absoluteUrl(`/blog/${post.slug}`),
-        lastModified: new Date(post.date),
+        lastModified: new Date(lastModified(post)),
     }));
 
     const casePages: MetadataRoute.Sitemap = caseStudies.map(study => ({
@@ -57,7 +57,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 }
 
 /** The English and the German services page, each listing both as its translations. */
-const servicesPages = (lastModified: Date): MetadataRoute.Sitemap => {
+const servicesPages = (updated: Date): MetadataRoute.Sitemap => {
     const languages = {
         en: absoluteUrl(servicesLanguages.en),
         de: absoluteUrl(servicesLanguages.de),
@@ -65,7 +65,7 @@ const servicesPages = (lastModified: Date): MetadataRoute.Sitemap => {
 
     return [servicesLanguages.en, servicesLanguages.de].map(path => ({
         url: absoluteUrl(path),
-        lastModified,
+        lastModified: updated,
         alternates: { languages },
     }));
 };

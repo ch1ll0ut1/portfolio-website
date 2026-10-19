@@ -13,6 +13,7 @@ import { NavTools } from '@/components/nav/NavTools';
 import { SiteNav } from '@/components/nav/SiteNav';
 import { siteConfig, siteTitle } from '@/config/site';
 import { baseOpenGraph } from '@/lib/baseOpenGraph';
+import { feedAlternateTypes } from '@/lib/feed';
 import { BOOT_SCRIPT } from '@/lib/bootScript';
 import type { CssVars } from '@/lib/cssVars';
 import { ogPalette } from '@/lib/og/palette';
@@ -39,6 +40,11 @@ export const metadata: Metadata = {
     metadataBase: new URL(siteConfig.url),
     // No canonical or share URL here: every page sets its own, and one set
     // here would also land on the 404 and error pages, pointing them home.
+    // Only the feed link. A page's own `alternates` replaces this whole, so a
+    // page that should keep announcing the feed (the blog's) spreads it in.
+    alternates: {
+        types: feedAlternateTypes,
+    },
     openGraph: {
         ...baseOpenGraph,
         type: 'website',

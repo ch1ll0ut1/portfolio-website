@@ -3,7 +3,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { bangkokDateTime, sortByDate } from './date';
+import { bangkokDateTime, formatDate, sortByDate } from './date';
 
 describe('bangkokDateTime', () => {
     it('should turn a calendar date into midnight in Bangkok', () => {
@@ -23,5 +23,16 @@ describe('sortByDate', () => {
 
         // Assert
         expect(sorted.map(item => item.date)).toEqual(['2026-01-01', '2025-01-01']);
+    });
+});
+
+describe('formatDate', () => {
+    it('should write the date in US English whatever the runtime locale', () => {
+        expect(formatDate('2025-08-14')).toBe('August 14, 2025');
+    });
+
+    it('should keep the calendar day of a bare date at the edges of the day', () => {
+        expect(formatDate('2026-01-01')).toBe('January 1, 2026');
+        expect(formatDate('2025-12-31')).toBe('December 31, 2025');
     });
 });

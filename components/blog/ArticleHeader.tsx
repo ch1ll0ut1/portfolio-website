@@ -1,16 +1,19 @@
 import { FC } from 'react';
 import Link from 'next/link';
-import { type BlogPost } from '@/config/blog';
+import { type ListedPost, lastModified } from '@/config/blog';
+import { siteConfig } from '@/config/site';
 import { formatDate } from '@/lib/date';
 import { MaskHeading } from './MaskHeading';
 import { Reveal } from '@/components/motion/Reveal';
 import styles from './Article.module.css';
 
 interface Props {
-    post: BlogPost;
+    post: ListedPost;
 }
 
 export const ArticleHeader: FC<Props> = ({ post }) => {
+    const updated = lastModified(post);
+
     return (
         <header className={styles.header}>
             <nav aria-label="Breadcrumb" className={styles.crumbs}>
@@ -29,10 +32,20 @@ export const ArticleHeader: FC<Props> = ({ post }) => {
 
             <p className={styles.meta}>
                 <time dateTime={post.date}>{formatDate(post.date)}</time>
+                {updated !== post.date && (
+                    <>
+                        <span className={styles.dot} aria-hidden="true" />
+                        <span>
+                            Updated
+                            {' '}
+                            <time dateTime={updated}>{formatDate(updated)}</time>
+                        </span>
+                    </>
+                )}
                 <span className={styles.dot} aria-hidden="true" />
                 <span>{post.readTime}</span>
                 <span className={styles.dot} aria-hidden="true" />
-                <span>Stefan Knoch</span>
+                <Link href="/" rel="author" className={styles.crumb}>{siteConfig.name}</Link>
             </p>
 
             <MaskHeading className={styles.title}>{post.title}</MaskHeading>

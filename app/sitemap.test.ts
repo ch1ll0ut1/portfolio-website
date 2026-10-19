@@ -21,14 +21,14 @@ describe('sitemap', () => {
         });
     });
 
-    it('should date each post by its publication date', () => {
+    it('should date each post by its last update, or its publication without one', () => {
         // Act
         const entries = sitemap();
 
         // Assert
         blogPosts.forEach((post) => {
             const entry = entries.find(item => item.url.endsWith(`/blog/${post.slug}`));
-            expect(entry?.lastModified).toEqual(new Date(post.date));
+            expect(entry?.lastModified).toEqual(new Date(post.updated ?? post.date));
         });
     });
 
@@ -111,25 +111,28 @@ describe('sitemap URLs and dates', () => {
         });
     });
 
-    it('should date the blog index by its newest post', () => {
+    it('should date the blog index by its most recent post change', () => {
+        // Arrange
+        const newest = Math.max(...blogPosts.map(post => new Date(post.updated ?? post.date).getTime()));
+
         // Act
         const index = sitemap().find(entry => entry.url === `${siteConfig.url}/blog`);
 
         // Assert
-        expect(index?.lastModified).toEqual(new Date(blogPosts[0]?.date ?? ''));
+        expect(index?.lastModified).toEqual(new Date(newest));
     });
 });
 
 describe('sitemap with drafts', () => {
-    const post = (slug: string, date: string, published: boolean): BlogPost => ({
+    const post = (slug: string, date: string, published: boolean, updated?: string): BlogPost => ({
         id: slug,
         title: slug,
         excerpt: '',
         date,
-        readTime: '1 min read',
         tags: [],
         slug,
         published,
+        updated,
     });
 
     afterEach(() => {
@@ -140,7 +143,8 @@ describe('sitemap with drafts', () => {
     it('should list published posts and leave drafts out, even when the config serves drafts', async () => {
         // Arrange: the dev config, which keeps drafts in, newest first.
         vi.resetModules();
-        vi.doMock('@/config/blog', () => ({
+        vi.doMock('@/config/blog', async importOriginal => ({
+            ...await importOriginal<typeof import('@/config/blog')>(),
             blogPosts: [
                 post('draft-newest', '2030-01-02', false),
                 post('published-post', '2030-01-01', true),
@@ -158,6 +162,28 @@ describe('sitemap with drafts', () => {
         expect(urls).not.toContain(`${siteConfig.url}/blog/draft-newest`);
         // A draft does not move the index's date either.
         expect(index?.lastModified).toEqual(new Date('2030-01-01'));
+    });
+
+    it('should date the index by an older post updated after the newest was published', async () => {
+        // Arrange
+        vi.resetModules();
+        vi.doMock('@/config/blog', async importOriginal => ({
+            ...await importOriginal<typeof import('@/config/blog')>(),
+            blogPosts: [
+                post('newest', '2030-01-02', true),
+                post('revised', '2030-01-01', true, '2030-03-01'),
+            ],
+        }));
+        const { default: freshSitemap } = await import('./sitemap');
+
+        // Act
+        const entries = freshSitemap();
+        const index = entries.find(entry => entry.url === `${siteConfig.url}/blog`);
+        const revised = entries.find(entry => entry.url === `${siteConfig.url}/blog/revised`);
+
+        // Assert
+        expect(index?.lastModified).toEqual(new Date('2030-03-01'));
+        expect(revised?.lastModified).toEqual(new Date('2030-03-01'));
     });
 });
 

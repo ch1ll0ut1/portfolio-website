@@ -7,7 +7,8 @@ import path from 'path';
 import { describe, expect, it } from 'vitest';
 import { blogPosts } from '@/config/blog';
 import { itemAt } from '@/test/itemAt';
-import { getBlogPostData, readPostMarkdown } from './blogPosts';
+import { getBlogPostData, listBlogPosts, readPostMarkdown } from './blogPosts';
+import { readingTime } from './readingTime';
 
 describe('readPostMarkdown', () => {
     it('should return a post\'s markdown with surrounding whitespace trimmed', () => {
@@ -22,6 +23,17 @@ describe('readPostMarkdown', () => {
     });
 });
 
+describe('listBlogPosts', () => {
+    it('should list every configured post in order, each timed from its own markdown', () => {
+        const listed = listBlogPosts();
+
+        expect(listed.map(post => post.slug)).toEqual(blogPosts.map(post => post.slug));
+        listed.forEach((post) => {
+            expect(post.readTime, post.slug).toBe(readingTime(readPostMarkdown(post.slug) ?? ''));
+        });
+    });
+});
+
 describe('getBlogPostData', () => {
     it('should return the post with its content and its neighbours in the index', () => {
         const middle = itemAt(blogPosts, 1);
@@ -29,16 +41,29 @@ describe('getBlogPostData', () => {
 
         expect(data?.post.slug).toBe(middle.slug);
         expect(data?.post.content).toBe(readPostMarkdown(middle.slug));
+        expect(data?.post.readTime).toBe(readingTime(data?.post.content ?? ''));
         // The index is newest first: the entry before is newer, the one after older.
-        expect(data?.newer).toBe(itemAt(blogPosts, 0));
-        expect(data?.older).toBe(itemAt(blogPosts, 2));
+        expect(data?.newer?.slug).toBe(itemAt(blogPosts, 0).slug);
+        expect(data?.older?.slug).toBe(itemAt(blogPosts, 2).slug);
+    });
+
+    it('should suggest related posts other than the post and its neighbours', () => {
+        const middle = itemAt(blogPosts, 1);
+        const data = getBlogPostData(middle.slug);
+        const shown = [middle.slug, data?.newer?.slug, data?.older?.slug];
+
+        expect(data?.related.length).toBeGreaterThan(0);
+        data?.related.forEach((post) => {
+            expect(shown).not.toContain(post.slug);
+            expect(post.readTime).toMatch(/^\d+ min read$/);
+        });
     });
 
     it('should leave the newest post without a newer neighbour', () => {
         const data = getBlogPostData(itemAt(blogPosts, 0).slug);
 
         expect(data?.newer).toBeUndefined();
-        expect(data?.older).toBe(itemAt(blogPosts, 1));
+        expect(data?.older?.slug).toBe(itemAt(blogPosts, 1).slug);
     });
 
     it('should return null for a slug the config does not list', () => {

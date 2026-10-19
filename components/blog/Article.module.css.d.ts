@@ -14,6 +14,10 @@ declare const styles: {
     readonly pagerLabel: string;
     readonly pagerLink: string;
     readonly pagerTitle: string;
+    readonly related: string;
+    readonly relatedItem: string;
+    readonly relatedList: string;
+    readonly relatedTitle: string;
     readonly title: string;
 };
 export default styles;

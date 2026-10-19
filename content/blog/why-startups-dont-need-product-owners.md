@@ -1,6 +1,6 @@
 # Why Startups Don’t Need Product Owners
 
-![Why Startups Don’t Need Product Owners](why-startups-dont-need-product-owners.webp)
+![A smiling manager in a suit next to a crossed-out person icon](why-startups-dont-need-product-owners.webp)
 
 I’ve spent most of my career working hands-on, building products from the ground up — coding, working with designers, talking to stakeholders and customers, and even managing projects myself.  
 
@@ -78,7 +78,7 @@ At the start, you need **generalists**:
 - A **generalist designer** who can cover branding, UI/UX, and product visuals.  
 - (Optionally) another **fullstack/generalist engineer** to speed up development.  
 
-Generalists create momentum. They get things shipped.  
+Generalists create momentum. They get things shipped. How to hire and balance them is the subject of [How to Build a Startup Dev Team That Works](/blog/how-to-build-a-startup-dev-team-for-real-world-success).  
 
 Later, as the product grows, you can add **specialists**—QA testers, infrastructure engineers, brand designers.  
 

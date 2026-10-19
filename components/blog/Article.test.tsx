@@ -7,7 +7,7 @@
 import { describe, it, expect, afterAll, beforeAll } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { Article } from './Article';
-import { type BlogPost } from '@/config/blog';
+import { type BlogPost, type ListedPost } from '@/config/blog';
 import { formatDate } from '@/lib/date';
 import { installMatchMedia } from '@/test/motionEnv';
 
@@ -25,7 +25,7 @@ const content = [
     '| Cell | Value |',
 ].join('\n');
 
-const post: BlogPost & { content: string } = {
+const post: ListedPost & { content: string } = {
     id: '1',
     title: 'Why Good Software Engineering Is Expensive',
     excerpt: 'AI can generate code, but it cannot replace engineering judgment.',
@@ -68,7 +68,7 @@ describe('Article Component', () => {
         // Assert
         expect(screen.getByText(formatDate(post.date))).toBeInTheDocument();
         expect(screen.getByText(post.readTime)).toBeInTheDocument();
-        expect(screen.getByText('Stefan Knoch')).toBeInTheDocument();
+        expect(screen.getAllByRole('link', { name: 'Stefan Knoch' })[0]).toHaveAttribute('href', '/');
         expect(screen.getByText(post.excerpt)).toBeInTheDocument();
         post.tags.forEach((tag) => {
             expect(screen.getByText(tag)).toBeInTheDocument();
@@ -85,6 +85,27 @@ describe('Article Component', () => {
         // Assert
         expect(time.tagName).toBe('TIME');
         expect(time).toHaveAttribute('datetime', post.date);
+    });
+
+    it('should say when a post was updated after it was published', () => {
+        // Arrange
+        render(<Article post={{ ...post, updated: '2026-10-13' }} />);
+
+        // Act
+        const updated = screen.getByText(formatDate('2026-10-13'));
+
+        // Assert
+        expect(updated.tagName).toBe('TIME');
+        expect(updated).toHaveAttribute('datetime', '2026-10-13');
+        expect(updated.parentElement).toHaveTextContent(`Updated ${formatDate('2026-10-13')}`);
+    });
+
+    it('should not show an update for a post that was never revised', () => {
+        // Arrange
+        render(<Article post={post} />);
+
+        // Assert
+        expect(screen.queryByText(/Updated/)).not.toBeInTheDocument();
     });
 
     it('should render the markdown content of the post', () => {
@@ -122,6 +143,17 @@ describe('Article Component', () => {
         expect(screen.getByRole('link', { name: /A Newer Post/ })).toHaveAttribute('href', '/blog/a-newer-post');
         expect(screen.getByRole('link', { name: /An Older Post/ })).toHaveAttribute('href', '/blog/an-older-post');
         expect(screen.getByRole('link', { name: 'All articles' })).toHaveAttribute('href', '/blog');
+    });
+
+    it('should close the body with the author card and suggest related posts', () => {
+        // Arrange
+        const related = { ...post, id: '4', title: 'A Related Post', slug: 'a-related-post' };
+        render(<Article post={post} related={[related]} />);
+
+        // Assert
+        expect(screen.getByRole('complementary', { name: 'About the author' })).toBeInTheDocument();
+        expect(screen.getByRole('region', { name: 'Related posts' })).toBeInTheDocument();
+        expect(screen.getByRole('link', { name: /A Related Post/ })).toHaveAttribute('href', '/blog/a-related-post');
     });
 
     it('should omit a neighbour link that does not exist', () => {

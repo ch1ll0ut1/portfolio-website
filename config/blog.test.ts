@@ -45,7 +45,6 @@ describe('Blog Configuration', () => {
                     title: expect.any(String),
                     excerpt: expect.any(String),
                     date: expect.any(String),
-                    readTime: expect.any(String),
                     tags: expect.arrayContaining([expect.any(String)]),
                     slug: expect.any(String),
                 });

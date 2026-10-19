@@ -13,7 +13,6 @@ const post: BlogPost = {
     title: 'An Older Post',
     excerpt: 'The excerpt.',
     date: '2025-08-14',
-    readTime: '10 min read',
     tags: ['AI'],
     slug: 'an-older-post',
     published: true,

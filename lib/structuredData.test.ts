@@ -22,7 +22,6 @@ const post: BlogPost = {
     title: 'A post',
     excerpt: 'What it says.',
     date: '2026-01-02',
-    readTime: '3 min read',
     tags: ['One', 'Two'],
     slug: 'a-post',
     published: true,
@@ -202,7 +201,7 @@ describe('structuredData', () => {
 
             // Assert
             expect(schema.url).toBe(`${siteConfig.url}/blog/a-post`);
-            expect(schema.image).toBe(`${siteConfig.url}/blog/a-post/opengraph-image`);
+            expect(schema.image).toBe(`${siteConfig.url}/blog/a-post/card.png`);
         });
 
         it('should date the post in Bangkok time', () => {
@@ -212,6 +211,15 @@ describe('structuredData', () => {
             // Assert
             expect(schema.datePublished).toBe('2026-01-02T00:00:00+07:00');
             expect(schema.dateModified).toBe('2026-01-02T00:00:00+07:00');
+        });
+
+        it('should date the modification by the post\'s update when it has one', () => {
+            // Act
+            const schema = blogPostingSchema({ ...post, updated: '2026-03-04' });
+
+            // Assert
+            expect(schema.datePublished).toBe('2026-01-02T00:00:00+07:00');
+            expect(schema.dateModified).toBe('2026-03-04T00:00:00+07:00');
         });
     });
 

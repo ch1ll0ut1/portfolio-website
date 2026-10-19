@@ -8,6 +8,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { notFound } from 'next/navigation';
 import { blogPosts } from '@/config/blog';
 import { absoluteUrl, siteConfig } from '@/config/site';
+import { feedAlternateTypes } from '@/lib/feed';
 import { itemAt } from '@/test/itemAt';
 // Imported once at module scope rather than inside each test: loading the
 // route pulls in the whole article graph, and a cold load inside a test body
@@ -38,21 +39,38 @@ describe('/blog/[slug]', () => {
 
             expect(metadata.title).toBe(post.title);
             expect(metadata.description).toBe(post.excerpt);
-            expect(metadata.alternates?.canonical).toBe(`/blog/${post.slug}`);
+            expect(metadata.alternates).toEqual({ canonical: `/blog/${post.slug}`, types: feedAlternateTypes });
             expect(metadata.openGraph).toMatchObject({
                 title: post.title,
                 description: post.excerpt,
                 url: absoluteUrl(`/blog/${post.slug}`),
                 type: 'article',
                 publishedTime: `${post.date}T00:00:00+07:00`,
+                modifiedTime: `${post.updated ?? post.date}T00:00:00+07:00`,
                 siteName: siteConfig.name,
                 locale: 'en_US',
-                authors: [siteConfig.name],
+                authors: [absoluteUrl('/')],
                 tags: post.tags,
             });
             expect(metadata.twitter).toMatchObject({ card: 'summary_large_image', title: post.title });
+            // The post's own card, described by its title on both networks.
+            const card = { url: `/blog/${post.slug}/card.png`, alt: post.title };
+            expect(metadata.openGraph?.images).toEqual([expect.objectContaining(card)]);
+            expect(metadata.twitter?.images).toEqual([expect.objectContaining(card)]);
             expect(metadata.robots).toBeUndefined();
             expect(metadata).not.toHaveProperty('keywords');
+        });
+
+        it('should date a revised post\'s card by its update', async () => {
+            const post = blogPosts.find(entry => entry.updated !== undefined);
+
+            const metadata = await generateMetadata({ params: params(post?.slug ?? '') });
+
+            expect(post).toBeDefined();
+            expect(metadata.openGraph).toMatchObject({
+                publishedTime: `${post?.date}T00:00:00+07:00`,
+                modifiedTime: `${post?.updated}T00:00:00+07:00`,
+            });
         });
 
         // Next's own `noindex` on the 404 keeps it out of the index; a value
