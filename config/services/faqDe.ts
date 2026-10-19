@@ -4,17 +4,17 @@
  */
 
 import {
-    FIRST_VERSION_RANGE_USD,
-    RESCUE_RANGE_USD,
+    FIRST_VERSION_RANGE_EUR,
+    RESCUE_RANGE_EUR,
     TECH_LEAD_MIN_HOURS_PER_MONTH,
-    usdRangeDe,
+    eurRangeDe,
 } from '../pricing';
 import type { FaqCopy } from './types';
 
 export const faqDe: FaqCopy[] = [
     {
         question: 'Was kostet das?',
-        answer: `Jeder Auftrag wird nach Stunden auf Basis eines schriftlichen Plans abgerechnet. Sie zahlen also für geleistete Arbeit, nicht für einen Festpreis mit Risikoaufschlag. Zur Orientierung: Die meisten Rettungen kosten ${usdRangeDe(RESCUE_RANGE_USD)}, die meisten ersten Versionen einer neuen App ${usdRangeDe(FIRST_VERSION_RANGE_USD)}, und die Rolle als Tech Lead beginnt bei etwa ${TECH_LEAD_MIN_HOURS_PER_MONTH} Stunden im Monat. Der erste Schritt, ein Check oder ein Produktplan, ist etwa eine Woche Arbeit und endet mit einem bepreisten Plan, bevor Sie sich auf mehr festlegen.`,
+        answer: `Jeder Auftrag wird nach Stunden auf Basis eines schriftlichen Plans abgerechnet. Sie zahlen also für geleistete Arbeit, nicht für einen Festpreis mit Risikoaufschlag. Zur Orientierung: Die meisten Rettungen kosten ${eurRangeDe(RESCUE_RANGE_EUR)}, die meisten ersten Versionen einer neuen App ${eurRangeDe(FIRST_VERSION_RANGE_EUR)}, und die Rolle als Tech Lead beginnt bei etwa ${TECH_LEAD_MIN_HOURS_PER_MONTH} Stunden im Monat. Der erste Schritt, ein Check oder ein Produktplan, ist etwa eine Woche Arbeit und endet mit einem bepreisten Plan, bevor Sie sich auf mehr festlegen.`,
     },
     {
         question: 'Können Sie Code übernehmen, den ein anderer Entwickler geschrieben hat?',

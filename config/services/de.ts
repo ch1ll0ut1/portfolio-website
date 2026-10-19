@@ -8,10 +8,10 @@
  */
 
 import {
-    FIRST_VERSION_RANGE_USD,
-    RESCUE_RANGE_USD,
+    FIRST_VERSION_RANGE_EUR,
+    RESCUE_RANGE_EUR,
     TECH_LEAD_MIN_HOURS_PER_MONTH,
-    usdRangeDe,
+    eurRangeDe,
 } from '../pricing';
 import { yearsShipping } from '../site';
 import { faqDe } from './faqDe';
@@ -80,7 +80,7 @@ export const servicesDe: ServicesPageCopy = {
                 'Die Rettung in wöchentlichen Etappen: jede Woche ausgelieferte Reparaturen und ein kurzer schriftlicher Bericht.',
                 'Eine saubere Übergabe, oder ich bleibe für die nächste Phase.',
             ],
-            range: `Check etwa eine Woche Arbeit · die meisten Rettungen ${usdRangeDe(RESCUE_RANGE_USD)}`,
+            range: `Check etwa eine Woche Arbeit · die meisten Rettungen ${eurRangeDe(RESCUE_RANGE_EUR)}`,
             proof: [
                 'Bei Eko die Echtzeit-Nachrichten doppelt so schnell gemacht, durch den Umbau des Kernsystems unter Last',
                 'Bei Agoda, einer der größten Reiseplattformen Asiens, eine abteilungsweite Initiative für Codequalität geleitet',
@@ -106,7 +106,7 @@ export const servicesDe: ServicesPageCopy = {
                 'Die Entwicklung in wöchentlichen Etappen: jede Woche eine klickbare Version und ein kurzer schriftlicher Bericht.',
                 'Start und Übergabe, mit Dokumentation und Tests.',
             ],
-            range: `Produktplan etwa eine Woche Arbeit · die meisten ersten Versionen ${usdRangeDe(FIRST_VERSION_RANGE_USD)}`,
+            range: `Produktplan etwa eine Woche Arbeit · die meisten ersten Versionen ${eurRangeDe(FIRST_VERSION_RANGE_EUR)}`,
             proof: [
                 'Technischer Mitgründer von BlueReceipt, einer SMS-Marketing-Plattform für Shopify-Händler',
                 'Leitender Architekt von Edithing, dem Gesetzeseditor des isländischen Parlaments',
