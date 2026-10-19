@@ -1,8 +1,9 @@
 'use client';
 
 import { type FC, useEffect, useId, useRef } from 'react';
+import Link from 'next/link';
 import { useInView } from '@/lib/motion';
-import { type Engagement, formatLabel } from '@/config/engagements';
+import { type Engagement, engagementLink, rangeLabel } from '@/config/engagements';
 import type { CssVars } from '@/lib/cssVars';
 import { runBorderTrace } from './borderTrace';
 import { useSpotlight } from './useSpotlight';
@@ -103,6 +104,7 @@ export const ServiceCard: FC<Props> = ({ engagement, index }) => {
                     {engagement.name}
                     {engagement.featured && <span className="visually-hidden">, featured</span>}
                 </h3>
+                <p className={styles.subtitle}>{engagement.subtitle}</p>
                 <p className={styles.who}>{engagement.who}</p>
             </div>
 
@@ -114,10 +116,21 @@ export const ServiceCard: FC<Props> = ({ engagement, index }) => {
                 })}
             </ul>
 
-            <p className={styles.format}>
-                <span>{formatLabel}</span>
-                {engagement.format}
-            </p>
+            <div className={styles.foot}>
+                <p className={styles.format}>
+                    <span>{rangeLabel}</span>
+                    {engagement.range}
+                </p>
+                <Link className={styles.more} href={engagementLink.href(engagement.id)}>
+                    {engagementLink.label}
+                    <span className="visually-hidden">
+                        :
+                        {' '}
+                        {engagement.name}
+                    </span>
+                    <span aria-hidden="true"> →</span>
+                </Link>
+            </div>
 
             {engagement.featured && <div ref={traceRef} className={styles.trace} aria-hidden="true" />}
         </article>

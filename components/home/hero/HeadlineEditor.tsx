@@ -1,11 +1,13 @@
 'use client';
 
 import { type FC, type RefObject, memo, useEffect } from 'react';
-import { heroHeadline } from '@/config/hero';
+import { heroHeadline, heroKicker } from '@/config/hero';
 import styles from './Hero.module.css';
 
-const HEADING_TEXT_ID = 'hero-headline';
+const KICKER_SEPARATOR = ' · ';
 const HEADLINE_TEXT = `${heroHeadline.before}${heroHeadline.highlight}${heroHeadline.after}`;
+/** The kicker, then the shipped headline: the heading in reading order. */
+const HEADING_NAME = `${heroKicker.join(KICKER_SEPARATOR)}. ${HEADLINE_TEXT}`;
 
 export interface Props {
     titleRef: RefObject<HTMLElement | null>;
@@ -63,12 +65,23 @@ const HeadlineEditorView: FC<Props> = ({ titleRef, hintId, onInput, onKeyDown, o
         };
     }, [titleRef, hintId, onInput, onKeyDown, onPaste, onBlur]);
 
-    // The heading is named by the shipped headline, not by whatever the
-    // visitor has typed into the editor inside it: the page's outline stays
-    // the page's, and the editor is a widget within it.
+    // The heading is named by the kicker and the shipped headline, not by
+    // whatever the visitor has typed into the editor inside it: the page's
+    // outline stays the page's, and the editor is a widget within it. A label
+    // rather than a hidden copy of the text, so the heading's text content
+    // carries the headline once.
     return (
-        <h1 aria-labelledby={HEADING_TEXT_ID}>
-            <span id={HEADING_TEXT_ID} hidden>{HEADLINE_TEXT}</span>
+        <h1 aria-label={HEADING_NAME}>
+            <span className={styles.kicker}>
+                {heroKicker.map((part, index) => (
+                    // The separator trails its part, so a wrapped line never starts with one.
+                    <span key={part} className={styles.kickerPart}>
+                        {part}
+                        {index < heroKicker.length - 1 && KICKER_SEPARATOR}
+                    </span>
+                ))}
+            </span>
+            {' '}
             <span
                 ref={titleRef}
                 className={styles.title}

@@ -108,6 +108,13 @@ export const commands: Command[] = [
         action: { type: 'external', url: links.social.linkedin },
     },
     {
+        id: 'services-page',
+        group: 'Elsewhere',
+        label: 'Services in detail',
+        hint: '/services',
+        action: { type: 'route', href: '/services' },
+    },
+    {
         id: 'blog',
         group: 'Elsewhere',
         label: 'Blog',

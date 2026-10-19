@@ -15,8 +15,8 @@ import { useRouteFocus } from './useRouteFocus';
 import { useSlidingPill } from './useSlidingPill';
 import styles from './SiteNav.module.css';
 
-/** Module-level so the observer in `useActiveSection` is built once. */
-const NAV_IDS = navSections.map(section => section.id);
+/** Module-level so the observer in `useActiveSection` is built once. Page links are not tracked. */
+const NAV_IDS = navSections.filter(section => section.page === undefined).map(section => section.id);
 /** Matches the prototype's `data-magnetic` pull on the primary call to action. */
 const BOOK_MAGNET = 0.25;
 /** The one route the sections live on. */
@@ -38,7 +38,9 @@ export interface Props {
  * tools cluster.
  *
  * Section links come from `config/sections.ts`, so the nav, the command palette
- * and the keyboard chords cannot drift apart.
+ * and the keyboard chords cannot drift apart. A section with a `page` of its
+ * own (the services, the writing) links there instead, so the header carries
+ * a crawlable link to the page, marked current on it and below it.
  *
  * Those links are absolute (`/#work`) rather than bare fragments so the same
  * nav works on the reading routes, where the sections are not in the document.
@@ -61,7 +63,9 @@ export const SiteNav: FC<Props> = ({ tools }) => {
 
     const pathname = usePathname();
     const router = useRouter();
-    const activeId = useActiveSection(NAV_IDS, pathname);
+    const activeSectionId = useActiveSection(NAV_IDS, pathname);
+    const pageId = navSections.find(section => section.page !== undefined && isOnPage(pathname, section.page))?.id;
+    const activeId = pageId ?? activeSectionId;
 
     useHeaderScroll(headerRef, styles.isScrolled, styles.isHidden);
     useSlidingPill(listRef, pillRef, activeId);
@@ -95,6 +99,20 @@ export const SiteNav: FC<Props> = ({ tools }) => {
 
                         {navSections.map((section) => {
                             const isActive = section.id === activeId;
+
+                            if (section.page !== undefined) {
+                                return (
+                                    <Link
+                                        key={section.id}
+                                        href={section.page}
+                                        className={isActive ? styles.isActive : undefined}
+                                        aria-current={isActive ? 'page' : undefined}
+                                        data-nav-id={section.id}
+                                    >
+                                        {section.label}
+                                    </Link>
+                                );
+                            }
 
                             return (
                                 <Link
@@ -131,6 +149,11 @@ export const SiteNav: FC<Props> = ({ tools }) => {
         </>
     );
 };
+
+/** Whether `pathname` is `page` or somewhere under it, such as a post under `/blog`. */
+const isOnPage = (pathname: string | null, page: string) => (
+    pathname === page || (pathname?.startsWith(`${page}/`) ?? false)
+);
 
 /** A click the browser should keep: another button, or opening elsewhere. */
 const isModifiedClick = (event: MouseEvent) => (

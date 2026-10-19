@@ -2,28 +2,29 @@ import { FC } from 'react';
 import type { Metadata } from 'next';
 import { ContactPage } from '@/components/contact/ContactPage';
 import { ReadingShell } from '@/components/blog/ReadingShell';
+import { JsonLd } from '@/components/seo/JsonLd';
 import { absoluteUrl, siteConfig } from '@/config/site';
 import { baseOpenGraph } from '@/lib/baseOpenGraph';
+import { WEBSITE_ID, breadcrumbSchema, jsonLdGraph, personRef } from '@/lib/structuredData';
 import { twitterCard } from '@/lib/twitterCard';
 import { issueContactToken, sendContactMessage } from './actions';
 
-const TITLE = 'Contact';
-const DESCRIPTION = 'Send Stefan Knoch a message: project enquiries, general questions and privacy requests.';
-/** What the share cards show: the page title with the layout's name suffix. */
-const SHARE_TITLE = `${TITLE} | ${siteConfig.name}`;
+/** Absolute, as it already names him: the layout's "| Stefan Knoch" would repeat it. */
+const TITLE = `Contact ${siteConfig.name} — hire a software architect & tech lead`;
+const DESCRIPTION = 'Tell me about your app, your MVP or your team. I reply within a day from Bangkok, across European, US and Asian hours. Projects, questions and privacy requests.';
 
 /* Every share field is set here, not inherited; see app/privacy/page.tsx. */
 export const metadata: Metadata = {
-    title: TITLE,
+    title: { absolute: TITLE },
     description: DESCRIPTION,
     openGraph: {
         ...baseOpenGraph,
-        title: SHARE_TITLE,
+        title: TITLE,
         description: DESCRIPTION,
         url: absoluteUrl('/contact'),
         type: 'website',
     },
-    twitter: twitterCard(SHARE_TITLE, DESCRIPTION),
+    twitter: twitterCard(TITLE, DESCRIPTION),
     robots: {
         index: true,
         follow: true,
@@ -39,9 +40,29 @@ export const metadata: Metadata = {
  * browser. Both need JavaScript, which the form needs anyway (BotID).
  */
 const Contact: FC = () => (
-    <ReadingShell>
-        <ContactPage action={sendContactMessage} issueToken={issueContactToken} />
-    </ReadingShell>
+    <>
+        <JsonLd data={jsonLdGraph(contactPageSchema, breadcrumbSchema(BREADCRUMBS))} />
+        <ReadingShell>
+            <ContactPage action={sendContactMessage} issueToken={issueContactToken} />
+        </ReadingShell>
+    </>
 );
+
+const BREADCRUMBS = [
+    { name: 'Home', path: '/' },
+    { name: 'Contact', path: '/contact' },
+];
+
+/** The page as a ContactPage whose subject is the site owner. */
+const contactPageSchema = {
+    '@type': 'ContactPage',
+    '@id': absoluteUrl('/contact#contactpage'),
+    'url': absoluteUrl('/contact'),
+    'name': TITLE,
+    'description': DESCRIPTION,
+    'inLanguage': 'en',
+    'isPartOf': { '@id': WEBSITE_ID },
+    'mainEntity': personRef(),
+};
 
 export default Contact;

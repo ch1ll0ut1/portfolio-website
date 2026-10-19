@@ -57,7 +57,7 @@ export const processSteps: ProcessStep[] = [
     {
         id: 'build',
         title: 'Build',
-        description: 'Working increments in production every week. I write the code myself and run agent pipelines for research, tests, and review.',
+        description: 'A working piece of the product, live every week. I write the code myself; AI tools help with research, tests, and review, and nothing ships until I have checked it.',
         transcript: [
             [{ text: '$', tone: 'prompt' }, { text: ' claude /ship feature/onboarding' }],
             [{ text: 'agents', tone: 'dim' }],
@@ -71,7 +71,7 @@ export const processSteps: ProcessStep[] = [
     {
         id: 'handover',
         title: 'Hand over',
-        description: 'Docs, tests, CI/CD, and onboarding for your team, so the product keeps running without me.',
+        description: 'Documentation, tests, automatic deploys, and a walkthrough for your team, so the product keeps running without me.',
         transcript: [
             [{ text: '$', tone: 'prompt' }, { text: ' handover --team' }],
             [{ text: '✓', tone: 'ok' }, { text: ' docs/handbook.md' }],

@@ -74,7 +74,7 @@ describe('Services', () => {
         expect(container.querySelector('#services')).toBeInTheDocument();
     });
 
-    it('should render every engagement with its bullets and format line', () => {
+    it('should render every engagement with its bullets and range line', () => {
         // Act
         render(<Services />);
 
@@ -84,12 +84,25 @@ describe('Services', () => {
 
             expect(within(card).getByRole('heading', { level: 3 })).toHaveTextContent(engagement.name);
             expect(within(card).getByText(engagement.who)).toBeInTheDocument();
+            expect(within(card).getByText(engagement.subtitle)).toBeInTheDocument();
 
             engagement.bullets.forEach((bullet) => {
                 expect(within(card).getByText(bullet)).toBeInTheDocument();
             });
 
-            expect(card.textContent).toContain(engagement.format);
+            expect(card.textContent).toContain(engagement.range);
+        });
+    });
+
+    it('should link every card to its section of the services page', () => {
+        // Act
+        render(<Services />);
+
+        // Assert
+        engagements.forEach((engagement) => {
+            const link = within(cardFor(engagement.id)).getByRole('link', { name: new RegExp(engagement.name, 'i') });
+
+            expect(link).toHaveAttribute('href', `/services#${engagement.id}`);
         });
     });
 

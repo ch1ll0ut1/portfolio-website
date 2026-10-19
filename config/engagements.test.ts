@@ -5,7 +5,7 @@
 
 import { describe, it, expect } from 'vitest';
 import { itemAt } from '@/test/itemAt';
-import { engagementNote, engagements, engagementsHeading, formatLabel } from './engagements';
+import { engagementLink, engagementNote, engagements, engagementsHeading, rangeLabel } from './engagements';
 
 describe('Engagements Configuration', () => {
     describe('Engagement Data Integrity', () => {
@@ -15,9 +15,11 @@ describe('Engagements Configuration', () => {
                 expect.objectContaining({
                     id: expect.any(String),
                     name: expect.any(String),
+                    subtitle: expect.any(String),
+                    short: expect.any(String),
                     who: expect.any(String),
                     bullets: expect.arrayContaining([expect.any(String)]),
-                    format: expect.any(String),
+                    range: expect.any(String),
                     featured: expect.any(Boolean),
                 }),
             ]));
@@ -40,8 +42,9 @@ describe('Engagements Configuration', () => {
             // Assert
             engagements.forEach((engagement) => {
                 expect(engagement.name.length).toBeGreaterThan(0);
+                expect(engagement.subtitle.length).toBeGreaterThan(0);
                 expect(engagement.who.length).toBeGreaterThan(0);
-                expect(engagement.format.length).toBeGreaterThan(0);
+                expect(engagement.range.length).toBeGreaterThan(0);
             });
         });
 
@@ -61,7 +64,7 @@ describe('Engagements Configuration', () => {
 
             // Assert
             expect(featured).toHaveLength(1);
-            expect(itemAt(featured, 0).name).toBe('Founding engineer');
+            expect(itemAt(featured, 0).id).toBe('build');
         });
     });
 
@@ -72,9 +75,21 @@ describe('Engagements Configuration', () => {
             expect(engagementsHeading.lede.length).toBeGreaterThan(0);
         });
 
-        it('should have a label for the format lines', () => {
+        it('should have a label for the range lines', () => {
             // Assert
-            expect(formatLabel).toBe('Format');
+            expect(rangeLabel).toBe('Typical');
+        });
+
+        it('should link every card to its section of the services page', () => {
+            // Assert
+            expect(engagementLink.href('rescue')).toBe('/services#rescue');
+        });
+
+        it('should quote ranges, never an hourly rate', () => {
+            // Assert
+            engagements.forEach((engagement) => {
+                expect(engagement.range).not.toMatch(/\/\s*h|per hour|hourly/i);
+            });
         });
     });
 
@@ -95,7 +110,7 @@ describe('Engagements Configuration', () => {
 
             // Assert
             expect(selected).toHaveLength(1);
-            expect(itemAt(selected, 0).text).toBe('senior judgment on every decision');
+            expect(itemAt(selected, 0).text).toBe('senior quality, faster.');
         });
     });
 });

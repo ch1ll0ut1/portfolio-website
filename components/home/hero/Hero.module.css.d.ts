@@ -20,6 +20,8 @@ declare const styles: {
     readonly isGhost: string;
     readonly isOn: string;
     readonly key: string;
+    readonly kicker: string;
+    readonly kickerPart: string;
     readonly lede: string;
     readonly ln: string;
     readonly punct: string;

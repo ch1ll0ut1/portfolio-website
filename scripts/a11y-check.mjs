@@ -39,7 +39,7 @@ const routes = async () => {
         return listed.split(',');
     }
 
-    return ['/', '/blog', ...await newestArticle(), ...await firstCaseStudy(), '/privacy', '/contact'];
+    return ['/', '/blog', ...await newestArticle(), ...await firstCaseStudy(), '/privacy', '/contact', '/services', '/de/leistungen'];
 };
 
 const scan = async (browser, route, theme) => {

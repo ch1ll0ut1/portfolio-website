@@ -49,6 +49,9 @@ const flushFrames = () => {
 
 const getHeader = () => screen.getByRole('banner');
 
+/** The nav items that jump to a homepage section rather than open a page. */
+const fragmentSections = navSections.filter(section => section.page === undefined);
+
 /** A scroll with nothing from the reader behind it, like a jump to a fragment. */
 const jumpTo = (value: number) => {
     setScrollY(value);
@@ -76,7 +79,7 @@ describe('<SiteNav> Component', () => {
         observers = installIntersectionObserver();
         restoreMedia = installMatchMedia([]);
 
-        sectionNodes = navSections.map((section) => {
+        sectionNodes = fragmentSections.map((section) => {
             const node = document.createElement('section');
 
             node.id = section.id;
@@ -173,16 +176,31 @@ describe('<SiteNav> Component', () => {
         const nav = screen.getByRole('navigation', { name: 'Sections' });
 
         navSections.forEach((section) => {
-            expect(screen.getByRole('link', { name: section.label })).toHaveAttribute('href', `/#${section.id}`);
+            expect(screen.getByRole('link', { name: section.label })).toHaveAttribute('href', section.page ?? `/#${section.id}`);
         });
 
         expect(nav.querySelectorAll('a')).toHaveLength(navSections.length);
     });
 
+    it('should link the services and the writing to their own pages', () => {
+        render(<SiteNav />);
+
+        expect(screen.getByRole('link', { name: 'Services' })).toHaveAttribute('href', '/services');
+        expect(screen.getByRole('link', { name: 'Writing' })).toHaveAttribute('href', '/blog');
+    });
+
+    it('should mark a page link current on its page and the pages under it', () => {
+        navigation.pathname = '/blog/a-post';
+        render(<SiteNav />);
+
+        expect(screen.getByRole('link', { name: 'Writing' })).toHaveAttribute('aria-current', 'page');
+        expect(screen.getByRole('link', { name: 'Services' })).not.toHaveAttribute('aria-current');
+    });
+
     it('should scroll to and focus the section when a section link is clicked on the homepage', () => {
         const scrollIntoView = vi.fn();
         const target = itemAt(sectionNodes, 1);
-        const section = itemAt(navSections, 1);
+        const section = itemAt(fragmentSections, 1);
 
         target.scrollIntoView = scrollIntoView;
         render(<SiteNav />);
@@ -201,7 +219,7 @@ describe('<SiteNav> Component', () => {
     it('should leave a modified click on a section link to the browser', () => {
         render(<SiteNav />);
 
-        const click = fireEvent.click(screen.getByRole('link', { name: itemAt(navSections, 1).label }), { metaKey: true });
+        const click = fireEvent.click(screen.getByRole('link', { name: itemAt(fragmentSections, 1).label }), { metaKey: true });
 
         expect(click).toBe(true);
         expect(itemAt(sectionNodes, 1)).not.toHaveFocus();
@@ -251,8 +269,8 @@ describe('<SiteNav> Component', () => {
             }
         });
 
-        expect(screen.getByRole('link', { name: itemAt(navSections, 2).label })).toHaveAttribute('aria-current', 'location');
-        expect(screen.getByRole('link', { name: itemAt(navSections, 0).label })).not.toHaveAttribute('aria-current');
+        expect(screen.getByRole('link', { name: itemAt(fragmentSections, 2).label })).toHaveAttribute('aria-current', 'location');
+        expect(screen.getByRole('link', { name: itemAt(fragmentSections, 0).label })).not.toHaveAttribute('aria-current');
     });
 
     // The layout keeps the nav mounted across client-side navigation.
@@ -273,7 +291,7 @@ describe('<SiteNav> Component', () => {
         navigation.pathname = '/blog';
         rerender(<SiteNav />);
 
-        expect(screen.getByRole('link', { name: itemAt(navSections, 2).label })).not.toHaveAttribute('aria-current');
+        expect(screen.getByRole('link', { name: itemAt(fragmentSections, 2).label })).not.toHaveAttribute('aria-current');
         expect(first?.disconnected).toBe(true);
         expect(findObservers().at(-1)).not.toBe(first);
     });
@@ -299,7 +317,7 @@ describe('<SiteNav> Component', () => {
         navigation.pathname = '/';
         rerender(<SiteNav />);
 
-        for (const section of navSections) {
+        for (const section of fragmentSections) {
             expect(screen.getByRole('link', { name: section.label })).not.toHaveAttribute('aria-current');
         }
 
@@ -314,13 +332,13 @@ describe('<SiteNav> Component', () => {
             }
         });
 
-        expect(screen.getByRole('link', { name: itemAt(navSections, 1).label })).toHaveAttribute('aria-current', 'location');
+        expect(screen.getByRole('link', { name: itemAt(fragmentSections, 1).label })).toHaveAttribute('aria-current', 'location');
     });
 
     it('should move the pill to a link that receives focus', () => {
         render(<SiteNav />);
 
-        const link = screen.getByRole('link', { name: itemAt(navSections, 1).label });
+        const link = screen.getByRole('link', { name: itemAt(fragmentSections, 1).label });
 
         Object.defineProperty(link, 'offsetWidth', { value: 80, configurable: true });
         Object.defineProperty(link, 'offsetLeft', { value: 120, configurable: true });
@@ -338,7 +356,7 @@ describe('<SiteNav> Component', () => {
         render(<SiteNav />);
 
         const nav = screen.getByRole('navigation', { name: 'Sections' });
-        const link = screen.getByRole('link', { name: itemAt(navSections, 0).label });
+        const link = screen.getByRole('link', { name: itemAt(fragmentSections, 0).label });
         const pill = getHeader().querySelector(`.${styles.pill}`);
 
         act(() => {
@@ -394,11 +412,11 @@ describe('<SiteNav> Component', () => {
         });
 
         it('should not hide the header when a section link scrolls the page down', () => {
-            itemAt(sectionNodes, 3).scrollIntoView = vi.fn();
+            itemAt(sectionNodes, 2).scrollIntoView = vi.fn();
             render(<SiteNav />);
 
             // A real click presses the pointer on the link, not the scrollbar.
-            const link = screen.getByRole('link', { name: itemAt(navSections, 3).label });
+            const link = screen.getByRole('link', { name: itemAt(fragmentSections, 2).label });
 
             fireEvent.pointerDown(link);
             fireEvent.click(link);

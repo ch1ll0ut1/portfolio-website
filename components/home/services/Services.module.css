@@ -67,6 +67,14 @@
     font-variation-settings: 'wdth' 80;
 }
 
+.subtitle {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    letter-spacing: .02em;
+    color: var(--muted);
+    font-variation-settings: 'wdth' 88;
+}
+
 .who {
     color: var(--fg-2);
 }
@@ -101,10 +109,15 @@
     transition: transform var(--dur-s) var(--ease-out);
 }
 
-.format {
+.foot {
     margin-top: auto;
     padding-top: 18px;
     border-top: 1px dashed var(--line);
+    display: grid;
+    gap: 14px;
+}
+
+.format {
     font-weight: 600;
     display: grid;
     gap: 2px;
@@ -114,6 +127,21 @@
     font-weight: 400;
     color: var(--muted);
     font-size: var(--fs-small);
+}
+
+/* The card's way on to its section of /services. */
+.more {
+    justify-self: start;
+    font-size: var(--fs-small);
+    color: var(--fg);
+    text-decoration: underline;
+    text-decoration-color: var(--caret);
+    text-decoration-thickness: 2px;
+    text-underline-offset: .2em;
+}
+
+.more:hover {
+    text-decoration-color: currentColor;
 }
 
 /* ---------- featured card ---------- */
