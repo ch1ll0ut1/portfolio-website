@@ -13,8 +13,10 @@ import userEvent from '@testing-library/user-event';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { REDUCED_MOTION_QUERY } from '@/lib/motion';
 import { installMatchMedia } from '../../../test/motionEnv';
-import { heroCtas, heroHeadline, heroLocation } from '@/config/hero';
+import { heroAvailability, heroCtas, heroHeadline, heroKicker, heroLocation } from '@/config/hero';
+import { yearsShipping } from '@/config/site';
 import { Hero } from './Hero';
+import { itemAt } from '@/test/itemAt';
 import { selectOffsets } from './editorDom';
 
 const editor = () => screen.getByRole('textbox', { name: 'Headline' });
@@ -43,6 +45,27 @@ describe('Hero', () => {
         expect(heading).toHaveTextContent(`${heroHeadline.before}${heroHeadline.highlight}${heroHeadline.after}`);
     });
 
+    it('should carry the kicker inside the heading, with the years counted from the start year', () => {
+        render(<Hero />);
+
+        const heading = screen.getByRole('heading', { level: 1 });
+
+        heroKicker.forEach((part) => {
+            expect(heading).toHaveTextContent(part);
+        });
+        expect(heading).toHaveTextContent(`${yearsShipping()} years`);
+    });
+
+    it('should hold the headline text once, with no hidden copy for the name', () => {
+        render(<Hero />);
+
+        const heading = screen.getByRole('heading', { level: 1 });
+        const occurrences = heading.textContent.split(heroHeadline.highlight).length - 1;
+
+        expect(occurrences).toBe(1);
+        expect(heading.querySelector('[hidden]')).toBeNull();
+    });
+
     it('should keep the heading named by the shipped headline, whatever is typed into it', () => {
         render(<Hero />);
 
@@ -50,7 +73,9 @@ describe('Hero', () => {
 
         editor().textContent = 'Something else entirely';
 
-        expect(heading).toHaveAccessibleName(`${heroHeadline.before}${heroHeadline.highlight}${heroHeadline.after}`);
+        expect(heading).toHaveAccessibleName(expect.stringContaining(`${heroHeadline.before}${heroHeadline.highlight}${heroHeadline.after}`));
+        expect(heading).toHaveAccessibleName(expect.stringContaining(itemAt(heroKicker, 0)));
+        expect(heading).not.toHaveAccessibleName(expect.stringContaining('Something else'));
         expect(heading).not.toHaveAttribute('contenteditable');
     });
 
@@ -170,7 +195,7 @@ describe('Hero', () => {
     it('should show availability and the local time placeholder until the clock starts', () => {
         render(<Hero />);
 
-        expect(screen.getByText(/senior or tech-lead roles/i)).toBeInTheDocument();
+        expect(screen.getByText(heroAvailability)).toBeInTheDocument();
         expect(screen.getByText(heroLocation.placeholder)).toBeInTheDocument();
         expect(screen.getByText(heroLocation.utcOffset)).toBeInTheDocument();
     });
@@ -219,7 +244,7 @@ describe('Hero server output', () => {
     it('should contain the lede and both calls to action', () => {
         const html = markup();
 
-        expect(html).toContain('fractional CTO');
+        expect(html).toContain('fix broken ones');
 
         for (const cta of heroCtas) {
             expect(html).toContain(cta.label);

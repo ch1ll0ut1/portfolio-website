@@ -6,7 +6,7 @@
  */
 
 import { links } from './links';
-import { siteConfig } from './site';
+import { yearsShipping } from './site';
 
 export interface HeroCta {
     label: string;
@@ -23,7 +23,18 @@ export const heroHeadline = {
     after: '.',
 };
 
-export const heroAvailability = 'Open to projects and senior or tech-lead roles';
+/**
+ * The small line set above the headline, inside the h1: who, how long, which
+ * languages and which hours. The year count derives from `sinceYear`.
+ */
+export const heroKicker = [
+    'Software architect & tech lead',
+    `${yearsShipping()} years`,
+    'English & Deutsch',
+    'Europe, US & Asia hours',
+];
+
+export const heroAvailability = 'Taking on new projects';
 
 export const heroLocation = {
     city: 'Bangkok',
@@ -33,7 +44,7 @@ export const heroLocation = {
     placeholder: '--:--',
 };
 
-export const heroLede = `Software architect, fractional CTO, and hands-on tech lead. Since ${siteConfig.sinceYear} I’ve taken products from the first commit to production, for startups, scale-ups, and the Parliament of Iceland.`;
+export const heroLede = 'I build new apps, fix broken ones, and lead your developers, so the software your business runs on actually works. For startups, small businesses, and the Parliament of Iceland.';
 
 export const heroCtas: HeroCta[] = [
     { label: 'Book a 30-min call', href: links.calendly, primary: true, external: true },

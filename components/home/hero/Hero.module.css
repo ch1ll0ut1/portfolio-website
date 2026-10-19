@@ -117,6 +117,27 @@
     position: relative;
 }
 
+/* The h1's kicker: who, how long, which languages and hours, as a mono
+   eyebrow above the headline. A span, like the editor beside it, since a
+   heading only holds phrasing content. */
+.kicker {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: clamp(14px, 1.6vw, 22px);
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    font-weight: 400;
+    line-height: 1.6;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: var(--fg-2);
+    font-variation-settings: 'wdth' 88;
+}
+
+.kickerPart {
+    white-space: pre;
+}
+
 /* The editor inside the page's h1. A span, since a heading only holds
    phrasing content, laid out as the block the headline always was. */
 .title {
