@@ -68,7 +68,7 @@ describe('Article Component', () => {
         // Assert
         expect(screen.getByText(formatDate(post.date))).toBeInTheDocument();
         expect(screen.getByText(post.readTime)).toBeInTheDocument();
-        expect(screen.getByText('Stefan Knoch')).toBeInTheDocument();
+        expect(screen.getAllByRole('link', { name: 'Stefan Knoch' })[0]).toHaveAttribute('href', '/');
         expect(screen.getByText(post.excerpt)).toBeInTheDocument();
         post.tags.forEach((tag) => {
             expect(screen.getByText(tag)).toBeInTheDocument();

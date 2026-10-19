@@ -2,6 +2,7 @@ import { FC } from 'react';
 import { type BlogPost, type ListedPost } from '@/config/blog';
 import { Markdown } from '@/components/markdown/Markdown';
 import { ArticleHeader } from './ArticleHeader';
+import { AuthorBox } from './AuthorBox';
 import { ArticlePager } from './ArticlePager';
 import { ReadingProgress } from './ReadingProgress';
 import styles from './Article.module.css';
@@ -29,6 +30,7 @@ export const Article: FC<Props> = ({ post, newer, older }) => {
                 <article id={ARTICLE_ID} className={styles.article} data-scroll-target>
                     <ArticleHeader post={post} />
                     <Markdown content={post.content} />
+                    <AuthorBox />
                 </article>
 
                 <ArticlePager newer={newer} older={older} />

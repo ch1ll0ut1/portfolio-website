@@ -6,7 +6,7 @@ import { EngagementTracker } from '@/components/analytics/EngagementTracker';
 import { Article } from '@/components/blog/Article';
 import { ReadingShell } from '@/components/blog/ReadingShell';
 import { JsonLd } from '@/components/seo/JsonLd';
-import { absoluteUrl, siteConfig } from '@/config/site';
+import { absoluteUrl } from '@/config/site';
 import { baseOpenGraph } from '@/lib/baseOpenGraph';
 import { getBlogPostData } from '@/lib/content/blogPosts';
 import { bangkokDateTime } from '@/lib/date';
@@ -59,7 +59,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
             type: 'article',
             publishedTime: bangkokDateTime(post.date),
             modifiedTime: bangkokDateTime(lastModified(post)),
-            authors: [siteConfig.name],
+            // The author's profile page: Open Graph wants a URL here, not a name.
+            authors: [absoluteUrl('/')],
             tags: post.tags,
         },
         twitter: twitterCard(post.title, post.excerpt),

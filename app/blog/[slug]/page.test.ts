@@ -48,7 +48,7 @@ describe('/blog/[slug]', () => {
                 modifiedTime: `${post.updated ?? post.date}T00:00:00+07:00`,
                 siteName: siteConfig.name,
                 locale: 'en_US',
-                authors: [siteConfig.name],
+                authors: [absoluteUrl('/')],
                 tags: post.tags,
             });
             expect(metadata.twitter).toMatchObject({ card: 'summary_large_image', title: post.title });
