@@ -16,6 +16,7 @@ import { type BlogPost, lastModified } from '@/config/blog';
 import { links } from '@/config/links';
 import { absoluteUrl, siteConfig, siteTitle } from '@/config/site';
 import { bangkokDateTime } from './date';
+import { postCardPath } from './og/postCard';
 
 export type JsonLdObject = Record<string, unknown>;
 
@@ -155,7 +156,7 @@ export const blogPostingSchema = (post: BlogPost): JsonLdObject => {
         '@type': 'BlogPosting',
         'headline': post.title,
         'description': post.excerpt,
-        'image': absoluteUrl(`/blog/${post.slug}/opengraph-image`),
+        'image': absoluteUrl(postCardPath(post.slug)),
         'author': authorRef(),
         // A personal site: the author is the publisher, so no organization logo is needed.
         'publisher': authorRef(),
