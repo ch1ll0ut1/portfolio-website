@@ -15,7 +15,7 @@ A modern, responsive portfolio website built with Next.js 16, React 19, and Type
 - **Performance Optimized** - Server-side rendering and optimized assets
 - **SEO Optimized** - Comprehensive SEO with structured data, Open Graph, and sitemaps
 - **Accessibility** - WCAG AA compliant with proper ARIA labels
-- **Contact form** - `/contact`, a Server Action that works without JavaScript, sent through Resend; spam is kept out by a honeypot, a signed minimum fill time and Vercel BotID, with no third-party captcha
+- **Contact form** - `/contact`, a prerendered page whose form sends through a Server Action and Resend; it needs JavaScript, because every submission must pass Vercel BotID, and is rate limited per IP by the Vercel Firewall, behind a honeypot and a signed minimum fill time, with no third-party captcha
 
 ### **Content Management**
 
@@ -206,10 +206,35 @@ and the form answers "not set up" (the server log names what is missing).
 | --- | --- |
 | `RESEND_API_KEY` | Sending-only Resend API key for the site's domain |
 | `CONTACT_TO_EMAIL` | The inbox messages are delivered to |
-| `CONTACT_FORM_SECRET` | Any long random string (e.g. `openssl rand -base64 32`); signs the form's render time |
+| `CONTACT_FORM_SECRET` | Any long random string (e.g. `openssl rand -base64 32`); signs the token the form fetches when it loads |
 
 BotID needs no variable: it runs on Vercel through the project's OIDC token.
-Turn on BotID Deep Analysis under Firewall > Rules if you want it.
+Turn on BotID Deep Analysis under Firewall > Rules if you want it. Vercel sets
+`VERCEL=1` itself; BotID and the rate limit run only where it is set, so a
+local `next dev` or `next start` sends without them.
+
+### **Contact form rate limit (Vercel Firewall)**
+
+The Server Action asks a Firewall rule for its verdict through
+`@vercel/firewall` (`lib/contact/rateLimit.ts`), so a limited visitor sees the
+form's own "too many messages" error rather than a bare 429. Until the rule
+exists the form works unlimited, and the function log warns
+`No Firewall rate-limit rule "contact-form" yet`. To create it:
+
+1. Vercel dashboard > the project > **Firewall** > **Configure** (custom
+   rules) > **+ New Rule**.
+2. **Name**: `Contact form rate limit`.
+3. **If**: `@vercel/firewall` **equals** `contact-form` (the rate limit ID in
+   the code). Add no path or method condition: the check reaches the Firewall
+   as its own `GET /.well-known/vercel/rate-limit-api/contact-form`, not as
+   `POST /contact`, so a `/contact` path condition would never match.
+4. **Then**: **Rate Limit**, **Fixed Window**, **10 minutes**, **5 requests**,
+   keyed by **IP Address**; when exceeded, **Too Many Requests (429)** (the
+   default; **Deny** works too, the code reads both as "limited").
+5. **Save**, then **Review Changes** > **Publish**.
+
+Only submissions that pass the honeypot, the field checks and the signed fill
+time are counted. Counters are kept per region, so the cap is approximate.
 
 ### **Available Scripts**
 

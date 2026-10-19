@@ -118,21 +118,30 @@ Blog content is managed through:
 
 ### Contact Form
 
-- **`/contact`** renders per request (the only dynamic page): the form carries a
-  signed render time minted per view, and `?topic=privacy` preselects the topic
-  without JavaScript. The CSP stays one static header.
+- **`/contact`** is prerendered like every other page. The form fetches its
+  signed token from the `issueContactToken` Server Action on mount and reads
+  `?topic=` in the browser; it stays a disabled fieldset with a `<noscript>`
+  LinkedIn note until then. The CSP stays one static header.
 - **Server Action** in `app/contact/actions.ts`, used through `useActionState`
-  in `components/contact/ContactForm.tsx`; works without JavaScript. The logic
-  is `lib/contact/handleContactSubmission.ts`: honeypot, field validation,
-  config, signed minimum fill time, BotID, then the email.
+  in `components/contact/ContactForm.tsx`; JavaScript only. The logic is
+  `lib/contact/handleContactSubmission.ts`: honeypot, field validation,
+  config, signed minimum fill time, then on Vercel only: no `Next-Action`
+  header (a native post) dropped, Firewall rate limit, BotID; then the email.
 - **Resend** through a plain `fetch` (`lib/contact/sendWithResend.ts`), not the
-  SDK. Sender in `config/site.ts`; the recipient only ever from the env.
+  SDK, from Resend's Tokyo region. Sender in `config/site.ts`; the recipient
+  only ever from the env.
 - **Vercel BotID**: `withBotId` in `next.config.ts` (same-origin proxy, so the
   CSP needs nothing new), `initBotId` in `instrumentation-client.ts` protecting
-  `POST /contact`, `checkBotId()` in `lib/contact/botCheck.ts`. Only consulted
-  on Vercel and for JavaScript submissions: native form posts cannot carry its
-  headers.
-- **Spam is dropped silently**: the visitor sees "sent", nothing is sent.
+  `POST /contact`, `checkBotId()` in `lib/contact/botCheck.ts`. Required for
+  every submission on Vercel; if BotID throws, the visitor gets an error
+  pointing to LinkedIn (fail closed, not silent).
+- **Rate limit**: `checkRateLimit('contact-form')` from `@vercel/firewall` in
+  `lib/contact/rateLimit.ts`, against a dashboard rule (README has the steps).
+  A missing rule or a failed check lets the submission on to BotID.
+- **On Vercel or not** is `runsOnVercel()` in `lib/contact/contactConfig.ts`:
+  `VERCEL=1` from the process env, never from the request.
+- **Spam is dropped silently**: the visitor sees "sent", nothing is sent. A
+  rate limit or a BotID failure is shown, since a real person can hit them.
 - **Env vars** (Vercel only): `RESEND_API_KEY`, `CONTACT_TO_EMAIL`,
   `CONTACT_FORM_SECRET`. Missing any, the build still passes and the form
   answers "not set up" with a server warning.
