@@ -70,7 +70,12 @@ export const authorRef = (): JsonLdObject => ({
 export const personSchema = ({ offers = [] }: PersonOptions = {}): JsonLdObject => ({
     ...authorRef(),
     description: siteConfig.description,
-    image: absoluteUrl('/opengraph-image'),
+    image: {
+        '@type': 'ImageObject',
+        'url': absoluteUrl('/stefan-knoch.jpg'),
+        'width': 800,
+        'height': 800,
+    },
     address: {
         '@type': 'PostalAddress',
         'addressLocality': siteConfig.city,
