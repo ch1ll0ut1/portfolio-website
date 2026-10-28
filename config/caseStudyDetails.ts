@@ -44,14 +44,14 @@ export const caseStudyDetails: Record<CaseVisualId, CaseStudyDetail> = {
             'Ordinary editors treat a document as running text. They flatten that structure or let it break, which leaves staff to check and repair it by hand.',
         ],
         did: [
-            'I worked closely with parliamentary staff for the length of the project, turning how they draft and amend law into editing concepts and a technical design.',
+            'I turned the structure of Icelandic legal documents into editing concepts and a technical design.',
             'I designed a document model that knows what a chapter, an article, a paragraph, and a numbered item are, and how they nest.',
             'The editor checks that model continuously, so every keystroke keeps the legal structure valid instead of leaving it to be fixed later.',
             'As lead architect I owned the system design, from the editor in the browser to the server and database behind it.',
         ],
         result: [
             'An open-source editor for drafting the Icelandic legal codex, bills, and amendments. The source is public on GitHub.',
-            'It is my third production rich text editor, after Slimwiki and DirectMail, which is used by thousands of people.',
+            'It is my third production rich text editor, after Slimwiki and DirectMail.',
         ],
         technical: [
             'A typed, hierarchical document model on Slate.js with continuous normalization: after each change the editor checks the tree against the model and repairs it, so the document can never be saved in an invalid shape.',
@@ -67,7 +67,7 @@ export const caseStudyDetails: Record<CaseVisualId, CaseStudyDetail> = {
         team: 'Six developers',
         problem: [
             'Four things had to agree on the same data: the marketing automations, a collaborative editor for the messages, the brand\'s Shopify store, and Twilio, which sends the texts.',
-            'Thousands of messages went out, and every one had to avoid tripping spam blocks or running up costs.',
+            'Every message had to go out through Twilio reliably, within the brand\'s Shopify data.',
         ],
         did: [
             'I recruited and led a team of six developers while staying the lead hands-on engineer, and ran the project management.',
@@ -76,8 +76,8 @@ export const caseStudyDetails: Record<CaseVisualId, CaseStudyDetail> = {
             'I chose infrastructure for cost as well as scale, and automated every deployment.',
         ],
         result: [
-            'A whole class of bugs was caught before customers ever saw them. When one part of the system changed, everything that relied on it was checked before the change could be released.',
-            'A team of six working to one set of standards, with releases that ran without manual steps.',
+            'A schema change that broke something failed the build instead of reaching production.',
+            'A team of six working to one set of standards, with deployments automated end to end.',
         ],
         technical: [
             'A fully typed data layer, from the database schema to a generated frontend SDK, including a custom ORM. A schema change that broke a caller failed the build instead of reaching production.',
