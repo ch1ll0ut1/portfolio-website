@@ -5,17 +5,21 @@
  */
 
 import {
+    FIRST_STEP_PRICE_USD,
     FIRST_VERSION_RANGE_USD,
     RESCUE_RANGE_USD,
     TECH_LEAD_MIN_HOURS_PER_MONTH,
+    TECH_LEAD_MONTHLY_MIN_USD,
+    usdAmountEn,
     usdRangeEn,
+    usdThousandsEn,
 } from '../pricing';
 import type { FaqCopy } from './types';
 
 export const faqEn: FaqCopy[] = [
     {
         question: 'What does it cost?',
-        answer: `Every engagement is billed by the hour against a written plan, so you pay for the work done, not for a padded fixed price. As a guide: most rescues cost ${usdRangeEn(RESCUE_RANGE_USD)}, most first versions of a new app ${usdRangeEn(FIRST_VERSION_RANGE_USD)}, and the tech-lead role starts at about ${TECH_LEAD_MIN_HOURS_PER_MONTH} hours a month. The first step, a health check or a product plan, is about a week of work, and it ends with a priced plan before you commit to more.`,
+        answer: `Every engagement is billed by the hour against a written plan, so you pay for the work done, not for a padded fixed price. As a guide: most rescues cost ${usdRangeEn(RESCUE_RANGE_USD)}, most first versions of a new app ${usdRangeEn(FIRST_VERSION_RANGE_USD)}, and the tech-lead role starts at about ${usdAmountEn(TECH_LEAD_MONTHLY_MIN_USD)} a month, for at least ${TECH_LEAD_MIN_HOURS_PER_MONTH} hours. The first step, a health check or a product plan, is about a week of work, costs roughly ${usdThousandsEn(FIRST_STEP_PRICE_USD)}, and ends with a priced plan before you commit to more.`,
     },
     {
         question: 'Can you take over code another developer wrote?',

@@ -1,16 +1,20 @@
 /**
  * Die deutsche Leistungsseite, `/de/leistungen`.
  *
- * The German counterpart of `en.ts`: same structure, same ranges (from
- * `config/pricing.ts`, in German number format), same facts. Written for DACH
+ * The German counterpart of `en.ts`: same structure, same facts. Prices come
+ * from `config/pricing.ts` in euros, set for DACH in their own right and in
+ * German number format. Written for DACH
  * search terms (App retten, MVP entwickeln lassen, Code-Review, DSGVO).
  * NEEDS STEFAN'S REVIEW before it is promoted anywhere.
  */
 
 import {
+    FIRST_STEP_PRICE_EUR,
     FIRST_VERSION_RANGE_EUR,
     RESCUE_RANGE_EUR,
     TECH_LEAD_MIN_HOURS_PER_MONTH,
+    TECH_LEAD_MONTHLY_MIN_EUR,
+    eurAmountDe,
     eurRangeDe,
 } from '../pricing';
 import { yearsShipping } from '../site';
@@ -80,7 +84,7 @@ export const servicesDe: ServicesPageCopy = {
                 'Die Rettung in wöchentlichen Etappen: jede Woche ausgelieferte Reparaturen und ein kurzer schriftlicher Bericht.',
                 'Eine saubere Übergabe, oder ich bleibe für die nächste Phase.',
             ],
-            range: `Check etwa eine Woche Arbeit · die meisten Rettungen ${eurRangeDe(RESCUE_RANGE_EUR)}`,
+            range: `Check etwa eine Woche Arbeit, rund ${eurAmountDe(FIRST_STEP_PRICE_EUR)} · die meisten Rettungen ${eurRangeDe(RESCUE_RANGE_EUR)}`,
             proof: [
                 'Bei Eko die Echtzeit-Nachrichten doppelt so schnell gemacht, durch den Umbau des Kernsystems unter Last',
                 'Bei Agoda, einer der größten Reiseplattformen Asiens, eine abteilungsweite Initiative für Codequalität geleitet',
@@ -106,7 +110,7 @@ export const servicesDe: ServicesPageCopy = {
                 'Die Entwicklung in wöchentlichen Etappen: jede Woche eine klickbare Version und ein kurzer schriftlicher Bericht.',
                 'Start und Übergabe, mit Dokumentation und Tests.',
             ],
-            range: `Produktplan etwa eine Woche Arbeit · die meisten ersten Versionen ${eurRangeDe(FIRST_VERSION_RANGE_EUR)}`,
+            range: `Produktplan etwa eine Woche Arbeit, rund ${eurAmountDe(FIRST_STEP_PRICE_EUR)} · die meisten ersten Versionen ${eurRangeDe(FIRST_VERSION_RANGE_EUR)}`,
             proof: [
                 'Technischer Mitgründer von BlueReceipt, einer SMS-Marketing-Plattform für Shopify-Händler',
                 'Leitender Architekt von Edithing, dem Gesetzeseditor des isländischen Parlaments',
@@ -132,7 +136,7 @@ export const servicesDe: ServicesPageCopy = {
                 'Die erste Woche: Ich prüfe Code, Abläufe und Pläne und sage Ihnen, was ich zuerst ändern würde.',
                 'Danach monatlich: ein fester Stundenrahmen, ein wöchentliches Gespräch und Hilfe, wenn es dringend wird. Jederzeit kündbar.',
             ],
-            range: `Ab etwa ${TECH_LEAD_MIN_HOURS_PER_MONTH} Stunden im Monat · monatlich, jederzeit kündbar`,
+            range: `Mindestens ${TECH_LEAD_MIN_HOURS_PER_MONTH} Stunden im Monat, ab etwa ${eurAmountDe(TECH_LEAD_MONTHLY_MIN_EUR)} · jederzeit kündbar`,
             proof: [
                 'Dreimal ein Tech-Team von null aufgebaut, von der Einstellung bis zu den Abläufen',
                 'Interim-CTO eines jungen Health-Tech-Start-ups: ein Team von acht Personen geführt und die HIPAA-Compliance geplant',

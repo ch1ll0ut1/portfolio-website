@@ -12,6 +12,8 @@ import {
     FIRST_VERSION_RANGE_USD,
     RESCUE_RANGE_USD,
     TECH_LEAD_MIN_HOURS_PER_MONTH,
+    TECH_LEAD_MONTHLY_MIN_USD,
+    usdAmountEn,
     usdRangeEn,
 } from './pricing';
 
@@ -87,7 +89,7 @@ export const engagements: Engagement[] = [
             'A roadmap and budget in plain English',
             'A weekly call, and someone on your side in vendor meetings',
         ],
-        range: `From about ${TECH_LEAD_MIN_HOURS_PER_MONTH} hours a month, cancel any time`,
+        range: `${TECH_LEAD_MIN_HOURS_PER_MONTH} hours a month, from about ${usdAmountEn(TECH_LEAD_MONTHLY_MIN_USD)}`,
         featured: false,
     },
 ];

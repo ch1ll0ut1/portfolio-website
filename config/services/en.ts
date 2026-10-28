@@ -2,7 +2,7 @@
  * The English services page, `/services`.
  *
  * Names, subtitles and who each engagement is for come from
- * `config/engagements.ts`, the same source as the homepage cards; ranges from
+ * `config/engagements.ts`, the same source as the homepage cards; prices from
  * `config/pricing.ts`. Facts come from the CV (`config/career.ts`,
  * `config/caseStudies.ts`); nothing here is a claim the CV cannot back.
  */
@@ -12,10 +12,14 @@ import { caseStudies } from '../caseStudies';
 import { fitContent } from '../fit';
 import { processSteps } from '../processSteps';
 import {
+    FIRST_STEP_PRICE_USD,
     FIRST_VERSION_RANGE_USD,
     RESCUE_RANGE_USD,
     TECH_LEAD_MIN_HOURS_PER_MONTH,
+    TECH_LEAD_MONTHLY_MIN_USD,
+    usdAmountEn,
     usdRangeEn,
+    usdThousandsEn,
 } from '../pricing';
 import { yearsShipping } from '../site';
 import { faqEn } from './faqEn';
@@ -86,7 +90,7 @@ export const servicesEn: ServicesPageCopy = {
                 'The rescue, in weekly milestones: fixes shipped every week, with a short written update.',
                 'A clean hand-over, or I stay on for the next phase.',
             ],
-            range: `Health check about a week of work · most rescues ${usdRangeEn(RESCUE_RANGE_USD)}`,
+            range: `Health check about a week of work, roughly ${usdThousandsEn(FIRST_STEP_PRICE_USD)} · most rescues ${usdRangeEn(RESCUE_RANGE_USD)}`,
             proof: [
                 'Doubled real-time messaging performance at Eko by rebuilding the core messaging system under load',
                 'Ran a department-wide code quality initiative at Agoda, one of Asia’s largest travel platforms',
@@ -109,7 +113,7 @@ export const servicesEn: ServicesPageCopy = {
                 'The build, in weekly milestones: a clickable version every week, with a short written update.',
                 'Launch and hand-over, with documentation and tests.',
             ],
-            range: `Product plan about a week of work · most first versions ${usdRangeEn(FIRST_VERSION_RANGE_USD)}`,
+            range: `Product plan about a week of work, roughly ${usdThousandsEn(FIRST_STEP_PRICE_USD)} · most first versions ${usdRangeEn(FIRST_VERSION_RANGE_USD)}`,
             proof: [
                 'Technical co-founder of BlueReceipt, an SMS marketing platform for Shopify brands',
                 'Lead architect of Edithing, the legal editor of the Parliament of Iceland',
@@ -132,7 +136,7 @@ export const servicesEn: ServicesPageCopy = {
                 'The first week: I review the code, the process, and the plans, and tell you what I would change first.',
                 'Then monthly: a set number of hours, a weekly call, and help when something urgent comes up. Cancel any time.',
             ],
-            range: `From about ${TECH_LEAD_MIN_HOURS_PER_MONTH} hours a month · monthly, cancel any time`,
+            range: `At least ${TECH_LEAD_MIN_HOURS_PER_MONTH} hours a month, from about ${usdAmountEn(TECH_LEAD_MONTHLY_MIN_USD)} · cancel any time`,
             proof: [
                 'Built tech teams from zero three times, from hiring to process',
                 'Interim CTO of an early-stage health-tech startup: led a team of eight and planned HIPAA compliance',
