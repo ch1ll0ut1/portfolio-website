@@ -184,7 +184,7 @@ export const servicesEn: ServicesPageCopy = {
     },
     cta: {
         title: 'Tell me where your project is stuck.',
-        lede: 'A free 30-minute call, or a message if you prefer writing. I reply within a day.',
+        lede: 'A free 30-minute call, or a message if you prefer writing. I reply within one working day.',
     },
 };
 

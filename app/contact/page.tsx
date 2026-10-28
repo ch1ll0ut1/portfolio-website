@@ -11,7 +11,7 @@ import { issueContactToken, sendContactMessage } from './actions';
 
 /** Absolute, as it already names him: the layout's "| Stefan Knoch" would repeat it. */
 const TITLE = `Contact ${siteConfig.name} — hire a software architect & tech lead`;
-const DESCRIPTION = 'Tell me about your app, your MVP or your team. I reply within a day from Bangkok, across European, US and Asian hours. Projects, questions and privacy requests.';
+const DESCRIPTION = 'Hire a software architect & tech lead for your app, your MVP or your team. I reply within one working day from Bangkok, across European, US and Asian hours.';
 
 /* Every share field is set here, not inherited; see app/privacy/page.tsx. */
 export const metadata: Metadata = {

@@ -201,6 +201,6 @@ export const servicesDe: ServicesPageCopy = {
     },
     cta: {
         title: 'Erzählen Sie mir, wo Ihr Projekt hakt.',
-        lede: 'Ein kostenloses Gespräch von 30 Minuten, oder eine Nachricht, wenn Sie lieber schreiben. Ich antworte innerhalb eines Tages.',
+        lede: 'Ein kostenloses Gespräch von 30 Minuten, oder eine Nachricht, wenn Sie lieber schreiben. Ich antworte innerhalb eines Werktages.',
     },
 };

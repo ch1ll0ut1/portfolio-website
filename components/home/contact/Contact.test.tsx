@@ -48,7 +48,7 @@ describe('Contact', () => {
         render(<Contact />);
 
         // Assert
-        expect(screen.getByText(/i reply within a day, from bangkok/i)).toBeInTheDocument();
+        expect(screen.getByText(/i reply within one working day, from bangkok/i)).toBeInTheDocument();
     });
 
     it('should offer both ways to get in touch', () => {

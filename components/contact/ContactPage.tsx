@@ -9,7 +9,7 @@ import styles from './ContactPage.module.css';
 type Props = ComponentProps<typeof ContactForm>;
 
 /** The page's h1: what the visitor came to do, in plain words. */
-export const CONTACT_HEADING = 'Hire me as your software architect and tech lead';
+export const CONTACT_HEADING = 'Tell me about your app, your MVP or your team';
 
 /**
  * The `/contact` page body: what to send and when I answer, then a short
