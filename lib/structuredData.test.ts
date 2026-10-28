@@ -66,7 +66,12 @@ describe('structuredData', () => {
                 'knowsLanguage': ['en', 'de'],
                 'sameAs': expect.arrayContaining([links.social.linkedin, links.social.github]),
             });
-            expect(schema.image).toEqual(expect.stringContaining(siteConfig.url));
+            expect(schema.image).toEqual({
+                '@type': 'ImageObject',
+                'url': `${siteConfig.url}/stefan-knoch.jpg`,
+                'width': 800,
+                'height': 800,
+            });
         });
 
         it('should not publish an email address', () => {

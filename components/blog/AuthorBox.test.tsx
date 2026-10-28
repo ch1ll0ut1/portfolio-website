@@ -21,6 +21,17 @@ describe('AuthorBox', () => {
         expect(name).toHaveAttribute('rel', 'author');
     });
 
+    it('should show a headshot of the author', () => {
+        // Arrange
+        render(<AuthorBox />);
+
+        // Act
+        const photo = screen.getByRole('img', { name: 'Stefan Knoch' });
+
+        // Assert
+        expect(photo.getAttribute('src')).toContain('stefan-knoch.jpg');
+    });
+
     it('should say what the author does, since when, and from where', () => {
         // Arrange
         render(<AuthorBox />);

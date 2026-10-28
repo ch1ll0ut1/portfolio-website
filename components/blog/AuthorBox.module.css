@@ -11,6 +11,29 @@
     background: var(--bg-2);
 }
 
+.head {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+/* The source is square, so the circle crops nothing but the corners. */
+.avatar {
+    flex: none;
+    width: 72px;
+    height: 72px;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    background: var(--surface);
+    object-fit: cover;
+}
+
+.byline {
+    display: grid;
+    gap: 4px;
+    min-width: 0;
+}
+
 .kicker {
     font-family: var(--font-mono);
     font-size: var(--fs-micro);
@@ -49,4 +72,11 @@
     flex-wrap: wrap;
     gap: 12px;
     margin-top: 8px;
+}
+
+@media (max-width: 560px) {
+    .avatar {
+        width: 64px;
+        height: 64px;
+    }
 }
