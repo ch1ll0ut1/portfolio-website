@@ -92,7 +92,7 @@ const rawBlogPosts: BlogPost[] = [
     {
         id: '8',
         title: '10 AI Workflows Every Developer Should Know',
-        excerpt: 'AI is no longer just autocomplete. These 10 workflows, from planning and UI bootstrapping to tests, reviews and deployment, help developers work 3–10× faster.',
+        excerpt: 'AI is no longer just autocomplete. These 10 workflows, from planning and UI bootstrapping to tests, reviews and deployment, help developers ship much faster.',
         date: '2025-08-26',
         updated: '2026-10-13',
         tags: ['AI', 'Developer Productivity', 'Workflows', 'Cursor', 'Claude Code', 'ChatGPT', 'Automation'],
