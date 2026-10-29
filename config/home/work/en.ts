@@ -104,6 +104,8 @@ export const workEn: WorkCopy = {
             engineer: 'engineer',
             designer: 'designer',
             product: 'product',
+            ci: 'CI',
+            aws: 'AWS',
         },
         eko: {
             title: 'messaging',

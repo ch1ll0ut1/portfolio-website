@@ -55,6 +55,9 @@ export interface CaseVisualsCopy {
         engineer: string;
         designer: string;
         product: string;
+        /** The two systems, by name. */
+        ci: string;
+        aws: string;
     };
     eko: {
         title: string;

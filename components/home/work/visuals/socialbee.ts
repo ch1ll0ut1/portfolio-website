@@ -34,13 +34,11 @@ export interface SocialbeeClasses {
 
 type NodeId = 'lead' | 'eng1' | 'eng2' | 'design' | 'product' | 'ci' | 'aws';
 
-/** People are labelled by their role, in the dictionary; systems by their name. */
-type NodeLabel = 'lead' | 'engineer' | 'designer' | 'product' | 'CI' | 'AWS';
-
 interface NodeSpec {
     x: number;
     y: number;
-    label: NodeLabel;
+    /** The key of the node's label in the dictionary: a person's role, or a system's name. */
+    label: 'lead' | 'engineer' | 'designer' | 'product' | 'ci' | 'aws';
     kind: 'person' | 'lead' | 'sys';
 }
 
@@ -50,8 +48,8 @@ const SPECS: Record<NodeId, NodeSpec> = {
     eng2: { x: 308, y: 62, label: 'engineer', kind: 'person' },
     design: { x: 72, y: 176, label: 'designer', kind: 'person' },
     product: { x: 328, y: 176, label: 'product', kind: 'person' },
-    ci: { x: 158, y: 232, label: 'CI', kind: 'sys' },
-    aws: { x: 242, y: 232, label: 'AWS', kind: 'sys' },
+    ci: { x: 158, y: 232, label: 'ci', kind: 'sys' },
+    aws: { x: 242, y: 232, label: 'aws', kind: 'sys' },
 };
 
 const COMMIT_GAP = 16;
@@ -67,7 +65,6 @@ export const buildSocialbee = (
 ): Illustration => {
     let api: RunnerApi | null = null;
     let commits = 0;
-    const labelOf = (label: NodeLabel) => (label === 'CI' || label === 'AWS' ? label : copy[label]);
 
     const chip = h('span', frame.chip, null, copy.team(0));
     const body = buildWindow(stage, frame, 'social-bee / ', copy.title, chip);
@@ -97,10 +94,10 @@ export const buildSocialbee = (
         element.style.top = `${spec.y}px`;
 
         if (spec.kind === 'sys') {
-            element.textContent = spec.label;
+            element.textContent = copy[spec.label];
         }
         else {
-            h('span', c.lbl, element, labelOf(spec.label));
+            h('span', c.lbl, element, copy[spec.label]);
         }
     });
 
