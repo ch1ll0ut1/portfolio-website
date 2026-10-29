@@ -2,8 +2,8 @@
  * Reads the visitor's fields out of a submitted form and checks them.
  *
  * The server is the only judge: the browser's own checks are switched off
- * (`noValidate`) so every visitor, with or without JS, gets the same inline
- * messages.
+ * (`noValidate`) so every visitor gets the same inline messages. Its verdicts
+ * are codes; the form words them in the visitor's language.
  */
 
 import {
@@ -14,6 +14,7 @@ import {
     contactLimits,
     isContactTopic,
 } from '@/config/contact';
+import { type Locale, defaultLocale, locales } from '@/lib/i18n/locale';
 
 /**
  * Something, an @, a domain with a dot. Deliberately loose: the only real test
@@ -43,29 +44,39 @@ export const readContactValues = (formData: FormData): ContactValues => {
     };
 };
 
+/**
+ * The language of the page the form was sent from. Only a known one is
+ * believed; anything else, or nothing, reads as the default.
+ */
+export const readContactLocale = (formData: FormData): Locale => {
+    const value = textField(formData, contactFieldNames.locale);
+
+    return locales.find(locale => locale === value) ?? defaultLocale;
+};
+
 /** What the visitor must fix, field by field. Empty when the values are fine. */
 export const validateContactValues = (values: ContactValues): ContactFieldErrors => {
     const errors: ContactFieldErrors = {};
 
     if (!values.name) {
-        errors.name = 'Please tell me your name.';
+        errors.name = { kind: 'required' };
     }
     else if (values.name.length > contactLimits.name) {
-        errors.name = `Please keep your name to ${contactLimits.name} characters or fewer.`;
+        errors.name = { kind: 'tooLong', max: contactLimits.name };
     }
 
     if (!values.email) {
-        errors.email = 'Please add your email address, so I can reply.';
+        errors.email = { kind: 'required' };
     }
     else if (values.email.length > contactLimits.email || !EMAIL_SHAPE.test(values.email)) {
-        errors.email = 'This does not look like an email address. Please check it.';
+        errors.email = { kind: 'invalidEmail' };
     }
 
     if (!values.message) {
-        errors.message = 'Please write a message.';
+        errors.message = { kind: 'required' };
     }
     else if (values.message.length > contactLimits.message) {
-        errors.message = `Please keep your message to ${contactLimits.message.toLocaleString('en-US')} characters or fewer; it has ${values.message.length.toLocaleString('en-US')}.`;
+        errors.message = { kind: 'tooLong', max: contactLimits.message, length: values.message.length };
     }
 
     return errors;

@@ -2,15 +2,21 @@
 
 import { type FC, type SubmitEvent, useActionState, useEffect, useId } from 'react';
 import {
+    type ContactCopy,
     type ContactField,
     type ContactState,
     type ContactValues,
     INITIAL_CONTACT_STATE,
+    contactCopy,
     contactFieldNames,
     contactLimits,
     contactTopics,
 } from '@/config/contact';
 import { links } from '@/config/links';
+import { fillSlots } from '@/lib/i18n/fillSlots';
+import { type Locale, intlLocale } from '@/lib/i18n/locale';
+import { useLocale } from '@/lib/i18n/LocaleContext';
+import { failureMessage, fieldErrorMessages } from './contactMessages';
 import { FormField } from './FormField';
 import { type TokenRequest, useFormToken, useQueryTopic } from './formSetup';
 import styles from './ContactForm.module.css';
@@ -25,13 +31,6 @@ interface Props {
 /** The order errors are looked at in, which is the order the fields appear. */
 const FIELD_ORDER: ContactField[] = ['name', 'email', 'message'];
 
-/** Said once per rejected submission; without JavaScript it is the only summary. */
-const INVALID_MESSAGE = 'Please check the fields marked below.';
-
-const SENT_MESSAGE = 'Thank you, your message is on its way. I will reply to the address you gave.';
-
-const TOKEN_FAILED_MESSAGE = 'Sorry, the form could not load. Please reload the page, or message me on LinkedIn.';
-
 /**
  * The contact form.
  *
@@ -41,7 +40,9 @@ const TOKEN_FAILED_MESSAGE = 'Sorry, the form could not load. Please reload the 
  * alive once it has fetched its signed token. It never pretends to work.
  *
  * The browser's own validation is off (`noValidate`) so every visitor gets the
- * server's messages, inline under each field. After a rejected submission,
+ * server's verdicts, inline under each field. The server answers in codes;
+ * the words come from `contactCopy` in the page's language, which is also
+ * posted with the message (for the email's "Language" line). After a rejected submission,
  * focus moves to the first field to fix; the thank-you is announced through a
  * polite live region and a failure through an alert.
  */
@@ -50,12 +51,14 @@ export const ContactForm: FC<Props> = ({ action, issueToken }) => {
     const tokenRequest = useFormToken(issueToken);
     const queryTopic = useQueryTopic();
     const id = useId();
+    const locale = useLocale();
+    const copy = contactCopy[locale];
     const fieldId = (field: string) => `${id}-${field}`;
 
     const values: ContactValues = 'values' in state
         ? state.values
         : { name: '', email: '', topic: queryTopic, message: '' };
-    const errors = state.status === 'invalid' ? state.errors : {};
+    const errors = state.status === 'invalid' ? fieldErrorMessages(state.errors, locale) : {};
     // The server hands back a token with every answer (fresh on "expired").
     const token = 'token' in state && state.token ? state.token : issuedToken(tokenRequest);
 
@@ -81,11 +84,11 @@ export const ContactForm: FC<Props> = ({ action, issueToken }) => {
         <form className={styles.form} action={formAction} onSubmit={preventDoubleSubmit} noValidate>
             <noscript>
                 <p className={styles.noscript}>
-                    The form needs JavaScript. You can
-                    {' '}
-                    <a href={links.social.linkedin} target="_blank" rel="noopener noreferrer">reach me on LinkedIn</a>
-                    {' '}
-                    instead.
+                    {fillSlots(copy.form.noscript, {
+                        linkedin: (
+                            <a href={links.social.linkedin} target="_blank" rel="noopener noreferrer">{copy.form.noscriptLink}</a>
+                        ),
+                    })}
                 </p>
             </noscript>
             {/* Disabled until the token is here: without JavaScript for good,
@@ -93,7 +96,7 @@ export const ContactForm: FC<Props> = ({ action, issueToken }) => {
             <fieldset className={styles.fields} disabled={tokenRequest.status !== 'ready'}>
                 <FormField
                     id={fieldId('name')}
-                    label="Name"
+                    label={copy.form.labels.name}
                     error={errors.name}
                 >
                     {fieldProps => (
@@ -112,8 +115,8 @@ export const ContactForm: FC<Props> = ({ action, issueToken }) => {
 
                 <FormField
                     id={fieldId('email')}
-                    label="Email"
-                    hint="Only used to reply to you."
+                    label={copy.form.labels.email}
+                    hint={copy.form.emailHint}
                     error={errors.email}
                 >
                     {fieldProps => (
@@ -131,7 +134,7 @@ export const ContactForm: FC<Props> = ({ action, issueToken }) => {
                     )}
                 </FormField>
 
-                <FormField id={fieldId('topic')} label="Topic" optional>
+                <FormField id={fieldId('topic')} label={copy.form.labels.topic} optional={copy.form.optional}>
                     {fieldProps => (
                         // `key`: a no-JS render after a submission must show the
                         // returned topic, and React reads `defaultValue` only once.
@@ -143,7 +146,7 @@ export const ContactForm: FC<Props> = ({ action, issueToken }) => {
                             defaultValue={values.topic}
                         >
                             {contactTopics.map(topic => (
-                                <option key={topic.value} value={topic.value}>{topic.label}</option>
+                                <option key={topic} value={topic}>{copy.topics[topic]}</option>
                             ))}
                         </select>
                     )}
@@ -151,8 +154,8 @@ export const ContactForm: FC<Props> = ({ action, issueToken }) => {
 
                 <FormField
                     id={fieldId('message')}
-                    label="Message"
-                    hint={`Up to ${contactLimits.message.toLocaleString('en-US')} characters.`}
+                    label={copy.form.labels.message}
+                    hint={copy.form.messageHint(contactLimits.message.toLocaleString(intlLocale[locale]))}
                     error={errors.message}
                 >
                     {fieldProps => (
@@ -172,7 +175,7 @@ export const ContactForm: FC<Props> = ({ action, issueToken }) => {
                     from screen readers, so only a bot that fills every input it
                     finds puts anything in it. */}
                 <div className={styles.trap} aria-hidden="true">
-                    <label htmlFor={fieldId('website')}>Leave this field empty</label>
+                    <label htmlFor={fieldId('website')}>{copy.form.honeypot}</label>
                     <input
                         id={fieldId('website')}
                         name={contactFieldNames.honeypot}
@@ -183,17 +186,18 @@ export const ContactForm: FC<Props> = ({ action, issueToken }) => {
                     />
                 </div>
                 <input type="hidden" name={contactFieldNames.token} value={token} />
+                <input type="hidden" name={contactFieldNames.locale} value={locale} />
 
                 <div className={styles.footer}>
                     <button className="btn btn--primary" type="submit" aria-disabled={pending}>
-                        <span className="btn__label">{pending ? 'Sending…' : 'Send message'}</span>
+                        <span className="btn__label">{pending ? copy.form.sending : copy.form.send}</span>
                     </button>
                     <div className={styles.messages}>
                         <p className={styles.status} role="status">
-                            {state.status === 'sent' ? SENT_MESSAGE : ''}
+                            {state.status === 'sent' ? copy.form.sent : ''}
                         </p>
                         <p className={styles.alert} role="alert">
-                            {alertText(state, tokenRequest)}
+                            {alertText(state, tokenRequest, copy, locale)}
                         </p>
                     </div>
                 </div>
@@ -204,13 +208,13 @@ export const ContactForm: FC<Props> = ({ action, issueToken }) => {
 
 const issuedToken = (request: TokenRequest) => (request.status === 'ready' ? request.token : '');
 
-const alertText = (state: ContactState, tokenRequest: TokenRequest) => {
+const alertText = (state: ContactState, tokenRequest: TokenRequest, copy: ContactCopy, locale: Locale) => {
     switch (state.status) {
         case 'invalid':
-            return INVALID_MESSAGE;
+            return copy.form.invalid;
         case 'failed':
-            return state.message;
+            return failureMessage(state.reason, locale);
         default:
-            return tokenRequest.status === 'failed' ? TOKEN_FAILED_MESSAGE : '';
+            return tokenRequest.status === 'failed' ? copy.form.tokenFailed : '';
     }
 };

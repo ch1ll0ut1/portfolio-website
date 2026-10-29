@@ -1,43 +1,50 @@
 import { type ComponentProps, FC } from 'react';
 import Link from 'next/link';
 import { MaskHeading } from '@/components/blog/MaskHeading';
-import { contactInvitation } from '@/config/contact';
+import { contactCopy } from '@/config/contact';
 import { links } from '@/config/links';
+import { fillSlots } from '@/lib/i18n/fillSlots';
+import type { Locale } from '@/lib/i18n/locale';
+import { localizedPath } from '@/lib/i18n/paths';
 import { ContactForm } from './ContactForm';
 import styles from './ContactPage.module.css';
 
-type Props = ComponentProps<typeof ContactForm>;
-
-/** The page's h1: what the visitor came to do, in plain words. */
-export const CONTACT_HEADING = 'Tell me about your app, your MVP or your team';
+type Props = ComponentProps<typeof ContactForm> & {
+    locale: Locale;
+};
 
 /**
- * The `/contact` page body: what to send and when I answer, then a short
+ * The contact page body: what to send and when I answer, then a short
  * first-person intro that points to LinkedIn first, then the form for
- * everything else.
+ * everything else. The form reads the language from the layout's provider.
  */
-export const ContactPage: FC<Props> = (formProps) => {
+export const ContactPage: FC<Props> = ({ locale, ...formProps }) => {
+    const copy = contactCopy[locale];
+
     return (
         <div className="wrap">
             <article className={styles.page}>
                 <header className={styles.header}>
-                    <p className={styles.kicker}>Contact</p>
-                    <MaskHeading className={styles.title}>{CONTACT_HEADING}</MaskHeading>
-                    <p className={styles.lead}>{contactInvitation}</p>
+                    <p className={styles.kicker}>{copy.page.kicker}</p>
+                    <MaskHeading className={styles.title}>{copy.page.heading}</MaskHeading>
+                    <p className={styles.lead}>{copy.invitation}</p>
                     <p className={styles.lead}>
-                        LinkedIn is the fastest way to reach me:
-                        {' '}
-                        <a className={styles.link} href={links.social.linkedin} target="_blank" rel="noopener noreferrer">
-                            message me there
-                        </a>
-                        . This form is for anything else, including privacy requests. It lands in my inbox, and I
-                        reply by email.
+                        {fillSlots(copy.page.linkedIn, {
+                            linkedin: (
+                                <a className={styles.link} href={links.social.linkedin} target="_blank" rel="noopener noreferrer">
+                                    {copy.page.linkedInLink}
+                                </a>
+                            ),
+                        })}
                     </p>
                     <p className={styles.note}>
-                        What happens to what you send is in the
-                        {' '}
-                        <Link className={styles.link} href="/privacy">privacy policy</Link>
-                        .
+                        {fillSlots(copy.page.privacyNote, {
+                            privacy: (
+                                <Link className={styles.link} href={localizedPath(locale, '/privacy')}>
+                                    {copy.page.privacyLink}
+                                </Link>
+                            ),
+                        })}
                     </p>
                 </header>
 

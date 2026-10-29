@@ -13,8 +13,8 @@ interface Props {
     label: string;
     hint?: string;
     error?: string;
-    /** Marks the label "optional"; every other field is required. */
-    optional?: boolean;
+    /** The word that marks the field optional, after its label; every other field is required. */
+    optional?: string;
     children: (control: FieldControlProps) => ReactNode;
 }
 
@@ -25,7 +25,7 @@ interface Props {
  * textarea, and gets the ids that connect it: `aria-describedby` names the
  * hint and the error, and `aria-invalid` is set only while there is an error.
  */
-export const FormField: FC<Props> = ({ id, label, hint, error, optional = false, children }) => {
+export const FormField: FC<Props> = ({ id, label, hint, error, optional, children }) => {
     const hintId = hint ? `${id}-hint` : undefined;
     const errorId = error ? `${id}-error` : undefined;
     const describedBy = [hintId, errorId].filter(Boolean).join(' ') || undefined;
@@ -37,7 +37,7 @@ export const FormField: FC<Props> = ({ id, label, hint, error, optional = false,
                 {optional && (
                     <>
                         {' '}
-                        <span className={styles.optional}>(optional)</span>
+                        <span className={styles.optional}>{optional}</span>
                     </>
                 )}
             </label>

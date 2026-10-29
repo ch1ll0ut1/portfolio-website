@@ -4,10 +4,12 @@
 
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { contactInvitation } from '@/config/contact';
+import { contactCopy } from '@/config/contact';
 import { links } from '@/config/links';
 import { installMatchMedia } from '@/test/motionEnv';
-import { CONTACT_HEADING, ContactPage } from './ContactPage';
+import { ContactPage } from './ContactPage';
+
+const copy = contactCopy.en;
 
 describe('ContactPage', () => {
     // The masked heading's motion hooks read `matchMedia`, which jsdom lacks.
@@ -22,7 +24,7 @@ describe('ContactPage', () => {
     });
 
     const renderPage = () => render(
-        <ContactPage action={vi.fn()} issueToken={() => Promise.resolve('token')} />,
+        <ContactPage locale="en" action={vi.fn()} issueToken={() => Promise.resolve('token')} />,
     );
 
     it('should be one page with one top-level heading', () => {
@@ -31,7 +33,7 @@ describe('ContactPage', () => {
 
         // Assert
         expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
-        expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(CONTACT_HEADING);
+        expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(copy.page.heading);
     });
 
     it('should say what to send and how soon I reply', () => {
@@ -39,7 +41,7 @@ describe('ContactPage', () => {
         renderPage();
 
         // Assert
-        expect(screen.getByText(contactInvitation)).toBeInTheDocument();
+        expect(screen.getByText(copy.invitation)).toBeInTheDocument();
     });
 
     it('should point to LinkedIn first, in a new tab', () => {
@@ -67,5 +69,13 @@ describe('ContactPage', () => {
 
         // Assert
         expect(screen.getByRole('button', { name: /send message/i })).toBeInTheDocument();
+    });
+
+    it('should link a German page to the German privacy policy', () => {
+        // Act
+        render(<ContactPage locale="de" action={vi.fn()} issueToken={() => Promise.resolve('token')} />);
+
+        // Assert
+        expect(screen.getByRole('link', { name: contactCopy.de.page.privacyLink })).toHaveAttribute('href', '/de/datenschutz');
     });
 });
