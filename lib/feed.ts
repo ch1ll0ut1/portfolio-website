@@ -1,15 +1,18 @@
 /**
- * The blog's RSS 2.0 feed (`/feed.xml`) and the `<link rel="alternate">` that
- * announces it.
+ * The blog's RSS 2.0 feeds (`/feed.xml`, and `/de/feed.xml` once the German
+ * posts exist) and the `<link rel="alternate">` that announces the English one.
  */
 
-import { type BlogPost, lastModified } from '@/config/blog';
+import { type BlogPost, blogCopy, lastModified, tagLabel } from '@/config/blog';
 import { absoluteUrl, siteConfig } from '@/config/site';
 import { bangkokDateTime } from './date';
+import type { Locale } from './i18n/locale';
+import { localizedPath } from './i18n/paths';
 
 const FEED_PATH = '/feed.xml';
-const FEED_TITLE = `${siteConfig.name} — Writing`;
-const FEED_DESCRIPTION = 'Writing on software engineering, technical leadership, hiring, and building software with AI.';
+
+/** The feed's title in `locale`, e.g. "Stefan Knoch — Writing". */
+const feedTitle = (locale: Locale) => blogCopy[locale].feed.title(siteConfig.name);
 
 /**
  * The feed as `alternates.types` metadata. Next replaces a parent's
@@ -17,26 +20,27 @@ const FEED_DESCRIPTION = 'Writing on software engineering, technical leadership,
  * this in too, or the link is lost there.
  */
 export const feedAlternateTypes = {
-    'application/rss+xml': [{ url: FEED_PATH, title: FEED_TITLE }],
+    'application/rss+xml': [{ url: FEED_PATH, title: feedTitle('en') }],
 };
 
 /**
- * The RSS document for `posts` (newest first, published only: the caller
- * filters). Links are absolute on the canonical origin and dates are RFC 822,
- * as RSS 2.0 requires.
+ * The RSS document for `posts` in `locale` (newest first, published only: the
+ * caller filters). Links are absolute on the canonical origin and dates are
+ * RFC 822, as RSS 2.0 requires.
  */
-export const rssFeed = (posts: BlogPost[]) => {
+export const rssFeed = (posts: BlogPost[], locale: Locale) => {
+    const copy = blogCopy[locale].feed;
     const newest = posts.map(lastModified).sort().at(-1);
-    const items = posts.map(rssItem).join('');
+    const items = posts.map(post => rssItem(post, locale)).join('');
 
     return `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 <channel>
-<title>${escapeXml(FEED_TITLE)}</title>
-<link>${absoluteUrl('/blog')}</link>
-<description>${escapeXml(FEED_DESCRIPTION)}</description>
-<language>en-us</language>
-<atom:link href="${absoluteUrl(FEED_PATH)}" rel="self" type="application/rss+xml"/>
+<title>${escapeXml(feedTitle(locale))}</title>
+<link>${absoluteUrl(localizedPath(locale, '/blog'))}</link>
+<description>${escapeXml(copy.description)}</description>
+<language>${copy.language}</language>
+<atom:link href="${absoluteUrl(localizedPath(locale, FEED_PATH))}" rel="self" type="application/rss+xml"/>
 ${newest ? `<lastBuildDate>${rfc822(newest)}</lastBuildDate>\n` : ''}${items}</channel>
 </rss>
 `;
@@ -45,9 +49,9 @@ ${newest ? `<lastBuildDate>${rfc822(newest)}</lastBuildDate>\n` : ''}${items}</c
 /** A calendar date as an RFC 822 date-time, at midnight in Bangkok like the rest of the site's dates. */
 const rfc822 = (date: string) => new Date(bangkokDateTime(date)).toUTCString();
 
-function rssItem(post: BlogPost) {
-    const url = absoluteUrl(`/blog/${post.slug}`);
-    const categories = post.tags.map(tag => `<category>${escapeXml(tag)}</category>\n`).join('');
+function rssItem(post: BlogPost, locale: Locale) {
+    const url = absoluteUrl(localizedPath(locale, `/blog/${post.slug}`));
+    const categories = post.tags.map(tag => `<category>${escapeXml(tagLabel(locale, tag))}</category>\n`).join('');
 
     return `<item>
 <title>${escapeXml(post.title)}</title>

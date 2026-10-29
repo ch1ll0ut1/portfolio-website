@@ -12,10 +12,12 @@
  * on every page.
  */
 
-import { type BlogPost, lastModified } from '@/config/blog';
+import { type BlogPost, blogCopy, lastModified, tagLabel } from '@/config/blog';
 import { links } from '@/config/links';
 import { absoluteUrl, siteConfig, siteTitle } from '@/config/site';
 import { bangkokDateTime } from './date';
+import { type Locale, intlLocale } from './i18n/locale';
+import { localizedPath } from './i18n/paths';
 import { postCardPath } from './og/postCard';
 
 export type JsonLdObject = Record<string, unknown>;
@@ -97,24 +99,24 @@ export const personSchema = ({ offers = [] }: PersonOptions = {}): JsonLdObject 
     ...(offers.length > 0 ? { makesOffer: offers } : {}),
 });
 
-/** The WebSite node, published by the site owner. */
-export const websiteSchema = (): JsonLdObject => ({
+/** The WebSite node, published by the site owner, in the language of the page it is on. */
+export const websiteSchema = (locale: Locale = 'en'): JsonLdObject => ({
     '@type': 'WebSite',
     '@id': WEBSITE_ID,
     'name': siteConfig.name,
     'alternateName': new URL(siteConfig.url).hostname,
     'url': absoluteUrl(),
-    'inLanguage': 'en',
+    'inLanguage': locale,
     'publisher': personRef(),
 });
 
-/** The homepage as a ProfilePage about the site owner. */
-export const profilePageSchema = (): JsonLdObject => ({
+/** The homepage as a ProfilePage about the site owner, in `locale`. */
+export const profilePageSchema = (locale: Locale = 'en'): JsonLdObject => ({
     '@type': 'ProfilePage',
     '@id': absoluteUrl('/#profilepage'),
     'url': absoluteUrl(),
     'name': siteTitle,
-    'inLanguage': 'en',
+    'inLanguage': locale,
     'isPartOf': { '@id': WEBSITE_ID },
     'mainEntity': personRef(),
     'dateModified': bangkokDateTime(siteConfig.staticPagesUpdated),
@@ -131,12 +133,12 @@ export const breadcrumbSchema = (items: BreadcrumbItem[]): JsonLdObject => ({
     })),
 });
 
-/** The Blog node for the index, listing every post it shows. */
-export const blogSchema = (posts: BlogPost[]): JsonLdObject => ({
+/** The Blog node for the index in `locale`, listing every post it shows. */
+export const blogSchema = (posts: BlogPost[], locale: Locale): JsonLdObject => ({
     '@type': 'Blog',
-    'name': `${siteConfig.name} Blog`,
-    'description': 'Writing on software engineering, technical leadership, hiring, and building software with AI.',
-    'url': absoluteUrl('/blog'),
+    'name': blogCopy[locale].schemaName(siteConfig.name),
+    'description': blogCopy[locale].feed.description,
+    'url': absoluteUrl(localizedPath(locale, '/blog')),
     'author': authorRef(),
     'blogPost': posts.map(post => ({
         '@type': 'BlogPosting',
@@ -145,23 +147,23 @@ export const blogSchema = (posts: BlogPost[]): JsonLdObject => ({
         'author': authorRef(),
         'datePublished': bangkokDateTime(post.date),
         'dateModified': bangkokDateTime(lastModified(post)),
-        'url': absoluteUrl(`/blog/${post.slug}`),
+        'url': postUrl(post, locale),
         'mainEntityOfPage': {
             '@type': 'WebPage',
-            '@id': absoluteUrl(`/blog/${post.slug}`),
+            '@id': postUrl(post, locale),
         },
     })),
 });
 
-/** The BlogPosting node for one article page. */
-export const blogPostingSchema = (post: BlogPost): JsonLdObject => {
-    const url = absoluteUrl(`/blog/${post.slug}`);
+/** The BlogPosting node for one article page in `locale`. */
+export const blogPostingSchema = (post: BlogPost, locale: Locale): JsonLdObject => {
+    const url = postUrl(post, locale);
 
     return {
         '@type': 'BlogPosting',
         'headline': post.title,
         'description': post.excerpt,
-        'image': absoluteUrl(postCardPath(post.slug)),
+        'image': absoluteUrl(postCardPath(post.slug, locale)),
         'author': authorRef(),
         // A personal site: the author is the publisher, so no organization logo is needed.
         'publisher': authorRef(),
@@ -172,15 +174,24 @@ export const blogPostingSchema = (post: BlogPost): JsonLdObject => {
             '@id': url,
         },
         'url': url,
-        'keywords': post.tags.join(', '),
-        'inLanguage': 'en-US',
+        'keywords': post.tags.map(tag => tagLabel(locale, tag)).join(', '),
+        'inLanguage': intlLocale[locale],
         'isAccessibleForFree': true,
     };
 };
 
-/** The breadcrumb trail of one article: Home › Writing › the post. */
-export const blogPostBreadcrumbs = (post: BlogPost): BreadcrumbItem[] => [
-    { name: 'Home', path: '/' },
-    { name: 'Writing', path: '/blog' },
-    { name: post.title, path: `/blog/${post.slug}` },
-];
+/** The breadcrumb trail of one article in `locale`: Home › Writing › the post. */
+export const blogPostBreadcrumbs = (post: BlogPost, locale: Locale): BreadcrumbItem[] => {
+    const names = blogCopy[locale].breadcrumbs;
+
+    return [
+        { name: names.home, path: localizedPath(locale, '/') },
+        { name: names.writing, path: localizedPath(locale, '/blog') },
+        { name: post.title, path: localizedPath(locale, `/blog/${post.slug}`) },
+    ];
+};
+
+/** A post's absolute URL in `locale`. */
+function postUrl(post: BlogPost, locale: Locale) {
+    return absoluteUrl(localizedPath(locale, `/blog/${post.slug}`));
+}

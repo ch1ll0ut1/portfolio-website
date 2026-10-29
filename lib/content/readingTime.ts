@@ -15,9 +15,8 @@ export const countWords = (markdown: string) => markdown
     .filter(token => /[\p{L}\p{N}]/u.test(token))
     .length;
 
-/** The read time a post shows, e.g. "5 min read": whole minutes, rounded up, never under one. */
-export const readingTime = (markdown: string) => {
-    const minutes = Math.max(1, Math.ceil(countWords(markdown) / WORDS_PER_MINUTE));
-
-    return `${minutes} min read`;
-};
+/**
+ * A post's read time in whole minutes, rounded up, never under one. The page
+ * words it in its own language through `BlogCopy.readTime`.
+ */
+export const readingTime = (markdown: string) => Math.max(1, Math.ceil(countWords(markdown) / WORDS_PER_MINUTE));

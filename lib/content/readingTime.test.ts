@@ -19,15 +19,15 @@ describe('countWords', () => {
 
 describe('readingTime', () => {
     it('should round a part minute up', () => {
-        expect(readingTime(words(231))).toBe('2 min read');
+        expect(readingTime(words(231))).toBe(2);
     });
 
     it('should give a full minute for exactly one minute of words', () => {
-        expect(readingTime(words(230))).toBe('1 min read');
+        expect(readingTime(words(230))).toBe(1);
     });
 
     it('should never show less than a minute', () => {
-        expect(readingTime('')).toBe('1 min read');
-        expect(readingTime('Short.')).toBe('1 min read');
+        expect(readingTime('')).toBe(1);
+        expect(readingTime('Short.')).toBe(1);
     });
 });

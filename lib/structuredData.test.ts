@@ -178,7 +178,7 @@ describe('structuredData', () => {
 
         it('should trail a post from home through the blog', () => {
             // Act
-            const items = blogPostBreadcrumbs(post);
+            const items = blogPostBreadcrumbs(post, 'en');
 
             // Assert
             expect(items).toEqual([
@@ -192,7 +192,7 @@ describe('structuredData', () => {
     describe('blogPostingSchema', () => {
         it('should name the person as publisher instead of an organization logo', () => {
             // Act
-            const schema = blogPostingSchema(post);
+            const schema = blogPostingSchema(post, 'en');
 
             // Assert
             expect(schema.publisher).toMatchObject({ '@type': 'Person', '@id': PERSON_ID, 'name': siteConfig.name });
@@ -202,16 +202,29 @@ describe('structuredData', () => {
 
         it('should point its image and URL at the post', () => {
             // Act
-            const schema = blogPostingSchema(post);
+            const schema = blogPostingSchema(post, 'en');
 
             // Assert
             expect(schema.url).toBe(`${siteConfig.url}/blog/a-post`);
             expect(schema.image).toBe(`${siteConfig.url}/blog/a-post/card.png`);
+            expect(schema.inLanguage).toBe('en-US');
+        });
+
+        it('should point a German post at its German page and card, in German', () => {
+            // Act
+            const schema = blogPostingSchema(post, 'de');
+            const items = blogPostBreadcrumbs(post, 'de');
+
+            // Assert
+            expect(schema.url).toBe(`${siteConfig.url}/de/blog/a-post`);
+            expect(schema.image).toBe(`${siteConfig.url}/de/blog/a-post/card.png`);
+            expect(schema.inLanguage).toBe('de-DE');
+            expect(items.map(item => item.path)).toEqual(['/de', '/de/blog', '/de/blog/a-post']);
         });
 
         it('should date the post in Bangkok time', () => {
             // Act
-            const schema = blogPostingSchema(post);
+            const schema = blogPostingSchema(post, 'en');
 
             // Assert
             expect(schema.datePublished).toBe('2026-01-02T00:00:00+07:00');
@@ -220,7 +233,7 @@ describe('structuredData', () => {
 
         it('should date the modification by the post\'s update when it has one', () => {
             // Act
-            const schema = blogPostingSchema({ ...post, updated: '2026-03-04' });
+            const schema = blogPostingSchema({ ...post, updated: '2026-03-04' }, 'en');
 
             // Assert
             expect(schema.datePublished).toBe('2026-01-02T00:00:00+07:00');
@@ -231,7 +244,7 @@ describe('structuredData', () => {
     describe('blogSchema', () => {
         it('should list one posting per post', () => {
             // Act
-            const schema = blogSchema([post, { ...post, id: 'y', slug: 'b-post' }]);
+            const schema = blogSchema([post, { ...post, id: 'y', slug: 'b-post' }], 'en');
 
             // Assert
             expect(schema.blogPost).toHaveLength(2);

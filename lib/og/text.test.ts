@@ -95,11 +95,11 @@ describe('metadata lines', () => {
     });
 
     it('should build the post line from the date and the reading time', () => {
-        expect(postMetaLine({ date: '2025-08-14', readTime: '10 min read' })).toBe('blog · 2025-08-14 · 10 min read');
+        expect(postMetaLine({ date: '2025-08-14', readTime: '10 min read' }, 'en')).toBe('blog · 2025-08-14 · 10 min read');
     });
 
     it('should leave out a missing reading time', () => {
-        expect(postMetaLine({ date: '2025-08-14' })).toBe('blog · 2025-08-14');
-        expect(postMetaLine({ date: '2025-08-14', readTime: ' ' })).toBe('blog · 2025-08-14');
+        expect(postMetaLine({ date: '2025-08-14' }, 'en')).toBe('blog · 2025-08-14');
+        expect(postMetaLine({ date: '2025-08-14', readTime: ' ' }, 'en')).toBe('blog · 2025-08-14');
     });
 });
