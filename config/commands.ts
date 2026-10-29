@@ -4,9 +4,14 @@
  * The "Go to" group is derived from `sections.ts` so the palette, the nav and
  * the keyboard chords cannot drift apart. Actions are declared as data rather
  * than callbacks: the palette owns how each one is carried out, which keeps
- * this file importable from tests and from the server.
+ * this file importable from tests and from the server. Labels, group headings
+ * and worded hints are in the chrome's dictionary, `config/chrome/`.
  */
 
+import type { Locale } from '@/lib/i18n/locale';
+import { localizedPath } from '@/lib/i18n/paths';
+import { chromeCopy } from './chrome';
+import type { CommandGroupId, CommandId } from './chrome/types';
 import { chordSections } from './sections';
 import { links } from './links';
 
@@ -15,7 +20,7 @@ export type CommandAction
     = | { type: 'section'; sectionId: string }
     /** Opens a URL in a new tab. */
       | { type: 'external'; url: string }
-    /** Navigates within the site. */
+    /** Navigates within the site, to an English path the palette localizes. */
       | { type: 'route'; href: string }
       | { type: 'theme' }
       | { type: 'shortcuts' }
@@ -37,95 +42,53 @@ export interface Command {
     action: CommandAction;
 }
 
-// "Back to top" is reachable by its chord but stays out of the palette: the
-// brand link and the browser already cover it, and it would read as noise.
-const goToCommands: Command[] = chordSections
-    .filter(section => section.id !== 'top')
-    .map(section => ({
-        id: `go-${section.id}`,
-        group: 'Go to',
-        label: section.label,
-        hint: `G ${section.chord.toUpperCase()}`,
-        action: { type: 'section', sectionId: section.id },
-    }));
+/** A command apart from its words. A route's hint is its path in the page's language. */
+interface CommandData {
+    id: CommandId;
+    group: CommandGroupId;
+    /** Keys or names; a worded hint comes from the dictionary instead. */
+    hint?: string;
+    action: CommandAction;
+}
 
-export const commands: Command[] = [
-    ...goToCommands,
-    {
-        id: 'book-call',
-        group: 'Actions',
-        label: 'Book a 30-min call',
-        hint: 'Calendly',
-        action: { type: 'external', url: links.calendly },
-    },
-    {
-        id: 'switch-theme',
-        group: 'Actions',
-        label: 'Switch color theme',
-        hint: 'T',
-        action: { type: 'theme' },
-    },
-    {
-        id: 'shortcuts',
-        group: 'Actions',
-        label: 'Keyboard shortcuts',
-        hint: '?',
-        action: { type: 'shortcuts' },
-    },
-    {
-        id: 'single-key-shortcuts',
-        group: 'Actions',
-        label: 'Turn single-key shortcuts on or off',
-        hint: 'T, ?, G',
-        action: { type: 'toggleSingleKeys' },
-    },
-    {
-        id: 'custom-cursor',
-        group: 'Actions',
-        label: 'Turn custom cursor on or off',
-        hint: 'Caret cursor',
-        action: { type: 'toggleCursor' },
-    },
-    {
-        id: 'cookie-settings',
-        group: 'Actions',
-        label: 'Cookie settings',
-        hint: 'Change or withdraw consent',
-        action: { type: 'cookieSettings' },
-    },
-    {
-        id: 'github',
-        group: 'Elsewhere',
-        label: 'GitHub',
-        hint: 'ch1ll0ut1',
-        action: { type: 'external', url: links.social.github },
-    },
-    {
-        id: 'linkedin',
-        group: 'Elsewhere',
-        label: 'LinkedIn',
-        hint: 'skdevde',
-        action: { type: 'external', url: links.social.linkedin },
-    },
-    {
-        id: 'services-page',
-        group: 'Elsewhere',
-        label: 'Services in detail',
-        hint: '/services',
-        action: { type: 'route', href: '/services' },
-    },
-    {
-        id: 'blog',
-        group: 'Elsewhere',
-        label: 'Blog',
-        hint: '/blog',
-        action: { type: 'route', href: '/blog' },
-    },
-    {
-        id: 'contact-form',
-        group: 'Elsewhere',
-        label: 'Contact form',
-        hint: '/contact',
-        action: { type: 'route', href: '/contact' },
-    },
+const commandData: CommandData[] = [
+    { id: 'book-call', group: 'actions', hint: 'Calendly', action: { type: 'external', url: links.calendly } },
+    { id: 'switch-theme', group: 'actions', hint: 'T', action: { type: 'theme' } },
+    { id: 'shortcuts', group: 'actions', hint: '?', action: { type: 'shortcuts' } },
+    { id: 'single-key-shortcuts', group: 'actions', hint: 'T, ?, G', action: { type: 'toggleSingleKeys' } },
+    { id: 'custom-cursor', group: 'actions', action: { type: 'toggleCursor' } },
+    { id: 'cookie-settings', group: 'actions', action: { type: 'cookieSettings' } },
+    { id: 'github', group: 'elsewhere', hint: 'ch1ll0ut1', action: { type: 'external', url: links.social.github } },
+    { id: 'linkedin', group: 'elsewhere', hint: 'skdevde', action: { type: 'external', url: links.social.linkedin } },
+    { id: 'services-page', group: 'elsewhere', action: { type: 'route', href: '/services' } },
+    { id: 'blog', group: 'elsewhere', action: { type: 'route', href: '/blog' } },
+    { id: 'contact-form', group: 'elsewhere', action: { type: 'route', href: '/contact' } },
 ];
+
+/** The palette's commands, in list order, told in `locale`. */
+export const commandsFor = (locale: Locale): Command[] => {
+    const { sections, commands: words } = chromeCopy[locale];
+
+    // "Back to top" is reachable by its chord but stays out of the palette: the
+    // brand link and the browser already cover it, and it would read as noise.
+    const goToCommands: Command[] = chordSections
+        .filter(section => section.id !== 'top')
+        .map(section => ({
+            id: `go-${section.id}`,
+            group: words.groups.goTo,
+            label: sections[section.id],
+            hint: `G ${section.chord.toUpperCase()}`,
+            action: { type: 'section', sectionId: section.id },
+        }));
+
+    return [
+        ...goToCommands,
+        ...commandData.map(({ id, group, hint, action }) => ({
+            id,
+            group: words.groups[group],
+            label: words.items[id].label,
+            hint: words.items[id].hint ?? hint ?? (action.type === 'route' ? localizedPath(locale, action.href) : ''),
+            action,
+        })),
+    ];
+};

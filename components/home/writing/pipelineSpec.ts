@@ -6,10 +6,11 @@
  * component may hard-code one — it receives this object instead.
  */
 
+import type { PipelineNodeId } from '@/config/home/writing/types';
+
 export interface PipelineNodeSpec {
-    /** Matches the `data-node` attribute in the markup. */
-    id: string;
-    label: string;
+    /** Matches the `data-node` attribute in the markup, and keys the node's label in the dictionary. */
+    id: PipelineNodeId;
     /** Resting position, as a percentage of the canvas. */
     x: string;
     y: string;
@@ -19,10 +20,10 @@ export interface PipelineNodeSpec {
 
 /** The four stages, in the order the token visits them. */
 export const pipelineNodes: PipelineNodeSpec[] = [
-    { id: 'spec', label: 'spec.md', x: '7%', y: '16%' },
-    { id: 'research', label: 'research', x: '55%', y: '10%' },
-    { id: 'gate', label: 'review gate', x: '24%', y: '50%', gate: true },
-    { id: 'implement', label: 'implement', x: '62%', y: '60%' },
+    { id: 'spec', x: '7%', y: '16%' },
+    { id: 'research', x: '55%', y: '10%' },
+    { id: 'gate', x: '24%', y: '50%', gate: true },
+    { id: 'implement', x: '62%', y: '60%' },
 ];
 
 /** Indices into `pipelineNodes`, and into the edges leaving each node. */

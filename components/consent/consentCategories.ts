@@ -2,10 +2,13 @@
  * The consent categories the preferences dialog prints, in display order.
  *
  * The keys are the categories `lib/consentStorage` persists; this file only
- * carries their copy, so adding a category stays a one-place change there and
+ * carries their order and whether they can be switched off, and their words
+ * are in `config/consent/`, so adding a category stays a change there and
  * here.
  */
 
+import { consentCopy } from '@/config/consent';
+import type { Locale } from '@/lib/i18n/locale';
 import type { ConsentState } from '@/lib/consentStorage';
 
 export interface ConsentCategory {
@@ -16,17 +19,14 @@ export interface ConsentCategory {
     locked: boolean;
 }
 
-export const consentCategories: ConsentCategory[] = [
-    {
-        key: 'essential',
-        title: 'Essential cookies',
-        description: 'Needed for the site to work. They hold your consent choice, and cannot be switched off.',
-        locked: true,
-    },
-    {
-        key: 'analytics',
-        title: 'Analytics cookies',
-        description: 'Report anonymously via Google Analytics how visitors move through the site, so I can see what is worth keeping. Google Analytics is not loaded at all unless this is on.',
-        locked: false,
-    },
+const categories: Pick<ConsentCategory, 'key' | 'locked'>[] = [
+    { key: 'essential', locked: true },
+    { key: 'analytics', locked: false },
 ];
+
+/** The categories, in display order, told in `locale`. */
+export const consentCategoriesFor = (locale: Locale): ConsentCategory[] => categories.map(({ key, locked }) => ({
+    key,
+    ...consentCopy[locale].categories[key],
+    locked,
+}));

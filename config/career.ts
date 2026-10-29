@@ -7,8 +7,13 @@
  * the employed track on `main`, down to the commit flagged `isRoot`.
  *
  * The hashes are decorative, but they are fixed strings rather than generated
- * ones so the scramble animation always settles to the same value.
+ * ones so the scramble animation always settles to the same value. They also
+ * key each role's title and description in `config/home/experience/`.
  */
+
+import type { Locale } from '@/lib/i18n/locale';
+import { experienceCopy } from './home/experience';
+import type { CareerHash } from './home/experience/types';
 
 export type CareerBranch = 'indie' | 'main';
 
@@ -21,7 +26,7 @@ export interface CommitRef {
 
 export interface CareerCommit {
     /** Seven hex characters, like an abbreviated git hash. */
-    hash: string;
+    hash: CareerHash;
     /** Year range of the role, e.g. `2013–2015`. */
     years: string;
     title: string;
@@ -35,93 +40,86 @@ export interface CareerCommit {
     isRoot?: boolean;
 }
 
-export const careerLog: CareerCommit[] = [
+/**
+ * A commit apart from its words. The current role's range ends in a bare
+ * dash, which `careerFor` closes with the dictionary's word for now.
+ */
+type CareerCommitData = Omit<CareerCommit, 'title' | 'description'>;
+
+const commits: CareerCommitData[] = [
     {
         hash: 'f0c2a19',
-        years: '2025–now',
-        title: 'Sole engineer, Fokus-Nachhilfe.ch',
-        description: 'New customer platform for a Swiss tutoring company. Next.js on Vercel, Supabase, HubSpot CRM, fully AI-augmented workflow.',
+        years: '2025–',
         branch: 'indie',
         ref: { label: 'HEAD → indie', isHead: true },
     },
     {
         hash: 'e7d1b04',
         years: '2023–2025',
-        title: 'Lead architect, Edithing for the Parliament of Iceland',
-        description: 'Open-source structured legal editor on Slate.js, designed with parliamentary stakeholders.',
         branch: 'indie',
     },
     {
         hash: 'c3a9f52',
         years: '2022–2023',
-        title: 'Technical lead & product architect, Social-Bee',
-        description: 'Built the tech and product department from zero: hiring, process, UX, and the AWS platform.',
         branch: 'indie',
     },
     {
         hash: '9d2c18e',
         years: '2021–2022',
-        title: 'Lead developer, DirectMail',
-        description: 'Rich text editor for structured email content, used by thousands of people.',
         branch: 'indie',
     },
     {
         hash: 'a4f07c3',
         years: '2021',
-        title: 'Antler founder program & interim CTO',
-        description: 'Selected for the founder program: prototypes, customer research, and investor pitches. Also interim CTO for an early-stage health-tech startup: led a team of eight and planned HIPAA compliance.',
         branch: 'indie',
     },
     {
         hash: '8e5b3a7',
         years: '2020–2021',
-        title: 'Technical co-founder, BlueReceipt',
-        description: 'SMS marketing platform for Shopify brands. Typed data layer, custom ORM, marketing automation pipeline, and a team of six.',
         branch: 'indie',
         isFork: true,
     },
     {
         hash: '7a1d940',
         years: '2018–2020',
-        title: 'Senior full-stack engineer, Agoda',
-        description: 'Flight search at one of Asia’s largest travel platforms. Led and mentored a team of four, improved frontend performance and monitoring, and ran a department-wide code quality initiative.',
         branch: 'main',
         ref: { label: 'main', isHead: false },
     },
     {
         hash: '6c0f2e1',
         years: '2017–2018',
-        title: 'Lead full-stack developer, Slimwiki',
-        description: 'Collaborative wiki with real-time editing, offline-first sync, and a custom editor. Automated AWS infrastructure.',
         branch: 'main',
     },
     {
         hash: '5b94d6a',
         years: '2015–2017',
-        title: 'Senior full-stack developer, Eko',
-        description: 'Doubled real-time messaging performance and built Elasticsearch search for the iOS and Android apps.',
         branch: 'main',
     },
     {
         hash: '4e28a1f',
         years: '2013–2015',
-        title: 'Software consultant, Bangkok',
-        description: 'Led Indycloud’s development with a team of two. Sole developer on a hotel walkthrough CMS, a doctor discovery platform, and a children’s mobile typing game; backend for an ML chatbot.',
         branch: 'main',
     },
     {
         hash: '3f7c0b2',
         years: '2011–2013',
-        title: 'Tech lead & project manager, Break Media Solutions',
-        description: 'Custom CMS and e-commerce platforms in Austria, with a distributed team of twelve.',
         branch: 'main',
     },
     {
         hash: '2a0e5d9',
         years: '2008–2011',
-        title: 'Full-stack developer, Agentur neun.li',
-        description: 'Wrote about half of a proprietary CMS in Liechtenstein, and dozens of client sites on it. Once shipped one in four hours.',
         branch: 'main',
         isRoot: true,
     },
 ];
+
+/** The log, newest first, told in `locale`. */
+export const careerFor = (locale: Locale): CareerCommit[] => {
+    const { now, commits: words } = experienceCopy[locale];
+
+    return commits.map(commit => ({
+        ...commit,
+        years: commit.years.endsWith('–') ? `${commit.years}${now}` : commit.years,
+        ...words[commit.hash],
+    }));
+};

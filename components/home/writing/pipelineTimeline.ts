@@ -9,6 +9,7 @@
  * Pure timing: it talks to the DOM only through the stage handed in.
  */
 
+import type { PipelineStatusCopy } from '@/config/home/writing/types';
 import { clamp } from '@/lib/motion';
 import { GATE, IMPLEMENT, type PipelineClasses, RESEARCH, SPEC } from './pipelineSpec';
 
@@ -39,7 +40,7 @@ export interface Timeline {
     advance: (delta: number) => void;
 }
 
-export const buildSteps = (stage: PipelineStage): Step[] => {
+export const buildSteps = (stage: PipelineStage, status: PipelineStatusCopy): Step[] => {
     const { classes } = stage;
     const travel = (index: number): Step => ({
         duration: TRAVEL_MS,
@@ -53,7 +54,7 @@ export const buildSteps = (stage: PipelineStage): Step[] => {
             onStart: () => {
                 stage.reset();
                 stage.setNode(SPEC, classes.nodeRunning);
-                stage.say('writing spec.md');
+                stage.say(status.writingSpec);
             },
         },
         { duration: 120, onStart: () => { stage.setNode(SPEC, classes.nodeDone); } },
@@ -64,7 +65,7 @@ export const buildSteps = (stage: PipelineStage): Step[] => {
                 stage.hideToken();
                 stage.setEdge(SPEC, classes.edgeDone);
                 stage.setNode(RESEARCH, classes.nodeRunning);
-                stage.say('research agents running');
+                stage.say(status.researching);
             },
         },
         { duration: 120, onStart: () => { stage.setNode(RESEARCH, classes.nodeDone); } },
@@ -75,14 +76,14 @@ export const buildSteps = (stage: PipelineStage): Step[] => {
                 stage.moveToken(RESEARCH, 1);
                 stage.setEdge(RESEARCH, classes.edgeDone);
                 stage.setNode(GATE, classes.gateWaiting);
-                stage.say('review gate: waiting');
+                stage.say(status.waiting);
             },
         },
         {
             duration: 650,
             onStart: () => {
                 stage.setNode(GATE, classes.gateApproved);
-                stage.say('approved');
+                stage.say(status.approved);
             },
         },
         travel(GATE),
@@ -92,14 +93,14 @@ export const buildSteps = (stage: PipelineStage): Step[] => {
                 stage.hideToken();
                 stage.setEdge(GATE, classes.edgeDone);
                 stage.setNode(IMPLEMENT, classes.nodeRunning);
-                stage.say('implementing');
+                stage.say(status.implementing);
             },
         },
         {
             duration: 1700,
             onStart: () => {
                 stage.setNode(IMPLEMENT, classes.nodeDone);
-                stage.say('done, next task');
+                stage.say(status.done);
             },
         },
     ];

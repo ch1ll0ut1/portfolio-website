@@ -1,6 +1,8 @@
 'use client';
 
 import { type FC } from 'react';
+import { chromeCopy } from '@/config/chrome';
+import { useLocale } from '@/lib/i18n/LocaleContext';
 
 interface Props {
     /** Styling comes from the host, so the nav keeps one definition of its pill. */
@@ -16,7 +18,7 @@ interface Props {
  * and what lets a host render its own button with the same attribute instead.
  */
 export const ThemeToggle: FC<Props> = ({ className }) => (
-    <button className={className} type="button" data-theme-toggle aria-label="Switch color theme">
+    <button className={className} type="button" data-theme-toggle aria-label={chromeCopy[useLocale()].themeToggle}>
         <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
             <circle cx="12" cy="12" r="5" fill="currentColor" />
             <path

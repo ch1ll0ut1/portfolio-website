@@ -1,4 +1,6 @@
 import { FC } from 'react';
+import { markdownCopy } from '@/config/markdown';
+import type { Locale } from '@/lib/i18n/locale';
 import { type RankedHeading } from '../bodyOutline';
 import styles from '../Markdown.module.css';
 
@@ -6,6 +8,7 @@ interface Props {
     element: RankedHeading;
     /** The heading's fragment id, unique within its document. */
     id: string;
+    locale: Locale;
 }
 
 /**
@@ -18,7 +21,7 @@ interface Props {
  * own. The heading is named by that text alone: without the label, the
  * link's label would be read as part of the heading's name.
  */
-export const MarkdownHeading: FC<Props> = ({ element, id }) => {
+export const MarkdownHeading: FC<Props> = ({ element, id, locale }) => {
     const { rank, content } = element;
     const Tag: `h${typeof rank}` = `h${rank}`;
     const className = rank === 2 ? styles.h2 : rank === 3 ? styles.h3 : styles.h4;
@@ -26,7 +29,7 @@ export const MarkdownHeading: FC<Props> = ({ element, id }) => {
     return (
         <Tag id={id} className={`${className} ${styles.anchored}`} aria-label={content}>
             {content}
-            <a href={`#${id}`} className={styles.anchor} aria-label={`Link to section: ${content}`} />
+            <a href={`#${id}`} className={styles.anchor} aria-label={markdownCopy[locale].headingLink(content)} />
         </Tag>
     );
 };

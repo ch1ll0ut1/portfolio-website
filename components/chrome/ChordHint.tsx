@@ -1,4 +1,8 @@
+'use client';
+
 import { type FC } from 'react';
+import { chromeCopy } from '@/config/chrome';
+import { useLocale } from '@/lib/i18n/LocaleContext';
 import { orderedChordSections } from './orderedChordSections';
 import styles from './ChordHint.module.css';
 
@@ -19,6 +23,6 @@ export const ChordHint: FC<Props> = ({ armed }) => (
     <div className={armed ? `${styles.hint} ${styles.on}` : styles.hint} aria-hidden="true">
         <kbd>g</kbd>
         {/* One expression: as separate children the formatter splits them and JSX eats the space. */}
-        <span>{`then ${keys}`}</span>
+        <span>{chromeCopy[useLocale()].chordHint(keys)}</span>
     </div>
 );

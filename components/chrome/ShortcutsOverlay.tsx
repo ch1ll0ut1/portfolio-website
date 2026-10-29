@@ -1,6 +1,9 @@
 'use client';
 
 import { type CSSProperties, type FC, useCallback, useRef } from 'react';
+import { chromeCopy } from '@/config/chrome';
+import type { ChromeCopy } from '@/config/chrome/types';
+import { useLocale } from '@/lib/i18n/LocaleContext';
 import { Overlay } from './Overlay';
 import { orderedChordSections } from './orderedChordSections';
 import { setPreference, usePreference } from './preferences';
@@ -35,6 +38,7 @@ interface Props {
  * user saying a word containing a `t` should not flip the page's theme.
  */
 export const ShortcutsOverlay: FC<Props> = ({ open, onClose }) => {
+    const copy = chromeCopy[useLocale()];
     const closeRef = useRef<HTMLButtonElement>(null);
     const apple = useApplePlatform();
     const singleKeys = usePreference('singleKeyShortcuts');
@@ -57,19 +61,19 @@ export const ShortcutsOverlay: FC<Props> = ({ open, onClose }) => {
             onKeyDown={handleKeyDown}
         >
             <div className={styles.head}>
-                <h2 className={styles.title} id={TITLE_ID}>Keyboard shortcuts</h2>
+                <h2 className={styles.title} id={TITLE_ID}>{copy.shortcuts.title}</h2>
                 <button
                     className={styles.close}
                     ref={closeRef}
                     type="button"
-                    aria-label="Close shortcuts"
+                    aria-label={copy.shortcuts.close}
                     onClick={onClose}
                 >
                     <kbd>esc</kbd>
                 </button>
             </div>
             <dl className={styles.list}>
-                {buildShortcuts(apple).map((shortcut, index) => {
+                {buildShortcuts(apple, copy).map((shortcut, index) => {
                     const style: RowStyle = { '--i': index };
                     const singleKey = shortcut.keys.length === 1 || shortcut.keys[0] === 'G';
 
@@ -93,8 +97,8 @@ export const ShortcutsOverlay: FC<Props> = ({ open, onClose }) => {
             </dl>
             <div className={styles.setting}>
                 <label className={styles.settingLabel} htmlFor={SWITCH_ID}>
-                    Single-key shortcuts
-                    <span className={styles.settingHint}>T, ? and the G chords. The command menu always works.</span>
+                    {copy.shortcuts.setting}
+                    <span className={styles.settingHint}>{copy.shortcuts.settingHint}</span>
                 </label>
                 <input
                     className={styles.switch}
@@ -111,12 +115,12 @@ export const ShortcutsOverlay: FC<Props> = ({ open, onClose }) => {
     );
 };
 
-const buildShortcuts = (apple: boolean): Shortcut[] => [
-    { keys: [apple ? '⌘' : 'Ctrl', 'K'], label: 'Command menu' },
-    { keys: ['T'], label: 'Switch color theme' },
+const buildShortcuts = (apple: boolean, { shortcuts, sections }: ChromeCopy): Shortcut[] => [
+    { keys: [apple ? '⌘' : 'Ctrl', 'K'], label: shortcuts.palette },
+    { keys: ['T'], label: shortcuts.theme },
     ...orderedChordSections.map(section => ({
         keys: ['G', section.chord.toUpperCase()],
-        label: section.id === 'top' ? 'Back to top' : `Go to ${section.label.toLowerCase()}`,
+        label: section.id === 'top' ? shortcuts.top : shortcuts.goTo(sections[section.id]),
     })),
-    { keys: ['?'], label: 'This list' },
+    { keys: ['?'], label: shortcuts.help },
 ];

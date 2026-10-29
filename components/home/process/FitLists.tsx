@@ -10,12 +10,14 @@
 
 import { FC, useRef } from 'react';
 import { useMaskReveal, useReveal } from '@/lib/motion';
-import { type FitTone, fitContent } from '@/config/fit';
+import { type FitTone, fitFor } from '@/config/fit';
+import { useLocale } from '@/lib/i18n/LocaleContext';
 import styles from './ProcessBlocks.module.css';
 
 const REVEAL_STAGGER = 0.08;
 
 export const FitLists: FC = () => {
+    const fitContent = fitFor(useLocale());
     const ref = useRef<HTMLDivElement>(null);
     const headingRef = useRef<HTMLHeadingElement>(null);
 

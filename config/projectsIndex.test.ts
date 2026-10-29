@@ -4,7 +4,10 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { projectsIndex } from './projectsIndex';
+import { workEn } from './home/work/en';
+import { projectsIndexFor } from './projectsIndex';
+
+const projectsIndex = projectsIndexFor('en');
 
 describe('Projects Index Configuration', () => {
     describe('Projects Index Data Integrity', () => {
@@ -58,6 +61,12 @@ describe('Projects Index Configuration', () => {
         it('should have projects', () => {
             // Assert
             expect(projectsIndex.length).toBeGreaterThan(0);
+        });
+    });
+
+    describe('Languages', () => {
+        it('should date current work with the dictionary\'s word for now', () => {
+            expect(projectsIndex.find(project => project.id === 'command-code')?.year).toBe(workEn.moreProjects.now);
         });
     });
 });

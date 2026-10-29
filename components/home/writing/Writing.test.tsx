@@ -6,13 +6,15 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { blogPosts } from '@/config/blog';
-import { buildingNow } from '@/config/buildingNow';
+import { buildingNowFor } from '@/config/buildingNow';
 import { Writing } from './Writing';
+
+const buildingNow = buildingNowFor('en');
 
 describe('Writing Section', () => {
     it('should render as a labelled section anchored at #writing', () => {
         // Arrange
-        const { container } = render(<Writing />);
+        const { container } = render(<Writing locale="en" />);
 
         // Act
         const section = container.querySelector('section');
@@ -24,7 +26,7 @@ describe('Writing Section', () => {
 
     it('should render the heading and sub-line', () => {
         // Arrange
-        render(<Writing />);
+        render(<Writing locale="en" />);
 
         // Assert
         expect(screen.getByRole('heading', { name: /writing and current work/i })).toBeInTheDocument();
@@ -33,7 +35,7 @@ describe('Writing Section', () => {
 
     it('should link every post the blog config flags as featured', () => {
         // Arrange
-        render(<Writing />);
+        render(<Writing locale="en" />);
 
         // Act
         const featured = blogPosts.filter(post => post.featured === true);
@@ -49,7 +51,7 @@ describe('Writing Section', () => {
 
     it('should render the building-now card alongside the posts', () => {
         // Arrange
-        render(<Writing />);
+        render(<Writing locale="en" />);
 
         // Assert
         expect(screen.getByRole('heading', { name: buildingNow.title })).toBeInTheDocument();
@@ -58,7 +60,7 @@ describe('Writing Section', () => {
 
     it('should link to the blog index', () => {
         // Arrange
-        render(<Writing />);
+        render(<Writing locale="en" />);
 
         // Assert
         expect(screen.getByRole('link', { name: /all articles on the blog/i })).toHaveAttribute('href', '/blog');

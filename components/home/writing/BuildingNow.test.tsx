@@ -6,8 +6,10 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { itemAt } from '@/test/itemAt';
-import { buildingNow } from '@/config/buildingNow';
+import { buildingNowFor } from '@/config/buildingNow';
 import { BuildingNow } from './BuildingNow';
+
+const buildingNow = buildingNowFor('en');
 
 describe('BuildingNow Component', () => {
     it('should render the project copy', () => {

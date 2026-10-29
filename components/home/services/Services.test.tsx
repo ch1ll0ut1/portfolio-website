@@ -4,7 +4,8 @@
 
 import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
-import { engagementNote, engagements, engagementsHeading } from '@/config/engagements';
+import { engagements } from '@/config/engagements';
+import { engagementsEn } from '@/config/home/services/en';
 import { itemAt } from '@/test/itemAt';
 import { installIntersectionObserver, installMatchMedia, settleIntro } from '../../../test/motionEnv';
 import { Services } from './Services';
@@ -67,16 +68,16 @@ describe('Services', () => {
 
     it('should render a labelled section anchored at the services id', () => {
         // Act
-        const { container } = render(<Services />);
+        const { container } = render(<Services locale="en" />);
 
         // Assert
-        expect(screen.getByRole('region', { name: new RegExp(engagementsHeading.title, 'i') })).toBeInTheDocument();
+        expect(screen.getByRole('region', { name: new RegExp(engagementsEn.heading.title, 'i') })).toBeInTheDocument();
         expect(container.querySelector('#services')).toBeInTheDocument();
     });
 
     it('should render every engagement with its bullets and range line', () => {
         // Act
-        render(<Services />);
+        render(<Services locale="en" />);
 
         // Assert
         engagements.forEach((engagement) => {
@@ -96,7 +97,7 @@ describe('Services', () => {
 
     it('should link every card to its section of the services page', () => {
         // Act
-        render(<Services />);
+        render(<Services locale="en" />);
 
         // Assert
         engagements.forEach((engagement) => {
@@ -108,7 +109,7 @@ describe('Services', () => {
 
     it('should render one card per engagement', () => {
         // Act
-        render(<Services />);
+        render(<Services locale="en" />);
 
         // Assert
         expect(screen.getAllByRole('article')).toHaveLength(engagements.length);
@@ -116,7 +117,7 @@ describe('Services', () => {
 
     it('should name every card after its engagement', () => {
         // Act
-        render(<Services />);
+        render(<Services locale="en" />);
 
         // Assert
         engagements.forEach((engagement) => {
@@ -126,7 +127,7 @@ describe('Services', () => {
 
     it('should mark the featured engagement for assistive technology', () => {
         // Act
-        render(<Services />);
+        render(<Services locale="en" />);
         const featured = engagements.filter(engagement => engagement.featured);
         const marked = screen.getAllByText(/featured/i);
 
@@ -137,10 +138,10 @@ describe('Services', () => {
 
     it('should expose the closing paragraph as ordinary text', () => {
         // Arrange
-        const expected = engagementNote.map(segment => segment.text).join(' ');
+        const expected = engagementsEn.note.map(segment => segment.text).join(' ');
 
         // Act
-        render(<Services />);
+        render(<Services locale="en" />);
         const paragraph = noteParagraph();
 
         // Assert
@@ -149,7 +150,7 @@ describe('Services', () => {
 
     it('should keep the closing paragraph readable with the typing decoration hidden', () => {
         // Act
-        render(<Services />);
+        render(<Services locale="en" />);
         const paragraph = noteParagraph();
         const decorations = paragraph.querySelectorAll('[aria-hidden="true"]');
 
@@ -171,7 +172,7 @@ describe('Services', () => {
 
         try {
             // Act
-            render(<Services />);
+            render(<Services locale="en" />);
             await settleIntro();
 
             // Assert

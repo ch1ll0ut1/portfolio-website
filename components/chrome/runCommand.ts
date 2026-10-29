@@ -6,7 +6,10 @@
  */
 
 import { showToast } from '@/lib/motion';
+import { chromeCopy } from '@/config/chrome';
 import type { CommandAction } from '@/config/commands';
+import type { Locale } from '@/lib/i18n/locale';
+import { localizedPath } from '@/lib/i18n/paths';
 import { requestConsentPreferences } from '@/components/consent/ConsentContext';
 import { openExternal } from './openExternal';
 import { togglePreference } from './preferences';
@@ -16,18 +19,22 @@ import { toggleTheme } from './themeStore';
 export interface CommandHandlers {
     openShortcuts: () => void;
     navigate: (href: string) => void;
+    /** The page's language: routes go to its pages, toasts speak it. */
+    locale: Locale;
 }
 
 export const runCommand = (action: CommandAction, handlers: CommandHandlers) => {
+    const { toasts } = chromeCopy[handlers.locale];
+
     switch (action.type) {
         case 'section':
-            scrollToSection(action.sectionId, handlers.navigate);
+            scrollToSection(action.sectionId, handlers.navigate, handlers.locale);
             break;
         case 'external':
             openExternal(action.url);
             break;
         case 'route':
-            handlers.navigate(action.href);
+            handlers.navigate(localizedPath(handlers.locale, action.href));
             break;
         case 'theme':
             toggleTheme();
@@ -36,10 +43,10 @@ export const runCommand = (action: CommandAction, handlers: CommandHandlers) => 
             handlers.openShortcuts();
             break;
         case 'toggleSingleKeys':
-            showToast(togglePreference('singleKeyShortcuts') ? 'Single-key shortcuts on' : 'Single-key shortcuts off');
+            showToast(togglePreference('singleKeyShortcuts') ? toasts.singleKeysOn : toasts.singleKeysOff);
             break;
         case 'toggleCursor':
-            showToast(togglePreference('caretCursor') ? 'Custom cursor on' : 'Custom cursor off');
+            showToast(togglePreference('caretCursor') ? toasts.cursorOn : toasts.cursorOff);
             break;
         case 'cookieSettings':
             requestConsentPreferences();

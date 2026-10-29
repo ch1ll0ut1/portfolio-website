@@ -1,10 +1,13 @@
 /**
  * The "Building now" card on the homepage.
  *
- * Copy for the project Stefan has in flight. Kept here so the writing section
- * stays markup and motion, and so the card can be updated without touching a
- * component.
+ * The project Stefan has in flight. Its words are in the writing section's
+ * dictionary, `config/home/writing/`, so the section stays markup and motion
+ * and the card can be updated without touching a component.
  */
+
+import type { Locale } from '@/lib/i18n/locale';
+import { writingCopy } from './home/writing';
 
 export interface BuildingNowProject {
     /** Small label above the title, next to the live dot. */
@@ -20,8 +23,5 @@ export interface BuildingNowProject {
     linkHref?: string;
 }
 
-export const buildingNow: BuildingNowProject = {
-    label: 'Building now',
-    title: 'Command&Code',
-    description: 'A desktop app that puts a visual orchestration layer on top of Claude Code: a workflow rail, approval gates on every artifact, and autonomy modes you set per step.',
-};
+/** The card, told in `locale`. It has no link while the repo is private. */
+export const buildingNowFor = (locale: Locale): BuildingNowProject => writingCopy[locale].buildingNow;

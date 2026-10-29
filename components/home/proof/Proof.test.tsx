@@ -4,9 +4,12 @@
 
 import { afterAll, afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { proofClients, proofStats } from '@/config/proof';
+import { proofEn } from '@/config/home/proof/en';
+import { proofStatsFor } from '@/config/proof';
 import { installIntersectionObserver, installMatchMedia, settleIntro } from '../../../test/motionEnv';
 import { Proof } from './Proof';
+
+const proofStats = proofStatsFor('en');
 
 /** The motion kit waits on web fonts, which jsdom does not implement. */
 const stubFonts = () => {
@@ -43,7 +46,7 @@ describe('Proof', () => {
 
     it('should render a labelled section anchored at the proof id', () => {
         // Act
-        const { container } = render(<Proof />);
+        const { container } = render(<Proof locale="en" />);
 
         // Assert
         expect(screen.getByRole('region', { name: /teams and organizations/i })).toBeInTheDocument();
@@ -52,16 +55,16 @@ describe('Proof', () => {
 
     it('should list every organisation once for assistive technology', () => {
         // Act
-        render(<Proof />);
+        render(<Proof locale="en" />);
         const items = screen.getAllByRole('listitem');
 
         // Assert
-        expect(items.map(item => item.textContent)).toEqual(proofClients);
+        expect(items.map(item => item.textContent)).toEqual(proofEn.clients);
     });
 
     it('should expose every stat label and its true final value as text', () => {
         // Act
-        const { container } = render(<Proof />);
+        const { container } = render(<Proof locale="en" />);
         const values = Array.from(container.querySelectorAll('dd')).map(accessibleText);
 
         // Assert
@@ -74,7 +77,7 @@ describe('Proof', () => {
 
     it('should build a digit column for every digit of every stat', () => {
         // Act
-        const { container } = render(<Proof />);
+        const { container } = render(<Proof locale="en" />);
         const columns = container.querySelectorAll('[data-odometer-column]');
         const digits = proofStats.reduce((total, stat) => total + stat.value.length, 0);
 
@@ -84,7 +87,7 @@ describe('Proof', () => {
 
     it('should pair every stat label with its value in a description list', () => {
         // Act
-        const { container } = render(<Proof />);
+        const { container } = render(<Proof locale="en" />);
 
         // Assert
         expect(container.querySelectorAll('dt')).toHaveLength(proofStats.length);

@@ -3,16 +3,16 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { engagementNote } from '@/config/engagements';
+import { engagementsEn } from '@/config/home/services/en';
 import { splitNoteWords } from './noteTyping';
 
 describe('splitNoteWords', () => {
     it('should reconstruct the paragraph from its words', () => {
         // Arrange
-        const expected = engagementNote.map(segment => segment.text).join(' ');
+        const expected = engagementsEn.note.map(segment => segment.text).join(' ');
 
         // Act
-        const words = splitNoteWords(engagementNote);
+        const words = splitNoteWords(engagementsEn.note);
 
         // Assert
         expect(words.map(word => word.text).join(' ')).toBe(expected);
@@ -20,7 +20,7 @@ describe('splitNoteWords', () => {
 
     it('should carry the selection flag through from the segments', () => {
         // Act
-        const words = splitNoteWords(engagementNote);
+        const words = splitNoteWords(engagementsEn.note);
         const selected = words.filter(word => word.selected);
 
         // Assert
@@ -29,7 +29,7 @@ describe('splitNoteWords', () => {
 
     it('should number the selected words in reading order', () => {
         // Act
-        const words = splitNoteWords(engagementNote);
+        const words = splitNoteWords(engagementsEn.note);
         const indices = words.filter(word => word.selected).map(word => word.selectIndex);
 
         // Assert
@@ -38,7 +38,7 @@ describe('splitNoteWords', () => {
 
     it('should leave unselected words without a selection index', () => {
         // Act
-        const words = splitNoteWords(engagementNote);
+        const words = splitNoteWords(engagementsEn.note);
 
         // Assert
         words.filter(word => !word.selected).forEach((word) => {

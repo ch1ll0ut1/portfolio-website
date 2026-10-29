@@ -5,7 +5,9 @@
 
 import { describe, it, expect } from 'vitest';
 import { itemAt } from '@/test/itemAt';
-import { careerLog } from './career';
+import { careerFor } from './career';
+
+const careerLog = careerFor('en');
 
 const startYear = (years: string) => parseInt(years.slice(0, 4), 10);
 
@@ -112,6 +114,15 @@ describe('Career Log Configuration', () => {
         it('should mark the oldest commit as the root', () => {
             // Assert
             expect(itemAt(careerLog, careerLog.length - 1).isRoot).toBe(true);
+        });
+    });
+
+    describe('Languages', () => {
+        it('should close the current role\'s range with the dictionary\'s word for now', () => {
+            expect(careerLog[0]?.years).toBe('2025–now');
+            careerLog.slice(1).forEach((commit) => {
+                expect(commit.years).toMatch(/^\d{4}(–\d{4})?$/);
+            });
         });
     });
 });

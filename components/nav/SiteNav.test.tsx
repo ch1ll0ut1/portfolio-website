@@ -13,6 +13,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { emitStage } from '@/lib/motion';
+import { chromeEn } from '@/config/chrome/en';
 import { navSections } from '@/config/sections';
 import { links } from '@/config/links';
 import { itemAt } from '@/test/itemAt';
@@ -176,7 +177,7 @@ describe('<SiteNav> Component', () => {
         const nav = screen.getByRole('navigation', { name: 'Sections' });
 
         navSections.forEach((section) => {
-            expect(screen.getByRole('link', { name: section.label })).toHaveAttribute('href', section.page ?? `/#${section.id}`);
+            expect(screen.getByRole('link', { name: chromeEn.sections[section.id] })).toHaveAttribute('href', section.page ?? `/#${section.id}`);
         });
 
         expect(nav.querySelectorAll('a')).toHaveLength(navSections.length);
@@ -205,7 +206,7 @@ describe('<SiteNav> Component', () => {
         target.scrollIntoView = scrollIntoView;
         render(<SiteNav />);
 
-        const click = fireEvent.click(screen.getByRole('link', { name: section.label }));
+        const click = fireEvent.click(screen.getByRole('link', { name: chromeEn.sections[section.id] }));
 
         // Handled here rather than by the browser, which would leave focus behind.
         expect(click).toBe(false);
@@ -219,7 +220,7 @@ describe('<SiteNav> Component', () => {
     it('should leave a modified click on a section link to the browser', () => {
         render(<SiteNav />);
 
-        const click = fireEvent.click(screen.getByRole('link', { name: itemAt(fragmentSections, 1).label }), { metaKey: true });
+        const click = fireEvent.click(screen.getByRole('link', { name: chromeEn.sections[itemAt(fragmentSections, 1).id] }), { metaKey: true });
 
         expect(click).toBe(true);
         expect(itemAt(sectionNodes, 1)).not.toHaveFocus();
@@ -269,8 +270,8 @@ describe('<SiteNav> Component', () => {
             }
         });
 
-        expect(screen.getByRole('link', { name: itemAt(fragmentSections, 2).label })).toHaveAttribute('aria-current', 'location');
-        expect(screen.getByRole('link', { name: itemAt(fragmentSections, 0).label })).not.toHaveAttribute('aria-current');
+        expect(screen.getByRole('link', { name: chromeEn.sections[itemAt(fragmentSections, 2).id] })).toHaveAttribute('aria-current', 'location');
+        expect(screen.getByRole('link', { name: chromeEn.sections[itemAt(fragmentSections, 0).id] })).not.toHaveAttribute('aria-current');
     });
 
     // The layout keeps the nav mounted across client-side navigation.
@@ -291,7 +292,7 @@ describe('<SiteNav> Component', () => {
         navigation.pathname = '/blog';
         rerender(<SiteNav />);
 
-        expect(screen.getByRole('link', { name: itemAt(fragmentSections, 2).label })).not.toHaveAttribute('aria-current');
+        expect(screen.getByRole('link', { name: chromeEn.sections[itemAt(fragmentSections, 2).id] })).not.toHaveAttribute('aria-current');
         expect(first?.disconnected).toBe(true);
         expect(findObservers().at(-1)).not.toBe(first);
     });
@@ -318,7 +319,7 @@ describe('<SiteNav> Component', () => {
         rerender(<SiteNav />);
 
         for (const section of fragmentSections) {
-            expect(screen.getByRole('link', { name: section.label })).not.toHaveAttribute('aria-current');
+            expect(screen.getByRole('link', { name: chromeEn.sections[section.id] })).not.toHaveAttribute('aria-current');
         }
 
         const second = findObserver();
@@ -332,13 +333,13 @@ describe('<SiteNav> Component', () => {
             }
         });
 
-        expect(screen.getByRole('link', { name: itemAt(fragmentSections, 1).label })).toHaveAttribute('aria-current', 'location');
+        expect(screen.getByRole('link', { name: chromeEn.sections[itemAt(fragmentSections, 1).id] })).toHaveAttribute('aria-current', 'location');
     });
 
     it('should move the pill to a link that receives focus', () => {
         render(<SiteNav />);
 
-        const link = screen.getByRole('link', { name: itemAt(fragmentSections, 1).label });
+        const link = screen.getByRole('link', { name: chromeEn.sections[itemAt(fragmentSections, 1).id] });
 
         Object.defineProperty(link, 'offsetWidth', { value: 80, configurable: true });
         Object.defineProperty(link, 'offsetLeft', { value: 120, configurable: true });
@@ -356,7 +357,7 @@ describe('<SiteNav> Component', () => {
         render(<SiteNav />);
 
         const nav = screen.getByRole('navigation', { name: 'Sections' });
-        const link = screen.getByRole('link', { name: itemAt(fragmentSections, 0).label });
+        const link = screen.getByRole('link', { name: chromeEn.sections[itemAt(fragmentSections, 0).id] });
         const pill = getHeader().querySelector(`.${styles.pill}`);
 
         act(() => {
@@ -416,7 +417,7 @@ describe('<SiteNav> Component', () => {
             render(<SiteNav />);
 
             // A real click presses the pointer on the link, not the scrollbar.
-            const link = screen.getByRole('link', { name: itemAt(fragmentSections, 2).label });
+            const link = screen.getByRole('link', { name: chromeEn.sections[itemAt(fragmentSections, 2).id] });
 
             fireEvent.pointerDown(link);
             fireEvent.click(link);

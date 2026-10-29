@@ -1,7 +1,9 @@
 'use client';
 
-import { type FC, useCallback, useEffect, useRef, useState } from 'react';
-import { projectsIndex } from '@/config/projectsIndex';
+import { type FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { workCopy } from '@/config/home/work';
+import { projectsIndexFor } from '@/config/projectsIndex';
+import { useLocale } from '@/lib/i18n/LocaleContext';
 import { useFinePointer, useReducedMotion, useStageEvent } from '@/lib/motion';
 import { ProjectPreview } from './ProjectPreview';
 import styles from './MoreProjects.module.css';
@@ -19,6 +21,8 @@ const MARKER_HEIGHT = 100;
  * treatment is a pointer nicety on top.
  */
 export const MoreProjects: FC = () => {
+    const locale = useLocale();
+    const projectsIndex = useMemo(() => projectsIndexFor(locale), [locale]);
     const listRef = useRef<HTMLOListElement>(null);
     const markerRef = useRef<HTMLDivElement>(null);
     /** The marker jumps to its first row and slides between rows afterwards. */
@@ -71,7 +75,7 @@ export const MoreProjects: FC = () => {
 
     return (
         <div className={styles.index} id="more-work">
-            <h3 className={styles.title}>More projects</h3>
+            <h3 className={styles.title}>{workCopy[locale].moreProjects.title}</h3>
             <ol
                 ref={listRef}
                 className={`${styles.list}${active === null ? '' : ` ${styles.listHot}`}`}

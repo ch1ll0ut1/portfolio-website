@@ -11,6 +11,7 @@
  * the (hashed) CSS Module class names.
  */
 
+import type { PipelineStatusCopy } from '@/config/home/writing/types';
 import { subscribeTick } from '@/lib/motion';
 import { makeDraggable } from './pipelineDrag';
 import { type Box, edgePath } from './pipelineGeometry';
@@ -31,6 +32,8 @@ export interface PipelineFlowOptions {
     /** The status readout's text element. */
     state: HTMLElement;
     classes: PipelineClasses;
+    /** What the status readout says at each step. */
+    status: PipelineStatusCopy;
     /** Renders one static frame and never starts the loop. */
     reduced: boolean;
     /** Enables node dragging. */
@@ -46,7 +49,7 @@ export interface PipelineFlow {
 }
 
 export const createPipelineFlow = (options: PipelineFlowOptions): PipelineFlow => {
-    const { canvas, svg, state, classes, reduced, fine, onLiveChange } = options;
+    const { canvas, svg, state, classes, status, reduced, fine, onLiveChange } = options;
     const nodes = collectNodes(canvas);
 
     if (nodes.length !== pipelineNodes.length) {
@@ -176,12 +179,12 @@ export const createPipelineFlow = (options: PipelineFlowOptions): PipelineFlow =
         stage.setNode(GATE, classes.gateWaiting);
         stage.setEdge(SPEC, classes.edgeDone);
         stage.setEdge(RESEARCH, classes.edgeDone);
-        stage.say('review gate: waiting');
+        stage.say(status.waiting);
 
         return { layout, destroy };
     }
 
-    const timeline = createTimeline(buildSteps(stage));
+    const timeline = createTimeline(buildSteps(stage, status));
 
     let stop: (() => void) | null = null;
     let onScreen = false;

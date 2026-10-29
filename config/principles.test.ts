@@ -4,7 +4,9 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { principlesContent } from './principles';
+import { principlesFor } from './principles';
+
+const principlesContent = principlesFor('en');
 
 describe('Principles Configuration', () => {
     describe('Principles Data Integrity', () => {

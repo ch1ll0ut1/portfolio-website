@@ -10,8 +10,10 @@ import { render, screen } from '@testing-library/react';
 import { installMatchMedia } from '../../../test/motionEnv';
 import { REDUCED_MOTION_QUERY } from '../../../lib/motion';
 import { caseStudies } from '../../../config/caseStudies';
-import { projectsIndex } from '../../../config/projectsIndex';
+import { projectsIndexFor } from '../../../config/projectsIndex';
 import { Work } from './Work';
+
+const projectsIndex = projectsIndexFor('en');
 
 describe('Work', () => {
     let restoreMedia: () => void;
@@ -28,7 +30,7 @@ describe('Work', () => {
 
     it('should render the section under the work anchor', () => {
         // Act
-        const { container } = render(<Work />);
+        const { container } = render(<Work locale="en" />);
 
         // Assert
         expect(container.querySelector('#work')).toBeInTheDocument();
@@ -36,7 +38,7 @@ describe('Work', () => {
 
     it('should render the section heading', () => {
         // Act
-        render(<Work />);
+        render(<Work locale="en" />);
 
         // Assert
         expect(screen.getByRole('heading', { level: 2, name: 'Selected work' })).toBeInTheDocument();
@@ -44,7 +46,7 @@ describe('Work', () => {
 
     it('should render every case study with its story and metric', () => {
         // Act
-        render(<Work />);
+        render(<Work locale="en" />);
 
         // Assert
         caseStudies.forEach((study) => {
@@ -58,7 +60,7 @@ describe('Work', () => {
 
     it('should render the project index after the case studies', () => {
         // Act
-        render(<Work />);
+        render(<Work locale="en" />);
 
         // Assert
         expect(screen.getAllByRole('listitem').length).toBeGreaterThanOrEqual(projectsIndex.length);

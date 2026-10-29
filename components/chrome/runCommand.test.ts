@@ -3,13 +3,15 @@
  */
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { commands } from '@/config/commands';
+import { commandsFor } from '@/config/commands';
 import { links } from '@/config/links';
 import { OPEN_CONSENT_PREFERENCES_EVENT } from '@/components/consent/ConsentContext';
 import { readPreference, setPreference } from './preferences';
 import { runCommand } from './runCommand';
 
-const handlers = () => ({ openShortcuts: vi.fn(), navigate: vi.fn() });
+const commands = commandsFor('en');
+
+const handlers = () => ({ openShortcuts: vi.fn(), navigate: vi.fn(), locale: 'en' as const });
 
 describe('runCommand', () => {
     it('should list a cookie settings command in the palette', () => {
@@ -29,7 +31,7 @@ describe('runCommand', () => {
         window.addEventListener(OPEN_CONSENT_PREFERENCES_EVENT, listener);
 
         // Act
-        runCommand({ type: 'cookieSettings' }, { openShortcuts: vi.fn(), navigate: vi.fn() });
+        runCommand({ type: 'cookieSettings' }, handlers());
 
         // Assert
         expect(listener).toHaveBeenCalledTimes(1);
@@ -117,6 +119,32 @@ describe('runCommand', () => {
             runCommand({ type: 'section', sectionId: 'process' }, commandHandlers);
 
             expect(commandHandlers.navigate).toHaveBeenCalledWith('/#process');
+        });
+
+        it('should route to the homepage in the page\'s language', () => {
+            const commandHandlers = { ...handlers(), locale: 'de' as const };
+
+            runCommand({ type: 'section', sectionId: 'process' }, commandHandlers);
+
+            expect(commandHandlers.navigate).toHaveBeenCalledWith('/de#process');
+        });
+    });
+
+    describe('routes', () => {
+        it('should navigate to the English path on an English page', () => {
+            const commandHandlers = handlers();
+
+            runCommand({ type: 'route', href: '/services' }, commandHandlers);
+
+            expect(commandHandlers.navigate).toHaveBeenCalledWith('/services');
+        });
+
+        it('should navigate to the German twin of the path on a German page', () => {
+            const commandHandlers = { ...handlers(), locale: 'de' as const };
+
+            runCommand({ type: 'route', href: '/services' }, commandHandlers);
+
+            expect(commandHandlers.navigate).toHaveBeenCalledWith('/de/leistungen');
         });
     });
 });

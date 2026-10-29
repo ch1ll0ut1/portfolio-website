@@ -13,7 +13,8 @@ import userEvent from '@testing-library/user-event';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { REDUCED_MOTION_QUERY } from '@/lib/motion';
 import { installMatchMedia } from '../../../test/motionEnv';
-import { heroAvailability, heroCtas, heroHeadline, heroKicker, heroLocation } from '@/config/hero';
+import { heroCtas, heroLocation } from '@/config/hero';
+import { heroEn } from '@/config/home/hero/en';
 import { yearsShipping } from '@/config/site';
 import { Hero } from './Hero';
 import { itemAt } from '@/test/itemAt';
@@ -42,7 +43,7 @@ describe('Hero', () => {
 
         const heading = screen.getByRole('heading', { level: 1 });
 
-        expect(heading).toHaveTextContent(`${heroHeadline.before}${heroHeadline.highlight}${heroHeadline.after}`);
+        expect(heading).toHaveTextContent(`${heroEn.headline.before}${heroEn.headline.highlight}${heroEn.headline.after}`);
     });
 
     it('should carry the kicker inside the heading, with the years counted from the start year', () => {
@@ -50,7 +51,7 @@ describe('Hero', () => {
 
         const heading = screen.getByRole('heading', { level: 1 });
 
-        heroKicker.forEach((part) => {
+        heroEn.kicker(yearsShipping()).forEach((part) => {
             expect(heading).toHaveTextContent(part);
         });
         expect(heading).toHaveTextContent(`${yearsShipping()} years`);
@@ -60,7 +61,7 @@ describe('Hero', () => {
         render(<Hero />);
 
         const heading = screen.getByRole('heading', { level: 1 });
-        const occurrences = heading.textContent.split(heroHeadline.highlight).length - 1;
+        const occurrences = heading.textContent.split(heroEn.headline.highlight).length - 1;
 
         expect(occurrences).toBe(1);
         expect(heading.querySelector('[hidden]')).toBeNull();
@@ -73,8 +74,8 @@ describe('Hero', () => {
 
         editor().textContent = 'Something else entirely';
 
-        expect(heading).toHaveAccessibleName(expect.stringContaining(`${heroHeadline.before}${heroHeadline.highlight}${heroHeadline.after}`));
-        expect(heading).toHaveAccessibleName(expect.stringContaining(itemAt(heroKicker, 0)));
+        expect(heading).toHaveAccessibleName(expect.stringContaining(`${heroEn.headline.before}${heroEn.headline.highlight}${heroEn.headline.after}`));
+        expect(heading).toHaveAccessibleName(expect.stringContaining(itemAt(heroEn.kicker(yearsShipping()), 0)));
         expect(heading).not.toHaveAccessibleName(expect.stringContaining('Something else'));
         expect(heading).not.toHaveAttribute('contenteditable');
     });
@@ -160,7 +161,7 @@ describe('Hero', () => {
     it('should keep the highlighted phrase as a mark so the model starts with three leaves', () => {
         render(<Hero />);
 
-        expect(screen.getByRole('heading', { level: 1 }).querySelector('mark')).toHaveTextContent(heroHeadline.highlight);
+        expect(screen.getByRole('heading', { level: 1 }).querySelector('mark')).toHaveTextContent(heroEn.headline.highlight);
     });
 
     it('should render the document model panel with the live headline', () => {
@@ -170,7 +171,7 @@ describe('Hero', () => {
 
         expect(panel).toHaveTextContent('headline.json');
         expect(panel).toHaveTextContent('"heading"');
-        expect(panel).toHaveTextContent(heroHeadline.highlight);
+        expect(panel).toHaveTextContent(heroEn.headline.highlight);
         expect(panel).toHaveTextContent('synced');
     });
 
@@ -178,7 +179,7 @@ describe('Hero', () => {
         render(<Hero />);
 
         for (const cta of heroCtas) {
-            expect(screen.getByRole('link', { name: cta.label })).toHaveAttribute('href', cta.href);
+            expect(screen.getByRole('link', { name: heroEn.ctas[cta.id] })).toHaveAttribute('href', cta.href);
         }
     });
 
@@ -186,7 +187,7 @@ describe('Hero', () => {
         render(<Hero />);
 
         const external = heroCtas.find(cta => cta.external);
-        const link = screen.getByRole('link', { name: String(external?.label) });
+        const link = screen.getByRole('link', { name: external ? heroEn.ctas[external.id] : '' });
 
         expect(link).toHaveAttribute('target', '_blank');
         expect(link).toHaveAttribute('rel', expect.stringContaining('noopener'));
@@ -195,7 +196,7 @@ describe('Hero', () => {
     it('should show availability and the local time placeholder until the clock starts', () => {
         render(<Hero />);
 
-        expect(screen.getByText(heroAvailability)).toBeInTheDocument();
+        expect(screen.getByText(heroEn.availability)).toBeInTheDocument();
         expect(screen.getByText(heroLocation.placeholder)).toBeInTheDocument();
         expect(screen.getByText(heroLocation.utcOffset)).toBeInTheDocument();
     });
@@ -238,7 +239,7 @@ describe('Hero server output', () => {
     const markup = () => renderToStaticMarkup(<Hero />);
 
     it('should contain the headline as real text', () => {
-        expect(markup()).toContain(heroHeadline.highlight);
+        expect(markup()).toContain(heroEn.headline.highlight);
     });
 
     it('should contain the lede and both calls to action', () => {
@@ -247,7 +248,7 @@ describe('Hero server output', () => {
         expect(html).toContain('fix broken ones');
 
         for (const cta of heroCtas) {
-            expect(html).toContain(cta.label);
+            expect(html).toContain(heroEn.ctas[cta.id]);
         }
     });
 

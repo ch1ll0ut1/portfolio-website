@@ -10,6 +10,8 @@ import {
     useStageEvent,
 } from '@/lib/motion';
 import { contactInvitation } from '@/config/contact';
+import { homeContactCopy } from '@/config/home/contact';
+import { useLocale } from '@/lib/i18n/LocaleContext';
 import { ContactFooter } from './ContactFooter';
 import { CtaMagnet } from './CtaMagnet';
 import { LinkedInMessage } from './LinkedInMessage';
@@ -34,6 +36,7 @@ const SWEEP_DELAY_MS = 620;
  * renders in anyway.
  */
 export const Contact: FC = () => {
+    const { title } = homeContactCopy[useLocale()];
     const sectionRef = useRef<HTMLElement>(null);
     const titleRef = useRef<HTMLHeadingElement>(null);
     const markRef = useRef<HTMLElement>(null);
@@ -104,10 +107,10 @@ export const Contact: FC = () => {
         >
             <div className={`wrap ${styles.inner}`}>
                 <h2 className={styles.title} id="contact-title" ref={titleRef}>
-                    Bring me the
+                    {title.before}
                     {' '}
-                    <mark className={styles.mark} ref={markRef}>hard part</mark>
-                    .
+                    <mark className={styles.mark} ref={markRef}>{title.highlight}</mark>
+                    {title.after}
                 </h2>
                 <p className={styles.lede} ref={ledeRef}>{contactInvitation}</p>
                 <div className={styles.actions} ref={actionsRef}>

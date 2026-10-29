@@ -11,13 +11,13 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { REDUCED_MOTION_QUERY } from '@/lib/motion';
-import { heroHeadline } from '@/config/hero';
+import { heroEn } from '@/config/home/hero/en';
 import { installMatchMedia } from '../../../test/motionEnv';
 import { Hero } from './Hero';
 import { selectOffsets } from './editorDom';
 import { MAX_HEADLINE_LENGTH } from './editorModel';
 
-const HEADLINE = `${heroHeadline.before}${heroHeadline.highlight}${heroHeadline.after}`;
+const HEADLINE = `${heroEn.headline.before}${heroEn.headline.highlight}${heroEn.headline.after}`;
 
 const editor = () => screen.getByRole('textbox', { name: 'Headline' });
 
@@ -174,7 +174,7 @@ describe('useHeadlineEditor', () => {
 
             expect(editor()).toHaveTextContent(HEADLINE);
             expect(editor().querySelector('b')).toBeNull();
-            expect(textOf('mark')).toEqual([heroHeadline.highlight]);
+            expect(textOf('mark')).toEqual([heroEn.headline.highlight]);
         });
     });
 
@@ -198,7 +198,7 @@ describe('useHeadlineEditor', () => {
             select(2, 7);
             paste('ship');
 
-            expect(editor().textContent).toBe(`I ship the ${heroHeadline.highlight}${heroHeadline.after}`);
+            expect(editor().textContent).toBe(`I ship the ${heroEn.headline.highlight}${heroEn.headline.after}`);
         });
 
         it('should cut a long paste off at the cap', () => {

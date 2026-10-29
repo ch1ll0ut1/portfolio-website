@@ -6,10 +6,12 @@
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
-import { careerLog } from '@/config/career';
+import { careerFor } from '@/config/career';
 import { itemAt } from '@/test/itemAt';
 import { installIntersectionObserver, installMatchMedia } from '../../../test/motionEnv';
 import { Experience } from './Experience';
+
+const careerLog = careerFor('en');
 
 /**
  * Hovers a row. jsdom has no PointerEvent, so the event is built by hand to
@@ -39,7 +41,7 @@ describe('Experience', () => {
     describe('Section Shell', () => {
         it('should render a labelled section anchored at the experience id', () => {
             // Act
-            const { container } = render(<Experience />);
+            const { container } = render(<Experience locale="en" />);
 
             // Assert
             expect(screen.getByRole('region', { name: /\d+ years, one log/i })).toBeInTheDocument();
@@ -48,7 +50,7 @@ describe('Experience', () => {
 
         it('should explain the two branches in the sub-line', () => {
             // Act
-            render(<Experience />);
+            render(<Experience locale="en" />);
 
             // Assert
             expect(screen.getByText(/forks off main onto its own branch/i)).toBeInTheDocument();
@@ -58,7 +60,7 @@ describe('Experience', () => {
     describe('Career History', () => {
         it('should render every commit as a list item', () => {
             // Act
-            render(<Experience />);
+            render(<Experience locale="en" />);
 
             // Assert
             expect(screen.getAllByRole('listitem')).toHaveLength(careerLog.length);
@@ -66,7 +68,7 @@ describe('Experience', () => {
 
         it('should render every role title as a heading', () => {
             // Act
-            render(<Experience />);
+            render(<Experience locale="en" />);
 
             // Assert
             careerLog.forEach((commit) => {
@@ -76,7 +78,7 @@ describe('Experience', () => {
 
         it('should render every description and year range as text', () => {
             // Act
-            render(<Experience />);
+            render(<Experience locale="en" />);
 
             // Assert
             careerLog.forEach((commit) => {
@@ -87,7 +89,7 @@ describe('Experience', () => {
 
         it('should render every commit hash', () => {
             // Act
-            render(<Experience />);
+            render(<Experience locale="en" />);
 
             // Assert
             careerLog.forEach((commit) => {
@@ -97,7 +99,7 @@ describe('Experience', () => {
 
         it('should keep the commits in newest-first document order', () => {
             // Act
-            render(<Experience />);
+            render(<Experience locale="en" />);
             const items = screen.getAllByRole('listitem');
 
             // Assert
@@ -108,7 +110,7 @@ describe('Experience', () => {
 
         it('should hide the git ref chips from assistive technology', () => {
             // Act
-            const { container } = render(<Experience />);
+            const { container } = render(<Experience locale="en" />);
             const chips = Array.from(container.querySelectorAll('h3 span'));
 
             // Assert
@@ -122,7 +124,7 @@ describe('Experience', () => {
     describe('Career Graph', () => {
         it('should hide both graph layers from assistive technology', () => {
             // Act
-            const { container } = render(<Experience />);
+            const { container } = render(<Experience locale="en" />);
             const layers = Array.from(container.querySelectorAll('svg'));
 
             // Assert
@@ -134,7 +136,7 @@ describe('Experience', () => {
 
         it('should draw one lane per branch on each layer', () => {
             // Act
-            const { container } = render(<Experience />);
+            const { container } = render(<Experience locale="en" />);
             const layers = Array.from(container.querySelectorAll('svg'));
 
             // Assert
@@ -145,7 +147,7 @@ describe('Experience', () => {
 
         it('should draw a node for every commit on each layer', () => {
             // Act
-            const { container } = render(<Experience />);
+            const { container } = render(<Experience locale="en" />);
             const layers = container.querySelectorAll('svg');
             const track = itemAt(layers, 0);
             const ink = itemAt(layers, 1);
@@ -160,7 +162,7 @@ describe('Experience', () => {
     describe('Row Hover', () => {
         it('should re-roll the hovered commit hash for a mouse', () => {
             // Arrange
-            const { container } = render(<Experience />);
+            const { container } = render(<Experience locale="en" />);
             const row = itemAt(screen.getAllByRole('listitem'), 0);
 
             // Act
@@ -172,7 +174,7 @@ describe('Experience', () => {
 
         it('should ignore hover from a touch pointer', () => {
             // Arrange
-            const { container } = render(<Experience />);
+            const { container } = render(<Experience locale="en" />);
             const row = itemAt(screen.getAllByRole('listitem'), 0);
 
             // Act

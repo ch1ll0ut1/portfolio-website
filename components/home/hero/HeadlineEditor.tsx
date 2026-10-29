@@ -1,13 +1,12 @@
 'use client';
 
 import { type FC, type RefObject, memo, useEffect } from 'react';
-import { heroHeadline, heroKicker } from '@/config/hero';
+import { heroCopy } from '@/config/home/hero';
+import { yearsShipping } from '@/config/site';
+import { useLocale } from '@/lib/i18n/LocaleContext';
 import styles from './Hero.module.css';
 
 const KICKER_SEPARATOR = ' · ';
-const HEADLINE_TEXT = `${heroHeadline.before}${heroHeadline.highlight}${heroHeadline.after}`;
-/** The kicker, then the shipped headline: the heading in reading order. */
-const HEADING_NAME = `${heroKicker.join(KICKER_SEPARATOR)}. ${HEADLINE_TEXT}`;
 
 export interface Props {
     titleRef: RefObject<HTMLElement | null>;
@@ -20,6 +19,12 @@ export interface Props {
 }
 
 const HeadlineEditorView: FC<Props> = ({ titleRef, hintId, onInput, onKeyDown, onPaste, onBlur }) => {
+    const { headline, kicker: kickerFor, editor } = heroCopy[useLocale()];
+    const kicker = kickerFor(yearsShipping());
+    /** The kicker, then the shipped headline: the heading in reading order. */
+    const headingName = `${kicker.join(KICKER_SEPARATOR)}. ${headline.before}${headline.highlight}${headline.after}`;
+    const editorLabel = editor.label;
+
     useEffect(() => {
         const title = titleRef.current;
 
@@ -40,7 +45,7 @@ const HeadlineEditorView: FC<Props> = ({ titleRef, hintId, onInput, onKeyDown, o
         title.setAttribute('contenteditable', 'true');
         title.setAttribute('role', 'textbox');
         title.setAttribute('aria-multiline', 'false');
-        title.setAttribute('aria-label', 'Headline');
+        title.setAttribute('aria-label', editorLabel);
         title.setAttribute('aria-describedby', hintId);
         title.tabIndex = -1;
 
@@ -63,7 +68,7 @@ const HeadlineEditorView: FC<Props> = ({ titleRef, hintId, onInput, onKeyDown, o
             title.removeAttribute('aria-describedby');
             title.removeAttribute('tabindex');
         };
-    }, [titleRef, hintId, onInput, onKeyDown, onPaste, onBlur]);
+    }, [titleRef, hintId, editorLabel, onInput, onKeyDown, onPaste, onBlur]);
 
     // The heading is named by the kicker and the shipped headline, not by
     // whatever the visitor has typed into the editor inside it: the page's
@@ -71,13 +76,13 @@ const HeadlineEditorView: FC<Props> = ({ titleRef, hintId, onInput, onKeyDown, o
     // rather than a hidden copy of the text, so the heading's text content
     // carries the headline once.
     return (
-        <h1 aria-label={HEADING_NAME}>
+        <h1 aria-label={headingName}>
             <span className={styles.kicker}>
-                {heroKicker.map((part, index) => (
+                {kicker.map((part, index) => (
                     // The separator trails its part, so a wrapped line never starts with one.
                     <span key={part} className={styles.kickerPart}>
                         {part}
-                        {index < heroKicker.length - 1 && KICKER_SEPARATOR}
+                        {index < kicker.length - 1 && KICKER_SEPARATOR}
                     </span>
                 ))}
             </span>
@@ -89,9 +94,9 @@ const HeadlineEditorView: FC<Props> = ({ titleRef, hintId, onInput, onKeyDown, o
                 autoCapitalize="off"
                 data-cursor="text"
             >
-                {heroHeadline.before}
-                <mark>{heroHeadline.highlight}</mark>
-                {heroHeadline.after}
+                {headline.before}
+                <mark>{headline.highlight}</mark>
+                {headline.after}
             </span>
         </h1>
     );

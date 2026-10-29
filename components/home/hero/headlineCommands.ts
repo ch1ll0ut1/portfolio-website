@@ -7,6 +7,7 @@
  * selection survive the rebuild, so the caret does not jump.
  */
 
+import type { HeroEditorCopy } from '@/config/home/hero/types';
 import {
     markCovering,
     normalizeEditor,
@@ -24,6 +25,9 @@ import {
     isMarkFullyApplied,
     toggleMark,
 } from './editorModel';
+
+/** The words of the position readout, from the hero's dictionary. */
+type ReadoutLabels = Pick<HeroEditorCopy, 'column' | 'selection'>;
 
 export interface MarkResult {
     /** The mark element to sweep, set only when a highlight was turned on. */
@@ -79,8 +83,8 @@ export const insertPlainText = (title: HTMLElement, text: string) => {
 
 export const isAtCap = (title: HTMLElement) => title.textContent.length >= MAX_HEADLINE_LENGTH;
 
-/** `col 7`, `sel 12–21`, or empty when the headline is not being edited. */
-export const selectionReadout = (title: HTMLElement) => {
+/** `col 7`, `sel 12–21` in English, or empty when the headline is not being edited. */
+export const selectionReadout = (title: HTMLElement, labels: ReadoutLabels) => {
     const selection = readSelection(title);
 
     if (!selection || document.activeElement !== title) {
@@ -90,8 +94,8 @@ export const selectionReadout = (title: HTMLElement) => {
     const { anchor, focus } = selection;
 
     if (anchor === focus) {
-        return `col ${anchor}`;
+        return labels.column(anchor);
     }
 
-    return `sel ${Math.min(anchor, focus)}–${Math.max(anchor, focus)}`;
+    return labels.selection(Math.min(anchor, focus), Math.max(anchor, focus));
 };

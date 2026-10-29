@@ -8,7 +8,9 @@
 'use client';
 
 import { type FC } from 'react';
+import { consentCopy } from '@/config/consent';
 import type { ConsentState } from '@/lib/consentStorage';
+import { useLocale } from '@/lib/i18n/LocaleContext';
 import type { ConsentCategory } from './consentCategories';
 import styles from './ConsentCategoryRow.module.css';
 
@@ -19,6 +21,7 @@ interface Props {
 }
 
 export const ConsentCategoryRow: FC<Props> = ({ category, checked, onToggle }) => {
+    const alwaysOn = consentCopy[useLocale()].alwaysOn;
     const titleId = `consent-${category.key}-title`;
     const descriptionId = `consent-${category.key}-description`;
 
@@ -27,7 +30,7 @@ export const ConsentCategoryRow: FC<Props> = ({ category, checked, onToggle }) =
             <div className={styles.head}>
                 <h3 className={styles.title} id={titleId}>{category.title}</h3>
                 {category.locked
-                    ? <span className={styles.badge}>always on</span>
+                    ? <span className={styles.badge}>{alwaysOn}</span>
                     : (
                         <input
                             className={styles.switch}

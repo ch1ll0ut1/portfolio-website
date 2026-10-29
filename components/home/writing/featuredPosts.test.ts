@@ -5,7 +5,10 @@
 
 import { describe, it, expect } from 'vitest';
 import { blogPosts } from '@/config/blog';
-import { allArticles, featuredPosts } from './featuredPosts';
+import { allArticlesFor, featuredPostsFor } from './featuredPosts';
+
+const allArticles = allArticlesFor('en');
+const featuredPosts = featuredPostsFor('en');
 
 describe('featuredPosts', () => {
     it('should contain exactly the posts flagged featured in the blog config', () => {

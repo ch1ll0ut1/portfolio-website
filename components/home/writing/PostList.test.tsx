@@ -6,12 +6,14 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { PostList } from './PostList';
-import { featuredPosts } from './featuredPosts';
+import { featuredPostsFor } from './featuredPosts';
+
+const featuredPosts = featuredPostsFor('en');
 
 describe('PostList Component', () => {
     it('should render a link to the real blog route of every featured post', () => {
         // Arrange
-        render(<PostList />);
+        render(<PostList locale="en" />);
 
         // Assert
         featuredPosts.forEach((post) => {
@@ -23,7 +25,7 @@ describe('PostList Component', () => {
 
     it('should render the titles the blog config provides', () => {
         // Arrange
-        render(<PostList />);
+        render(<PostList locale="en" />);
 
         // Assert
         featuredPosts.forEach((post) => {
@@ -34,7 +36,7 @@ describe('PostList Component', () => {
 
     it('should link the all-articles row to the blog index', () => {
         // Arrange
-        render(<PostList />);
+        render(<PostList locale="en" />);
 
         // Act
         const link = screen.getByRole('link', { name: /all articles on the blog/i });
@@ -45,7 +47,7 @@ describe('PostList Component', () => {
 
     it('should render one row per featured post plus the all-articles row', () => {
         // Arrange
-        render(<PostList />);
+        render(<PostList locale="en" />);
 
         // Assert
         expect(screen.getAllByRole('listitem')).toHaveLength(featuredPosts.length + 1);

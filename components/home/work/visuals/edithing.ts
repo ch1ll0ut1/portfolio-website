@@ -6,6 +6,7 @@
  * narrative readable as a sequence of keystrokes rather than DOM writes.
  */
 
+import type { CaseVisualsCopy } from '@/config/home/work/types';
 import { EASE } from '@/lib/motion';
 import { type FrameClasses, type Illustration, anim, buildWindow, h, tf } from './dom';
 import {
@@ -50,11 +51,12 @@ export const buildEdithing = (
     stage: Element,
     frame: FrameClasses,
     c: EdithingClasses,
+    copy: CaseVisualsCopy['edithing'],
 ): Illustration => {
     let api: RunnerApi | null = null;
     let caretIndex = 0;
 
-    const chip = h('span', `${frame.chip} ${frame.chipOk}`, null, 'valid');
+    const chip = h('span', `${frame.chip} ${frame.chipOk}`, null, copy.valid);
     const body = buildWindow(stage, frame, 'edithing / ', 'frumvarp.json', chip);
     const rowsEl = h('div', c.rows, body);
     const gutter = h('div', c.gutter, rowsEl);
@@ -189,7 +191,7 @@ export const buildEdithing = (
 
             h(j === path.length - 1 ? 'b' : 'span', '', crumbs, crumb);
         });
-        position.textContent = `Ln ${index + 1}`;
+        position.textContent = copy.line(index + 1);
     };
 
     /** Grows a row's text bar in character-sized steps, caret riding the end. */
@@ -238,7 +240,7 @@ export const buildEdithing = (
         press,
         status: (busy: boolean) => {
             chip.className = `${frame.chip} ${busy ? frame.chipBusy : frame.chipOk}`;
-            chip.textContent = busy ? 'normalizing' : 'valid';
+            chip.textContent = busy ? copy.normalizing : copy.valid;
         },
         selectRow: (index: number) => {
             const start = `translate3d(36px, ${rowY(index)}px, 0)`;

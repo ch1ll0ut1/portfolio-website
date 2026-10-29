@@ -1,8 +1,9 @@
 'use client';
 
-import { type FC, Fragment, useCallback, useEffect, useRef, useState } from 'react';
+import { type FC, Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useInView, useScrub, useStageEvent } from '@/lib/motion';
-import { engagementNote } from '@/config/engagements';
+import { engagementsCopy } from '@/config/home/services';
+import { useLocale } from '@/lib/i18n/LocaleContext';
 import type { CssVars } from '@/lib/cssVars';
 import { type TypingEngine, createTypingEngine, splitNoteWords } from './noteTyping';
 import styles from './Services.module.css';
@@ -12,9 +13,6 @@ const SCRUB_START = 0.94;
 /** …and 1 once it reaches here. The element's own height is added back on, so
  *  the writing tracks the paragraph's top rather than its bottom. */
 const SCRUB_END = 0.64;
-
-const words = splitNoteWords(engagementNote);
-const lastSelectIndex = words.reduce((last, word) => Math.max(last, word.selectIndex), -1);
 
 const isElement = (element: HTMLElement | null): element is HTMLElement => element !== null;
 
@@ -39,6 +37,9 @@ export const TypedParagraph: FC = () => {
     const engineRef = useRef<TypingEngine | null>(null);
     const writingRef = useRef(false);
     const [scrubEnd, setScrubEnd] = useState(SCRUB_END);
+    const locale = useLocale();
+    const words = useMemo(() => splitNoteWords(engagementsCopy[locale].note), [locale]);
+    const lastSelectIndex = words.reduce((last, word) => Math.max(last, word.selectIndex), -1);
 
     useEffect(() => {
         const paragraph = paragraphRef.current;
@@ -68,7 +69,7 @@ export const TypedParagraph: FC = () => {
             writingRef.current = false;
             engine.destroy();
         };
-    }, []);
+    }, [words]);
 
     // The paragraph's height cancels out of the scrub range, so progress tracks
     // its top edge on any wrap. Re-measured whenever the layout can change.

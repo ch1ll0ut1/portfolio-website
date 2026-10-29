@@ -1,7 +1,8 @@
 'use client';
 
-import { type FC, useCallback, useRef, useState } from 'react';
-import { caseStudies } from '@/config/caseStudies';
+import { type FC, useCallback, useMemo, useRef, useState } from 'react';
+import { caseStudiesFor } from '@/config/caseStudies';
+import { useLocale } from '@/lib/i18n/LocaleContext';
 import { CaseCard } from './CaseCard';
 import { useCaseStack } from './caseStack';
 import { useStackFocus } from './stackFocus';
@@ -15,6 +16,8 @@ import styles from './Work.module.css';
  * illustration to pause.
  */
 export const CaseList: FC = () => {
+    const locale = useLocale();
+    const caseStudies = useMemo(() => caseStudiesFor(locale), [locale]);
     const casesRef = useRef<HTMLDivElement>(null);
     const [covered, setCovered] = useState<readonly boolean[]>(() => caseStudies.map(() => false));
 

@@ -1,40 +1,20 @@
 /**
- * Hero section copy and data.
- *
- * The headline is stored as its three parts rather than as markup, because the
- * editor turns them into the initial leaves of its document model.
+ * Hero section data. The words, headline included, are in the hero's
+ * dictionary, `config/home/hero/`.
  */
 
 import { links } from './links';
-import { yearsShipping } from './site';
+import type { HeroCtaId } from './home/hero/types';
 
 export interface HeroCta {
-    label: string;
+    /** Key of its label in the hero's dictionary. */
+    id: HeroCtaId;
     href: string;
     /** Filled button. There is exactly one. */
     primary: boolean;
     /** Opens in a new tab. */
     external: boolean;
 }
-
-export const heroHeadline = {
-    before: 'I build the ',
-    highlight: 'hard part',
-    after: '.',
-};
-
-/**
- * The small line set above the headline, inside the h1: who, how long, which
- * languages and which hours. The year count derives from `sinceYear`.
- */
-export const heroKicker = [
-    'Software architect & tech lead',
-    `${yearsShipping()} years`,
-    'English & Deutsch',
-    'Europe, US & Asia hours',
-];
-
-export const heroAvailability = 'Taking on new projects';
 
 export const heroLocation = {
     city: 'Bangkok',
@@ -44,9 +24,8 @@ export const heroLocation = {
     placeholder: '--:--',
 };
 
-export const heroLede = 'I build new apps, fix broken ones, and lead your developers, so the software your business runs on actually works. For startups, small businesses, and the Parliament of Iceland.';
-
 export const heroCtas: HeroCta[] = [
-    { label: 'Book a 30-min call', href: links.calendly, primary: true, external: true },
-    { label: 'See the work', href: '#work', primary: false, external: false },
+    { id: 'book', href: links.calendly, primary: true, external: true },
+    // A fragment on the page itself, the same in both languages.
+    { id: 'work', href: '#work', primary: false, external: false },
 ];

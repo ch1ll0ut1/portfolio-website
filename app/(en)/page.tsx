@@ -42,12 +42,12 @@ const Home: FC = () => (
         {/* Focusable so the skip link moves focus here; see ReadingShell. */}
         <main id="main" tabIndex={-1} data-scroll-target>
             <Hero />
-            <Proof />
-            <Work />
-            <Services />
+            <Proof locale="en" />
+            <Work locale="en" />
+            <Services locale="en" />
             <Process />
-            <Experience />
-            <Writing />
+            <Experience locale="en" />
+            <Writing locale="en" />
             <Contact />
         </main>
     </>

@@ -5,7 +5,8 @@
 
 import { describe, it, expect } from 'vitest';
 import { itemAt } from '@/test/itemAt';
-import { engagementLink, engagementNote, engagements, engagementsHeading, rangeLabel } from './engagements';
+import { engagementPath, engagements, engagementsFor } from './engagements';
+import { engagementsEn } from './home/services/en';
 
 describe('Engagements Configuration', () => {
     describe('Engagement Data Integrity', () => {
@@ -71,18 +72,18 @@ describe('Engagements Configuration', () => {
     describe('Section Copy', () => {
         it('should have a heading and a sub-line', () => {
             // Assert
-            expect(engagementsHeading.title.length).toBeGreaterThan(0);
-            expect(engagementsHeading.lede.length).toBeGreaterThan(0);
+            expect(engagementsEn.heading.title.length).toBeGreaterThan(0);
+            expect(engagementsEn.heading.lede.length).toBeGreaterThan(0);
         });
 
         it('should have a label for the range lines', () => {
             // Assert
-            expect(rangeLabel).toBe('Typical');
+            expect(engagementsEn.rangeLabel).toBe('Typical');
         });
 
         it('should link every card to its section of the services page', () => {
             // Assert
-            expect(engagementLink.href('rescue')).toBe('/services#rescue');
+            expect(engagementPath('rescue')).toBe('/services#rescue');
         });
 
         it('should quote ranges, never an hourly rate', () => {
@@ -93,11 +94,21 @@ describe('Engagements Configuration', () => {
         });
     });
 
+    describe('Languages', () => {
+        it('should tell the English engagements, the ones the services page and the structured data read', () => {
+            // Assert
+            expect(engagements).toEqual(engagementsFor('en'));
+            expect(engagements.map(engagement => engagement.name)).toEqual(
+                Object.values(engagementsEn.engagements).map(copy => copy.name),
+            );
+        });
+    });
+
     describe('Closing Note', () => {
         it('should have non-empty segments', () => {
             // Assert
-            expect(engagementNote.length).toBeGreaterThan(0);
-            engagementNote.forEach((segment) => {
+            expect(engagementsEn.note.length).toBeGreaterThan(0);
+            engagementsEn.note.forEach((segment) => {
                 expect(segment.text.trim()).toBe(segment.text);
                 expect(segment.text.length).toBeGreaterThan(0);
                 expect(typeof segment.selected).toBe('boolean');
@@ -106,7 +117,7 @@ describe('Engagements Configuration', () => {
 
         it('should mark exactly one phrase as selected', () => {
             // Act
-            const selected = engagementNote.filter(segment => segment.selected);
+            const selected = engagementsEn.note.filter(segment => segment.selected);
 
             // Assert
             expect(selected).toHaveLength(1);

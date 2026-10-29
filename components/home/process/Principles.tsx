@@ -10,12 +10,14 @@
 
 import { FC, useRef } from 'react';
 import { useReveal } from '@/lib/motion';
-import { principlesContent } from '@/config/principles';
+import { principlesFor } from '@/config/principles';
+import { useLocale } from '@/lib/i18n/LocaleContext';
 import styles from './ProcessBlocks.module.css';
 
 const REVEAL_STAGGER = 0.08;
 
 export const Principles: FC = () => {
+    const principlesContent = principlesFor(useLocale());
     const ref = useRef<HTMLDivElement>(null);
 
     useReveal(ref, { selector: '[data-reveal]', stagger: REVEAL_STAGGER });

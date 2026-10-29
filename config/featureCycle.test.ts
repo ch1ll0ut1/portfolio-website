@@ -5,7 +5,9 @@
 
 import { describe, it, expect } from 'vitest';
 import { itemAt } from '@/test/itemAt';
-import { featureCycleContent } from './featureCycle';
+import { featureCycleFor } from './featureCycle';
+
+const featureCycleContent = featureCycleFor('en');
 
 describe('Feature Cycle Configuration', () => {
     describe('Feature Cycle Data Integrity', () => {

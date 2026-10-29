@@ -4,7 +4,7 @@
 
 import { afterAll, afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { render } from '@testing-library/react';
-import { engagementNote } from '@/config/engagements';
+import { engagementsEn } from '@/config/home/services/en';
 import { REDUCED_MOTION_QUERY } from '@/lib/motion';
 import { installIntersectionObserver, installMatchMedia, settleIntro, stubRect } from '../../../test/motionEnv';
 import { TypedParagraph } from './TypedParagraph';
@@ -18,7 +18,7 @@ const stubFonts = () => {
     });
 };
 
-const fullText = engagementNote.map(segment => segment.text).join(' ');
+const fullText = engagementsEn.note.map(segment => segment.text).join(' ');
 
 const noteParagraph = (container: HTMLElement) => {
     const paragraph = container.querySelector('[data-note="services"]');
@@ -63,7 +63,7 @@ describe('TypedParagraph', () => {
     it('should mark the selected phrase so it can be highlighted', () => {
         // Arrange
         restoreMedia = installMatchMedia([]);
-        const selected = engagementNote.filter(segment => segment.selected);
+        const selected = engagementsEn.note.filter(segment => segment.selected);
         const expectedWords = selected.flatMap(segment => segment.text.split(' '));
 
         // Act

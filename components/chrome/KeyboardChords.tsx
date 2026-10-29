@@ -3,6 +3,7 @@
 import { type FC, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { chordSections } from '@/config/sections';
+import { useLocale } from '@/lib/i18n/LocaleContext';
 import { ChordHint } from './ChordHint';
 import { isEditingTarget } from './isEditingTarget';
 import { usePreference } from './preferences';
@@ -32,6 +33,7 @@ interface Props {
  */
 export const KeyboardChords: FC<Props> = ({ overlayOpen, onTogglePalette, onOpenShortcuts }) => {
     const router = useRouter();
+    const locale = useLocale();
     const singleKeys = usePreference('singleKeyShortcuts');
     const [armed, setArmed] = useState(false);
     const armedRef = useRef(false);
@@ -85,7 +87,7 @@ export const KeyboardChords: FC<Props> = ({ overlayOpen, onTogglePalette, onOpen
 
                 if (section) {
                     event.preventDefault();
-                    scrollToSection(section.id, navigate);
+                    scrollToSection(section.id, navigate, locale);
                 }
 
                 return;
@@ -109,7 +111,7 @@ export const KeyboardChords: FC<Props> = ({ overlayOpen, onTogglePalette, onOpen
             document.removeEventListener('keydown', handleKeyDown);
             window.clearTimeout(timerRef.current);
         };
-    }, [overlayOpen, onTogglePalette, onOpenShortcuts, router, singleKeys]);
+    }, [overlayOpen, onTogglePalette, onOpenShortcuts, router, locale, singleKeys]);
 
     return <ChordHint armed={armed} />;
 };
