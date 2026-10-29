@@ -8,7 +8,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { siteConfig } from '@/config/site';
 import { verifySubmitter } from './botCheck';
 import { MAX_TOKEN_AGE_MS, MIN_FILL_MS, checkFormToken, signFormToken } from './formToken';
-import { contactMessages, handleContactSubmission } from './handleContactSubmission';
+import { handleContactSubmission } from './handleContactSubmission';
 import { isRateLimited } from './rateLimit';
 import { sendWithResend } from './sendWithResend';
 
@@ -84,6 +84,22 @@ describe('handleContactSubmission', () => {
         }));
     });
 
+    it('should tell the email which language the visitor wrote from', async () => {
+        // Act
+        await handleContactSubmission(submission({ locale: 'de' }), HEADERS, NOW);
+
+        // Assert
+        expect(vi.mocked(sendWithResend).mock.calls[0]?.[0].text).toContain('Language: de');
+    });
+
+    it.each(['fr', '', 'DE', 'de-DE'])('should read an unknown language %j as English', async (locale) => {
+        // Act
+        await handleContactSubmission(submission({ locale }), HEADERS, NOW);
+
+        // Assert
+        expect(vi.mocked(sendWithResend).mock.calls[0]?.[0].text).toContain('Language: en');
+    });
+
     it('should hand the request headers to the rate limit, and ask BotID', async () => {
         // Act
         await handleContactSubmission(submission(), HEADERS, NOW);
@@ -141,10 +157,9 @@ describe('handleContactSubmission', () => {
             // Assert
             expect(state).toMatchObject({
                 status: 'failed',
-                message: contactMessages.botCheckFailed,
+                reason: 'botCheckFailed',
                 values: { name: 'Ada Lovelace' },
             });
-            expect(contactMessages.botCheckFailed).toContain('LinkedIn');
             expect(sendWithResend).not.toHaveBeenCalled();
         });
 
@@ -156,8 +171,7 @@ describe('handleContactSubmission', () => {
             const state = await handleContactSubmission(submission(), HEADERS, NOW);
 
             // Assert
-            expect(state).toMatchObject({ status: 'failed', message: contactMessages.rateLimited });
-            expect(contactMessages.rateLimited).toContain('LinkedIn');
+            expect(state).toMatchObject({ status: 'failed', reason: 'rateLimited' });
             expect(console.info).toHaveBeenCalledWith('[contact] Refused a submission: the Firewall rate limit was hit.');
             expect(console.info).not.toHaveBeenCalledWith(expect.stringContaining('ada@example.com'));
             expect(verifySubmitter).not.toHaveBeenCalled();
@@ -187,7 +201,7 @@ describe('handleContactSubmission', () => {
                 const state = await handleContactSubmission(submission(), HEADERS, NOW);
 
                 // Assert
-                expect(state).toMatchObject({ status: 'failed', message: contactMessages.notConfigured });
+                expect(state).toMatchObject({ status: 'failed', reason: 'notConfigured' });
                 expect(console.warn).toHaveBeenCalledWith(expect.stringContaining(variable));
                 expect(sendWithResend).not.toHaveBeenCalled();
             },
@@ -257,7 +271,7 @@ describe('handleContactSubmission', () => {
             );
 
             // Assert
-            expect(state).toMatchObject({ status: 'failed', message: contactMessages.expired });
+            expect(state).toMatchObject({ status: 'failed', reason: 'expired' });
             expect(sendWithResend).not.toHaveBeenCalled();
             const token = 'token' in state ? state.token : '';
             expect(checkFormToken(token, SECRET, NOW.getTime())).toBe('ok');
@@ -279,7 +293,7 @@ describe('handleContactSubmission', () => {
             // Assert
             expect(state).toMatchObject({
                 status: 'invalid',
-                errors: { name: expect.any(String), email: expect.any(String) },
+                errors: { name: { kind: 'required' }, email: { kind: 'invalidEmail' } },
                 values: { email: 'not-an-address', message: 'Can we talk about a project?' },
                 token,
             });
@@ -291,7 +305,10 @@ describe('handleContactSubmission', () => {
             const state = await handleContactSubmission(submission({ message: 'a'.repeat(5001) }), HEADERS, NOW);
 
             // Assert
-            expect(state).toMatchObject({ status: 'invalid', errors: { message: expect.any(String) } });
+            expect(state).toMatchObject({
+                status: 'invalid',
+                errors: { message: { kind: 'tooLong', max: 5000, length: 5001 } },
+            });
         });
     });
 
@@ -304,7 +321,7 @@ describe('handleContactSubmission', () => {
             const state = await handleContactSubmission(submission({ email: 'nope' }), HEADERS, NOW);
 
             // Assert
-            expect(state).toMatchObject({ status: 'invalid', errors: { email: expect.any(String) } });
+            expect(state).toMatchObject({ status: 'invalid', errors: { email: { kind: 'invalidEmail' } } });
         });
 
         it('should not ask the rate limit or BotID about an incomplete message', async () => {
@@ -344,7 +361,7 @@ describe('handleContactSubmission', () => {
             // Assert
             expect(state).toMatchObject({
                 status: 'failed',
-                message: contactMessages.sendFailed,
+                reason: 'sendFailed',
                 values: { name: 'Ada Lovelace' },
             });
         });

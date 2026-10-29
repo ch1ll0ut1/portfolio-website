@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { type PolicyItem } from './policyLists';
+import type { PolicyItem } from '@/config/privacy';
 import styles from './Privacy.module.css';
 
 interface Props {

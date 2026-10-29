@@ -4,10 +4,14 @@
  * Plain text first, with a small HTML part of the same content. Every value
  * the visitor typed is escaped in the HTML, and the name is a single line
  * (see `readContactValues`), so it cannot break the subject.
+ *
+ * Always in English, whatever the visitor's language: it is read by Stefan.
+ * The "Language" line says which page it came from, so the reply can match.
  */
 
-import { type ContactValues, contactTopicLabel } from '@/config/contact';
+import { type ContactValues, contactCopy } from '@/config/contact';
 import { siteConfig } from '@/config/site';
+import type { Locale } from '@/lib/i18n/locale';
 
 export interface ContactEmail {
     subject: string;
@@ -17,13 +21,14 @@ export interface ContactEmail {
 
 const SITE_HOST = new URL(siteConfig.url).host;
 
-export const composeContactEmail = (values: ContactValues, receivedAt: Date): ContactEmail => {
-    const topic = contactTopicLabel(values.topic);
+export const composeContactEmail = (values: ContactValues, locale: Locale, receivedAt: Date): ContactEmail => {
+    const topic = contactCopy.en.topics[values.topic];
     const timestamp = receivedAt.toISOString();
     const rows: [string, string][] = [
         ['Name', values.name],
         ['Email', values.email],
         ['Topic', topic],
+        ['Language', locale],
         ['Received', timestamp],
     ];
 

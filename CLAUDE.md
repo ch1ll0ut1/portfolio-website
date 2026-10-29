@@ -76,16 +76,18 @@ components/            # React components organized by domain
 ├── chrome/           # Site-wide overlay: command palette, theme, cursor, progress
 ├── consent/          # Cookie banner and preferences dialog
 ├── document/         # SiteDocument: the html/head/body shell both root layouts render
-├── contact/          # /contact page body and the form (client)
+├── contact/          # Contact page body, route and metadata, and the form (client)
+├── errors/           # Not-found page and metadata, per language and kind
 ├── home/             # One directory per homepage section
 │   ├── hero/         # ... contact, experience, process, proof,
 │   └── ...           #     services, work, writing
 ├── markdown/         # Markdown renderer, parser and element components
-└── nav/              # Site nav, brand mark, nav tools
+├── nav/              # Site nav, brand mark, nav tools
+└── privacy/          # Privacy page body and metadata, per language
 
 config/               # Section data and types, one file per section
 ├── blog.ts           # Blog post metadata (`published` and `featured` live here)
-├── contact.ts        # Contact form fields, topics, limits and action states
+├── contact/          # Contact form fields, topics, limits, action codes; page and form copy
 ├── sections.ts       # Section ids and nav order
 └── ...               # career, caseStudies, engagements, proof, processSteps, ...
 
@@ -135,7 +137,7 @@ Blog content is managed through:
   config, signed minimum fill time, then on Vercel only: no `Next-Action`
   header (a native post) dropped, Firewall rate limit, BotID; then the email.
 - **Resend** through a plain `fetch` (`lib/contact/sendWithResend.ts`), not the
-  SDK, from Resend's Tokyo region. Sender in `config/site.ts`; the recipient
+  SDK, from Resend's Tokyo region. Sender in `config/site/identity.ts`; the recipient
   only ever from the env.
 - **Vercel BotID**: `withBotId` in `next.config.ts` (same-origin proxy, so the
   CSP needs nothing new), `initBotId` in `instrumentation-client.ts` protecting

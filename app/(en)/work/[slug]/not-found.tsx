@@ -1,15 +1,11 @@
 import { FC } from 'react';
 import type { Metadata } from 'next';
-import { CaseStudyNotFound } from '@/components/work/pages/CaseStudyNotFound';
-import { caseStudyNotFoundMetadata } from '@/lib/work/caseStudyMetadata';
+import { NotFoundPage } from '@/components/errors/NotFoundPage';
+import { notFoundMetadata } from '@/components/errors/notFoundMetadata';
 
-/**
- * Shown when `/work/[slug]` matches no case study, with a real 404. The
- * metadata lives here because Next discards the page's once `notFound()` is
- * thrown.
- */
-export const metadata: Metadata = caseStudyNotFoundMetadata('en');
+/** Shown when `/work/[slug]` matches no case study, with a real 404, as on the blog. */
+export const metadata: Metadata = notFoundMetadata('en', 'caseStudy');
 
-const NotFound: FC = () => <CaseStudyNotFound locale="en" />;
+const CaseStudyNotFound: FC = () => <NotFoundPage locale="en" kind="caseStudy" />;
 
-export default NotFound;
+export default CaseStudyNotFound;

@@ -10,6 +10,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { ContactState } from '@/config/contact';
 import { links } from '@/config/links';
+import { LocaleProvider } from '@/lib/i18n/LocaleContext';
 import { ContactForm } from './ContactForm';
 
 type Action = (previous: ContactState, formData: FormData) => Promise<ContactState>;
@@ -97,14 +98,37 @@ describe('ContactForm', () => {
             'message': 'Hello',
             'website': '',
             'form-token': 'token-1',
+            'locale': 'en',
         });
+    });
+
+    it('should post the language of the page it is on', async () => {
+        // Arrange
+        const action = vi.fn<Action>().mockResolvedValue({ status: 'sent' });
+        render(
+            <LocaleProvider locale="de">
+                <ContactForm action={action} issueToken={issueToken} />
+            </LocaleProvider>,
+        );
+        await waitFor(() => {
+            expect(screen.getByRole('group')).toBeEnabled();
+        });
+
+        // Act
+        await send();
+
+        // Assert
+        await waitFor(() => {
+            expect(action).toHaveBeenCalledTimes(1);
+        });
+        expect(action.mock.calls[0]?.[1].get('locale')).toBe('de');
     });
 
     it('should mark each invalid field, describe it by its error, and focus the first', async () => {
         // Arrange
         const action = vi.fn<Action>().mockResolvedValue({
             status: 'invalid',
-            errors: { email: 'Check the address.', message: 'Write a message.' },
+            errors: { email: { kind: 'invalidEmail' }, message: { kind: 'required' } },
             values: VALUES,
             token: 'token-1',
         });
@@ -119,8 +143,8 @@ describe('ContactForm', () => {
             expect(email).toHaveFocus();
         });
         expect(email).toHaveAttribute('aria-invalid', 'true');
-        expect(email).toHaveAccessibleDescription(/Check the address\./);
-        expect(screen.getByRole('textbox', { name: 'Message' })).toHaveAccessibleDescription(/Write a message\./);
+        expect(email).toHaveAccessibleDescription(/This does not look like an email address\./);
+        expect(screen.getByRole('textbox', { name: 'Message' })).toHaveAccessibleDescription(/Please write a message\./);
         expect(screen.getByRole('textbox', { name: 'Name' })).not.toHaveAttribute('aria-invalid');
         expect(screen.getByRole('alert')).toHaveTextContent('Please check the fields marked below.');
     });
@@ -129,7 +153,7 @@ describe('ContactForm', () => {
         // Arrange
         await renderForm(vi.fn<Action>().mockResolvedValue({
             status: 'invalid',
-            errors: { email: 'Check the address.' },
+            errors: { email: { kind: 'invalidEmail' } },
             values: { ...VALUES, message: 'My long message' },
             token: 'token-1',
         }));
@@ -164,7 +188,7 @@ describe('ContactForm', () => {
         // Arrange
         const action = vi.fn<Action>().mockResolvedValue({
             status: 'failed',
-            message: 'Could not send.',
+            reason: 'sendFailed',
             values: VALUES,
             token: 'token-2',
         });
@@ -175,7 +199,7 @@ describe('ContactForm', () => {
 
         // Assert
         await waitFor(() => {
-            expect(screen.getByRole('alert')).toHaveTextContent('Could not send.');
+            expect(screen.getByRole('alert')).toHaveTextContent('Sorry, your message could not be sent.');
         });
         expect(container.querySelector('input[name="form-token"]')).toHaveValue('token-2');
     });

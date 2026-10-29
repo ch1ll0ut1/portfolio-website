@@ -2,17 +2,21 @@ import { FC } from 'react';
 import type { Metadata, Viewport } from 'next';
 import Link from 'next/link';
 import './globals.css';
+import { errorsCopy } from '@/config/errors';
 import { siteConfig } from '@/config/site';
 import { BOOT_SCRIPT } from '@/lib/bootScript';
 import { fontFamilies } from '@/lib/fonts';
 import { layoutMetadata, layoutViewport } from '@/lib/i18n/layoutMetadata';
 import { localizedPath } from '@/lib/i18n/paths';
 
+/** English, with one German line: the URL matched no route, so no language is known. */
+const COPY = errorsCopy.en.notFound.page;
+
 export const metadata: Metadata = {
-    ...layoutMetadata,
+    ...layoutMetadata('en'),
     // No layout above this page, so no title template: the site name is written out.
-    title: `Page not found | ${siteConfig.name}`,
-    description: 'The page you were looking for does not exist.',
+    title: `${COPY.title} | ${siteConfig.name}`,
+    description: COPY.description,
     // Null for the reason given in app/(en)/not-found.tsx: Next adds its own noindex.
     robots: null,
 };
@@ -62,14 +66,14 @@ const GlobalNotFound: FC = () => {
                     <div className="wrap">
                         <div className="nf-panel">
                             <p className="nf-kicker">404</p>
-                            <h1 className="nf-title">Page not found</h1>
-                            <p className="nf-body">That page does not exist, or it has moved since the link was made.</p>
+                            <h1 className="nf-title">{COPY.title}</h1>
+                            <p className="nf-body">{COPY.body}</p>
                             <div className="nf-actions">
                                 <Link href="/" className="btn btn--primary">
-                                    <span className="btn__label">Back to home</span>
+                                    <span className="btn__label">{COPY.action}</span>
                                 </Link>
                                 <Link href={localizedPath('de', '/')} className="btn" lang="de" hrefLang="de">
-                                    <span className="btn__label">Zur deutschen Startseite</span>
+                                    <span className="btn__label">{errorsCopy.de.homeInLanguage}</span>
                                 </Link>
                             </div>
                         </div>

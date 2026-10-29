@@ -4,9 +4,9 @@ import '../globals.css';
 import { SiteDocument } from '@/components/document/SiteDocument';
 import { layoutMetadata, layoutViewport } from '@/lib/i18n/layoutMetadata';
 
-// The English fallbacks until the German site title and description exist;
-// every German page sets its own title, description and share fields.
-export const metadata: Metadata = layoutMetadata;
+// The German site title and description as fallbacks; every German page
+// sets its own title, description and share fields.
+export const metadata: Metadata = layoutMetadata('de');
 
 export const viewport: Viewport = layoutViewport;
 

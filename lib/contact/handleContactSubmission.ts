@@ -17,12 +17,15 @@
  * limit or a failed BotID check is told so, with LinkedIn as the way round:
  * those can happen to a real person, who must not think a message was sent.
  *
+ * The answers are codes (`ContactState`), never sentences: the form words
+ * them in the visitor's language. The server's own log lines stay English.
+ *
  * Kept apart from the `'use server'` module so it can be tested with a plain
  * `FormData` and `Headers`, without a request.
  */
 
 import 'next/dist/compiled/server-only';
-import { type ContactState, type ContactValues, contactFieldNames } from '@/config/contact';
+import { type ContactFailure, type ContactState, type ContactValues, contactFieldNames } from '@/config/contact';
 import { siteConfig } from '@/config/site';
 import { isJavaScriptSubmission, verifySubmitter } from './botCheck';
 import { composeContactEmail } from './composeEmail';
@@ -30,15 +33,7 @@ import { readContactConfig, runsOnVercel } from './contactConfig';
 import { MIN_FILL_MS, checkFormToken, signFormToken } from './formToken';
 import { isRateLimited } from './rateLimit';
 import { sendWithResend } from './sendWithResend';
-import { readContactValues, textField, validateContactValues } from './validateSubmission';
-
-export const contactMessages = {
-    notConfigured: 'The contact form is not set up right now. Please message me on LinkedIn instead.',
-    expired: 'This form was open for over two hours, so I could not accept it. Please send it again.',
-    rateLimited: 'You have sent several messages in a short time, so I could not accept this one. Please try again later, or message me on LinkedIn.',
-    botCheckFailed: 'Sorry, I could not check that this message came from a person, so it was not sent. Please try again in a moment, or message me on LinkedIn.',
-    sendFailed: 'Sorry, your message could not be sent. Please try again in a moment, or message me on LinkedIn.',
-} as const;
+import { readContactLocale, readContactValues, textField, validateContactValues } from './validateSubmission';
 
 const SENT: ContactState = { status: 'sent' };
 
@@ -64,7 +59,7 @@ export const handleContactSubmission = async (
     if ('missing' in configResult) {
         console.warn(`[contact] The contact form is not configured: set ${configResult.missing.join(', ')}. Nothing was sent.`);
 
-        return failed(contactMessages.notConfigured, values, token);
+        return failed('notConfigured', values, token);
     }
 
     const { config } = configResult;
@@ -77,7 +72,7 @@ export const handleContactSubmission = async (
     if (verdict === 'expired') {
         // Dated back by the minimum fill time: the visitor has already spent
         // longer than that on the form, so resending at once must not read as a bot.
-        return failed(contactMessages.expired, values, signFormToken(config.secret, now.getTime() - MIN_FILL_MS));
+        return failed('expired', values, signFormToken(config.secret, now.getTime() - MIN_FILL_MS));
     }
 
     if (runsOnVercel() && !isJavaScriptSubmission(requestHeaders)) {
@@ -88,7 +83,7 @@ export const handleContactSubmission = async (
         // Logged like a drop, without the visitor's data, so limit hits show in the logs.
         console.info('[contact] Refused a submission: the Firewall rate limit was hit.');
 
-        return failed(contactMessages.rateLimited, values, token);
+        return failed('rateLimited', values, token);
     }
 
     const submitter = await verifySubmitter();
@@ -98,7 +93,7 @@ export const handleContactSubmission = async (
     }
 
     if (submitter === 'unavailable') {
-        return failed(contactMessages.botCheckFailed, values, token);
+        return failed('botCheckFailed', values, token);
     }
 
     const sent = await sendWithResend({
@@ -106,15 +101,15 @@ export const handleContactSubmission = async (
         from: siteConfig.contactSender,
         to: config.recipient,
         replyTo: values.email,
-        ...composeContactEmail(values, now),
+        ...composeContactEmail(values, readContactLocale(formData), now),
     });
 
-    return sent ? SENT : failed(contactMessages.sendFailed, values, token);
+    return sent ? SENT : failed('sendFailed', values, token);
 };
 
-const failed = (message: string, values: ContactValues, token: string): ContactState => ({
+const failed = (reason: ContactFailure, values: ContactValues, token: string): ContactState => ({
     status: 'failed',
-    message,
+    reason,
     values,
     token,
 });

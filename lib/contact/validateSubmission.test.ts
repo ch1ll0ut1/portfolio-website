@@ -4,7 +4,7 @@
 
 import { describe, expect, it } from 'vitest';
 import { type ContactValues, contactLimits } from '@/config/contact';
-import { readContactValues, validateContactValues } from './validateSubmission';
+import { readContactLocale, readContactValues, validateContactValues } from './validateSubmission';
 
 const valid: ContactValues = {
     name: 'Ada Lovelace',
@@ -71,7 +71,11 @@ describe('validateContactValues', () => {
         const errors = validateContactValues({ ...valid, name: '', email: '', message: '' });
 
         // Assert
-        expect(Object.keys(errors).sort()).toEqual(['email', 'message', 'name']);
+        expect(errors).toEqual({
+            name: { kind: 'required' },
+            email: { kind: 'required' },
+            message: { kind: 'required' },
+        });
     });
 
     it.each([
@@ -85,7 +89,7 @@ describe('validateContactValues', () => {
         'ada@example.com, eve@example.com',
         'ada@@example.com',
     ])('should refuse %j as an email address', (email) => {
-        expect(validateContactValues({ ...valid, email }).email).toMatch(/email address/);
+        expect(validateContactValues({ ...valid, email }).email).toEqual({ kind: 'invalidEmail' });
     });
 
     it.each(['ada@example.com', 'ada.lovelace+site@mail.example.co.uk', 'a@b.io'])(
@@ -97,13 +101,14 @@ describe('validateContactValues', () => {
 
     it('should cap the name at its limit', () => {
         expect(validateContactValues({ ...valid, name: 'a'.repeat(contactLimits.name) })).toEqual({});
-        expect(validateContactValues({ ...valid, name: 'a'.repeat(contactLimits.name + 1) }).name).toMatch(/100 characters/);
+        expect(validateContactValues({ ...valid, name: 'a'.repeat(contactLimits.name + 1) }).name)
+            .toEqual({ kind: 'tooLong', max: 100 });
     });
 
     it('should cap the message at its limit', () => {
         expect(validateContactValues({ ...valid, message: 'a'.repeat(contactLimits.message) })).toEqual({});
         expect(validateContactValues({ ...valid, message: 'a'.repeat(contactLimits.message + 1) }).message)
-            .toMatch(/5,000 characters or fewer; it has 5,001/);
+            .toEqual({ kind: 'tooLong', max: 5000, length: 5001 });
     });
 
     it('should cap the email address at its limit', () => {
@@ -111,6 +116,20 @@ describe('validateContactValues', () => {
         const email = `${'a'.repeat(contactLimits.email)}@example.com`;
 
         // Act & Assert
-        expect(validateContactValues({ ...valid, email }).email).toBeDefined();
+        expect(validateContactValues({ ...valid, email }).email).toEqual({ kind: 'invalidEmail' });
+    });
+});
+
+describe('readContactLocale', () => {
+    it.each(['en', 'de'] as const)('should believe the known language %j', (locale) => {
+        expect(readContactLocale(formOf({ locale }))).toBe(locale);
+    });
+
+    it.each(['fr', 'DE', 'de-DE', ' de', ''])('should read the unknown language %j as English', (locale) => {
+        expect(readContactLocale(formOf({ locale }))).toBe('en');
+    });
+
+    it('should read a missing language as English', () => {
+        expect(readContactLocale(formOf({}))).toBe('en');
     });
 });

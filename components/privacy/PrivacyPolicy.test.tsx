@@ -6,7 +6,7 @@ import { PrivacyPolicy } from './PrivacyPolicy';
 describe('PrivacyPolicy', () => {
     it('should show the date it was given, not the day it was rendered', () => {
         // Act
-        render(<PrivacyPolicy lastUpdated="2026-01-01" />);
+        render(<PrivacyPolicy locale="en" lastUpdated="2026-01-01" />);
 
         // Assert
         const time = screen.getByText('January 1, 2026');
@@ -16,7 +16,7 @@ describe('PrivacyPolicy', () => {
 
     it('should offer the contact form, with the privacy topic picked, for privacy requests', () => {
         // Act
-        render(<PrivacyPolicy lastUpdated="2026-01-01" />);
+        render(<PrivacyPolicy locale="en" lastUpdated="2026-01-01" />);
 
         // Assert
         const formLinks = screen.getAllByRole('link').filter(link => link.getAttribute('href')?.startsWith('/contact'));
@@ -31,7 +31,7 @@ describe('PrivacyPolicy', () => {
 
     it('should disclose what the contact form collects, where it goes, and for how long', () => {
         // Act
-        render(<PrivacyPolicy lastUpdated="2026-01-01" />);
+        render(<PrivacyPolicy locale="en" lastUpdated="2026-01-01" />);
 
         // Assert
         expect(screen.getByText(/I receive your name, your email address, the topic you picked, and your message/))
@@ -43,7 +43,7 @@ describe('PrivacyPolicy', () => {
 
     it('should say the form needs JavaScript for BotID, and that it is rate limited by IP', () => {
         // Act
-        render(<PrivacyPolicy lastUpdated="2026-01-01" />);
+        render(<PrivacyPolicy locale="en" lastUpdated="2026-01-01" />);
 
         // Assert
         const spam = screen.getByText(/Vercel BotID runs an invisible check/);
@@ -53,7 +53,7 @@ describe('PrivacyPolicy', () => {
 
     it('should list Resend among the service providers, next to Vercel', () => {
         // Act
-        render(<PrivacyPolicy lastUpdated="2026-01-01" />);
+        render(<PrivacyPolicy locale="en" lastUpdated="2026-01-01" />);
 
         // Assert
         const providers = screen.getByRole('heading', { name: 'Service Providers' }).parentElement;
@@ -64,7 +64,7 @@ describe('PrivacyPolicy', () => {
 
     it('should point privacy requests to LinkedIn in a new tab', () => {
         // Act
-        render(<PrivacyPolicy lastUpdated="2026-01-01" />);
+        render(<PrivacyPolicy locale="en" lastUpdated="2026-01-01" />);
 
         // Assert
         const link = screen.getByRole('link', { name: /linkedin\.com\/in\/skdevde/ });
@@ -76,7 +76,7 @@ describe('PrivacyPolicy', () => {
 
     it('should not offer an email address', () => {
         // Act
-        const { container } = render(<PrivacyPolicy lastUpdated="2026-01-01" />);
+        const { container } = render(<PrivacyPolicy locale="en" lastUpdated="2026-01-01" />);
 
         // Assert
         expect(container.querySelector('a[href*="@"]')).not.toBeInTheDocument();
@@ -85,7 +85,7 @@ describe('PrivacyPolicy', () => {
 
     it('should describe only the essential and analytics categories', () => {
         // Act
-        const { container } = render(<PrivacyPolicy lastUpdated="2026-01-01" />);
+        const { container } = render(<PrivacyPolicy locale="en" lastUpdated="2026-01-01" />);
 
         // Assert
         expect(container.textContent).not.toMatch(/contact form submissions|marketing cookies are used/i);
@@ -98,7 +98,7 @@ describe('PrivacyPolicy', () => {
         'should name the %s key among the essential storage',
         (key) => {
             // Act
-            render(<PrivacyPolicy lastUpdated="2026-01-01" />);
+            render(<PrivacyPolicy locale="en" lastUpdated="2026-01-01" />);
 
             // Assert
             expect(screen.getByText(/^Your cookie choice/)).toHaveTextContent(key);
@@ -107,9 +107,23 @@ describe('PrivacyPolicy', () => {
 
     it('should be a single document with one top-level heading', () => {
         // Act
-        render(<PrivacyPolicy lastUpdated="2026-01-01" />);
+        render(<PrivacyPolicy locale="en" lastUpdated="2026-01-01" />);
 
         // Assert
         expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
+    });
+
+    it('should date and link a German page in German', () => {
+        // Act
+        render(<PrivacyPolicy locale="de" lastUpdated="2026-01-01" />);
+
+        // Assert
+        expect(screen.getByText('1. Januar 2026').tagName).toBe('TIME');
+        const formLinks = screen.getAllByRole('link').filter(link => link.getAttribute('href')?.startsWith('/de/kontakt'));
+        expect(formLinks.length).toBeGreaterThanOrEqual(2);
+        formLinks.forEach((link) => {
+            expect(link).toHaveAttribute('href', '/de/kontakt?topic=privacy');
+        });
+        expect(screen.getByRole('link', { name: 'stefanknoch.com/de/kontakt' })).toBeInTheDocument();
     });
 });
