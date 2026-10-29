@@ -144,12 +144,6 @@ export const workEn: WorkCopy = {
         contact: 'Get in touch',
         others: 'More case studies',
     },
-    notFound: {
-        title: 'Case study not found',
-        description: 'That case study does not exist, or its link has changed.',
-        body: 'That case study does not exist, or its link has changed since it was shared.',
-        action: 'All work',
-    },
     card: {
         alt: name => `A case study from ${name}'s work`,
         kicker: 'case study',

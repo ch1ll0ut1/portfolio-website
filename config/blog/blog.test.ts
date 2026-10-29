@@ -3,9 +3,14 @@
  * Tests data integrity and structure, not function behavior.
  */
 
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { describe, it, expect } from 'vitest';
+import { INFORMAL_ADDRESS, dictionaryStrings, keyPaths } from '@/test/dictionary';
 import { itemAt } from '@/test/itemAt';
-import { blogCopy, blogPosts, blogPostsFor, tagLabel } from '@/config/blog';
+import { type BlogCopy, blogCopy, blogPosts, blogPostsFor, tagLabel } from '@/config/blog';
+import { blogDe } from './de';
+import { blogEn } from './en';
 import { rawBlogPosts } from './posts';
 
 describe('Blog Configuration', () => {
@@ -125,5 +130,66 @@ describe('Blog Configuration', () => {
         it('should fall back to the English tag where a language has no label for it', () => {
             expect(tagLabel('de', 'a-tag-nobody-labelled')).toBe('a-tag-nobody-labelled');
         });
+
+        it('should label an English tag in German on a German page', () => {
+            expect(tagLabel('de', 'Tech Leadership')).toBe('Technische Führung');
+        });
+
+        it('should only label tags the posts use', () => {
+            const used = new Set(rawBlogPosts.flatMap(post => post.tags));
+
+            Object.keys(blogDe.tags).forEach((tag) => {
+                expect(used.has(tag), tag).toBe(true);
+            });
+        });
+    });
+
+    describe('German copy', () => {
+        it('should be the German dictionary', () => {
+            expect(blogCopy.de).toBe(blogDe);
+        });
+
+        it('should fill the same keys as the English, tag labels aside', () => {
+            const withoutTags = (copy: BlogCopy) => keyPaths({ ...copy, tags: {} });
+
+            expect(withoutTags(blogDe)).toEqual(withoutTags(blogEn));
+        });
+
+        it('should leave no string empty, quote no dollars and never say "du"', () => {
+            dictionaryStrings(blogDe).forEach(({ path, text }) => {
+                expect(text.trim(), path).not.toBe('');
+                expect(text, path).not.toContain('$');
+                expect(text, path).not.toMatch(INFORMAL_ADDRESS);
+            });
+        });
+
+        it('should title each post as its German markdown\'s heading', () => {
+            rawBlogPosts.forEach(({ slug }) => {
+                const englishHeading = firstHeading(readFileSync(join(process.cwd(), 'content/blog', `${slug}.md`), 'utf8'));
+                const germanHeading = firstHeading(readFileSync(join(process.cwd(), 'content/blog/de', `${slug}.md`), 'utf8'));
+
+                // A post without an `#` heading in English has none in German either.
+                expect(germanHeading === undefined, slug).toBe(englishHeading === undefined);
+                if (germanHeading !== undefined) {
+                    expect(blogDe.posts[slug].title, slug).toBe(germanHeading);
+                }
+            });
+        });
     });
 });
+
+/** The text of a markdown file's first `#` heading, skipping code blocks. */
+const firstHeading = (markdown: string) => {
+    let inCode = false;
+
+    for (const line of markdown.split('\n')) {
+        if (line.startsWith('```')) {
+            inCode = !inCode;
+        }
+        else if (!inCode && line.startsWith('# ')) {
+            return line.slice(2).trim();
+        }
+    }
+
+    return undefined;
+};

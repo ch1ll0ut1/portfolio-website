@@ -4,6 +4,7 @@
  */
 
 import type { Metadata } from 'next';
+import { notFoundMetadata } from '@/components/errors/notFoundMetadata';
 import { caseStudyPath, findCaseStudy } from '@/config/caseStudies';
 import { workCopy } from '@/config/caseStudyDetails';
 import { absoluteUrl, siteConfig } from '@/config/site';
@@ -12,23 +13,13 @@ import { type Locale, ogLocale } from '@/lib/i18n/locale';
 import { localizedPath } from '@/lib/i18n/paths';
 import { twitterCard } from '@/lib/twitterCard';
 
-/**
- * A case's 404 metadata in `locale`. `robots: null` leaves the `noindex` to
- * Next, which sends its own with every 404, as on the blog.
- */
-export const caseStudyNotFoundMetadata = (locale: Locale): Metadata => ({
-    title: workCopy[locale].notFound.title,
-    description: workCopy[locale].notFound.description,
-    robots: null,
-});
-
 /** The metadata of the case at `slug` in `locale`, or its 404's for a slug with no case. */
 export const caseStudyMetadata = (slug: string, locale: Locale): Metadata => {
     const study = findCaseStudy(slug);
 
     // Matches the not-found page, robots included.
     if (!study) {
-        return caseStudyNotFoundMetadata(locale);
+        return notFoundMetadata(locale, 'caseStudy');
     }
 
     const detail = workCopy[locale].details[study.id];

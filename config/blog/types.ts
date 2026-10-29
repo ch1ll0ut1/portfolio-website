@@ -105,13 +105,6 @@ export interface BlogCopy {
         };
         actions: CallToActionCopy;
     };
-    /** The 404 of an unknown slug: page metadata and panel. */
-    notFound: {
-        title: string;
-        description: string;
-        body: string;
-        action: string;
-    };
     /** The first part of a post card's meta line, "blog · 2025-08-14 · 5 min read". */
     cardKicker: string;
     feed: {

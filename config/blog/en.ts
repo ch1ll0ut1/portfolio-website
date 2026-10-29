@@ -83,12 +83,6 @@ export const blogEn: BlogCopy = {
             contact: 'Get in touch',
         },
     },
-    notFound: {
-        title: 'Post not found',
-        description: 'That article does not exist, or its link has changed.',
-        body: 'That article does not exist, or its link has changed since it was shared.',
-        action: 'All articles',
-    },
     cardKicker: 'blog',
     feed: {
         title: name => `${name} — Writing`,

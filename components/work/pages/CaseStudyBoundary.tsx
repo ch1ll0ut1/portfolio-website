@@ -1,7 +1,7 @@
 import { FC, ReactNode, Suspense } from 'react';
 import { findCaseStudy } from '@/config/caseStudies';
 import type { Locale } from '@/lib/i18n/locale';
-import { CaseStudyNotFound } from './CaseStudyNotFound';
+import { NotFoundPage } from '@/components/errors/NotFoundPage';
 
 interface Props {
     slug: string;
@@ -22,7 +22,7 @@ export const CaseStudyBoundary: FC<Props> = ({ slug, locale, children }) => {
     }
 
     return (
-        <Suspense fallback={<CaseStudyNotFound locale={locale} />}>
+        <Suspense fallback={<NotFoundPage locale={locale} kind="caseStudy" />}>
             {children}
         </Suspense>
     );
