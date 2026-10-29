@@ -5,13 +5,13 @@ import { SectionHead } from '../SectionHead';
 import { CaseList } from './CaseList';
 import { MoreProjects } from './MoreProjects';
 
-/**
- * Selected work: the stacking case studies, then the smaller projects.
- */
 interface Props {
     locale: Locale;
 }
 
+/**
+ * Selected work: the stacking case studies, then the smaller projects.
+ */
 export const Work: FC<Props> = ({ locale }) => (
     <section className="section" id="work" aria-labelledby="work-title">
         <div className="wrap">

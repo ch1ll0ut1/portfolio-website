@@ -7,6 +7,10 @@ import { ServiceCard } from './ServiceCard';
 import { TypedParagraph } from './TypedParagraph';
 import styles from './Services.module.css';
 
+interface Props {
+    locale: Locale;
+}
+
 /**
  * The services section: three engagement models, then the note on how the work
  * actually runs.
@@ -14,10 +18,6 @@ import styles from './Services.module.css';
  * The heading rises line by line, the cards arrive in a short stagger, and the
  * closing paragraph writes itself as it scrolls through.
  */
-interface Props {
-    locale: Locale;
-}
-
 export const Services: FC<Props> = ({ locale }) => (
     <section className={`section ${styles.services}`} id="services" aria-labelledby="services-title">
         <div className="wrap">

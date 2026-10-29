@@ -5,6 +5,10 @@ import type { Locale } from '@/lib/i18n/locale';
 import { SectionHead } from '../SectionHead';
 import { CareerLog } from './CareerLog';
 
+interface Props {
+    locale: Locale;
+}
+
 /**
  * Experience: every role since the first one, printed as a `git log --graph`.
  *
@@ -15,10 +19,6 @@ import { CareerLog } from './CareerLog';
  * and in a screen reader. The graph beside it is decorative: it draws the same
  * two lanes the list already describes, and reveals them as the page scrolls.
  */
-interface Props {
-    locale: Locale;
-}
-
 export const Experience: FC<Props> = ({ locale }) => (
     <section className="section" id="experience" data-section="experience" aria-labelledby="experience-title">
         <div className="wrap">
