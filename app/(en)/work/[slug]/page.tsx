@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     const { slug } = await params;
     const study = findCaseStudy(slug);
 
-    // Matches ./not-found.tsx, robots included; see app/blog/[slug]/page.tsx.
+    // Matches ./not-found.tsx, robots included; see app/(en)/blog/[slug]/page.tsx.
     if (!study) {
         return {
             title: 'Case study not found',

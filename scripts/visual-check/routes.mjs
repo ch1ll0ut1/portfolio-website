@@ -30,7 +30,7 @@ export const expectedStatus = route => (route === MISSING_ARTICLE ? MISSING_ARTI
  * The missing article is a 404 in production, where Next prerenders it before
  * sending anything. The dev server renders it on request and streams it, so
  * its 200 is already sent by the time the page's `notFound()` reaches the
- * post's not-found boundary (see app/blog/[slug]/layout.tsx). There the real
+ * post's not-found boundary (see app/(en)/blog/[slug]/layout.tsx). There the real
  * 404 is told from a soft one by the marker Next's dev server adds for a
  * caught `notFound()`, which a page that merely rendered the panel lacks.
  */
