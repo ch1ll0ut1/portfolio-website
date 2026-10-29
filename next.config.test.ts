@@ -36,6 +36,16 @@ describe('next.config.ts redirects', () => {
     );
 });
 
+describe('next.config.ts rewrites', () => {
+    it('should keep serving the English share cards at their old URLs', async () => {
+        const rewrites = await nextConfig.rewrites?.();
+
+        expect(rewrites).toEqual(expect.arrayContaining([
+            { source: '/work/:slug/opengraph-image', destination: '/work/:slug/opengraph-image-j99tbg' },
+        ]));
+    });
+});
+
 describe('next.config.ts experimental flags', () => {
     // Without it app/global-not-found.tsx is ignored and an unknown URL gets Next's bare 404.
     it('should turn on the global 404', () => {
