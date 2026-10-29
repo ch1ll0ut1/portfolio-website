@@ -16,7 +16,7 @@ import { type BlogPost, blogCopy, lastModified, tagLabel } from '@/config/blog';
 import { links } from '@/config/links';
 import { absoluteUrl, siteConfig, siteTitle } from '@/config/site';
 import { bangkokDateTime } from './date';
-import { type Locale, intlLocale } from './i18n/locale';
+import { type Locale, intlLocale, otherLocale } from './i18n/locale';
 import { localizedPath } from './i18n/paths';
 import { postCardPath } from './og/postCard';
 
@@ -155,9 +155,20 @@ export const blogSchema = (posts: BlogPost[], locale: Locale): JsonLdObject => (
     })),
 });
 
-/** The BlogPosting node for one article page in `locale`. */
+/**
+ * The key that links an article to its twin in the other language: the
+ * German one is a translation of the English original, which in turn names
+ * the German one as its translation.
+ */
+const TRANSLATION_LINK: Record<Locale, string> = {
+    en: 'workTranslation',
+    de: 'translationOfWork',
+};
+
+/** The BlogPosting node for one article page in `locale`, linked to its twin. */
 export const blogPostingSchema = (post: BlogPost, locale: Locale): JsonLdObject => {
     const url = postUrl(post, locale);
+    const other = otherLocale(locale);
 
     return {
         '@type': 'BlogPosting',
@@ -177,6 +188,11 @@ export const blogPostingSchema = (post: BlogPost, locale: Locale): JsonLdObject 
         'keywords': post.tags.map(tag => tagLabel(locale, tag)).join(', '),
         'inLanguage': intlLocale[locale],
         'isAccessibleForFree': true,
+        [TRANSLATION_LINK[locale]]: {
+            '@type': 'BlogPosting',
+            'url': postUrl(post, other),
+            'inLanguage': intlLocale[other],
+        },
     };
 };
 
