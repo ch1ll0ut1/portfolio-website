@@ -3,7 +3,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { absoluteUrl, siteConfig, siteTitle, yearsShipping } from './site';
+import { absoluteUrl, siteConfig, siteTitle, yearsShipping } from '.';
 
 describe('Site Configuration', () => {
     it('should keep the canonical origin free of a trailing slash', () => {

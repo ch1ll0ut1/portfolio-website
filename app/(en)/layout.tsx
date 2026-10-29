@@ -4,7 +4,7 @@ import '../globals.css';
 import { SiteDocument } from '@/components/document/SiteDocument';
 import { layoutMetadata, layoutViewport } from '@/lib/i18n/layoutMetadata';
 
-export const metadata: Metadata = layoutMetadata;
+export const metadata: Metadata = layoutMetadata('en');
 
 export const viewport: Viewport = layoutViewport;
 

@@ -1,13 +1,16 @@
 import { MetadataRoute } from 'next';
-import { siteConfig, siteTitle } from '@/config/site';
+import { siteConfig, siteCopy } from '@/config/site';
 import { manifestIconPath, manifestIcons } from '@/lib/og/manifestIcons';
 import { ogPalette } from '@/lib/og/palette';
 
+/** English only: a manifest is one per site, and `lang` says which language it is in. */
 export default function manifest(): MetadataRoute.Manifest {
+    const { title, description } = siteCopy.en;
+
     return {
-        name: siteTitle,
+        name: title,
         short_name: siteConfig.name,
-        description: siteConfig.description,
+        description,
         start_url: '/',
         display: 'standalone',
         background_color: ogPalette.bg,

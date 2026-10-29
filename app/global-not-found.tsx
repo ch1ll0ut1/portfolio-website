@@ -13,7 +13,7 @@ import { localizedPath } from '@/lib/i18n/paths';
 const COPY = errorsCopy.en.notFound.page;
 
 export const metadata: Metadata = {
-    ...layoutMetadata,
+    ...layoutMetadata('en'),
     // No layout above this page, so no title template: the site name is written out.
     title: `${COPY.title} | ${siteConfig.name}`,
     description: COPY.description,
