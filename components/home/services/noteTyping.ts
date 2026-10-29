@@ -9,7 +9,7 @@
  * reads as ordinary text to assistive tech at every point in the sequence.
  */
 
-import type { EngagementNoteSegment } from '@/config/engagements';
+import type { EngagementNoteSegment } from '@/config/home/services/types';
 
 /** One word of the paragraph, ready to render. */
 export interface NoteWord {

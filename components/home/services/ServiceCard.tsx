@@ -3,7 +3,10 @@
 import { type FC, useEffect, useId, useRef } from 'react';
 import Link from 'next/link';
 import { useInView } from '@/lib/motion';
-import { type Engagement, engagementLink, rangeLabel } from '@/config/engagements';
+import { type Engagement, engagementPath } from '@/config/engagements';
+import { engagementsCopy } from '@/config/home/services';
+import { localizedPath } from '@/lib/i18n/paths';
+import { useLocale } from '@/lib/i18n/LocaleContext';
 import type { CssVars } from '@/lib/cssVars';
 import { runBorderTrace } from './borderTrace';
 import { useSpotlight } from './useSpotlight';
@@ -36,6 +39,8 @@ export const ServiceCard: FC<Props> = ({ engagement, index }) => {
     const traceRef = useRef<HTMLDivElement>(null);
     const stopTraceRef = useRef<(() => void) | null>(null);
     const settleTimerRef = useRef(0);
+    const locale = useLocale();
+    const copy = engagementsCopy[locale];
     const nameId = useId();
     const delay = index * STAGGER_S;
 
@@ -102,7 +107,7 @@ export const ServiceCard: FC<Props> = ({ engagement, index }) => {
             <div className={styles.top}>
                 <h3 className={styles.name} id={nameId}>
                     {engagement.name}
-                    {engagement.featured && <span className="visually-hidden">, featured</span>}
+                    {engagement.featured && <span className="visually-hidden">{copy.featured}</span>}
                 </h3>
                 <p className={styles.subtitle}>{engagement.subtitle}</p>
                 <p className={styles.who}>{engagement.who}</p>
@@ -118,11 +123,11 @@ export const ServiceCard: FC<Props> = ({ engagement, index }) => {
 
             <div className={styles.foot}>
                 <p className={styles.format}>
-                    <span>{rangeLabel}</span>
+                    <span>{copy.rangeLabel}</span>
                     {engagement.range}
                 </p>
-                <Link className={styles.more} href={engagementLink.href(engagement.id)}>
-                    {engagementLink.label}
+                <Link className={styles.more} href={localizedPath(locale, engagementPath(engagement.id))}>
+                    {copy.linkLabel}
                     <span className="visually-hidden">
                         :
                         {' '}

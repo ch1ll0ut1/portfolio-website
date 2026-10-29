@@ -44,7 +44,7 @@ const Home: FC = () => (
             <Hero />
             <Proof locale="en" />
             <Work />
-            <Services />
+            <Services locale="en" />
             <Process />
             <Experience />
             <Writing />
