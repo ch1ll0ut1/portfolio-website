@@ -52,6 +52,32 @@ describe('fieldErrorMessages', () => {
         expect(messages.message).toContain('5.001');
     });
 
+    it('should word every code in German on a German page', () => {
+        // Act
+        const required = fieldErrorMessages({
+            name: { kind: 'required' },
+            email: { kind: 'required' },
+            message: { kind: 'required' },
+        }, 'de');
+        const wrong = fieldErrorMessages({
+            name: { kind: 'tooLong', max: 100 },
+            email: { kind: 'invalidEmail' },
+            message: { kind: 'tooLong', max: 5000, length: 5001 },
+        }, 'de');
+
+        // Assert
+        expect(required).toEqual({
+            name: 'Bitte geben Sie Ihren Namen an.',
+            email: 'Bitte geben Sie Ihre E-Mail-Adresse an, damit ich antworten kann.',
+            message: 'Bitte schreiben Sie eine Nachricht.',
+        });
+        expect(wrong).toEqual({
+            name: 'Bitte kürzen Sie Ihren Namen auf höchstens 100 Zeichen.',
+            email: 'Das sieht nicht nach einer E-Mail-Adresse aus. Bitte prüfen Sie die Adresse.',
+            message: 'Ihre Nachricht hat 5.001 Zeichen. Bitte kürzen Sie sie auf höchstens 5.000.',
+        });
+    });
+
     it('should leave fields without an error out', () => {
         expect(fieldErrorMessages({}, 'en')).toEqual({});
     });
