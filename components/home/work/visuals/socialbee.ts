@@ -7,6 +7,7 @@
  * "built the department and handed it over" looks like.
  */
 
+import type { CaseVisualsCopy } from '@/config/home/work/types';
 import { type FrameClasses, type Illustration, anim, buildWindow, h, tf } from './dom';
 import type { RunnerApi } from './runner';
 
@@ -33,15 +34,18 @@ export interface SocialbeeClasses {
 
 type NodeId = 'lead' | 'eng1' | 'eng2' | 'design' | 'product' | 'ci' | 'aws';
 
+/** People are labelled by their role, in the dictionary; systems by their name. */
+type NodeLabel = 'lead' | 'engineer' | 'designer' | 'product' | 'CI' | 'AWS';
+
 interface NodeSpec {
     x: number;
     y: number;
-    label: string;
+    label: NodeLabel;
     kind: 'person' | 'lead' | 'sys';
 }
 
 const SPECS: Record<NodeId, NodeSpec> = {
-    lead: { x: 200, y: 112, label: 'tech lead', kind: 'lead' },
+    lead: { x: 200, y: 112, label: 'lead', kind: 'lead' },
     eng1: { x: 92, y: 62, label: 'engineer', kind: 'person' },
     eng2: { x: 308, y: 62, label: 'engineer', kind: 'person' },
     design: { x: 72, y: 176, label: 'designer', kind: 'person' },
@@ -59,12 +63,14 @@ export const buildSocialbee = (
     stage: Element,
     frame: FrameClasses,
     c: SocialbeeClasses,
+    copy: CaseVisualsCopy['socialbee'],
 ): Illustration => {
     let api: RunnerApi | null = null;
     let commits = 0;
+    const labelOf = (label: NodeLabel) => (label === 'CI' || label === 'AWS' ? label : copy[label]);
 
-    const chip = h('span', frame.chip, null, 'team 0');
-    const body = buildWindow(stage, frame, 'social-bee / ', 'tech department', chip);
+    const chip = h('span', frame.chip, null, copy.team(0));
+    const body = buildWindow(stage, frame, 'social-bee / ', copy.title, chip);
     const board = h('div', c.stage, body);
     const edgesEl = h('div', '', board);
     const nodesEl = h('div', '', board);
@@ -94,7 +100,7 @@ export const buildSocialbee = (
             element.textContent = spec.label;
         }
         else {
-            h('span', c.lbl, element, spec.label);
+            h('span', c.lbl, element, labelOf(spec.label));
         }
     });
 
@@ -188,7 +194,7 @@ export const buildSocialbee = (
     };
 
     const setTeam = (size: number) => {
-        chip.textContent = `team ${size}`;
+        chip.textContent = copy.team(size);
     };
 
     const reset = () => {
@@ -265,7 +271,7 @@ export const buildSocialbee = (
             await runner.wait(500);
 
             chip.className = `${frame.chip} ${frame.chipBusy}`;
-            chip.textContent = 'shipping';
+            chip.textContent = copy.shipping;
 
             const dev = (turn: number): NodeId => (turn % 2 === 0 ? 'eng1' : 'eng2');
 
@@ -281,7 +287,7 @@ export const buildSocialbee = (
             });
             leadToCi.classList.add(c.edgeDim);
             chip.className = `${frame.chip} ${frame.chipOk}`;
-            chip.textContent = 'handover';
+            chip.textContent = copy.handover;
 
             for (let i = 0; i < 9; i++) {
                 void ship(dev(i + 1));

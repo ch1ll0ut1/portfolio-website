@@ -8,6 +8,7 @@
  * histogram are measured from the simulation rather than scripted.
  */
 
+import type { CaseVisualsCopy } from '@/config/home/work/types';
 import { clamp } from '@/lib/motion';
 import { type FrameClasses, type Illustration, anim, buildWindow, h, tf } from './dom';
 import type { RunnerApi } from './runner';
@@ -78,12 +79,13 @@ export const buildEko = (
     stage: Element,
     frame: FrameClasses,
     c: EkoClasses,
+    copy: CaseVisualsCopy['eko'],
 ): Illustration => {
     const toggle = h('span', c.toggle);
     const thumb = h('i', c.thumb, toggle);
-    const beforeLabel = h('span', c.toggleOn, toggle, 'before');
-    const afterLabel = h('span', '', toggle, 'after');
-    const body = buildWindow(stage, frame, 'eko / ', 'messaging', toggle);
+    const beforeLabel = h('span', c.toggleOn, toggle, copy.before);
+    const afterLabel = h('span', '', toggle, copy.after);
+    const body = buildWindow(stage, frame, 'eko / ', copy.title, toggle);
 
     const lanes: Lane[] = LANE_NAMES.map((name, index) => {
         const el = h('div', c.lane, body);
@@ -104,7 +106,7 @@ export const buildEko = (
     const meter = h('div', c.meter, body);
 
     meter.style.top = '176px';
-    h('span', c.meterLbl, meter, 'throughput');
+    h('span', c.meterLbl, meter, copy.throughput);
 
     const meterTrack = h('span', c.meterTrack, meter);
     const meterFill = h('span', c.meterFill, meterTrack);
@@ -113,7 +115,7 @@ export const buildEko = (
 
     meterFill.style.transform = 'scaleX(.5)';
     latencyRow.style.top = '214px';
-    h('span', c.meterLbl, latencyRow, 'latency per message');
+    h('span', c.meterLbl, latencyRow, copy.latency);
 
     const hist = h('div', c.hist, body);
     const bars: HTMLSpanElement[] = [];

@@ -4,8 +4,9 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { caseStudies, caseStudyPath, findCaseStudy } from './caseStudies';
+import { caseStudies, caseStudiesFor, caseStudyPath, findCaseStudy } from './caseStudies';
 import { caseStudyDetails } from './caseStudyDetails';
+import { workEn } from './home/work/en';
 
 describe('Case Studies Configuration', () => {
     describe('Case Studies Data Integrity', () => {
@@ -141,6 +142,20 @@ describe('Case study pages', () => {
             expect(detail.result.length).toBeGreaterThan(0);
             expect(detail.technical.length).toBeGreaterThan(0);
             expect(detail.topics.length).toBeGreaterThan(0);
+        });
+    });
+
+    describe('Languages', () => {
+        it('should tell the English case studies from the English dictionary', () => {
+            expect(caseStudies).toEqual(caseStudiesFor('en'));
+            caseStudies.forEach((study) => {
+                const copy = workEn.cases[study.id];
+
+                expect(study.role).toBe(copy.role);
+                expect(study.problem).toBe(copy.problem);
+                expect(study.metric.label).toBe(copy.metricLabel);
+                expect(study.link?.label).toBe(copy.linkLabel);
+            });
         });
     });
 });

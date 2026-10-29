@@ -11,9 +11,11 @@ import { act, fireEvent, render, screen } from '@testing-library/react';
 import { itemAt } from '../../../test/itemAt';
 import { installMatchMedia } from '../../../test/motionEnv';
 import { FINE_POINTER_QUERY } from '../../../lib/motion';
-import { projectsIndex } from '../../../config/projectsIndex';
+import { projectsIndexFor } from '../../../config/projectsIndex';
 import { MoreProjects } from './MoreProjects';
 import styles from './MoreProjects.module.css';
+
+const projectsIndex = projectsIndexFor('en');
 
 /** jsdom lays nothing out, so rows get the offsets the marker needs. */
 const stubOffsets = (rows: HTMLElement[]) => {

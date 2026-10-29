@@ -22,13 +22,8 @@ const CARD_MID = 27;
 
 export const GLYPH: Record<LayerState, string> = { ok: '\u2713', edit: '\u2022', gen: '\u21bb', err: '!' };
 
-/** File name and what that layer is, per card. */
-export const HEADS: [string, string][] = [
-    ['schema.sql', 'migration'],
-    ['orm/customer.ts', 'custom ORM'],
-    ['sdk/types.ts', 'generated'],
-    ['Settings.tsx', 'React'],
-];
+/** File name per card. What each layer is, it says in the work section's dictionary. */
+export const FILES = ['schema.sql', 'orm/customer.ts', 'sdk/types.ts', 'Settings.tsx'];
 
 export const LINES: ((renamed: boolean) => Token[])[] = [
     renamed => [

@@ -2,6 +2,9 @@
 
 import { type FC, useCallback, useEffect, useRef } from 'react';
 import type { CaseMetric, CaseVisualId } from '@/config/caseStudies';
+import { workCopy } from '@/config/home/work';
+import type { CaseVisualsCopy } from '@/config/home/work/types';
+import { useLocale } from '@/lib/i18n/LocaleContext';
 import { prefersReducedMotion, useMaskReveal, useStageEvent } from '@/lib/motion';
 import { whenIdle } from '@/lib/whenIdle';
 import styles from './CaseVisual.module.css';
@@ -28,7 +31,7 @@ const NARROW = 520;
  */
 const APPROACH_MARGIN = '100% 0px';
 
-type Build = (stage: HTMLElement) => Illustration;
+type Build = (stage: HTMLElement, copy: CaseVisualsCopy) => Illustration;
 
 /**
  * Each illustration's code, resolved to the function that builds it.
@@ -40,16 +43,16 @@ type Build = (stage: HTMLElement) => Illustration;
  */
 const loaders: Record<CaseVisualId, () => Promise<Build>> = {
     edithing: () => import('./edithing').then(({ buildEdithing }) =>
-        (stage: HTMLElement) => buildEdithing(stage, frameClasses, edithingClasses),
+        (stage: HTMLElement, copy: CaseVisualsCopy) => buildEdithing(stage, frameClasses, edithingClasses, copy.edithing),
     ),
     bluereceipt: () => import('./bluereceipt').then(({ buildBluereceipt }) =>
-        (stage: HTMLElement) => buildBluereceipt(stage, frameClasses, bluereceiptClasses),
+        (stage: HTMLElement, copy: CaseVisualsCopy) => buildBluereceipt(stage, frameClasses, bluereceiptClasses, copy.bluereceipt),
     ),
     socialbee: () => import('./socialbee').then(({ buildSocialbee }) =>
-        (stage: HTMLElement) => buildSocialbee(stage, frameClasses, socialbeeClasses),
+        (stage: HTMLElement, copy: CaseVisualsCopy) => buildSocialbee(stage, frameClasses, socialbeeClasses, copy.socialbee),
     ),
     eko: () => import('./eko').then(({ buildEko }) =>
-        (stage: HTMLElement) => buildEko(stage, frameClasses, ekoClasses),
+        (stage: HTMLElement, copy: CaseVisualsCopy) => buildEko(stage, frameClasses, ekoClasses, copy.eko),
     ),
 };
 
@@ -60,6 +63,7 @@ const loaders: Record<CaseVisualId, () => Promise<Build>> = {
  * keep it scaled to the panel, and tell its runner when to run.
  */
 export const CaseVisual: FC<Props> = ({ id, metric, covered }) => {
+    const visualsCopy = workCopy[useLocale()].visuals;
     const hostRef = useRef<HTMLDivElement>(null);
     const metricRef = useRef<HTMLParagraphElement>(null);
     const valueRef = useRef<HTMLSpanElement>(null);
@@ -141,7 +145,7 @@ export const CaseVisual: FC<Props> = ({ id, metric, covered }) => {
                 return;
             }
 
-            const illustration = build(stage);
+            const illustration = build(stage, visualsCopy);
 
             illustrationRef.current = illustration;
             stage.style.width = `${illustration.width}px`;
@@ -217,7 +221,7 @@ export const CaseVisual: FC<Props> = ({ id, metric, covered }) => {
             stageRef.current = null;
             stage.remove();
         };
-    }, [id, fit, sync]);
+    }, [id, visualsCopy, fit, sync]);
 
     return (
         <div className={styles.well}>

@@ -7,11 +7,12 @@
  * pipeline goes green. That is what "fully typed data layer" buys.
  */
 
+import type { CaseVisualsCopy } from '@/config/home/work/types';
 import { EASE } from '@/lib/motion';
 import { type FrameClasses, type Illustration, anim, buildWindow, h, tf } from './dom';
 import {
+    FILES,
     GLYPH,
-    HEADS,
     LINES,
     type LayerState,
     TOPS,
@@ -64,12 +65,13 @@ export const buildBluereceipt = (
     stage: Element,
     frame: FrameClasses,
     c: BluereceiptClasses,
+    copy: CaseVisualsCopy['bluereceipt'],
 ): Illustration => {
     let api: RunnerApi | null = null;
 
     const tokenClass: Record<TokenKind, string> = { p: c.tkP, k: c.tkK, t: c.tkT, s: c.tkS };
-    const chip = h('span', `${frame.chip} ${frame.chipOk}`, null, 'tsc · 0 errors');
-    const body = buildWindow(stage, frame, 'bluereceipt / ', 'typed data layer', chip);
+    const chip = h('span', `${frame.chip} ${frame.chipOk}`, null, copy.clean);
+    const body = buildWindow(stage, frame, 'bluereceipt / ', copy.title, chip);
     const rail = h('span', c.rail, body);
     const fill = h('span', `${c.fill} ${c.fillOn}`, body);
     const pulse = h('span', c.pulse, body);
@@ -106,10 +108,11 @@ export const buildBluereceipt = (
     };
 
     const layers: Layer[] = TOPS.flatMap((top, index) => {
-        const heading = HEADS[index];
+        const file = FILES[index];
+        const caption = copy.layers[index];
         const render = LINES[index];
 
-        if (heading === undefined || render === undefined) {
+        if (file === undefined || caption === undefined || render === undefined) {
             return [];
         }
 
@@ -119,8 +122,8 @@ export const buildBluereceipt = (
 
         node.style.top = `${mid(index) - 5.5}px`;
         card.style.top = `${top}px`;
-        h('b', '', head, heading[0]);
-        head.appendChild(document.createTextNode(heading[1]));
+        h('b', '', head, file);
+        head.appendChild(document.createTextNode(caption));
 
         const state = h('span', c.st, head, GLYPH.ok);
         const code = h('div', c.code, card);
@@ -134,7 +137,7 @@ export const buildBluereceipt = (
 
     errorBox.style.top = `${(TOPS[3] ?? 0) + 62}px`;
     h('br', '', errorBox);
-    h('i', '', errorBox, 'Caught at build time, before it shipped.');
+    h('i', '', errorBox, copy.caught);
 
     const setState = (layer: Layer, state: LayerState) => {
         layer.state.dataset.state = state;
@@ -146,7 +149,7 @@ export const buildBluereceipt = (
         const variant = state === 'ok' ? frame.chipOk : state === 'err' ? frame.chipErr : frame.chipBusy;
 
         chip.className = `${frame.chip} ${variant}`;
-        chip.textContent = state === 'ok' ? 'tsc · 0 errors' : state === 'err' ? 'tsc · 1 error' : 'tsc · checking';
+        chip.textContent = state === 'ok' ? copy.clean : state === 'err' ? copy.failed : copy.checking;
     };
 
     /** Swaps a code line for a regenerated one, old rolling up and new rolling in. */

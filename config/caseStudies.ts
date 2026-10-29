@@ -2,12 +2,16 @@
  * The four case studies in the "Selected work" section.
  *
  * Each also has its own page at `/work/<slug>`, whose longer copy lives in
- * `caseStudyDetails.ts`.
+ * `caseStudyDetails.ts`. The words of the card (role, client, the story and
+ * the labels) are in the work section's dictionary, `config/home/work/`.
  *
  * Each one reads problem → what I did → result, the structure the brief asks
  * for. The `id` doubles as the key of the illustration that runs in the case's
  * visual well, so adding a case means adding a matching visual module.
  */
+
+import type { Locale } from '@/lib/i18n/locale';
+import { workCopy } from './home/work';
 
 /** Illustrations available in `components/home/work/visuals`. */
 export type CaseVisualId = 'edithing' | 'bluereceipt' | 'socialbee' | 'eko';
@@ -46,67 +50,80 @@ export interface CaseStudy {
     metric: CaseMetric;
 }
 
-export const caseStudies: CaseStudy[] = [
+/** What a case study is apart from its words. */
+interface CaseStudyData {
+    id: CaseVisualId;
+    slug: string;
+    years: string;
+    /** The project's name. */
+    title: string;
+    tags: string[];
+    /** Target of the outbound link; its label is in the dictionary. */
+    linkHref?: string;
+    metricValue: string;
+}
+
+const caseStudyData: CaseStudyData[] = [
     {
         id: 'edithing',
         slug: 'parliament-of-iceland-legislative-editor',
         years: '2023–2025',
-        role: 'Lead architect',
         title: 'Edithing',
-        client: 'Parliament of Iceland',
-        problem: 'Icelandic law lives in deeply nested documents: chapters, articles, paragraphs, and numbered items. Ordinary editors flatten that structure or break it.',
-        did: 'Designed a typed, hierarchical document model on Slate.js with continuous normalization, so every keystroke keeps the legal structure valid.',
-        result: 'An open-source editor for drafting the legal codex, bills, and amendments. My third production rich text editor, after Slimwiki and DirectMail.',
         tags: ['TypeScript', 'React', 'Slate.js', 'Node.js', 'MySQL', 'Zustand'],
-        link: {
-            href: 'https://github.com/althingi-net/edithing',
-            label: 'Read the source on GitHub',
-        },
-        metric: { value: '3rd', label: 'production editor' },
+        linkHref: 'https://github.com/althingi-net/edithing',
+        metricValue: '3rd',
     },
     {
         id: 'bluereceipt',
         slug: 'bluereceipt-shopify-sms-marketing-platform',
         years: '2020–2021',
-        role: 'Technical co-founder',
         title: 'BlueReceipt',
-        client: 'SMS marketing for Shopify brands',
-        problem: 'Marketing automation, collaborative editing, Shopify, and Twilio all had to agree on one data model, with every message going out through Twilio reliably.',
-        did: 'Built a fully typed data layer from database schema to a generated frontend SDK, including a custom ORM, and one automation pipeline for schema sync, API docs, SDK generation, visual tests, and deploys. Chose ECS over serverless on AWS CDK, and set the standards for a team of six.',
-        result: 'A schema change that broke something failed the build instead of reaching production, and deployments were automated end to end.',
         tags: ['TypeScript', 'Koa', 'GraphQL', 'MySQL', 'AWS CDK', 'ECS'],
-        metric: { value: 'DB → UI', label: 'one typed data layer' },
+        metricValue: 'DB → UI',
     },
     {
         id: 'socialbee',
         slug: 'social-bee-tech-department-from-zero',
         years: '2022–2023',
-        role: 'Technical lead & product architect',
         title: 'Social-Bee',
-        client: 'Immigrant support platform, Germany',
-        problem: 'An organization helping immigrants with German bureaucracy, courses, and resources had a mission and no tech team.',
-        did: 'Built the tech and product department from zero: hired developers and designers, set up the process, designed the UX with stakeholders, and architected the platform on AWS with automated pipelines.',
-        result: 'A complete technical foundation, from the core platform to CI/CD and AWS infrastructure, and an in-house team I hired and mentored.',
         tags: ['TypeScript', 'React', 'Node.js', 'TypeORM', 'PostgreSQL', 'AWS'],
-        metric: { value: '0 → 1', label: 'tech department' },
+        metricValue: '0 → 1',
     },
     {
         id: 'eko',
         slug: 'eko-real-time-messaging-performance',
         years: '2015–2017',
-        role: 'Senior full-stack developer',
         title: 'Eko',
-        client: 'Employee communication, $28M+ funded',
-        problem: 'Real-time messaging lagged under load for the iOS and Android apps of a fast-growing communication platform.',
-        did: 'Refactored the core messaging system, rewrote the high-traffic APIs behind the mobile apps, and built full-text message search on Elasticsearch.',
-        result: 'Messaging performance doubled and the user-facing lag was gone.',
         tags: ['Node.js', 'MongoDB', 'Redis', 'Elasticsearch', 'Docker', 'AWS'],
-        metric: { value: '2×', label: 'messaging performance' },
+        metricValue: '2×',
     },
 ];
+
+/** The case studies, in card order, told in `locale`. */
+export const caseStudiesFor = (locale: Locale): CaseStudy[] => caseStudyData.map((data) => {
+    const { linkLabel, metricLabel, ...story } = workCopy[locale].cases[data.id];
+
+    return {
+        id: data.id,
+        slug: data.slug,
+        years: data.years,
+        role: story.role,
+        title: data.title,
+        client: story.client,
+        problem: story.problem,
+        did: story.did,
+        result: story.result,
+        tags: data.tags,
+        ...(data.linkHref !== undefined && linkLabel !== undefined && { link: { href: data.linkHref, label: linkLabel } }),
+        metric: { value: data.metricValue, label: metricLabel },
+    };
+});
+
+/** The case studies in English, which the `/work` pages, the sitemap and the services page read. */
+export const caseStudies = caseStudiesFor('en');
 
 /** The case study whose page is `/work/<slug>`, if there is one. */
 export const findCaseStudy = (slug: string) => caseStudies.find(study => study.slug === slug);
 
-/** The path of a case study's own page. */
+/** The English path of a case study's own page. */
 export const caseStudyPath = (study: CaseStudy) => `/work/${study.slug}`;

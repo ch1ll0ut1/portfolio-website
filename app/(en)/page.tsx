@@ -43,7 +43,7 @@ const Home: FC = () => (
         <main id="main" tabIndex={-1} data-scroll-target>
             <Hero />
             <Proof locale="en" />
-            <Work />
+            <Work locale="en" />
             <Services locale="en" />
             <Process />
             <Experience />

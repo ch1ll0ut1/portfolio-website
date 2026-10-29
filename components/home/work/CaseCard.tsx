@@ -3,6 +3,9 @@
 import { type FC, useRef } from 'react';
 import Link from 'next/link';
 import { type CaseStudy, caseStudyPath } from '@/config/caseStudies';
+import { workCopy } from '@/config/home/work';
+import { localizedPath } from '@/lib/i18n/paths';
+import { useLocale } from '@/lib/i18n/LocaleContext';
 import type { CssVars } from '@/lib/cssVars';
 import { useMaskReveal, useReveal } from '@/lib/motion';
 import { CaseVisual } from './visuals/CaseVisual';
@@ -25,6 +28,8 @@ interface Props {
  * the story rows the entrance staggers.
  */
 export const CaseCard: FC<Props> = ({ study, index, covered }) => {
+    const locale = useLocale();
+    const labels = workCopy[locale].card;
     const titleRef = useRef<HTMLHeadingElement>(null);
     const storyRef = useRef<HTMLDListElement>(null);
     // `--i` staggers the sticky offsets; `--dim` is written by the stack effect.
@@ -45,15 +50,15 @@ export const CaseCard: FC<Props> = ({ study, index, covered }) => {
                     <p className={styles.client}>{study.client}</p>
                     <dl ref={storyRef} className={styles.story}>
                         <div data-reveal="">
-                            <dt>Problem</dt>
+                            <dt>{labels.problem}</dt>
                             <dd>{study.problem}</dd>
                         </div>
                         <div data-reveal="">
-                            <dt>What I did</dt>
+                            <dt>{labels.did}</dt>
                             <dd>{study.did}</dd>
                         </div>
                         <div data-reveal="">
-                            <dt>Result</dt>
+                            <dt>{labels.result}</dt>
                             <dd>{study.result}</dd>
                         </div>
                     </dl>
@@ -61,10 +66,10 @@ export const CaseCard: FC<Props> = ({ study, index, covered }) => {
                         {study.tags.map(tag => <li key={tag}>{tag}</li>)}
                     </ul>
                     <div className={styles.links}>
-                        <Link className={`${styles.link} ulink`} href={caseStudyPath(study)}>
-                            Read the case study
+                        <Link className={`${styles.link} ulink`} href={localizedPath(locale, caseStudyPath(study))}>
+                            {labels.readMore}
                             {' '}
-                            <span className="visually-hidden">{`about ${study.title}`}</span>
+                            <span className="visually-hidden">{labels.readMoreAbout(study.title)}</span>
                         </Link>
                         {study.link && (
                             <a
