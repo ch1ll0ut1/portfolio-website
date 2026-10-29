@@ -1,7 +1,12 @@
 import { type FC } from 'react';
 import Link from 'next/link';
-import { allArticles, featuredPosts } from './featuredPosts';
+import type { Locale } from '@/lib/i18n/locale';
+import { allArticlesFor, featuredPostsFor } from './featuredPosts';
 import styles from './PostList.module.css';
+
+interface Props {
+    locale: Locale;
+}
 
 /**
  * The featured posts, plus a smaller row into the blog index.
@@ -9,10 +14,12 @@ import styles from './PostList.module.css';
  * `data-post` is what the section's entrance stagger reveals, so the rows are
  * ordinary markup here and readable with no JS at all.
  */
-export const PostList: FC = () => {
+export const PostList: FC<Props> = ({ locale }) => {
+    const allArticles = allArticlesFor(locale);
+
     return (
         <ul className={styles.posts}>
-            {featuredPosts.map(post => (
+            {featuredPostsFor(locale).map(post => (
                 <li className={styles.post} key={post.slug} data-post>
                     <Link className={styles.link} href={post.href}>
                         <span className={styles.kind}>{post.kind}</span>

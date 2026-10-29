@@ -2,7 +2,8 @@
 
 import { type FC, useRef, useState } from 'react';
 import { useReveal } from '@/lib/motion';
-import { type BuildingNowProject, buildingNow } from '@/config/buildingNow';
+import { type BuildingNowProject, buildingNowFor } from '@/config/buildingNow';
+import { useLocale } from '@/lib/i18n/LocaleContext';
 import { PipelineCanvas } from './PipelineCanvas';
 import styles from './BuildingNow.module.css';
 
@@ -18,7 +19,9 @@ interface Props {
  * with it rather than animating forever. The call to action is optional: with
  * no link the pipeline is the card's last row and closes it off on its own.
  */
-export const BuildingNow: FC<Props> = ({ project = buildingNow }) => {
+export const BuildingNow: FC<Props> = ({ project: given }) => {
+    const locale = useLocale();
+    const project = given ?? buildingNowFor(locale);
     const cardRef = useRef<HTMLElement>(null);
     const [live, setLive] = useState(false);
     const { linkLabel, linkHref } = project;

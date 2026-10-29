@@ -1,6 +1,8 @@
 'use client';
 
 import { type CSSProperties, type FC, useEffect, useEffectEvent, useRef } from 'react';
+import { writingCopy } from '@/config/home/writing';
+import { useLocale } from '@/lib/i18n/LocaleContext';
 import { hasFinePointer, prefersReducedMotion, useStageEvent } from '@/lib/motion';
 import { type PipelineFlow, createPipelineFlow } from './pipelineFlow';
 import { type PipelineClasses, type PipelineNodeSpec, pipelineNodes } from './pipelineSpec';
@@ -42,6 +44,7 @@ const classes: PipelineClasses = {
  * hidden from assistive technology.
  */
 export const PipelineCanvas: FC<Props> = ({ onLiveChange }) => {
+    const { nodes, status } = writingCopy[useLocale()].pipeline;
     const canvasRef = useRef<HTMLDivElement>(null);
     const svgRef = useRef<SVGSVGElement>(null);
     const stateRef = useRef<HTMLSpanElement>(null);
@@ -64,6 +67,7 @@ export const PipelineCanvas: FC<Props> = ({ onLiveChange }) => {
             svg,
             state,
             classes,
+            status,
             reduced: prefersReducedMotion(),
             fine: hasFinePointer(),
             onLiveChange: liveChanged,
@@ -75,7 +79,7 @@ export const PipelineCanvas: FC<Props> = ({ onLiveChange }) => {
             flowRef.current = null;
             flow.destroy();
         };
-    }, []);
+    }, [status]);
 
     useStageEvent('layout', () => {
         flowRef.current?.layout();
@@ -99,12 +103,12 @@ export const PipelineCanvas: FC<Props> = ({ onLiveChange }) => {
                             </svg>
                         )
                         : null}
-                    <span>{node.label}</span>
+                    <span>{nodes[node.id]}</span>
                 </span>
             ))}
 
             <span className={styles.status}>
-                <span className={styles.state} ref={stateRef}>ready</span>
+                <span className={styles.state} ref={stateRef}>{status.ready}</span>
             </span>
         </div>
     );
