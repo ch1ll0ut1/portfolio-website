@@ -1,4 +1,5 @@
 import type { Locale } from '@/lib/i18n/locale';
+import { privacyDe } from './de';
 import { privacyEn } from './en';
 import type { PrivacyCopy } from './types';
 
@@ -14,5 +15,5 @@ export const POLICY_LAST_UPDATED = '2026-10-19';
 /** The privacy policy in each language: `/privacy` and `/de/datenschutz`. */
 export const privacyCopy: Record<Locale, PrivacyCopy> = {
     en: privacyEn,
-    de: privacyEn, // i18n: German copy pending
+    de: privacyDe,
 };
