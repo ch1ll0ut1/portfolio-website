@@ -8,6 +8,10 @@ import { publishedArticles } from './publishedArticles.mjs';
 
 /** Exercises the not-found branch of /blog/[slug]. */
 const MISSING_ARTICLE = '/blog/this-article-does-not-exist';
+/** The same branch of its German twin, /de/blog/[slug], which answers with the German panel. */
+const MISSING_GERMAN_ARTICLE = '/de/blog/this-article-does-not-exist';
+/** The routes that have to answer 404. */
+const MISSING = [MISSING_ARTICLE, MISSING_GERMAN_ARTICLE];
 /**
  * It is swept *because* it 404s. The not-found page carries the same nav,
  * chrome and footer as any other route, so it has to read as well as they do —
@@ -22,13 +26,13 @@ const ARTICLE_SAMPLE = 2;
 const DEV_NOT_FOUND_MARKER = '<meta name="next-error" content="not-found"/>';
 
 /** The status a route has to answer with. */
-export const expectedStatus = route => (route === MISSING_ARTICLE ? MISSING_ARTICLE_STATUS : 200);
+export const expectedStatus = route => (MISSING.includes(route) ? MISSING_ARTICLE_STATUS : 200);
 
 /**
  * Whether `response` answers `route` with the status it should.
  *
- * The missing article is a 404 in production, where Next prerenders it before
- * sending anything. The dev server renders it on request and streams it, so
+ * A missing article, in either language, is a 404 in production, where Next
+ * prerenders it before sending anything. The dev server renders it on request and streams it, so
  * its 200 is already sent by the time the page's `notFound()` reaches the
  * post's not-found boundary (see app/(en)/blog/[slug]/layout.tsx). There the real
  * 404 is told from a soft one by the marker Next's dev server adds for a
@@ -39,7 +43,7 @@ export const answersAsExpected = async (route, response) => {
         return true;
     }
 
-    return route === MISSING_ARTICLE
+    return MISSING.includes(route)
       && response.status() === 200
       && (await response.text()).includes(DEV_NOT_FOUND_MARKER);
 };
@@ -70,11 +74,26 @@ const sampleCaseStudies = async (base) => {
     return cases.slice(0, 2);
 };
 
-/** Every route type by default; `--routes` narrows it for a quick check. */
+/**
+ * The German twin of an English path, as `localizedPath` in lib/i18n/paths.ts
+ * maps it: the slugs are shared, only the first segment may differ.
+ */
+const GERMAN_SEGMENTS = { work: 'referenzen', contact: 'kontakt', privacy: 'datenschutz', services: 'leistungen' };
+
+export const germanPath = path => `/de${path.replace(/^\/([^/]+)/, (_match, segment) => `/${GERMAN_SEGMENTS[segment] ?? segment}`)}`;
+
+/** Every route type by default, in both languages; `--routes` narrows it for a quick check. */
 export const resolveRoutes = async (base) => {
     const override = argOf('routes', '');
 
-    return override
-        ? override.split(',').filter(Boolean)
-        : ['/', '/blog', ...await sampleArticles(base), MISSING_ARTICLE, ...await sampleCaseStudies(base), '/privacy', '/contact', '/services', '/de/leistungen'];
+    if (override) {
+        return override.split(',').filter(Boolean);
+    }
+
+    const articles = await sampleArticles(base);
+    const cases = await sampleCaseStudies(base);
+    // The German homepage, `/de`, is not built yet.
+    const twins = ['/blog', ...articles, ...cases, '/privacy', '/contact', '/services'];
+
+    return ['/', ...twins, MISSING_ARTICLE, ...twins.map(germanPath), MISSING_GERMAN_ARTICLE];
 };

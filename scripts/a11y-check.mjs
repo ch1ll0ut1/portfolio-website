@@ -14,6 +14,7 @@ import { AxeBuilder } from '@axe-core/playwright';
 import { chromium } from 'playwright';
 import { caseStudyPages } from './visual-check/caseStudyPages.mjs';
 import { publishedArticles } from './visual-check/publishedArticles.mjs';
+import { germanPath } from './visual-check/routes.mjs';
 
 const argOf = (name, fallback) => {
     const index = process.argv.indexOf(`--${name}`);
@@ -39,7 +40,10 @@ const routes = async () => {
         return listed.split(',');
     }
 
-    return ['/', '/blog', ...await newestArticle(), ...await firstCaseStudy(), '/privacy', '/contact', '/services', '/de/leistungen'];
+    // The German homepage, `/de`, is not built yet.
+    const twins = ['/blog', ...await newestArticle(), ...await firstCaseStudy(), '/privacy', '/contact', '/services'];
+
+    return ['/', ...twins, ...twins.map(germanPath), '/de/blog/this-article-does-not-exist'];
 };
 
 const scan = async (browser, route, theme) => {
