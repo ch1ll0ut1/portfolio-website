@@ -1,7 +1,8 @@
 'use client';
 
-import { type FC } from 'react';
-import { careerLog } from '@/config/career';
+import { type FC, useMemo } from 'react';
+import { careerFor } from '@/config/career';
+import { useLocale } from '@/lib/i18n/LocaleContext';
 import { CareerGraph } from './CareerGraph';
 import { CommitRow } from './CommitRow';
 import { useCareerLog } from './useCareerLog';
@@ -12,6 +13,8 @@ import styles from './Experience.module.css';
  * that draws the same two lanes and reveals them as the page scrolls.
  */
 export const CareerLog: FC = () => {
+    const locale = useLocale();
+    const careerLog = useMemo(() => careerFor(locale), [locale]);
     const {
         logRef,
         inkRef,

@@ -1,5 +1,7 @@
 import { type FC } from 'react';
+import { experienceCopy } from '@/config/home/experience';
 import { yearsShipping } from '@/config/site';
+import type { Locale } from '@/lib/i18n/locale';
 import { SectionHead } from '../SectionHead';
 import { CareerLog } from './CareerLog';
 
@@ -13,13 +15,17 @@ import { CareerLog } from './CareerLog';
  * and in a screen reader. The graph beside it is decorative: it draws the same
  * two lanes the list already describes, and reveals them as the page scrolls.
  */
-export const Experience: FC = () => (
+interface Props {
+    locale: Locale;
+}
+
+export const Experience: FC<Props> = ({ locale }) => (
     <section className="section" id="experience" data-section="experience" aria-labelledby="experience-title">
         <div className="wrap">
             <SectionHead
                 id="experience-title"
-                title={`${yearsShipping()} years, one log`}
-                lede="Every role, newest first, from Liechtenstein and Austria to Bangkok and Singapore. Independent work since 2020 forks off main onto its own branch."
+                title={experienceCopy[locale].heading.title(yearsShipping())}
+                lede={experienceCopy[locale].heading.lede}
             />
 
             <CareerLog />
