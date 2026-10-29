@@ -70,4 +70,18 @@ describe('ErrorPanel Component', () => {
         // Assert
         expect(screen.getByText('Error 4021337')).toBeInTheDocument();
     });
+
+    it('should speak German on a German page, with the way home leading to the German home page', () => {
+        // Arrange
+        const error = Object.assign(new Error('boom'), { digest: '4021337' });
+
+        // Act
+        render(<ErrorPanel error={error} onRetry={vi.fn()} locale="de" />);
+
+        // Assert
+        expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Etwas ist schiefgelaufen');
+        expect(screen.getByText('Fehler 4021337')).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: 'Erneut versuchen' })).toBeInTheDocument();
+        expect(screen.getByRole('link', { name: 'Zur Startseite' })).toHaveAttribute('href', '/de');
+    });
 });
