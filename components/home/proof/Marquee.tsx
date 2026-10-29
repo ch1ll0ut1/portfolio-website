@@ -1,6 +1,8 @@
 'use client';
 
 import { type FC, useEffect, useRef, useState } from 'react';
+import { proofCopy } from '@/config/home/proof';
+import { useLocale } from '@/lib/i18n/LocaleContext';
 import { prefersReducedMotion, useReducedMotion } from '@/lib/motion';
 import { type MarqueeEngine, startMarquee } from './marqueeEngine';
 import styles from './Proof.module.css';
@@ -27,6 +29,7 @@ export const Marquee: FC<Props> = ({ names }) => {
     const trackRef = useRef<HTMLUListElement>(null);
     const engineRef = useRef<MarqueeEngine | null>(null);
     const reduced = useReducedMotion();
+    const labels = proofCopy[useLocale()].marquee;
     const [paused, setPaused] = useState(false);
 
     useEffect(() => {
@@ -73,13 +76,13 @@ export const Marquee: FC<Props> = ({ names }) => {
                         className={styles.marqueeToggle}
                         data-paused={paused}
                         type="button"
-                        aria-label={paused ? 'Play the moving list of organizations' : 'Pause the moving list of organizations'}
+                        aria-label={paused ? labels.playLabel : labels.pauseLabel}
                         onClick={() => {
                             setPaused(previous => !previous);
                         }}
                     >
                         <span className={styles.marqueeIcon} aria-hidden="true" />
-                        {paused ? 'Play' : 'Pause'}
+                        {paused ? labels.play : labels.pause}
                     </button>
                 )}
         </div>

@@ -4,8 +4,12 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { proofClients, proofStats } from './proof';
+import { proofEn } from './home/proof/en';
+import { proofStatsFor } from './proof';
 import { siteConfig } from './site';
+
+const proofClients = proofEn.clients;
+const proofStats = proofStatsFor('en');
 
 describe('Proof Configuration', () => {
     describe('Client Data Integrity', () => {
