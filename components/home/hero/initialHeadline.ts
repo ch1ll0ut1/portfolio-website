@@ -5,11 +5,16 @@
  * "the original headline" has one definition rather than two that can drift.
  */
 
-import { heroHeadline } from '@/config/hero';
+import { heroCopy } from '@/config/home/hero';
+import type { Locale } from '@/lib/i18n/locale';
 import { type Leaf, mergeLeaves } from './editorModel';
 
-export const INITIAL_HEADLINE: Leaf[] = mergeLeaves([
-    { text: heroHeadline.before },
-    { text: heroHeadline.highlight, highlight: true },
-    { text: heroHeadline.after },
-]);
+export const initialHeadline = (locale: Locale): Leaf[] => {
+    const { before, highlight, after } = heroCopy[locale].headline;
+
+    return mergeLeaves([
+        { text: before },
+        { text: highlight, highlight: true },
+        { text: after },
+    ]);
+};

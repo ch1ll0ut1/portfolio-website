@@ -9,6 +9,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { readSelection, selectOffsets, serializeEditor } from './editorDom';
 import { MAX_HEADLINE_LENGTH } from './editorModel';
+import { heroEn } from '@/config/home/hero/en';
 import {
     insertPlainText,
     isAtCap,
@@ -168,7 +169,7 @@ describe('headlineCommands', () => {
         it('should be empty while the headline is not the active element', () => {
             selectOffsets(title, 4, 9);
 
-            expect(selectionReadout(title)).toBe('');
+            expect(selectionReadout(title, heroEn.editor)).toBe('');
         });
     });
 });

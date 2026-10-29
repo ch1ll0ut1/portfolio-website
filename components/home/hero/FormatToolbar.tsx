@@ -11,6 +11,8 @@ import {
     useRef,
     useState,
 } from 'react';
+import { heroCopy } from '@/config/home/hero';
+import { useLocale } from '@/lib/i18n/LocaleContext';
 import { EASE, clamp, prefersReducedMotion } from '@/lib/motion';
 import { readSelection, serializeEditor } from './editorDom';
 import { type MarkName, type MarkSet, NO_MARKS, isMarkFullyApplied } from './editorModel';
@@ -28,18 +30,18 @@ export interface Props {
 }
 
 interface ToolbarButton {
+    /** Also the key of its label in the hero's dictionary. */
     command: FormatCommand;
-    label: string;
     content: ReactNode;
     /** Reset is an action, not a state. */
     toggle: boolean;
 }
 
 const BUTTONS: ToolbarButton[] = [
-    { command: 'bold', label: 'Bold', content: <b>B</b>, toggle: true },
-    { command: 'italic', label: 'Italic', content: <i>I</i>, toggle: true },
-    { command: 'highlight', label: 'Highlight', content: <span className={styles.toolbarHl}>H</span>, toggle: true },
-    { command: 'reset', label: 'Restore original headline', content: '↺', toggle: false },
+    { command: 'bold', content: <b>B</b>, toggle: true },
+    { command: 'italic', content: <i>I</i>, toggle: true },
+    { command: 'highlight', content: <span className={styles.toolbarHl}>H</span>, toggle: true },
+    { command: 'reset', content: '↺', toggle: false },
 ];
 
 /** Gap kept between the toolbar and the hero's edges. */
@@ -93,6 +95,7 @@ const nextIndex = (key: string, current: number, count: number) => {
  * intact.
  */
 export const FormatToolbar: FC<Props> = ({ editorRef, hostRef, toolbarRef, onCommand }) => {
+    const labels = heroCopy[useLocale()].editor.toolbar;
     const wasVisible = useRef(false);
     const buttonRefs = useRef<(HTMLButtonElement | null)[]>([]);
     const [placement, setPlacement] = useState<{ x: number; y: number } | null>(null);
@@ -200,7 +203,7 @@ export const FormatToolbar: FC<Props> = ({ editorRef, hostRef, toolbarRef, onCom
             ref={toolbarRef}
             className={styles.toolbar}
             role="toolbar"
-            aria-label="Format selection"
+            aria-label={labels.label}
             hidden={placement === null}
             onPointerDown={(event) => {
                 // Keep the selection the toolbar is about to act on.
@@ -215,7 +218,7 @@ export const FormatToolbar: FC<Props> = ({ editorRef, hostRef, toolbarRef, onCom
                     }}
                     type="button"
                     tabIndex={index === focusIndex ? 0 : -1}
-                    aria-label={button.label}
+                    aria-label={labels[button.command]}
                     aria-pressed={button.toggle ? isMarkOn(marks, button.command) : undefined}
                     className={isMarkOn(marks, button.command) ? styles.isOn : undefined}
                     onKeyDown={(event) => {

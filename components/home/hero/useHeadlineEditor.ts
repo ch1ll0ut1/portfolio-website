@@ -1,13 +1,14 @@
 'use client';
 
 import { type RefObject, useCallback } from 'react';
+import { useLocale } from '@/lib/i18n/LocaleContext';
 import { prefersReducedMotion } from '@/lib/motion';
 import type { FormatCommand } from './FormatToolbar';
 import type { PanelState } from './DocumentModelPanel';
 import { insertPlainText, isAtCap, resetHeadline, toggleSelectionMark } from './headlineCommands';
 import { normalizeEditor, selectOffsets } from './editorDom';
 import type { HeadingDoc } from './editorModel';
-import { INITIAL_HEADLINE } from './initialHeadline';
+import { initialHeadline } from './initialHeadline';
 import { useHeadlineModel } from './useHeadlineModel';
 import styles from './Hero.module.css';
 
@@ -58,6 +59,7 @@ export interface UseHeadlineEditorOptions {
  * render exactly once and then be left alone.
  */
 export const useHeadlineEditor = ({ titleRef, ripple, exitRef, toolbarRef }: UseHeadlineEditorOptions): HeadlineEditorApi => {
+    const locale = useLocale();
     const model = useHeadlineModel(titleRef);
     const { sync, clearPosition } = model;
 
@@ -95,7 +97,7 @@ export const useHeadlineEditor = ({ titleRef, ripple, exitRef, toolbarRef }: Use
         }
 
         if (command === 'reset') {
-            sweep(resetHeadline(title, INITIAL_HEADLINE));
+            sweep(resetHeadline(title, initialHeadline(locale)));
             sync();
 
             return;
@@ -109,7 +111,7 @@ export const useHeadlineEditor = ({ titleRef, ripple, exitRef, toolbarRef }: Use
 
         sync();
         sweep(result.sweep);
-    }, [sweep, sync, titleRef]);
+    }, [locale, sweep, sync, titleRef]);
 
     const onInput = useCallback(() => {
         const title = titleRef.current;

@@ -2,7 +2,9 @@
 
 import { type FC, useCallback, useEffect, useRef } from 'react';
 import { clamp, useMagnet, useReducedMotion, useScrub, useStageEvent } from '@/lib/motion';
-import { heroAvailability, heroCtas, heroLede, heroLocation } from '@/config/hero';
+import { heroCtas, heroLocation } from '@/config/hero';
+import { heroCopy } from '@/config/home/hero';
+import { useLocale } from '@/lib/i18n/LocaleContext';
 import { DocumentModelPanel } from './DocumentModelPanel';
 import { FormatToolbar } from './FormatToolbar';
 import { HeadlineEditor } from './HeadlineEditor';
@@ -42,6 +44,7 @@ export const Hero: FC = () => {
     /** The section's height, measured on layout so the scrub never reads it. */
     const heightRef = useRef(0);
     const reduced = useReducedMotion();
+    const copy = heroCopy[useLocale()];
 
     const ripple = useCallback((clientX: number, clientY: number) => {
         fieldRef.current?.ripple(clientX, clientY);
@@ -137,7 +140,7 @@ export const Hero: FC = () => {
                 <div className={styles.status}>
                     <span className={styles.chip}>
                         <span className={styles.chipDot} aria-hidden="true" />
-                        {heroAvailability}
+                        {copy.availability}
                     </span>
                     <span className={styles.chip}>
                         {heroLocation.city}
@@ -166,7 +169,7 @@ export const Hero: FC = () => {
                 </div>
 
                 <div className={styles.copy}>
-                    <p className={styles.lede}>{heroLede}</p>
+                    <p className={styles.lede}>{copy.lede}</p>
                     <div className={styles.ctas}>
                         {heroCtas.map((cta, index) => (
                             <a
@@ -177,7 +180,7 @@ export const Hero: FC = () => {
                                 target={cta.external ? '_blank' : undefined}
                                 rel={cta.external ? 'noopener noreferrer' : undefined}
                             >
-                                <span className="btn__label">{cta.label}</span>
+                                <span className="btn__label">{copy.ctas[cta.id]}</span>
                             </a>
                         ))}
                     </div>

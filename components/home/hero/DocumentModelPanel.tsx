@@ -2,12 +2,15 @@
 
 import { type FC, Fragment, type RefObject } from 'react';
 import { useApplePlatform } from '@/components/chrome/useApplePlatform';
+import { heroCopy } from '@/config/home/hero';
+import type { HeroPanelState } from '@/config/home/hero/types';
+import { useLocale } from '@/lib/i18n/LocaleContext';
 import type { HeadingDoc } from './editorModel';
 import { type TokenKind, headlineJsonLines } from './headlineJson';
 import styles from './Hero.module.css';
 
 /** `normalizing` and `selecting` both read as "work in progress" in the bar. */
-export type PanelState = 'synced' | 'normalizing' | 'selecting';
+export type PanelState = HeroPanelState;
 
 export interface Props {
     doc: HeadingDoc;
@@ -43,17 +46,18 @@ const TOKEN_CLASS: Record<TokenKind, string> = {
  * editor would and only the leaves that actually changed flash.
  */
 export const DocumentModelPanel: FC<Props> = ({ doc, baseline, position, state, hintId, editButtonRef, onEdit }) => {
+    const { editor } = heroCopy[useLocale()];
     const apple = useApplePlatform();
     const mod = apple ? '⌘' : 'Ctrl+';
     const highlight = apple ? '⌘⇧H' : 'Ctrl+Shift+H';
 
     return (
-        <aside className={styles.tree} aria-label="Live document model of the headline">
+        <aside className={styles.tree} aria-label={editor.panelLabel}>
             <div className={styles.treeBar}>
                 <span className={styles.treeFile}>headline.json</span>
                 <span className={styles.treePos} aria-hidden="true">{position}</span>
                 <span className={`${styles.treeState} ${state === 'synced' ? '' : styles.isDirty}`}>
-                    {state}
+                    {editor.states[state]}
                 </span>
             </div>
             <pre className={styles.treeCode} aria-live="off">
@@ -71,21 +75,21 @@ export const DocumentModelPanel: FC<Props> = ({ doc, baseline, position, state, 
             </pre>
             <div className={styles.treeHint}>
                 <p id={hintId}>
-                    The headline is a working editor. Select a word, press
+                    {editor.hint.intro}
                     {' '}
                     <kbd>{`${mod}B`}</kbd>
-                    {', '}
+                    {editor.hint.comma}
                     <kbd>{`${mod}I`}</kbd>
-                    {' or '}
+                    {editor.hint.or}
                     <kbd>{highlight}</kbd>
-                    , or type over it.
+                    {editor.hint.outro}
                     <span className="visually-hidden">
                         {' '}
-                        With text selected, Alt+F10 moves to the format toolbar. Enter or Escape finishes editing.
+                        {editor.hintKeyboard}
                     </span>
                 </p>
                 <button className={styles.editButton} ref={editButtonRef} type="button" onClick={onEdit}>
-                    Edit headline
+                    {editor.editButton}
                 </button>
             </div>
         </aside>

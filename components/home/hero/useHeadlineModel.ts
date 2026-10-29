@@ -1,11 +1,13 @@
 'use client';
 
 import { type RefObject, useCallback, useEffect, useRef, useState } from 'react';
+import { heroCopy } from '@/config/home/hero';
+import { useLocale } from '@/lib/i18n/LocaleContext';
 import type { PanelState } from './DocumentModelPanel';
 import { serializeEditor } from './editorDom';
 import { type HeadingDoc, type Leaf, createDoc, leafKey } from './editorModel';
 import { selectionReadout } from './headlineCommands';
-import { INITIAL_HEADLINE } from './initialHeadline';
+import { initialHeadline } from './initialHeadline';
 
 /** How long the panel admits to being out of date after an edit. */
 const NORMALIZE_MS = 420;
@@ -40,7 +42,9 @@ export interface HeadlineModel {
  * (DOM → model → panel) structural rather than merely documented.
  */
 export const useHeadlineModel = (titleRef: RefObject<HTMLElement | null>): HeadlineModel => {
-    const [model, setModel] = useState<PanelModel>(() => ({ doc: createDoc(INITIAL_HEADLINE), baseline: [] }));
+    const locale = useLocale();
+    const { editor } = heroCopy[locale];
+    const [model, setModel] = useState<PanelModel>(() => ({ doc: createDoc(initialHeadline(locale)), baseline: [] }));
     const [panelState, setPanelState] = useState<PanelState>('synced');
     const [position, setPosition] = useState('');
     const dirtyTimer = useRef(0);
@@ -89,8 +93,8 @@ export const useHeadlineModel = (titleRef: RefObject<HTMLElement | null>): Headl
 
     const onSelecting = useCallback((start: number, end: number) => {
         setPanelState('selecting');
-        setPosition(`sel ${start}–${end}`);
-    }, []);
+        setPosition(editor.selection(start, end));
+    }, [editor]);
 
     const onRelease = useCallback(() => {
         const title = titleRef.current;
@@ -137,7 +141,7 @@ export const useHeadlineModel = (titleRef: RefObject<HTMLElement | null>): Headl
 
                 // While the intro is running, the readout belongs to the intro.
                 if (title && settled.current) {
-                    setPosition(selectionReadout(title));
+                    setPosition(selectionReadout(title, editor));
                 }
             });
         };
@@ -147,7 +151,7 @@ export const useHeadlineModel = (titleRef: RefObject<HTMLElement | null>): Headl
         return () => {
             document.removeEventListener('selectionchange', schedule);
         };
-    }, [titleRef]);
+    }, [editor, titleRef]);
 
     useEffect(() => () => {
         window.clearTimeout(dirtyTimer.current);
