@@ -1,16 +1,13 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { notFoundMetadata } from '@/components/errors/notFoundMetadata';
 
 /**
  * Matches ../not-found.tsx, robots included. Next discards a page's metadata
  * once `notFound()` is thrown, but a 404 caught in ./layout.tsx's Suspense
  * boundary keeps it, as the blog article's does.
  */
-export const metadata: Metadata = {
-    title: 'Seite nicht gefunden',
-    description: 'Die gesuchte Seite gibt es nicht.',
-    robots: null,
-};
+export const metadata: Metadata = notFoundMetadata('de', 'page');
 
 /**
  * No path is built ahead. Declaring the (empty) list still matters: it makes

@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import type { Metadata } from 'next';
-import { NotFoundPanel } from '@/components/blog/NotFoundPanel';
-import { ReadingShell } from '@/components/blog/ReadingShell';
+import { NotFoundPage } from '@/components/errors/NotFoundPage';
+import { notFoundMetadata } from '@/components/errors/notFoundMetadata';
 
 /**
  * Shown when `/blog/[slug]` matches no post.
@@ -9,32 +9,9 @@ import { ReadingShell } from '@/components/blog/ReadingShell';
  * The page used to render this panel inline and answer 200, which let a
  * mistyped or stale link be indexed as real content. Living in the not-found
  * boundary instead means Next serves the identical page with a real 404.
- *
- * The metadata lives here rather than in the page's `generateMetadata`, which
- * Next discards once `notFound()` is thrown — without this the 404 shipped no
- * title at all, leaving the tab showing a bare URL.
  */
-export const metadata: Metadata = {
-    title: 'Post not found',
-    description: 'That article does not exist, or its link has changed.',
-    // Null, not `{ index: false }`: Next already answers every 404 with its
-    // own `<meta name="robots" content="noindex">`, so a value here would only
-    // add a second tag. Null still clears the layout's "index, follow".
-    robots: null,
-};
+export const metadata: Metadata = notFoundMetadata('en', 'post');
 
-const PostNotFound: FC = () => {
-    return (
-        <ReadingShell>
-            <NotFoundPanel
-                kicker="404"
-                title="Post not found"
-                body="That article does not exist, or its link has changed since it was shared."
-                actionHref="/blog"
-                actionLabel="All articles"
-            />
-        </ReadingShell>
-    );
-};
+const PostNotFound: FC = () => <NotFoundPage locale="en" kind="post" />;
 
 export default PostNotFound;

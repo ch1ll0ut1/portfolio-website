@@ -1,27 +1,10 @@
 'use client';
 
 import { FC, useEffect } from 'react';
+import { errorsCopy } from '@/config/errors';
 import type { Locale } from '@/lib/i18n/locale';
 import { localizedPath } from '@/lib/i18n/paths';
 import { NotFoundPanel } from './NotFoundPanel';
-
-/** The panel's words in each language. German addresses the reader as "Sie". */
-const COPY: Record<Locale, { kicker: string; title: string; body: string; home: string; retry: string }> = {
-    en: {
-        kicker: 'Error',
-        title: 'Something went wrong',
-        body: 'This page failed to load. Trying again usually fixes it; if not, the home page is a safe place to start over.',
-        home: 'Back to home',
-        retry: 'Try again',
-    },
-    de: {
-        kicker: 'Fehler',
-        title: 'Etwas ist schiefgelaufen',
-        body: 'Diese Seite konnte nicht geladen werden. Ein neuer Versuch hilft meistens; wenn nicht, können Sie auf der Startseite neu beginnen.',
-        home: 'Zur Startseite',
-        retry: 'Erneut versuchen',
-    },
-};
 
 interface Props {
     error: Error & { digest?: string };
@@ -44,7 +27,7 @@ export const ErrorPanel: FC<Props> = ({ error, onRetry, locale = 'en' }) => {
         console.error(error);
     }, [error]);
 
-    const copy = COPY[locale];
+    const copy = errorsCopy[locale].error;
 
     return (
         <NotFoundPanel
