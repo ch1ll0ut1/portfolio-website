@@ -21,6 +21,7 @@ export const chromeDe: ChromeCopy = {
         brandHome: 'Stefan Knoch, Startseite',
     },
     themeToggle: 'Farbschema wechseln',
+    languageOffer: { code: 'DE', invite: 'Auf Deutsch lesen' },
     palette: {
         label: 'Befehlsmenü',
         placeholder: 'Abschnitt oder Befehl suchen',
@@ -60,11 +61,12 @@ export const chromeDe: ChromeCopy = {
         close: 'Tastenkürzel schließen',
         palette: 'Befehlsmenü',
         theme: 'Farbschema wechseln',
+        language: 'Sprache wechseln',
         goTo: section => `Zum Abschnitt ${section}`,
         top: 'Nach oben',
         help: 'Diese Liste',
         setting: 'Einzeltasten-Kürzel',
-        settingHint: 'T, ? und die G-Tastenfolgen. Das Befehlsmenü funktioniert immer.',
+        settingHint: 'T, L, ? und die G-Tastenfolgen. Das Befehlsmenü funktioniert immer.',
     },
     chordHint: keys => `dann ${keys}`,
     toasts: {
