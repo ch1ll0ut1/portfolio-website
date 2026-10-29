@@ -1,4 +1,4 @@
-/* The ⌘K and theme buttons that sit in the nav's tools row.
+/* The ⌘K, language and theme controls that sit in the nav's tools row.
    Both carry only the attributes GlobalChrome listens for, so the nav owns
    their appearance without importing anything from the chrome layer. */
 .button {
@@ -19,6 +19,15 @@
 
 .theme {
     padding: 0;
+}
+
+/* A two-letter code, set like the keycaps rather than the label. */
+.language {
+    padding: 0;
+    font-family: var(--font-mono);
+    font-size: .75rem;
+    font-weight: 500;
+    letter-spacing: .04em;
 }
 
 .button:hover,

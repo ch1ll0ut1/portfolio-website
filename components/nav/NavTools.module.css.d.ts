@@ -2,6 +2,7 @@
 declare const styles: {
     readonly button: string;
     readonly label: string;
+    readonly language: string;
     readonly shortcut: string;
     readonly theme: string;
 };
