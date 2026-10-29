@@ -28,11 +28,16 @@ describe('sortByDate', () => {
 
 describe('formatDate', () => {
     it('should write the date in US English whatever the runtime locale', () => {
-        expect(formatDate('2025-08-14')).toBe('August 14, 2025');
+        expect(formatDate('2025-08-14', 'en')).toBe('August 14, 2025');
+    });
+
+    it('should write the date the German way on a German page', () => {
+        expect(formatDate('2025-08-14', 'de')).toBe('14. August 2025');
     });
 
     it('should keep the calendar day of a bare date at the edges of the day', () => {
-        expect(formatDate('2026-01-01')).toBe('January 1, 2026');
-        expect(formatDate('2025-12-31')).toBe('December 31, 2025');
+        expect(formatDate('2026-01-01', 'en')).toBe('January 1, 2026');
+        expect(formatDate('2025-12-31', 'en')).toBe('December 31, 2025');
+        expect(formatDate('2025-12-31', 'de')).toBe('31. Dezember 2025');
     });
 });

@@ -50,7 +50,7 @@ describe('BlogIndex Component', () => {
 
     it('should render a row linking to each post', () => {
         // Arrange
-        render(<BlogIndex posts={mockPosts} />);
+        render(<BlogIndex locale="en" posts={mockPosts} />);
 
         // Assert
         mockPosts.forEach((post) => {
@@ -61,7 +61,7 @@ describe('BlogIndex Component', () => {
 
     it('should give each post title an h2 inside its link', () => {
         // Arrange
-        render(<BlogIndex posts={mockPosts} />);
+        render(<BlogIndex locale="en" posts={mockPosts} />);
 
         // Act
         const titles = screen.getAllByRole('heading', { level: 2 });
@@ -75,7 +75,7 @@ describe('BlogIndex Component', () => {
 
     it('should render every published post the config provides', () => {
         // Arrange
-        render(<BlogIndex posts={blogPosts.map(post => ({ ...post, readTime: '1 min read' }))} />);
+        render(<BlogIndex locale="en" posts={blogPosts.map(post => ({ ...post, readTime: '1 min read' }))} />);
 
         // Assert
         blogPosts.forEach((post) => {
@@ -85,17 +85,17 @@ describe('BlogIndex Component', () => {
 
     it('should render each post excerpt, date and read time', () => {
         // Arrange
-        render(<BlogIndex posts={mockPosts} />);
+        render(<BlogIndex locale="en" posts={mockPosts} />);
 
         // Assert
         expect(screen.getByText('The first excerpt.')).toBeInTheDocument();
         expect(screen.getByText('8 min read')).toBeInTheDocument();
-        expect(screen.getByText(formatDate('2025-08-16'))).toBeInTheDocument();
+        expect(screen.getByText(formatDate('2025-08-16', 'en'))).toBeInTheDocument();
     });
 
     it('should expose the page heading as the only h1', () => {
         // Arrange
-        render(<BlogIndex posts={mockPosts} />);
+        render(<BlogIndex locale="en" posts={mockPosts} />);
 
         // Assert
         expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
@@ -103,7 +103,7 @@ describe('BlogIndex Component', () => {
 
     it('should list the tags of each post', () => {
         // Arrange
-        render(<BlogIndex posts={mockPosts} />);
+        render(<BlogIndex locale="en" posts={mockPosts} />);
 
         // Assert
         expect(screen.getByText('Hiring')).toBeInTheDocument();
@@ -113,7 +113,7 @@ describe('BlogIndex Component', () => {
 
     it('should mark a featured post', () => {
         // Arrange
-        render(<BlogIndex posts={mockPosts} />);
+        render(<BlogIndex locale="en" posts={mockPosts} />);
 
         // Assert
         expect(screen.getAllByText('Featured')).toHaveLength(1);

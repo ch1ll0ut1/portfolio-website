@@ -5,7 +5,8 @@
 
 import { describe, it, expect } from 'vitest';
 import { itemAt } from '@/test/itemAt';
-import { blogPosts } from './blog';
+import { blogCopy, blogPosts, blogPostsFor, tagLabel } from '@/config/blog';
+import { rawBlogPosts } from './posts';
 
 describe('Blog Configuration', () => {
     describe('Blog Posts Data Integrity', () => {
@@ -82,6 +83,47 @@ describe('Blog Configuration', () => {
                     expect(tag.length).toBeGreaterThan(0);
                 });
             });
+        });
+    });
+
+    describe('blogPostsFor', () => {
+        it('should merge each language\'s title and excerpt onto the shared facts', () => {
+            // Act
+            const english = blogPostsFor('en');
+
+            // Assert
+            expect(english).toBe(blogPosts);
+            // Outside production every post is listed, drafts included.
+            expect(english).toHaveLength(rawBlogPosts.length);
+            rawBlogPosts.forEach((facts) => {
+                const post = english.find(entry => entry.slug === facts.slug);
+
+                expect(post).toEqual({ ...facts, ...blogCopy.en.posts[facts.slug] });
+            });
+        });
+
+        it('should list the same posts in the same order in every language', () => {
+            // Act
+            const german = blogPostsFor('de');
+
+            // Assert
+            expect(german.map(post => post.slug)).toEqual(blogPosts.map(post => post.slug));
+            expect(german.map(post => post.date)).toEqual(blogPosts.map(post => post.date));
+            expect(german.map(post => post.tags)).toEqual(blogPosts.map(post => post.tags));
+        });
+
+        it('should keep the key order the posts were always serialized in', () => {
+            expect(Object.keys(itemAt(blogPosts, 0)).slice(0, 4)).toEqual(['id', 'title', 'excerpt', 'date']);
+        });
+    });
+
+    describe('tagLabel', () => {
+        it('should show an English tag as it is on an English page', () => {
+            expect(tagLabel('en', 'Tech Leadership')).toBe('Tech Leadership');
+        });
+
+        it('should fall back to the English tag where a language has no label for it', () => {
+            expect(tagLabel('de', 'a-tag-nobody-labelled')).toBe('a-tag-nobody-labelled');
         });
     });
 });

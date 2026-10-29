@@ -9,7 +9,7 @@ export const dynamic = 'force-static';
  * dev server shows drafts, but a feed reader must never see one.
  */
 export function GET() {
-    return new Response(rssFeed(blogPosts.filter(post => post.published)), {
+    return new Response(rssFeed(blogPosts.filter(post => post.published), 'en'), {
         headers: { 'Content-Type': 'application/rss+xml; charset=utf-8' },
     });
 }

@@ -5,20 +5,27 @@
  */
 
 import { type CaseStudy, caseStudyPath } from '@/config/caseStudies';
-import { type CaseStudyDetail } from '@/config/caseStudyDetails';
+import { type CaseStudyDetail, workCopy } from '@/config/caseStudyDetails';
 import { absoluteUrl } from '@/config/site';
+import { type Locale, intlLocale } from './i18n/locale';
+import { localizedPath } from './i18n/paths';
 import { type BreadcrumbItem, type JsonLdObject, authorRef } from './structuredData';
 
-/** The breadcrumb trail of a case study: Home › Work › the case. */
-export const caseStudyBreadcrumbs = (study: CaseStudy): BreadcrumbItem[] => [
-    { name: 'Home', path: '/' },
-    { name: 'Work', path: '/#work' },
-    { name: study.title, path: caseStudyPath(study) },
-];
+/** The breadcrumb trail of a case study in `locale`: Home › Work › the case. */
+export const caseStudyBreadcrumbs = (study: CaseStudy, locale: Locale): BreadcrumbItem[] => {
+    const names = workCopy[locale].breadcrumbs;
 
-/** The CreativeWork node for one case study page. */
-export const caseStudySchema = (study: CaseStudy, detail: CaseStudyDetail): JsonLdObject => {
-    const url = absoluteUrl(caseStudyPath(study));
+    return [
+        { name: names.home, path: localizedPath(locale, '/') },
+        { name: names.work, path: localizedPath(locale, '/#work') },
+        { name: study.title, path: localizedPath(locale, caseStudyPath(study)) },
+    ];
+};
+
+/** The CreativeWork node for one case study page in `locale`, told by `detail` in that language. */
+export const caseStudySchema = (study: CaseStudy, detail: CaseStudyDetail, locale: Locale): JsonLdObject => {
+    const path = localizedPath(locale, caseStudyPath(study));
+    const url = absoluteUrl(path);
     const startYear = /^\d{4}/.exec(study.years)?.[0];
 
     return {
@@ -28,12 +35,12 @@ export const caseStudySchema = (study: CaseStudy, detail: CaseStudyDetail): Json
         'alternateName': study.title,
         'description': detail.description,
         'url': url,
-        'image': absoluteUrl(`${caseStudyPath(study)}/opengraph-image`),
+        'image': absoluteUrl(`${path}/opengraph-image`),
         'author': authorRef(),
         'about': detail.topics.map(name => ({ '@type': 'Thing', name })),
         'keywords': [...detail.topics, ...study.tags].join(', '),
         ...(startYear ? { dateCreated: startYear } : {}),
         ...(study.link ? { sameAs: study.link.href } : {}),
-        'inLanguage': 'en-US',
+        'inLanguage': intlLocale[locale],
     };
 };

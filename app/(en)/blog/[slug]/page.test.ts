@@ -6,10 +6,12 @@
 
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { notFound } from 'next/navigation';
+import { renderToString } from 'react-dom/server';
 import { blogPosts } from '@/config/blog';
 import { absoluteUrl, siteConfig } from '@/config/site';
 import { feedAlternateTypes } from '@/lib/feed';
 import { itemAt } from '@/test/itemAt';
+import { BlogPostPage } from '@/components/blog/pages/BlogPostPage';
 // Imported once at module scope rather than inside each test: loading the
 // route pulls in the whole article graph, and a cold load inside a test body
 // raced the 5 s test timeout whenever the machine was busy.
@@ -85,12 +87,19 @@ describe('/blog/[slug]', () => {
 
     describe('page', () => {
         it('should answer an unknown slug with notFound()', async () => {
-            await expect(BlogPost({ params: params('this-article-does-not-exist') })).rejects.toBe(NOT_FOUND);
+            const page = await BlogPost({ params: params('this-article-does-not-exist') });
+
+            expect(() => renderToString(page)).toThrow(NOT_FOUND);
             expect(notFound).toHaveBeenCalledOnce();
         });
 
         it('should render a known post without calling notFound()', async () => {
-            await expect(BlogPost({ params: params(itemAt(blogPosts, 0).slug) })).resolves.toBeTruthy();
+            const slug = itemAt(blogPosts, 0).slug;
+
+            const page = await BlogPost({ params: params(slug) });
+
+            expect(page).toMatchObject({ props: { slug, locale: 'en' } });
+            expect(BlogPostPage({ slug, locale: 'en' })).toBeTruthy();
             expect(notFound).not.toHaveBeenCalled();
         });
     });

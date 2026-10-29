@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import type { Metadata } from 'next';
-import { NotFoundPanel } from '@/components/blog/NotFoundPanel';
-import { ReadingShell } from '@/components/blog/ReadingShell';
+import { BlogPostNotFound } from '@/components/blog/pages/BlogPostNotFound';
+import { postNotFoundMetadata } from '@/lib/blog/postMetadata';
 
 /**
  * Shown when `/blog/[slug]` matches no post.
@@ -14,27 +14,8 @@ import { ReadingShell } from '@/components/blog/ReadingShell';
  * Next discards once `notFound()` is thrown — without this the 404 shipped no
  * title at all, leaving the tab showing a bare URL.
  */
-export const metadata: Metadata = {
-    title: 'Post not found',
-    description: 'That article does not exist, or its link has changed.',
-    // Null, not `{ index: false }`: Next already answers every 404 with its
-    // own `<meta name="robots" content="noindex">`, so a value here would only
-    // add a second tag. Null still clears the layout's "index, follow".
-    robots: null,
-};
+export const metadata: Metadata = postNotFoundMetadata('en');
 
-const PostNotFound: FC = () => {
-    return (
-        <ReadingShell>
-            <NotFoundPanel
-                kicker="404"
-                title="Post not found"
-                body="That article does not exist, or its link has changed since it was shared."
-                actionHref="/blog"
-                actionLabel="All articles"
-            />
-        </ReadingShell>
-    );
-};
+const PostNotFound: FC = () => <BlogPostNotFound locale="en" />;
 
 export default PostNotFound;

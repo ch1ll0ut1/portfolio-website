@@ -55,7 +55,7 @@ describe('Article Component', () => {
 
     it('should render the post title as the page heading', () => {
         // Arrange
-        render(<Article post={post} />);
+        render(<Article locale="en" post={post} />);
 
         // Assert
         expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(post.title);
@@ -63,10 +63,10 @@ describe('Article Component', () => {
 
     it('should publish the post metadata', () => {
         // Arrange
-        render(<Article post={post} />);
+        render(<Article locale="en" post={post} />);
 
         // Assert
-        expect(screen.getByText(formatDate(post.date))).toBeInTheDocument();
+        expect(screen.getByText(formatDate(post.date, 'en'))).toBeInTheDocument();
         expect(screen.getByText(post.readTime)).toBeInTheDocument();
         expect(screen.getAllByRole('link', { name: 'Stefan Knoch' })[0]).toHaveAttribute('href', '/');
         expect(screen.getByText(post.excerpt)).toBeInTheDocument();
@@ -77,10 +77,10 @@ describe('Article Component', () => {
 
     it('should mark the date up as machine readable', () => {
         // Arrange
-        render(<Article post={post} />);
+        render(<Article locale="en" post={post} />);
 
         // Act
-        const time = screen.getByText(formatDate(post.date));
+        const time = screen.getByText(formatDate(post.date, 'en'));
 
         // Assert
         expect(time.tagName).toBe('TIME');
@@ -89,20 +89,20 @@ describe('Article Component', () => {
 
     it('should say when a post was updated after it was published', () => {
         // Arrange
-        render(<Article post={{ ...post, updated: '2026-10-13' }} />);
+        render(<Article locale="en" post={{ ...post, updated: '2026-10-13' }} />);
 
         // Act
-        const updated = screen.getByText(formatDate('2026-10-13'));
+        const updated = screen.getByText(formatDate('2026-10-13', 'en'));
 
         // Assert
         expect(updated.tagName).toBe('TIME');
         expect(updated).toHaveAttribute('datetime', '2026-10-13');
-        expect(updated.parentElement).toHaveTextContent(`Updated ${formatDate('2026-10-13')}`);
+        expect(updated.parentElement).toHaveTextContent(`Updated ${formatDate('2026-10-13', 'en')}`);
     });
 
     it('should not show an update for a post that was never revised', () => {
         // Arrange
-        render(<Article post={post} />);
+        render(<Article locale="en" post={post} />);
 
         // Assert
         expect(screen.queryByText(/Updated/)).not.toBeInTheDocument();
@@ -110,7 +110,7 @@ describe('Article Component', () => {
 
     it('should render the markdown content of the post', () => {
         // Arrange
-        render(<Article post={post} />);
+        render(<Article locale="en" post={post} />);
 
         // Assert
         expect(screen.getByRole('heading', { level: 2, name: 'A section heading' })).toBeInTheDocument();
@@ -121,7 +121,7 @@ describe('Article Component', () => {
 
     it('should offer a breadcrumb back to the index', () => {
         // Arrange
-        render(<Article post={post} />);
+        render(<Article locale="en" post={post} />);
 
         // Act
         const breadcrumb = screen.getByRole('navigation', { name: 'Breadcrumb' });
@@ -133,7 +133,7 @@ describe('Article Component', () => {
 
     it('should link to the neighbouring posts and to all articles', () => {
         // Arrange
-        render(<Article post={post} newer={newer} older={older} />);
+        render(<Article locale="en" post={post} newer={newer} older={older} />);
 
         // Act
         const pager = screen.getByRole('navigation', { name: 'More articles' });
@@ -148,7 +148,7 @@ describe('Article Component', () => {
     it('should close the body with the author card and suggest related posts', () => {
         // Arrange
         const related = { ...post, id: '4', title: 'A Related Post', slug: 'a-related-post' };
-        render(<Article post={post} related={[related]} />);
+        render(<Article locale="en" post={post} related={[related]} />);
 
         // Assert
         expect(screen.getByRole('complementary', { name: 'About the author' })).toBeInTheDocument();
@@ -158,7 +158,7 @@ describe('Article Component', () => {
 
     it('should omit a neighbour link that does not exist', () => {
         // Arrange
-        render(<Article post={post} older={older} />);
+        render(<Article locale="en" post={post} older={older} />);
 
         // Assert
         expect(screen.queryByText('Newer')).not.toBeInTheDocument();
@@ -167,7 +167,7 @@ describe('Article Component', () => {
 
     it('should keep the reading progress indicator out of the accessibility tree', () => {
         // Arrange
-        const { container } = render(<Article post={post} />);
+        const { container } = render(<Article locale="en" post={post} />);
 
         // Act
         const decorations = container.querySelectorAll('[aria-hidden="true"]');
@@ -179,7 +179,7 @@ describe('Article Component', () => {
 
     it('should expose the article as the analytics scroll target', () => {
         // Arrange
-        const { container } = render(<Article post={post} />);
+        const { container } = render(<Article locale="en" post={post} />);
 
         // Assert
         const article = container.querySelector('article');

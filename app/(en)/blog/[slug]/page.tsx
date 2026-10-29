@@ -1,19 +1,8 @@
 import { FC } from 'react';
 import type { Metadata } from 'next';
-import { notFound } from 'next/navigation';
-import { blogPosts, lastModified } from '@/config/blog';
-import { EngagementTracker } from '@/components/analytics/EngagementTracker';
-import { Article } from '@/components/blog/Article';
-import { ReadingShell } from '@/components/blog/ReadingShell';
-import { JsonLd } from '@/components/seo/JsonLd';
-import { absoluteUrl } from '@/config/site';
-import { baseOpenGraph } from '@/lib/baseOpenGraph';
-import { getBlogPostData } from '@/lib/content/blogPosts';
-import { bangkokDateTime } from '@/lib/date';
-import { feedAlternateTypes } from '@/lib/feed';
-import { postCardImage } from '@/lib/og/postCard';
-import { blogPostBreadcrumbs, blogPostingSchema, breadcrumbSchema, jsonLdGraph } from '@/lib/structuredData';
-import { twitterCard } from '@/lib/twitterCard';
+import { BlogPostPage } from '@/components/blog/pages/BlogPostPage';
+import { blogPostsFor } from '@/config/blog';
+import { blogPostMetadata } from '@/lib/blog/postMetadata';
 
 /*
  * `dynamicParams` stays at its default on purpose. Every post is generated at
@@ -23,81 +12,27 @@ import { twitterCard } from '@/lib/twitterCard';
  * post-specific 404.
  */
 
+interface Props {
+    params: Promise<{ slug: string }>;
+}
+
 /**
  * Generates static params for all blog posts to enable static generation.
  */
 export async function generateStaticParams() {
-    return blogPosts.map(post => ({ slug: post.slug }));
+    return blogPostsFor('en').map(post => ({ slug: post.slug }));
 }
 
-/**
- * Generates metadata for individual blog posts
- */
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { slug } = await params;
-    const data = getBlogPostData(slug);
 
-    // Guards the property reads below. Matches ./not-found.tsx, robots
-    // included: Next sends its own `noindex` with the 404, and a value here
-    // would be a second robots tag (this result does reach the page).
-    if (!data) {
-        return {
-            title: 'Post not found',
-            description: 'That article does not exist, or its link has changed.',
-            robots: null,
-        };
-    }
-
-    const { post } = data;
-
-    return {
-        title: post.title,
-        description: post.excerpt,
-        openGraph: {
-            ...baseOpenGraph,
-            title: post.title,
-            description: post.excerpt,
-            url: absoluteUrl(`/blog/${slug}`),
-            type: 'article',
-            publishedTime: bangkokDateTime(post.date),
-            modifiedTime: bangkokDateTime(lastModified(post)),
-            // The author's profile page: Open Graph wants a URL here, not a name.
-            authors: [absoluteUrl('/')],
-            tags: post.tags,
-            images: [postCardImage(post)],
-        },
-        twitter: { ...twitterCard(post.title, post.excerpt), images: [postCardImage(post)] },
-        alternates: {
-            canonical: `/blog/${slug}`,
-            types: feedAlternateTypes,
-        },
-    };
+    return blogPostMetadata(slug, 'en');
 }
 
-const BlogPost: FC<{ params: Promise<{ slug: string }> }> = async ({ params }) => {
+const BlogPost: FC<Props> = async ({ params }) => {
     const { slug } = await params;
-    const data = getBlogPostData(slug);
 
-    // Renders ./not-found.tsx with a real 404. Returning the panel from here
-    // answered 200, which made every stale link indexable as real content.
-    // ./layout.tsx keeps the throw from failing the document's server render.
-    if (!data) {
-        notFound();
-    }
-
-    const { post, newer, older, related } = data;
-
-    return (
-        <>
-            <JsonLd data={jsonLdGraph(blogPostingSchema(post), breadcrumbSchema(blogPostBreadcrumbs(post)))} />
-
-            <EngagementTracker pageType="blog_post" scrollTarget="article" />
-
-            <ReadingShell>
-                <Article post={post} newer={newer} older={older} related={related} />
-            </ReadingShell>
-        </>
-    );
+    return <BlogPostPage slug={slug} locale="en" />;
 };
 
 export default BlogPost;

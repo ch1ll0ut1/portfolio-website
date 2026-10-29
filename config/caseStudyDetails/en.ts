@@ -1,39 +1,20 @@
 /**
- * The long form of each case study, for its own page at `/work/<slug>`.
+ * The case study pages in English: the long form of each case, and the words
+ * of the page around it.
  *
- * `caseStudies.ts` holds the short card the homepage shows; this file holds
- * what only the case page needs: the search-facing title and description, a
- * plain-language lede, and the story told at more length. Every fact here is
- * drawn from the CV and the career config. Nothing is added that they cannot
- * back up: no invented clients, numbers, or quotes.
+ * `config/caseStudies.ts` holds the short card the homepage shows; the
+ * details here hold what only the case page needs: the search-facing title
+ * and description, a plain-language lede, and the story told at more length.
+ * Every fact here is drawn from the CV and the career config. Nothing is added
+ * that they cannot back up: no invented clients, numbers, or quotes.
  *
  * The copy is written for a buyer who does not write code. Technical detail
  * is kept for `technical`, which the page sets last.
  */
 
-import type { CaseVisualId } from './caseStudies';
+import type { WorkCopy } from './types';
 
-export interface CaseStudyDetail {
-    /** The page's `h1`: who it was for and what was built, phrased the way someone would search for it. */
-    heading: string;
-    /** The `<title>`, before the layout's ` | Stefan Knoch`. Kept to 45 characters so the whole thing fits in 60. */
-    metaTitle: string;
-    /** Meta and share description, 140–160 characters. */
-    description: string;
-    /** One or two sentences under the heading, in plain words. */
-    lede: string;
-    /** Team size, when the CV gives one. */
-    team?: string;
-    problem: string[];
-    did: string[];
-    result: string[];
-    /** The engineering detail, for readers who want it. */
-    technical: string[];
-    /** What the work is about, for the structured data's `about`. */
-    topics: string[];
-}
-
-export const caseStudyDetails: Record<CaseVisualId, CaseStudyDetail> = {
+const details: WorkCopy['details'] = {
     edithing: {
         heading: 'A legal text editor for the Parliament of Iceland',
         metaTitle: 'Legal Editor for the Parliament of Iceland',
@@ -133,5 +114,45 @@ export const caseStudyDetails: Record<CaseVisualId, CaseStudyDetail> = {
             'Full-text search on Elasticsearch, with Docker and AWS for running it.',
         ],
         topics: ['Real-time messaging', 'API performance', 'Mobile backend', 'Full-text search'],
+    },
+};
+
+export const workEn: WorkCopy = {
+    details,
+    breadcrumbs: {
+        label: 'Breadcrumb',
+        home: 'Home',
+        work: 'Work',
+    },
+    kicker: 'Case study',
+    facts: {
+        client: 'Client',
+        role: 'Role',
+        years: 'Years',
+        team: 'Team',
+    },
+    story: {
+        problem: 'Problem',
+        did: 'What I did',
+        result: 'Result',
+        stack: 'Stack',
+    },
+    next: {
+        title: 'Have a project like this?',
+        body: 'I build new apps, fix broken ones, and lead your developers. Tell me what you are working on, and I will tell you honestly whether I am the right fit.',
+        services: 'How I can help',
+        contact: 'Get in touch',
+        others: 'More case studies',
+    },
+    notFound: {
+        title: 'Case study not found',
+        description: 'That case study does not exist, or its link has changed.',
+        body: 'That case study does not exist, or its link has changed since it was shared.',
+        action: 'All work',
+    },
+    card: {
+        alt: name => `A case study from ${name}'s work`,
+        kicker: 'case study',
+        metaKicker: 'work',
     },
 };

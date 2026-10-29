@@ -20,7 +20,7 @@ describe('/blog/[slug]/card.png', () => {
         const post = itemAt(blogPosts, 0);
 
         // Act
-        const image = postCardImage(post);
+        const image = postCardImage(post, 'en');
 
         // Assert
         expect(image).toEqual({
@@ -30,6 +30,7 @@ describe('/blog/[slug]/card.png', () => {
             type: 'image/png',
             alt: post.title,
         });
-        expect(postCardPath(post.slug)).toBe(image.url);
+        expect(postCardPath(post.slug, 'en')).toBe(image.url);
+        expect(postCardPath(post.slug, 'de')).toBe(`/de/blog/${post.slug}/card.png`);
     });
 });

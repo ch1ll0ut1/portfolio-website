@@ -3,7 +3,9 @@
  * and the metadata lines. Pure functions, so they are tested without a render.
  */
 
+import { blogCopy } from '@/config/blog';
 import { siteConfig } from '@/config/site';
+import type { Locale } from '@/lib/i18n/locale';
 
 const ELLIPSIS = '…';
 
@@ -94,8 +96,8 @@ export const siteMetaLine = () => [
     `since ${siteConfig.sinceYear}`,
 ].join(' · ');
 
-/** `blog · 2025-08-14 · 10 min read`; parts that are empty are left out. */
-export const postMetaLine = (post: { date: string; readTime?: string }) => ['blog', post.date, post.readTime ?? '']
+/** `blog · 2025-08-14 · 10 min read` in `locale`; parts that are empty are left out. */
+export const postMetaLine = (post: { date: string; readTime?: string }, locale: Locale) => [blogCopy[locale].cardKicker, post.date, post.readTime ?? '']
     .filter(part => part.trim() !== '')
     .join(' · ');
 

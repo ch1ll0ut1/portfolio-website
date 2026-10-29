@@ -23,7 +23,7 @@ describe('CaseStudyArticle', () => {
 
     it.each(caseStudies)('should render $title as one article with one h1 and the next steps after it', (study) => {
         // Act
-        const { container } = render(<CaseStudyArticle study={study} />);
+        const { container } = render(<CaseStudyArticle locale="en" study={study} />);
 
         // Assert
         expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);

@@ -16,6 +16,11 @@ describe('slugify', () => {
         expect(slugify('Café & Crème')).toBe('cafe-creme');
     });
 
+    it('should spell a sharp s as ss rather than drop it', () => {
+        expect(slugify('Straße')).toBe('strasse');
+        expect(slugify('Größe und Maße')).toBe('grosse-und-masse');
+    });
+
     it('should keep leading numbers and collapse separators', () => {
         expect(slugify('1. AI-Assisted Brainstorming & Architecture Planning')).toBe('1-ai-assisted-brainstorming-architecture-planning');
         expect(slugify('5. Mini Case Study – A Feature in a Day')).toBe('5-mini-case-study-a-feature-in-a-day');

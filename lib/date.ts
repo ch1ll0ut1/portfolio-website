@@ -2,6 +2,8 @@
  * Date utility functions for consistent date handling across the application.
  */
 
+import { type Locale, intlLocale } from './i18n/locale';
+
 /**
  * Sorts items by date property (newest first).
  * Accepts any object with a 'date' property that can be converted to a Date.
@@ -11,16 +13,18 @@ export function sortByDate<T extends { date: string }>(items: T[]): T[] {
 }
 
 /**
- * Formats a calendar date (`YYYY-MM-DD`) for display, e.g. "August 14, 2025".
+ * Formats a calendar date (`YYYY-MM-DD`) for display in `locale`, e.g.
+ * "August 14, 2025" or "14. August 2025".
  *
- * Pinned to `en-US` and UTC: a bare ISO date parses as UTC midnight, so the
- * server's locale and time zone would otherwise decide the text (and could
- * move it a day), and the client's hydration could disagree with it.
+ * Pinned to the locale's `intlLocale` and to UTC: a bare ISO date parses as
+ * UTC midnight, so the server's locale and time zone would otherwise decide
+ * the text (and could move it a day), and the client's hydration could
+ * disagree with it.
  */
-export function formatDate(dateString: string): string {
+export function formatDate(dateString: string, locale: Locale): string {
     const date = new Date(dateString);
 
-    return date.toLocaleDateString('en-US', {
+    return date.toLocaleDateString(intlLocale[locale], {
         year: 'numeric',
         month: 'long',
         day: 'numeric',

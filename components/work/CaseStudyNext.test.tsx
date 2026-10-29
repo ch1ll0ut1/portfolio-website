@@ -12,7 +12,7 @@ import { CaseStudyNext } from './CaseStudyNext';
 describe('CaseStudyNext', () => {
     it('should point to the services page and the contact page', () => {
         // Act
-        render(<CaseStudyNext current={itemAt(caseStudies, 0)} />);
+        render(<CaseStudyNext locale="en" current={itemAt(caseStudies, 0)} />);
 
         // Assert
         expect(screen.getByRole('link', { name: 'How I can help' })).toHaveAttribute('href', '/services');
@@ -24,7 +24,7 @@ describe('CaseStudyNext', () => {
         const current = itemAt(caseStudies, 1);
 
         // Act
-        render(<CaseStudyNext current={current} />);
+        render(<CaseStudyNext locale="en" current={current} />);
 
         // Assert
         const others = within(screen.getByRole('navigation', { name: 'More case studies' }));

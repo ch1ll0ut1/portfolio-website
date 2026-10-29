@@ -9,12 +9,14 @@
 const FALLBACK = 'section';
 
 /**
- * A URL-safe id from heading text: lower case, accents dropped, anything but
+ * A URL-safe id from heading text: lower case, accents dropped, `ß` spelled
+ * `ss` (NFKD leaves it whole, so it would otherwise be dropped), anything but
  * letters, digits, spaces and hyphens removed, runs of spaces and hyphens
  * collapsed into one hyphen.
  */
 export const slugify = (text: string) => {
     const slug = text
+        .replace(/[ßẞ]/g, 'ss')
         .normalize('NFKD')
         .replace(/[̀-ͯ]/g, '')
         .toLowerCase()

@@ -74,7 +74,7 @@ describe('/feed.xml', () => {
 describe('rssFeed', () => {
     it('should date items in RFC 822, at midnight in Bangkok', () => {
         // Act
-        const xml = rssFeed([post('a-post', true, { date: '2025-08-14' })]);
+        const xml = rssFeed([post('a-post', true, { date: '2025-08-14' })], 'en');
 
         // Assert
         expect(all(xml, 'pubDate')).toEqual(['Wed, 13 Aug 2025 17:00:00 GMT']);
@@ -85,7 +85,7 @@ describe('rssFeed', () => {
         const xml = rssFeed([
             post('newest', true, { date: '2030-02-01' }),
             post('revised', true, { date: '2030-01-01', updated: '2030-03-01' }),
-        ]);
+        ], 'en');
 
         // Assert
         expect(all(xml, 'lastBuildDate')).toEqual(['Thu, 28 Feb 2030 17:00:00 GMT']);
@@ -93,11 +93,21 @@ describe('rssFeed', () => {
 
     it('should list each tag as a category and escape markup in text', () => {
         // Act
-        const xml = rssFeed([post('a-post', true, { title: 'Q&A: <tags> "quoted"', tags: ['Node.js', 'R&D'] })]);
+        const xml = rssFeed([post('a-post', true, { title: 'Q&A: <tags> "quoted"', tags: ['Node.js', 'R&D'] })], 'en');
 
         // Assert
         expect(all(xml, 'title')[1]).toBe('Q&amp;A: &lt;tags&gt; &quot;quoted&quot;');
         expect(all(xml, 'category')).toEqual(['Node.js', 'R&amp;D']);
+    });
+
+    it('should link a German feed\'s blog, posts and itself under /de', () => {
+        // Act
+        const xml = rssFeed([post('a-post', true)], 'de');
+
+        // Assert
+        expect(all(xml, 'link')).toEqual([`${siteConfig.url}/de/blog`, `${siteConfig.url}/de/blog/a-post`]);
+        expect(all(xml, 'guid')).toEqual([`${siteConfig.url}/de/blog/a-post`]);
+        expect(xml).toContain(`<atom:link href="${siteConfig.url}/de/feed.xml" rel="self"`);
     });
 });
 

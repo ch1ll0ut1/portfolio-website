@@ -49,6 +49,7 @@ describe('/work/[slug] layout', () => {
         const layout = await CaseStudyLayout({ children, params: params(itemAt(caseStudies, 0).slug) });
 
         // Assert
-        expect(layout).toBe(children);
+        // A Suspense boundary would wrap the markup in <!--$--> comments.
+        expect(renderToString(<>{layout}</>)).toBe(renderToString(children));
     });
 });

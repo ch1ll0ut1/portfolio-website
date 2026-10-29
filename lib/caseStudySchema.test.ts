@@ -17,7 +17,7 @@ describe('caseStudySchema', () => {
         const detail = caseStudyDetails[study.id];
 
         // Act
-        const schema = caseStudySchema(study, detail);
+        const schema = caseStudySchema(study, detail, 'en');
 
         // Assert
         expect(schema).toMatchObject({
@@ -39,11 +39,26 @@ describe('caseStudySchema', () => {
         const study = itemAt(caseStudies, 3);
 
         // Act
-        const schema = caseStudySchema(study, caseStudyDetails[study.id]);
+        const schema = caseStudySchema(study, caseStudyDetails[study.id], 'en');
 
         // Assert
         expect(schema).not.toHaveProperty('sameAs');
         expect(schema.dateCreated).toBe('2015');
+    });
+
+    it('should point a German case at its page under /de/referenzen, in German', () => {
+        // Arrange
+        const study = itemAt(caseStudies, 0);
+
+        // Act
+        const schema = caseStudySchema(study, caseStudyDetails[study.id], 'de');
+        const trail = caseStudyBreadcrumbs(study, 'de');
+
+        // Assert
+        expect(schema.url).toBe(`${siteConfig.url}/de/referenzen/${study.slug}`);
+        expect(schema.image).toBe(`${siteConfig.url}/de/referenzen/${study.slug}/opengraph-image`);
+        expect(schema.inLanguage).toBe('de-DE');
+        expect(trail.map(item => item.path)).toEqual(['/de', '/de#work', `/de/referenzen/${study.slug}`]);
     });
 });
 
@@ -53,7 +68,7 @@ describe('caseStudyBreadcrumbs', () => {
         const study = itemAt(caseStudies, 2);
 
         // Act
-        const trail = breadcrumbSchema(caseStudyBreadcrumbs(study));
+        const trail = breadcrumbSchema(caseStudyBreadcrumbs(study, 'en'));
 
         // Assert
         expect(trail.itemListElement).toEqual([
