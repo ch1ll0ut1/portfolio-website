@@ -2,11 +2,12 @@
 
 import { type FC, type PointerEvent, useRef } from 'react';
 import { useMagnet } from '@/lib/motion';
+import { homeContactCopy } from '@/config/home/contact';
 import { links } from '@/config/links';
+import { useLocale } from '@/lib/i18n/LocaleContext';
 import { conversionHandlers } from './outboundTracking';
 import styles from './CtaMagnet.module.css';
 
-const LABEL = 'Book a 30-min call';
 /* Carried over from the pre-redesign closing CTA so the GA4 series continues. */
 const CONVERSION_TYPE = 'footer';
 const CONVERSION_LOCATION = 'cta_section';
@@ -25,6 +26,7 @@ const CONVERSION_LOCATION = 'cta_section';
  * label roll and arrow swap.
  */
 export const CtaMagnet: FC = () => {
+    const label = homeContactCopy[useLocale()].book;
     const ctaRef = useRef<HTMLAnchorElement>(null);
     const tracking = conversionHandlers(CONVERSION_TYPE, CONVERSION_LOCATION);
 
@@ -56,8 +58,8 @@ export const CtaMagnet: FC = () => {
         >
             <span className={styles.in}>
                 <span className={styles.roll}>
-                    <span className={styles.rollA}>{LABEL}</span>
-                    <span className={styles.rollB} aria-hidden="true">{LABEL}</span>
+                    <span className={styles.rollA}>{label}</span>
+                    <span className={styles.rollB} aria-hidden="true">{label}</span>
                 </span>
                 {/* Two identical glyphs: the first leaves up and right as the
                     second arrives from down and left. */}

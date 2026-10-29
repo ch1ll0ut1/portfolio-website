@@ -2,7 +2,11 @@
 
 import { type FC, useRef } from 'react';
 import Link from 'next/link';
+import { homeContactCopy } from '@/config/home/contact';
+import type { FooterLinkId } from '@/config/home/contact/types';
 import { links } from '@/config/links';
+import { localizedPath } from '@/lib/i18n/paths';
+import { useLocale } from '@/lib/i18n/LocaleContext';
 import { requestConsentPreferences } from '@/components/consent/ConsentContext';
 import { externalLinkHandlers } from './outboundTracking';
 import { FooterClock } from './FooterClock';
@@ -13,7 +17,9 @@ const YEAR = 2026;
 const SOURCE_URL = 'https://github.com/ch1ll0ut1/portfolio-website';
 
 interface FooterLink {
-    label: string;
+    /** Also the key of its label in the contact band's dictionary. */
+    id: FooterLinkId;
+    /** An English path for a page of the site, which is localized. */
     href: string;
     /** Opens in a new tab. */
     external: boolean;
@@ -26,11 +32,11 @@ interface FooterLink {
 }
 
 const footerLinks: FooterLink[] = [
-    { label: 'GitHub', href: links.social.github, external: true, trackingLabel: 'github profile' },
-    { label: 'LinkedIn', href: links.social.linkedin, external: true, trackingLabel: 'linkedin profile' },
-    { label: 'Blog', href: '/blog', external: false },
-    { label: 'Privacy', href: '/privacy', external: false },
-    { label: 'Contact', href: '/contact', external: false },
+    { id: 'github', href: links.social.github, external: true, trackingLabel: 'github profile' },
+    { id: 'linkedin', href: links.social.linkedin, external: true, trackingLabel: 'linkedin profile' },
+    { id: 'blog', href: '/blog', external: false },
+    { id: 'privacy', href: '/privacy', external: false },
+    { id: 'contact', href: '/contact', external: false },
 ];
 
 /**
@@ -41,6 +47,8 @@ const footerLinks: FooterLink[] = [
  * the letters above them.
  */
 export const ContactFooter: FC = () => {
+    const locale = useLocale();
+    const copy = homeContactCopy[locale].footer;
     const footerRef = useRef<HTMLElement>(null);
 
     return (
@@ -52,7 +60,7 @@ export const ContactFooter: FC = () => {
                         <p>{`© ${YEAR} Stefan Knoch`}</p>
                         <p>
                             <a className="ulink" href={SOURCE_URL} target="_blank" rel="noopener noreferrer">
-                                Source on GitHub
+                                {copy.source}
                             </a>
                         </p>
                     </div>
@@ -62,8 +70,8 @@ export const ContactFooter: FC = () => {
                             // nav and the rest of the chrome mounted.
                             if (!link.external) {
                                 return (
-                                    <li key={link.label}>
-                                        <Link className="ulink" href={link.href}>{link.label}</Link>
+                                    <li key={link.id}>
+                                        <Link className="ulink" href={localizedPath(locale, link.href)}>{copy.links[link.id]}</Link>
                                     </li>
                                 );
                             }
@@ -73,7 +81,7 @@ export const ContactFooter: FC = () => {
                                 : externalLinkHandlers(link.href, link.trackingLabel);
 
                             return (
-                                <li key={link.label}>
+                                <li key={link.id}>
                                     <a
                                         className="ulink"
                                         href={link.href}
@@ -82,7 +90,7 @@ export const ContactFooter: FC = () => {
                                         onClick={tracking?.onClick}
                                         onAuxClick={tracking?.onAuxClick}
                                     >
-                                        {link.label}
+                                        {copy.links[link.id]}
                                     </a>
                                 </li>
                             );
@@ -91,13 +99,13 @@ export const ContactFooter: FC = () => {
                             {/* Consent must be as easy to withdraw as to give, so
                                 the preferences stay one click away on every page. */}
                             <button className={`ulink ${styles.linkButton}`} type="button" onClick={requestConsentPreferences}>
-                                Cookie settings
+                                {copy.cookieSettings}
                             </button>
                         </li>
                     </ul>
                     <div className={styles.end}>
                         <p className={styles.clock}>
-                            Bangkok
+                            {copy.city}
                             {' '}
                             <FooterClock />
                         </p>
@@ -118,7 +126,7 @@ export const ContactFooter: FC = () => {
                                     </svg>
                                 ))}
                             </span>
-                            Back to top
+                            {copy.backToTop}
                         </a>
                     </div>
                 </div>

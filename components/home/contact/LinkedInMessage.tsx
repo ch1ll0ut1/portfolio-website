@@ -1,9 +1,12 @@
+'use client';
+
 import { type FC } from 'react';
+import { homeContactCopy } from '@/config/home/contact';
 import { links } from '@/config/links';
+import { useLocale } from '@/lib/i18n/LocaleContext';
 import { externalLinkHandlers } from './outboundTracking';
 import styles from './LinkedInMessage.module.css';
 
-const LABEL = 'Message me on LinkedIn';
 const TRACKING_LABEL = 'linkedin message';
 
 /**
@@ -14,6 +17,7 @@ const TRACKING_LABEL = 'linkedin message';
  * set. It is a plain link, so the browser handles the new tab.
  */
 export const LinkedInMessage: FC = () => {
+    const label = homeContactCopy[useLocale()].linkedIn;
     const tracking = externalLinkHandlers(links.social.linkedin, TRACKING_LABEL);
 
     return (
@@ -25,7 +29,7 @@ export const LinkedInMessage: FC = () => {
             onClick={tracking.onClick}
             onAuxClick={tracking.onAuxClick}
         >
-            {LABEL}
+            {label}
             {/* Two identical glyphs: the first leaves up and right as the
                 second arrives from down and left. */}
             <span className={styles.arrow} aria-hidden="true">
