@@ -9,7 +9,7 @@ import { blogEn } from './en';
 import { rawBlogPosts } from './posts';
 import type { BlogCopy, BlogPost } from './types';
 
-export type { BlogCopy, BlogPost, BlogPostData, BlogPostWords, BlogSlug, ListedPost } from './types';
+export type { BlogCopy, BlogPost, ListedPost } from './types';
 
 export const blogCopy: Record<Locale, BlogCopy> = {
     en: blogEn,
