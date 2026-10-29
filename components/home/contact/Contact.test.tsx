@@ -4,7 +4,9 @@
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
+import { contactCopy } from '@/config/contact';
 import { links } from '@/config/links';
+import { LocaleProvider } from '@/lib/i18n/LocaleContext';
 import { installIntersectionObserver, installMatchMedia, settleIntro } from '../../../test/motionEnv';
 import { Contact } from './Contact';
 import styles from './Contact.module.css';
@@ -49,6 +51,18 @@ describe('Contact', () => {
 
         // Assert
         expect(screen.getByText(/i reply within one working day, from bangkok/i)).toBeInTheDocument();
+    });
+
+    it('should render the German lede on a German page', () => {
+        // Act
+        render(
+            <LocaleProvider locale="de">
+                <Contact />
+            </LocaleProvider>,
+        );
+
+        // Assert
+        expect(screen.getByText(contactCopy.de.invitation)).toBeInTheDocument();
     });
 
     it('should offer both ways to get in touch', () => {

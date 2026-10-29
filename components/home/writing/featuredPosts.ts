@@ -9,7 +9,7 @@
  * dictionary, keyed by slug.
  */
 
-import { blogPosts } from '@/config/blog';
+import { blogPostsFor } from '@/config/blog';
 import { writingCopy } from '@/config/home/writing';
 import type { Locale } from '@/lib/i18n/locale';
 import { localizedPath } from '@/lib/i18n/paths';
@@ -25,7 +25,7 @@ export interface FeaturedPost {
 export const featuredPostsFor = (locale: Locale): FeaturedPost[] => {
     const { highlights, defaultKind } = writingCopy[locale];
 
-    return blogPosts
+    return blogPostsFor(locale)
         .filter(post => post.featured === true && post.published)
         .map((post) => {
             const highlight = highlights[post.slug];
