@@ -20,9 +20,9 @@ Viel Software wirkt heute halb fertig.
 
 Apps stürzen ab. Buttons reagieren nicht mehr. Oberflächen frieren ein. Datei-Uploads schlagen fehl. Benachrichtigungen kommen doppelt. Formulare verhalten sich mal so, mal so. Funktionen wirken, als hätten sie nichts miteinander zu tun. Abläufe werden unübersichtlich. Ein Update macht kaputt, was gestern noch lief.
 
-Selbst viele Produkte großer, gut finanzierter Unternehmen sind schlechter geworden.
+Selbst viele Produkte großer, gut finanzierter Unternehmen fühlen sich schlechter an als früher.
 
-Das Seltsame daran: Viele dieser Produkte bauen technisch kluge Leute.
+Das Seltsame daran: Hinter vielen dieser Produkte stehen technisch kluge Leute.
 
 Aber irgendwann hat sich ein Teil der Branche auf die falschen Dinge versteift:
 
@@ -103,7 +103,7 @@ Ein mächtiges Werkzeug, ja. Aber eben ein Werkzeug.
 
 Frameworks, Bibliotheken, IDEs, Cloud-Plattformen und Deployment-Pipelines haben die Entwicklung produktiver gemacht. KI tut das auch.
 
-Aber sie ersetzt nicht auf magische Weise das Urteilsvermögen, die Erfahrung und die Verantwortung, die echte Softwareentwicklung braucht.
+Aber sie ersetzt nicht wie von Zauberhand das Urteilsvermögen, die Erfahrung und die Verantwortung, die echte Softwareentwicklung braucht.
 
 Wer nie entwickelt hat, entwickelt nicht plötzlich professionell Software, nur weil eine KI den Code schreibt.
 
@@ -140,13 +140,13 @@ Aber KI versteht nicht von selbst:
 KI verstärkt gute wie schlechte Softwareentwicklung.
 
 Ein schwacher Prozess mit KI erzeugt schneller mehr Chaos.  
-Wer das Handwerk beherrscht, wird mit KI deutlich produktiver.
+Wer das Handwerk beherrscht, wird mit KI enorm viel produktiver.
 
 ---
 
 ## Auf den letzten 20 % wird Software teuer
 
-Eine der größten Täuschungen der KI-gestützten Entwicklung ist, wie schnell die ersten 80 % aussehen.
+Eine der größten Täuschungen der KI-gestützten Entwicklung ist, wie schnell die ersten 80 % fertig wirken.
 
 Eine Oberfläche ist in Minuten generiert.  
 Eine funktionierende Demo steht in ein paar Stunden.  
@@ -190,11 +190,11 @@ Das Ziel ist, hochwertige Software schneller zu bauen, ohne die Wartbarkeit auf 
 
 ## Software bauen ist wie ein Hochhaus bauen
 
-Gründungsteams ohne technischen Hintergrund unterschätzen oft, wie viel unsichtbare Arbeit unter einer Software steckt.
+Gründungsteams ohne technischen Hintergrund unterschätzen oft, wie viel unsichtbare Arbeit in einer Software steckt.
 
 Ein Prototyp kann fertig aussehen, während das Fundament darunter schon nachgibt.
 
-Software zu bauen hat viel mehr mit einem Hochhaus zu tun, als den meisten bewusst ist.
+Software zu bauen hat viel mehr mit dem Bau eines Hochhauses zu tun, als den meisten bewusst ist.
 
 Wer Material ohne vernünftige Statik aufeinanderstapelt, sieht eine Weile lang Fortschritt.
 
@@ -211,7 +211,7 @@ Mit Software ist es genauso.
 
 Der Unterschied: Bei Software sind die Probleme am Anfang oft unsichtbar.
 
-Billige Software sieht bei der ersten Demo meist gut aus.
+Billige Software sieht bei der ersten Demo oft gut aus.
 
 Die echten Probleme kommen später.
 
@@ -220,13 +220,13 @@ Neue Funktionen werden immer mühsamer.
 Das Team traut sich an bestimmte Teile der Codebasis nicht mehr heran.  
 Die Performance wird schlechter.  
 Sicherheitsrisiken tauchen auf.  
-Jede kleine Anfrage dauert länger als gedacht.
+Jede kleine Änderung dauert länger als gedacht.
 
 Irgendwann sagt dann jemand:
 
 > „Wir müssen vielleicht alles neu schreiben.“
 
-Dieser Neubau ist fast immer viel teurer, als es gewesen wäre, die Sache von Anfang an richtig zu bauen.
+Dieser Neubau ist meist viel teurer, als es gewesen wäre, die Sache von Anfang an richtig zu bauen.
 
 ---
 
@@ -337,7 +337,7 @@ Von der Kundenseite kommen das Wissen über das Geschäft, das Wissen über die 
 
 Ich bringe technisches Urteilsvermögen, Architektur, UX-Denken und Erfahrung in der Umsetzung mit. Und ich widerspreche, wenn eine Idee technisch oder fürs Produkt keinen Sinn ergibt.
 
-Ist ein Designteam beteiligt, gilt dasselbe.
+Ist jemand fürs Design beteiligt, gilt dasselbe.
 
 Design und Entwicklung dürfen keine getrennten Welten sein.
 
@@ -370,7 +370,7 @@ Es prägt die nächste Version.
 
 Das heißt nicht, dass die Stakeholder jede Kleinigkeit abnehmen müssen. Manchen ist es lieber, sich herauszuhalten. Andere wollen regelmäßig Fortschritte sehen und enger eingebunden sein.
 
-Beides funktioniert.
+Beides kann funktionieren.
 
 Aber die Haltung sollte klar sein:
 
@@ -489,7 +489,7 @@ Es ist viel besser, die KI von Anfang an mit klaren Standards, klarer Architektu
 
 ## Warum Algorithmus-Interviews am Ziel vorbeigehen
 
-Eine der seltsamsten Gewohnheiten der Softwarebranche: Bewerbungen in der Entwicklung werden an abstrakten Algorithmus-Rätseln gemessen.
+Eine der seltsamsten Gewohnheiten der Softwarebranche: Wer sich für die Entwicklung bewirbt, wird an abstrakten Algorithmus-Rätseln gemessen.
 
 Zum Beispiel:
 
@@ -501,7 +501,7 @@ Tiefes Informatikwissen hat seinen Platz.
 
 Aber in der Produktentwicklung geht es meistens nicht darum, Sortieralgorithmen von Grund auf selbst zu schreiben.
 
-Moderne Software stützt sich in der Regel auf gemeinsam genutzte Bibliotheken, Frameworks, Datenbanken und vielfach erprobte Infrastruktur.
+Moderne Software stützt sich in der Regel auf verbreitete Bibliotheken, Frameworks, Datenbanken und vielfach erprobte Infrastruktur.
 
 Schwierig ist nicht, unter Prüfungsdruck ein isoliertes Rätsel zu lösen.
 
@@ -579,11 +579,11 @@ Das Ziel ist Software, die:
 - die Menschen zufrieden macht, die sie nutzen
 - und sich weiterentwickeln kann, ohne unter ihrem eigenen Gewicht zusammenzubrechen
 
-KI verändert die Softwareentwicklung dramatisch.
+KI verändert die Softwareentwicklung grundlegend.
 
 Aber sie hat erfahrene Leute in der Entwicklung nicht überflüssig gemacht.
 
-Wenn überhaupt, ist technisches Urteilsvermögen heute noch wichtiger.
+Im Gegenteil: Technisches Urteilsvermögen ist heute noch wichtiger.
 
 Denn schlechte Software lässt sich jetzt schneller erzeugen als je zuvor.
 

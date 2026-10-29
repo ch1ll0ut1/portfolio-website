@@ -15,11 +15,11 @@ Eine seltsame Idee und meist ein teurer Fehler.
 
 ---
 
-## Product Owner vs. Tech Lead
+## Product Owner vs Tech Lead
 
 In einer gewachsenen Organisation haben ein **Product Owner (PO)** und ein **Tech Lead/CTO** sehr unterschiedliche Aufgaben.
 
-| Product Owner | Tech Lead / CTO |
+| Product Owner | Tech Lead/CTO |
 |---------------|-----------------|
 | Legt fest, *was* gebaut wird und *warum* | Legt fest, *wie* es gebaut wird, und prägt das *Was* mit: durch technische Vision und den Blick auf das Machbare |
 | Konzentriert sich auf Nutzerbedürfnisse, geschäftlichen Nutzen und Prioritäten | Konzentriert sich auf Architektur, Skalierbarkeit und die langfristige Richtung |
@@ -49,7 +49,7 @@ Gebraucht hätte es aber **jemanden, der das Design in der ganzen Breite abdeckt
 Stattdessen führte das Unternehmen Gespräche mit Leuten, die sich ganz auf Wireframes und Prototypen spezialisiert hatten.
 Alle wurden abgelehnt. Ein halbes Jahr später war die Stelle immer noch nicht besetzt.
 
-Inkompetent war die Person nicht. Sie saß nur an der falschen Stelle.
+Inkompetent war der PO nicht. Er saß nur in der falschen Rolle.
 
 ---
 
@@ -70,7 +70,7 @@ Zu Leitungen und Wandmaterialien hat sie gern eine Meinung. Aber ohne Ahnung von
 
 Eine zweite Falle für neue Abteilungen und junge Startups: Sie stellen **zu früh Leute für Spezialgebiete** ein.
 
-Große Unternehmen können sich jemanden für **UX Research** leisten, der nur Usability-Tests durchführt, oder jemanden im **Backend**, der das Frontend nie anfasst. In einem neuen Team funktioniert das nicht.
+Große Unternehmen können sich jemanden für **UI/UX Research** leisten, der nur Usability-Tests durchführt, oder jemanden im **Backend**, der das Frontend nie anfasst. In einem neuen Team funktioniert das nicht.
 
 Am Anfang brauchen Sie Leute, die **breit aufgestellt** sind:
 
@@ -84,10 +84,10 @@ Später, wenn das Produkt wächst, können Sie **Spezialisierungen** ergänzen: 
 
 Und falls Sie über **Managementrollen** nachdenken:
 
-- Ein **Project Manager (PM)** kann sinnvoll sein, sobald Ihr Team auf etwa **10 Leute** wächst.
+- Ein **Project Manager** kann sinnvoll sein, sobald Ihr Team auf etwa **10 Leute** wächst.
 - Ein **Product Owner (PO)**? Realistisch erst sehr, sehr viel später, oft eher bei **100 Leuten**, wenn die Komplexität des Produkts und konkurrierende Prioritäten es wirklich verlangen.
 
-Wer diese Rollen zu früh besetzt, reißt überall Lücken, bremst den Fortschritt und schafft unnötigen Overhead.
+Wer diese Rollen zu früh besetzt, dem fehlen an allen anderen Stellen die Leute. Das bremst den Fortschritt und schafft unnötigen Overhead.
 
 ---
 
@@ -95,7 +95,7 @@ Wer diese Rollen zu früh besetzt, reißt überall Lücken, bremst den Fortschri
 
 Kurz gesagt: **nicht am Anfang.**
 
-In der Frühphase eines Startups oder einer neuen Tech-Abteilung ist ein PO Overhead. Ihr Tech Lead, der selbst Full-Stack mitentwickelt, die Person fürs Design und Ihr Entwicklungsteam können direkt mit den Stakeholdern sprechen und viel schneller iterieren, ohne dass jemand dazwischensitzt.
+In der Frühphase eines Startups oder einer neuen Tech-Abteilung ist ein PO Overhead. Ihr Tech Lead, der selbst über den ganzen Stack mitprogrammiert, die Person fürs Design und Ihr Entwicklungsteam können direkt mit den Stakeholdern sprechen und viel schneller iterieren, ohne dass jemand dazwischensitzt.
 
 Wenn überhaupt, holen Sie früher einen **Project Manager** dazu, ab etwa **10** Leuten im Team. Aber einen **Product Owner?** Den brauchen Sie in den meisten Fällen erst, wenn Sie auf **100 Leute** zugehen und die Komplexität des Produkts, mehrere Teams und die Stakeholder es wirklich verlangen.
 
@@ -107,8 +107,8 @@ Bis dahin gilt: Lassen Sie die bauen, die wirklich bauen.
 
 In einem Startup gehört das *Was* nicht dem Product Owner. Es entsteht im ganzen Team: Tech Lead, Design, Entwicklung und Gründungsteam gemeinsam.
 
-Der Tech Lead ist nicht bloß fürs „Wie“ zuständig. Ein Tech Lead baut selbst mit und reicht zugleich in Vision und Produktrichtung hinein, weil die Machbarkeit Teil der Frage nach dem *Was* ist.
+Der Tech Lead ist nicht bloß fürs „Wie“ zuständig. Ein Tech Lead arbeitet selbst am Code und prägt zugleich Vision und Produktrichtung mit, weil die Machbarkeit Teil der Frage nach dem *Was* ist.
 
-Deshalb bringt ein zu früh eingestellter PO keinen Nutzen. Bis Sie auf Dutzende Leute in der Entwicklung und mehrere Stakeholder gewachsen sind, entscheiden die, die wirklich bauen, das *Was* und das *Wie* besser gemeinsam.
+Deshalb bringt ein zu früh eingestellter PO keinen Nutzen. Bis Ihr Entwicklungsteam Dutzende Leute zählt und mehrere Stakeholder mitreden, entscheiden die, die wirklich bauen, das *Was* und das *Wie* besser gemeinsam.
 
 Später, wenn die Komplexität es rechtfertigt, kann ein Product Owner wertvoll sein. In der frühen Phase ist die Rolle mehr Overhead als Hilfe.

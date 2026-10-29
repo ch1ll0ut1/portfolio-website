@@ -3,11 +3,11 @@
 ![Zehn Workflows, bei denen KI Ihnen helfen kann](ai-boosted-development-workflows.webp)
 
 Künstliche Intelligenz ist 2025 keine Spielerei mehr.  
-Sie ist mehr als „Autovervollständigung für Code“. Sie ist ein **Satz von Workflows, der jede Phase der Softwareentwicklung beschleunigen kann**, vom Brainstorming bis zum Deployment.
+Sie ist mehr als „Autovervollständigung für Code“. Sie ist eine **Reihe von Workflows, die jede Phase der Softwareentwicklung beschleunigen können**, vom Brainstorming bis zum Deployment.
 
-In den letzten zwei Jahren haben viele von uns erlebt, dass Entwicklungsteams, die sich auf KI einlassen, **3–10× so schnell** arbeiten, ohne an Qualität einzubüßen. Ich selbst habe Produkte in Tagen gebaut, die früher Wochen gedauert hätten. Das gelang aber erst, als ich verstanden hatte, wie man KI richtig einsetzt. Wie das aussieht, beschreibe ich in [Mit KI Apps 10× schneller bauen](/de/blog/how-to-use-ai-to-build-apps-10x-speed).
+In den letzten zwei Jahren haben viele von uns erlebt, dass Entwicklungsteams, die sich auf KI einlassen, **drei- bis zehnmal so schnell** arbeiten, ohne an Qualität einzubüßen. Ich selbst habe Produkte in Tagen gebaut, die früher Wochen gedauert hätten. Das gelang aber erst, als ich verstanden hatte, wie man KI richtig einsetzt. Wie das aussieht, beschreibe ich in [Mit KI Apps 10× schneller bauen](/de/blog/how-to-use-ai-to-build-apps-10x-speed).
 
-Dieser Artikel geht den **zehn wirkungsvollsten KI-Workflows, die Sie 2025 in der Entwicklung kennen sollten**, auf den Grund.
+In diesem Artikel stelle ich die **zehn wirkungsvollsten KI-Workflows** vor, die Sie 2025 in der Entwicklung kennen sollten.
 
 Zu jedem Workflow erfahren Sie:
 
@@ -24,7 +24,7 @@ Fangen wir an.
 
 Noch bevor Sie die erste Zeile Code schreiben, kann Ihnen der richtige KI-Workflow tagelanges Ausprobieren ersparen.
 
-Statt die KI einfach „die App bauen“ zu lassen, bitten Sie sie, **die Rolle einer erfahrenen Architektin oder eines erfahrenen Architekten zu übernehmen**:
+Statt die KI einfach „die App bauen“ zu lassen, bitten Sie sie, **die Architektur so anzugehen, wie es jemand Erfahrenes tun würde**:
 
 - Mehrere Ansätze vorschlagen.
 - Rückfragen stellen.
@@ -109,7 +109,7 @@ Mit KI dauert die Fehlersuche Minuten statt Stunden:
 ## 6. KI für Dokumentation und Wissensaustausch
 
 KI ist nicht nur für Code da.  
-Sie kann **lebendige Dokumentation** erstellen und aktuell halten:
+Sie kann **lebende Dokumentation** erstellen und aktuell halten:
 
 - API-Referenzen
 - Coding-Richtlinien
@@ -167,7 +167,7 @@ Die KI kann die Codebasis zusammenfassen, Fragen wie „Wo ist X implementiert?�
 
 **Workflow:**
 
-- Eine von der KI erstellte `ONBOARDING.md`.
+- Lassen Sie die KI eine `ONBOARDING.md` erstellen.
 - Fragen Sie: *„Explain the authentication system in 500 words.“*
 - Stellen Sie Leitfragen bereit, damit Juniors schneller lernen.
 
@@ -179,7 +179,7 @@ Die KI kann die Codebasis zusammenfassen, Fragen wie „Wo ist X implementiert?�
 
 Der letzte Workflow ist eine Ebene höher angesiedelt: Sie nutzen KI, um den Einsatz von KI *selbst* zu verbessern.
 
-- Sammeln Sie die Schmerzpunkte Ihres Teams.
+- Sammeln Sie, wo es in Ihrem Team hakt.
 - Fragen Sie die KI: *„Where are we losing time in our dev cycle?“*
 - Führen Sie neue Workflows ein.
 
@@ -192,10 +192,10 @@ Wer den eigenen KI-Einsatz laufend verfeinert, zieht dauerhaft an denen vorbei, 
 
 Vor Kurzem habe ich für ein Kundenprojekt ein Dashboard-Widget in weniger als 24 Stunden gebaut:
 
-1. **UI-Grundlage** – In 10 Minuten mit v0 generiert.
+1. **UI-Grundlage** – in 10 Minuten mit v0 generiert.
 2. **Architekturplan** – Claude hat drei Ansätze vorgeschlagen, ich habe einen ausgewählt.
-3. **Umsetzung** – 80 % des Codes hat Cursor geschrieben, die Sonderfälle habe ich übernommen.
-4. **Bugfixes** – Einen Bug hat die KI gelöst, einen anderen Stack Overflow.
+3. **Umsetzung** – 80 % des Codes hat Cursor geschrieben, die Sonderfälle habe ich selbst gelöst.
+4. **Bugfixes** – Einen Bug hat die KI gelöst, die Lösung für einen anderen fand ich auf Stack Overflow.
 
 Gesamtzeit: rund 7 Stunden. Auf dem klassischen Weg: 2–3 Tage.  
 Auf Kundenseite dachte man, ich hätte eine Woche daran gearbeitet.
@@ -204,7 +204,7 @@ Auf Kundenseite dachte man, ich hätte eine Woche daran gearbeitet.
 
 ## Fazit
 
-KI ist 2025 keine Option mehr.  
+KI ist 2025 nicht mehr optional.  
 Sie ist die **neue Grundkompetenz der Softwareentwicklung**.
 
 Wer diese zehn Workflows beherrscht:
@@ -222,6 +222,6 @@ Wer diese zehn Workflows beherrscht:
 
 … lässt andere in der Branche hinter sich, **nicht um 10 %, sondern um das Zehnfache**.
 
-KI wird niemanden ersetzen, der Software entwickelt. Sie *wird* aber alle ersetzen, die in der Entwicklung auf KI verzichten.
+KI wird niemanden ersetzen, der Software entwickelt. Wer dabei aber auf KI verzichtet, *wird* ersetzt werden.
 
 👉 Mit welchem dieser Workflows fangen Sie morgen an?
