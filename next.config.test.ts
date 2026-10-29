@@ -1,5 +1,5 @@
 /**
- * Tests for the redirects in `next.config.ts`. The security headers are
+ * Tests for the redirects and flags in `next.config.ts`. The security headers are
  * covered beside the policy, in lib/contentSecurityPolicy.test.ts.
  */
 
@@ -34,4 +34,11 @@ describe('next.config.ts redirects', () => {
             expect(await redirectsFor(host)).toHaveLength(0);
         },
     );
+});
+
+describe('next.config.ts experimental flags', () => {
+    // Without it app/global-not-found.tsx is ignored and an unknown URL gets Next's bare 404.
+    it('should turn on the global 404', () => {
+        expect(nextConfig.experimental?.globalNotFound).toBe(true);
+    });
 });

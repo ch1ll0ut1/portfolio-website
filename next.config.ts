@@ -62,6 +62,11 @@ const nextConfig: NextConfig = {
     poweredByHeader: false,
     compress: true,
     reactStrictMode: true,
+    experimental: {
+        // app/global-not-found.tsx: with a root layout per language there is
+        // no single layout to wrap the 404 of an unmatched URL in.
+        globalNotFound: true,
+    },
     images: {
         // AVIF first: noticeably smaller than WebP for the flat blog artwork.
         formats: ['image/avif', 'image/webp'],
