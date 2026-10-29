@@ -3,12 +3,15 @@ import Link from 'next/link';
 import { MaskHeading } from '@/components/blog/MaskHeading';
 import { Reveal } from '@/components/motion/Reveal';
 import type { CaseStudy } from '@/config/caseStudies';
-import type { CaseStudyDetail } from '@/config/caseStudyDetails';
+import { type CaseStudyDetail, workCopy } from '@/config/caseStudyDetails';
+import type { Locale } from '@/lib/i18n/locale';
+import { localizedPath } from '@/lib/i18n/paths';
 import styles from './CaseStudy.module.css';
 
 interface Props {
     study: CaseStudy;
     detail: CaseStudyDetail;
+    locale: Locale;
 }
 
 /**
@@ -16,24 +19,26 @@ interface Props {
  * section, the search-facing headline, a plain-language lede, and the key
  * facts beside the case's headline number.
  */
-export const CaseStudyHeader: FC<Props> = ({ study, detail }) => {
+export const CaseStudyHeader: FC<Props> = ({ study, detail, locale }) => {
+    const copy = workCopy[locale];
+
     return (
         <header className={styles.header}>
-            <nav aria-label="Breadcrumb" className={styles.crumbs}>
+            <nav aria-label={copy.breadcrumbs.label} className={styles.crumbs}>
                 <ol>
                     <li>
-                        <Link href="/" className={styles.crumb}>Home</Link>
+                        <Link href={localizedPath(locale, '/')} className={styles.crumb}>{copy.breadcrumbs.home}</Link>
                     </li>
                     <li aria-hidden="true" className={styles.crumbSep}>/</li>
                     <li>
-                        <Link href="/#work" className={styles.crumb}>Work</Link>
+                        <Link href={localizedPath(locale, '/#work')} className={styles.crumb}>{copy.breadcrumbs.work}</Link>
                     </li>
                     <li aria-hidden="true" className={styles.crumbSep}>/</li>
                     <li aria-current="page" className={styles.crumbCurrent}>{study.title}</li>
                 </ol>
             </nav>
 
-            <p className={styles.kicker}>Case study</p>
+            <p className={styles.kicker}>{copy.kicker}</p>
 
             <MaskHeading className={styles.title}>{detail.heading}</MaskHeading>
 
@@ -44,20 +49,20 @@ export const CaseStudyHeader: FC<Props> = ({ study, detail }) => {
             <div className={styles.facts}>
                 <dl className={styles.factList}>
                     <div>
-                        <dt>Client</dt>
+                        <dt>{copy.facts.client}</dt>
                         <dd>{study.client}</dd>
                     </div>
                     <div>
-                        <dt>Role</dt>
+                        <dt>{copy.facts.role}</dt>
                         <dd>{study.role}</dd>
                     </div>
                     <div>
-                        <dt>Years</dt>
+                        <dt>{copy.facts.years}</dt>
                         <dd>{study.years}</dd>
                     </div>
                     {detail.team && (
                         <div>
-                            <dt>Team</dt>
+                            <dt>{copy.facts.team}</dt>
                             <dd>{detail.team}</dd>
                         </div>
                     )}

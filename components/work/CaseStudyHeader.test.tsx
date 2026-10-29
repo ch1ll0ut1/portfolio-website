@@ -29,7 +29,7 @@ describe('CaseStudyHeader', () => {
         const detail = caseStudyDetails[study.id];
 
         // Act
-        render(<CaseStudyHeader study={study} detail={detail} />);
+        render(<CaseStudyHeader locale="en" study={study} detail={detail} />);
 
         // Assert
         expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
@@ -42,7 +42,7 @@ describe('CaseStudyHeader', () => {
         const study = itemAt(caseStudies, 0);
 
         // Act
-        render(<CaseStudyHeader study={study} detail={caseStudyDetails[study.id]} />);
+        render(<CaseStudyHeader locale="en" study={study} detail={caseStudyDetails[study.id]} />);
 
         // Assert
         const crumbs = within(screen.getByRole('navigation', { name: 'Breadcrumb' }));
@@ -58,7 +58,7 @@ describe('CaseStudyHeader', () => {
         const withoutTeam = itemAt(caseStudies, 3);
 
         // Act
-        const { unmount } = render(<CaseStudyHeader study={withTeam} detail={caseStudyDetails[withTeam.id]} />);
+        const { unmount } = render(<CaseStudyHeader locale="en" study={withTeam} detail={caseStudyDetails[withTeam.id]} />);
 
         // Assert
         expect(screen.getByText(withTeam.client)).toBeInTheDocument();
@@ -67,7 +67,7 @@ describe('CaseStudyHeader', () => {
         expect(screen.getByText('Team')).toBeInTheDocument();
         unmount();
 
-        render(<CaseStudyHeader study={withoutTeam} detail={caseStudyDetails[withoutTeam.id]} />);
+        render(<CaseStudyHeader locale="en" study={withoutTeam} detail={caseStudyDetails[withoutTeam.id]} />);
         expect(screen.queryByText('Team')).toBeNull();
     });
 
@@ -76,7 +76,7 @@ describe('CaseStudyHeader', () => {
         const study = itemAt(caseStudies, 3);
 
         // Act
-        render(<CaseStudyHeader study={study} detail={caseStudyDetails[study.id]} />);
+        render(<CaseStudyHeader locale="en" study={study} detail={caseStudyDetails[study.id]} />);
 
         // Assert
         expect(screen.getByText(study.metric.value)).toBeInTheDocument();

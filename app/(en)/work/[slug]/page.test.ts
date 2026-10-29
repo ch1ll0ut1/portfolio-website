@@ -5,10 +5,12 @@
 
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { notFound } from 'next/navigation';
+import { renderToString } from 'react-dom/server';
 import { caseStudies } from '@/config/caseStudies';
 import { caseStudyDetails } from '@/config/caseStudyDetails';
 import { absoluteUrl, siteConfig } from '@/config/site';
 import { itemAt } from '@/test/itemAt';
+import { CaseStudyPage as CaseStudyBody } from '@/components/work/pages/CaseStudyPage';
 // Imported once at module scope, as the blog article's test does, to keep the
 // route's cold load out of the per-test timeout.
 import CaseStudyPage, { generateMetadata, generateStaticParams } from './page';
@@ -67,12 +69,19 @@ describe('/work/[slug]', () => {
 
     describe('page', () => {
         it('should answer an unknown slug with notFound()', async () => {
-            await expect(CaseStudyPage({ params: params('this-case-does-not-exist') })).rejects.toBe(NOT_FOUND);
+            const page = await CaseStudyPage({ params: params('this-case-does-not-exist') });
+
+            expect(() => renderToString(page)).toThrow(NOT_FOUND);
             expect(notFound).toHaveBeenCalledOnce();
         });
 
         it('should render a known case without calling notFound()', async () => {
-            await expect(CaseStudyPage({ params: params(itemAt(caseStudies, 0).slug) })).resolves.toBeTruthy();
+            const slug = itemAt(caseStudies, 0).slug;
+
+            const page = await CaseStudyPage({ params: params(slug) });
+
+            expect(page).toMatchObject({ props: { slug, locale: 'en' } });
+            expect(CaseStudyBody({ slug, locale: 'en' })).toBeTruthy();
             expect(notFound).not.toHaveBeenCalled();
         });
     });

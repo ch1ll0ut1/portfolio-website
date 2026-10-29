@@ -15,7 +15,7 @@ describe('CaseStudyStory', () => {
         const study = itemAt(caseStudies, 0);
 
         // Act
-        render(<CaseStudyStory study={study} detail={caseStudyDetails[study.id]} />);
+        render(<CaseStudyStory locale="en" study={study} detail={caseStudyDetails[study.id]} />);
 
         // Assert
         expect(screen.getAllByRole('heading', { level: 2 }).map(heading => heading.textContent))
@@ -28,7 +28,7 @@ describe('CaseStudyStory', () => {
         const detail = caseStudyDetails[study.id];
 
         // Act
-        render(<CaseStudyStory study={study} detail={detail} />);
+        render(<CaseStudyStory locale="en" study={study} detail={detail} />);
 
         // Assert
         [...detail.problem, ...detail.did, ...detail.result, ...detail.technical].forEach((text) => {
@@ -44,7 +44,7 @@ describe('CaseStudyStory', () => {
         const study = itemAt(caseStudies, 0);
 
         // Act
-        render(<CaseStudyStory study={study} detail={caseStudyDetails[study.id]} />);
+        render(<CaseStudyStory locale="en" study={study} detail={caseStudyDetails[study.id]} />);
 
         // Assert
         expect(screen.getByRole('link', { name: study.link?.label })).toHaveAttribute('href', study.link?.href);
@@ -55,7 +55,7 @@ describe('CaseStudyStory', () => {
         const study = itemAt(caseStudies, 3);
 
         // Act
-        render(<CaseStudyStory study={study} detail={caseStudyDetails[study.id]} />);
+        render(<CaseStudyStory locale="en" study={study} detail={caseStudyDetails[study.id]} />);
 
         // Assert
         expect(screen.queryByRole('link')).toBeNull();
