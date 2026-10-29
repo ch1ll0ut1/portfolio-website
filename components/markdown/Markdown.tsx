@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { readImageDimensions } from '@/lib/content/blogImages';
+import { type Locale, defaultLocale } from '@/lib/i18n/locale';
 import { parseMarkdown } from './parser/blockParser';
 import { bodyOutline } from './bodyOutline';
 import { createSlugger } from './headingSlugger';
@@ -16,9 +17,11 @@ import styles from './Markdown.module.css';
 interface Props {
     content: string;
     className?: string;
+    /** The language of the words the renderer adds, such as a heading link's name. English until the caller says otherwise. */
+    locale?: Locale;
 }
 
-export const Markdown: FC<Props> = ({ content, className = '' }) => {
+export const Markdown: FC<Props> = ({ content, className = '', locale = defaultLocale }) => {
     const elements = bodyOutline(parseMarkdown(content, readImageDimensions));
     const firstImage = elements.findIndex(element => element.type === 'image');
     // Per render, so heading ids are unique within this document only.
@@ -29,7 +32,7 @@ export const Markdown: FC<Props> = ({ content, className = '' }) => {
             {elements.map((element, index) => {
                 switch (element.type) {
                     case 'heading':
-                        return <MarkdownHeading key={index} element={element} id={headingId(element.content)} />;
+                        return <MarkdownHeading key={index} element={element} id={headingId(element.content)} locale={locale} />;
 
                     case 'codeBlock':
                         return <MarkdownCodeBlock key={index} element={element} />;
@@ -41,7 +44,7 @@ export const Markdown: FC<Props> = ({ content, className = '' }) => {
                         return <MarkdownQuote key={index} element={element} />;
 
                     case 'table':
-                        return <MarkdownTable key={index} element={element} />;
+                        return <MarkdownTable key={index} element={element} locale={locale} />;
 
                     case 'separator':
                         return <MarkdownSeparator key={index} element={element} />;

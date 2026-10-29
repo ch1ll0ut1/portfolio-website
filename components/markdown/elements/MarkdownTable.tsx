@@ -1,10 +1,13 @@
 import { FC } from 'react';
+import { markdownCopy } from '@/config/markdown';
+import type { Locale } from '@/lib/i18n/locale';
 import { type TableElement } from '../parser/types';
 import { InlineContent } from '../InlineContent';
 import styles from '../Markdown.module.css';
 
 interface Props {
     element: TableElement;
+    locale: Locale;
 }
 
 /**
@@ -12,9 +15,9 @@ interface Props {
  * keyboard users who cannot drag it — and, being a tab stop, it is a named
  * region so a screen reader says what the focus landed on.
  */
-export const MarkdownTable: FC<Props> = ({ element }) => {
+export const MarkdownTable: FC<Props> = ({ element, locale }) => {
     return (
-        <div className={styles.tableWrap} tabIndex={0} role="region" aria-label="Table">
+        <div className={styles.tableWrap} tabIndex={0} role="region" aria-label={markdownCopy[locale].table}>
             <table className={styles.table}>
                 <thead>
                     <tr>

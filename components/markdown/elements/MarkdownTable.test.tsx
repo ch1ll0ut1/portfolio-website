@@ -16,7 +16,7 @@ describe('MarkdownTable Component', () => {
             rows: [[[{ text: 'Cell' }]]],
         };
 
-        render(<MarkdownTable element={element} />);
+        render(<MarkdownTable element={element} locale="en" />);
 
         const region = screen.getByRole('region', { name: 'Table' });
         expect(region).toHaveAttribute('tabindex', '0');
@@ -42,7 +42,7 @@ describe('MarkdownTable Component', () => {
             ],
         };
 
-        render(<MarkdownTable element={element} />);
+        render(<MarkdownTable element={element} locale="en" />);
 
         const table = screen.getByRole('table');
         expect(table).toBeInTheDocument();
@@ -81,7 +81,7 @@ describe('MarkdownTable Component', () => {
             ],
         };
 
-        render(<MarkdownTable element={element} />);
+        render(<MarkdownTable element={element} locale="en" />);
 
         const table = screen.getByRole('table');
         expect(table).toBeInTheDocument();
@@ -102,7 +102,7 @@ describe('MarkdownTable Component', () => {
             rows: [],
         };
 
-        render(<MarkdownTable element={element} />);
+        render(<MarkdownTable element={element} locale="en" />);
 
         const table = screen.getByRole('table');
         expect(table).toBeInTheDocument();
@@ -123,7 +123,7 @@ describe('MarkdownTable Component', () => {
             rows: [],
         };
 
-        render(<MarkdownTable element={element} />);
+        render(<MarkdownTable element={element} locale="en" />);
 
         const table = screen.getByRole('table');
         expect(table).toBeInTheDocument();
@@ -142,7 +142,7 @@ describe('MarkdownTable Component', () => {
             rows: [[[{ text: 'Cell' }]]],
         };
 
-        render(<MarkdownTable element={element} />);
+        render(<MarkdownTable element={element} locale="en" />);
 
         // The wrapper scrolls rather than widening the page, so it must be
         // reachable by keyboard.
@@ -157,7 +157,7 @@ describe('MarkdownTable Component', () => {
             rows: [[[{ text: 'Cell' }], [{ text: 'Other' }]]],
         };
 
-        render(<MarkdownTable element={element} />);
+        render(<MarkdownTable element={element} locale="en" />);
 
         const headers = screen.getAllByRole('columnheader');
         expect(headers).toHaveLength(2);
@@ -174,7 +174,7 @@ describe('MarkdownTable Component', () => {
             rows: [[[{ text: 'Cell' }]], [[{ text: 'Second' }]]],
         };
 
-        render(<MarkdownTable element={element} />);
+        render(<MarkdownTable element={element} locale="en" />);
 
         expect(screen.getAllByRole('row')).toHaveLength(3);
         expect(screen.getByRole('cell', { name: 'Cell' })).toBeInTheDocument();
@@ -188,7 +188,7 @@ describe('MarkdownTable Component', () => {
             rows: [[[{ text: 'Cell with < and > symbols' }]]],
         };
 
-        render(<MarkdownTable element={element} />);
+        render(<MarkdownTable element={element} locale="en" />);
 
         expect(screen.getByText('Special & Characters')).toBeInTheDocument();
         expect(screen.getByText('Cell with < and > symbols')).toBeInTheDocument();
@@ -206,7 +206,7 @@ describe('MarkdownTable Component', () => {
             rows,
         };
 
-        render(<MarkdownTable element={element} />);
+        render(<MarkdownTable element={element} locale="en" />);
 
         const table = screen.getByRole('table');
         expect(table).toBeInTheDocument();
@@ -241,7 +241,7 @@ describe('MarkdownTable Component', () => {
             ],
         };
 
-        render(<MarkdownTable element={element} />);
+        render(<MarkdownTable element={element} locale="en" />);
 
         expect(screen.getAllByText('Plain cell')).toHaveLength(2);
         expect(screen.getByText('Bold cell')).toBeInTheDocument();

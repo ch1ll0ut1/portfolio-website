@@ -17,13 +17,13 @@ const heading = (rank: HeadingRank, content: string, level: RankedHeading['level
 
 describe('MarkdownHeading Component', () => {
     it('renders the element for its rank, not its markdown level', () => {
-        render(<MarkdownHeading element={heading(2, 'Part one', 1)} id="part-one" />);
+        render(<MarkdownHeading element={heading(2, 'Part one', 1)} id="part-one" locale="en" />);
 
         expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent('Part one');
     });
 
     it.each([2, 3, 4, 5, 6] as const)('renders rank %i as that heading level', (rank) => {
-        render(<MarkdownHeading element={heading(rank, `Rank ${rank}`)} id={`rank-${rank}`} />);
+        render(<MarkdownHeading element={heading(rank, `Rank ${rank}`)} id={`rank-${rank}`} locale="en" />);
 
         expect(screen.getByRole('heading', { level: rank })).toHaveTextContent(`Rank ${rank}`);
     });
@@ -31,8 +31,8 @@ describe('MarkdownHeading Component', () => {
     it('shares the h4 style for every rank below h3', () => {
         render(
             <>
-                <MarkdownHeading element={heading(4, 'Four')} id="four" />
-                <MarkdownHeading element={heading(6, 'Six')} id="six" />
+                <MarkdownHeading element={heading(4, 'Four')} id="four" locale="en" />
+                <MarkdownHeading element={heading(6, 'Six')} id="six" locale="en" />
             </>,
         );
 
@@ -41,13 +41,13 @@ describe('MarkdownHeading Component', () => {
     });
 
     it('should handle special characters in content', () => {
-        render(<MarkdownHeading element={heading(2, 'Title with & special < characters >')} id="title" />);
+        render(<MarkdownHeading element={heading(2, 'Title with & special < characters >')} id="title" locale="en" />);
 
         expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent('Title with & special < characters >');
     });
 
     it('should carry its id and link to itself under an accessible label', () => {
-        render(<MarkdownHeading element={heading(2, 'Part one')} id="part-one" />);
+        render(<MarkdownHeading element={heading(2, 'Part one')} id="part-one" locale="en" />);
 
         const section = screen.getByRole('heading', { level: 2, name: 'Part one' });
         const link = screen.getByRole('link', { name: 'Link to section: Part one' });
