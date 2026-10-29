@@ -6,12 +6,12 @@ Es gab eine Zeit, da habe ich „Magie“ in Frameworks geliebt.
 Damals hat mich Ruby on Rails umgehauen: Models wurden automatisch geladen, Routen tauchten aus dem Nichts auf, Datenbankmigrationen liefen wie ein Uhrwerk.
 Es war, als hätte ich ein unsichtbares Entwicklungsteam angeheuert, das für mich arbeitet, während ich in Ruhe meinen Kaffee trinke.
 
-Jahre später, nach zehn Jahren mit Systemen in Node.js und TypeScript, hat sich mein Geschmack geändert.
+Heute, nach zehn Jahren, in denen ich Systeme mit Node.js und TypeScript gebaut habe, hat sich mein Geschmack geändert.
 
 ## Node.js und TypeScript: Warum expliziter Code gewinnt
 
-Das Node.js-Ökosystem hat seine Macken, aber es ist mit einer klaren Philosophie gewachsen: *radikal einfach*.
-Ein HTTP-Server? Drei Zeilen in `server.js`. Routing? Eine kleine Bibliothek dazu.
+Das Node.js-Ökosystem hat seine Macken, aber es folgt von Anfang an einer klaren Philosophie: *radikale Einfachheit*.
+Ein HTTP-Server? Drei Zeilen in `server.js`. Routing? Eine kleine Library dazu.
 Skalieren? Weitere kleine Teile zusammensetzen.
 
 **Beispiel: Ein minimaler HTTP-Server in Node.js**
@@ -29,7 +29,7 @@ console.log("Server running at http://localhost:3000/");
 ```
 
 Das ist eine Werkstatt mit beschrifteten Werkzeugen: Jede Schraube und jedes Kabel liegt offen, und Sie entscheiden genau, wie alles zusammengesetzt wird.
-Weil nichts versteckt ist, lieben so viele, die seit Jahren mit Node.js arbeiten, es bis heute.
+Weil nichts versteckt ist, hängen so viele, die seit Jahren mit Node.js arbeiten, bis heute daran.
 Das System funktioniert, weil Sie sehen können, wie es funktioniert.
 
 ## Python-Frameworks: Die versteckten Kosten der Magie
@@ -75,7 +75,7 @@ Bei Systemen, die wartbar bleiben sollen, wird Magie leicht zu getarnten technis
 ## Python im Stil von Node.js schreiben
 
 Die gute Nachricht? Sie *können* Python im Stil von Node.js schreiben: explizit, modular und ohne Magie.
-Nehmen Sie schlanke Frameworks wie FastAPI oder minimale Bibliotheken, verdrahten Sie alles selbst und behandeln Sie jeden Teil als Modul, das sich mit anderen kombinieren lässt.
+Nehmen Sie schlanke Frameworks wie FastAPI oder minimale Libraries, verdrahten Sie alles selbst und behandeln Sie jeden Teil als Modul, das sich mit anderen kombinieren lässt.
 
 **Beispiel: Eine FastAPI-App ohne Magie**
 
@@ -96,7 +96,7 @@ if __name__ == "__main__":
 
 Hier ist Ihre `main.py` der Einstiegspunkt, und Sie bestimmen genau, wie die App startet. Keine automatische Erkennung, kein versteckter Lebenszyklus, nur explizite Verdrahtung.
 
-Sie müssen die Stärken von Python in Data Science, Machine Learning oder beim Scripting nicht aufgeben. Aber Sie können die Klarheit und Explizitheit behalten, die die Wartung von Node.js so angenehm machen.
+Sie müssen die Stärken von Python in Data Science, Machine Learning oder beim Scripting nicht aufgeben. Aber Sie können die Klarheit und den expliziten Stil mitnehmen, die Node.js so angenehm wartbar machen.
 
 ## Zum Schluss
 

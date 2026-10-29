@@ -166,7 +166,8 @@ Code-Review-Prozess" and "ein Startup-Team". Plurals follow English: "Startups",
 | code audit / security review | Code Review / Sicherheitsprüfung | as in `de.ts` |
 | product plan | Produktplan | |
 | engagement | Auftrag | never "Engagement" |
-| milestone | Etappe | as in `de.ts` |
+| milestone | Etappe | only for the phases of Stefan's own offering (services copy, `de.ts`). In startup or investor prose: „Meilenstein“ („verpasste Meilensteine“) |
+| library | Library / Bibliothek | „Library“ in developer posts (both AI posts, Node.js), „Bibliothek“ in buyer posts |
 | hand-over | Übergabe / übergeben | |
 | written update | kurzer schriftlicher Bericht | |
 | fix plan | Plan | "ein Plan, nach Risiko und Kosten sortiert" |
@@ -231,7 +232,8 @@ Code-Review-Prozess" and "ein Startup-Team". Plurals follow English: "Startups",
 ### Blog post titles
 
 Use these titles in `config/blog/de.ts`, in each post's `#` heading, and as the
-link text wherever one post links to another. A post's title is also its meta
+link text wherever one post points to another in a "read more" sentence (see §7
+for links inside running prose). A post's title is also its meta
 title, so each one fits in 60 characters with the ` | Stefan Knoch` suffix:
 
 | Slug | German title |
@@ -315,8 +317,11 @@ Coding, Workflows, Clean Code, Fractional CTO) stay as they are.
   prompts quoted as code, and external URLs. Translate a prompt in a code block
   only if the English post presents it as prose to adapt. When in doubt, keep
   it.
-- **Internal links** point at the German page. Use the German post title as the
-  link text:
+- **Internal links** point at the German page. In an explicit "read more" or
+  reference sentence („Mehr dazu in …“, „lesen Sie meinen Artikel: …“), the link
+  text is the exact German post title. Inside running prose, descriptive link
+  text is fine („Deshalb [brauchen Startups noch keinen Product Owner](…)“), as
+  long as the target is unchanged:
 
   | English | German |
   |---|---|
@@ -436,7 +441,7 @@ Use the DSGVO's own terms, exactly:
 8. Check typography: „…“ quotes, " – " dashes, "5.000 €", "14. August 2025", no
    serial comma.
 9. Markdown: same headings and levels, code untouched, internal links on
-   `/de/...`, and link text uses the German post titles.
+   `/de/...`, and "read more" links use the exact German post titles (§7).
 10. TypeScript: the type is filled exactly, interpolations (`${…}`) are kept,
     `pnpm exec tsc --noEmit` passes, and SEO titles are ≤ 60 characters and
     descriptions ≤ 155.

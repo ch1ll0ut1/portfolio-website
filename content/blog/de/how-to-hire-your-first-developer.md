@@ -4,9 +4,9 @@
 
 Die erste Stelle in der Entwicklung zu besetzen, kann schnell überfordern. Vielleicht gründen Sie ohne technischen Hintergrund, leiten ein Team in einem wachsenden Unternehmen oder wissen einfach, dass Sie Technik brauchen, sprechen aber noch nicht die Sprache von Frameworks, Datenbanken und Cloud-Hosting.
 
-Ich kenne beide Seiten des Tisches: Ich habe Entwicklungsteams eingestellt und geführt, und ich war selbst die technische Person im Team. Dabei habe ich gesehen, was eine Einstellung erfolgreich macht und was zum teuren Fehler werden kann.
+Ich kenne beide Seiten: Ich habe Leute für die Entwicklung eingestellt und Entwicklungsteams geführt, und ich war selbst die technische Person im Team. Dabei habe ich gesehen, was eine Einstellung zum Erfolg macht und was sie zum teuren Fehler werden lässt.
 
-Das sollten Sie wissen, bevor Sie die erste technische Person ins Team holen.
+Das sollten Sie wissen, bevor Sie diese erste Stelle besetzen.
 
 ---
 
@@ -26,7 +26,7 @@ Für die erste Stelle ist meist jemand aus der Full-Stack-Entwicklung die beste 
 
 ## 2. Schauen Sie über den Lebenslauf hinaus
 
-Lebensläufe können täuschen. Manche Bewerbung enthält jedes Schlagwort, das es gibt, und dann hapert es, sobald wirklich etwas geliefert werden muss. Andere kommen von brillanten Leuten, die sich auf dem Papier nur schlecht „verkaufen“.
+Lebensläufe können täuschen. Manche Bewerbungen enthalten jedes Schlagwort, das es gibt, und dann hapert es, sobald wirklich etwas geliefert werden muss. Andere kommen von brillanten Leuten, die sich auf dem Papier nur schlecht „verkaufen“.
 
 Entscheidend ist, *echte Fähigkeiten* zu prüfen:
 
@@ -40,7 +40,7 @@ Entscheidend ist, *echte Fähigkeiten* zu prüfen:
 
 ## 3. Begeisterung zählt mehr als ein glattes Vorstellungsgespräch
 
-Achten Sie bei der ersten technischen Person auf Begeisterung und Neugier. Löst sie gern Probleme? Tüftelt sie an eigenen Nebenprojekten? Interessiert sie das *Warum* hinter Ihrem Produkt?
+Achten Sie bei dieser ersten Einstellung auf Begeisterung und Neugier. Löst die Person gern Probleme? Tüftelt sie an eigenen Nebenprojekten? Interessiert sie das *Warum* hinter Ihrem Produkt?
 
 Fähigkeiten lassen sich lernen. Begeisterung, Verantwortungsgefühl und echtes Interesse lassen sich viel schwerer vortäuschen.
 
@@ -58,8 +58,8 @@ Statt sofort einen Vollzeitvertrag zu unterschreiben, beginnen Sie mit einem kur
 
 ## 5. Machen Sie es nicht allein
 
-Jetzt kommt der schwierige Teil: Wenn Sie selbst nicht technisch sind, woher wissen Sie, wer gut ist?
-Genau hier liegen viele Gründungsteams falsch: Sie verlassen sich auf die falschen Signale.
+Jetzt kommt der schwierige Teil: Wenn Sie selbst keinen technischen Hintergrund haben, woher wissen Sie, wer gut ist?
+Genau hier machen viele Gründungsteams den Fehler, sich auf die falschen Signale zu verlassen.
 
 Was hier viel bewirkt: Holen Sie einen **Fractional CTO oder Tech Lead** dazu, der den Prozess begleitet. So jemand kann:
 
@@ -73,8 +73,8 @@ Was hier viel bewirkt: Holen Sie einen **Fractional CTO oder Tech Lead** dazu, d
 
 ## Fazit
 
-Bei der ersten Einstellung geht es nicht darum, die sagenhafte „perfekte Besetzung“ zu finden. Es geht um die Person, die zu Ihrem jetzigen Bedarf passt: jemand, der liefert, genug kommuniziert, um gut zusammenzuarbeiten, und mit Ihrer Vision wächst.
+Bei der ersten Einstellung geht es nicht darum, die vielbeschworene „perfekte Besetzung“ zu finden. Es geht um die Person, die zu Ihrem jetzigen Bedarf passt: jemand, der liefert, genug kommuniziert, um gut zusammenzuarbeiten, und mit Ihrer Vision wächst.
 
-Fangen Sie mit Klarheit an, testen Sie realistisch und holen Sie sich ruhig erfahrene Hilfe dazu. Wenn Sie das richtig machen, wird Ihre erste technische Einstellung zum Grundstein für alles, was Sie danach bauen.
+Klären Sie zuerst, was Sie brauchen, testen Sie realistisch und holen Sie sich ruhig erfahrene Hilfe dazu. Wenn Sie das richtig machen, wird Ihre erste technische Einstellung zum Grundstein für alles, was Sie danach bauen.
 
 Und wenn Sie über diese erste Einstellung hinauswachsen wollen, zeigt [Ein Startup-Team aufbauen, das funktioniert](/de/blog/how-to-build-a-startup-dev-team-for-real-world-success), wie es weitergeht.
