@@ -1,22 +1,12 @@
 /**
- * The privacy policy's labeled bullet lists.
+ * The English privacy policy's labeled bullet lists, used by `./en.ts`.
  *
- * Kept as data because every one of them is the same shape (a bold label and
- * a sentence), and reading the policy as markup is far easier when that
- * repetition is not spelled out ten times.
+ * Kept apart because every one of them is the same shape (a bold label and
+ * a sentence), and the policy reads far easier when that repetition is not
+ * spelled out between its paragraphs.
  */
 
-export interface PolicyItem {
-    /** Bold lead-in. Omit for a plain bullet. */
-    label?: string;
-    text: string;
-}
-
-/**
- * When the policy text last changed. A fixed date: the policy changes when its
- * text does, not when the site is rebuilt.
- */
-export const POLICY_LAST_UPDATED = '2026-10-19';
+import type { PolicyItem } from './types';
 
 export const directInformation: PolicyItem[] = [
     { label: 'Contact form', text: 'If you send me a message through the contact form, I receive your name, your email address, the topic you picked, and your message, to answer you. The form sends them through Resend, from its Tokyo region (Japan), straight to my email inbox; the website itself keeps no copy.' },
