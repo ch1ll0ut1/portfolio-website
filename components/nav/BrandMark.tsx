@@ -3,6 +3,9 @@
 import { type FC, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { chromeCopy } from '@/config/chrome';
+import { localizedPath } from '@/lib/i18n/paths';
+import { useLocale } from '@/lib/i18n/LocaleContext';
 import { hasFinePointer } from '@/lib/motion';
 import { type Retype, createRetype } from './retypeMark';
 import styles from './BrandMark.module.css';
@@ -19,7 +22,10 @@ import styles from './BrandMark.module.css';
  * `data-nav-item` opts this element into `SiteNav`'s entrance stagger.
  */
 export const BrandMark: FC = () => {
-    const isHome = usePathname() === '/';
+    const locale = useLocale();
+    const { nav } = chromeCopy[locale];
+    const home = localizedPath(locale, '/');
+    const isHome = usePathname() === home;
     const markRef = useRef<HTMLSpanElement>(null);
     const retypeRef = useRef<Retype | null>(null);
 
@@ -86,6 +92,6 @@ export const BrandMark: FC = () => {
     // On the homepage a plain fragment link, so the browser scrolls to the
     // hero as before; elsewhere a client-side route change home.
     return isHome
-        ? <a href="#top" aria-label="Stefan Knoch, back to top" data-nav-item {...shared} />
-        : <Link href="/" aria-label="Stefan Knoch, home" data-nav-item {...shared} />;
+        ? <a href="#top" aria-label={nav.brandTop} data-nav-item {...shared} />
+        : <Link href={home} aria-label={nav.brandHome} data-nav-item {...shared} />;
 };

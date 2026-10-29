@@ -1,7 +1,9 @@
 'use client';
 
 import { type CSSProperties, type FC, useEffect, useRef } from 'react';
+import { chromeCopy } from '@/config/chrome';
 import type { Command } from '@/config/commands';
+import { useLocale } from '@/lib/i18n/LocaleContext';
 import { groupCommands } from './commandFilter';
 import styles from './CommandPalette.module.css';
 
@@ -47,6 +49,7 @@ interface Props {
  * layout effect, and for a key press or click before the frame is painted.
  */
 export const CommandList: FC<Props> = ({ id, optionIdPrefix, commands, selected, intro, onHover, onRun }) => {
+    const label = chromeCopy[useLocale()].palette.list;
     const groups = groupCommands(commands);
     const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
     const highlightRef = useRef<HTMLDivElement>(null);
@@ -95,7 +98,7 @@ export const CommandList: FC<Props> = ({ id, optionIdPrefix, commands, selected,
             className={intro ? `${styles.list} ${styles.intro}` : styles.list}
             id={id}
             role="listbox"
-            aria-label="Commands"
+            aria-label={label}
             hidden={commands.length === 0}
         >
             <div className={styles.highlight} ref={highlightRef} aria-hidden="true" />

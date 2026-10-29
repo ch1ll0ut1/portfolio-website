@@ -7,12 +7,14 @@
  * must continue from Work, not from wherever focus was left behind.
  */
 
+import type { Locale } from '@/lib/i18n/locale';
+import { localizedPath } from '@/lib/i18n/paths';
 import { prefersReducedMotion } from '@/lib/motion';
 
 /** Where "top" lands when the page has no hero: the skip link's target. */
 const TOP_FALLBACK_ID = 'main';
 
-export const scrollToSection = (id: string, navigate: (href: string) => void) => {
+export const scrollToSection = (id: string, navigate: (href: string) => void, locale: Locale) => {
     const behavior: ScrollBehavior = prefersReducedMotion() ? 'auto' : 'smooth';
 
     if (id === 'top') {
@@ -34,7 +36,7 @@ export const scrollToSection = (id: string, navigate: (href: string) => void) =>
     // The sections only exist on the homepage, so from a reading route the
     // palette and the chords navigate there instead of doing nothing — through
     // the router, so the page is not reloaded from scratch.
-    navigate(`/#${id}`);
+    navigate(`${localizedPath(locale, '/')}#${id}`);
 };
 
 /**

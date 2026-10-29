@@ -4,7 +4,10 @@ import { type FC, type MouseEvent, type ReactNode, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useMagnet } from '@/lib/motion';
+import { chromeCopy } from '@/config/chrome';
 import { navSections } from '@/config/sections';
+import { localizedPath } from '@/lib/i18n/paths';
+import { useLocale } from '@/lib/i18n/LocaleContext';
 import { links } from '@/config/links';
 import { scrollToSection } from '@/components/chrome/scrollToSection';
 import { BrandMark } from './BrandMark';
@@ -19,8 +22,6 @@ import styles from './SiteNav.module.css';
 const NAV_IDS = navSections.filter(section => section.page === undefined).map(section => section.id);
 /** Matches the prototype's `data-magnetic` pull on the primary call to action. */
 const BOOK_MAGNET = 0.25;
-/** The one route the sections live on. */
-const HOME = '/';
 
 export interface Props {
     /**
@@ -61,10 +62,13 @@ export const SiteNav: FC<Props> = ({ tools }) => {
     const pillRef = useRef<HTMLSpanElement>(null);
     const bookRef = useRef<HTMLAnchorElement>(null);
 
+    const locale = useLocale();
+    const copy = chromeCopy[locale];
+    const home = localizedPath(locale, '/');
     const pathname = usePathname();
     const router = useRouter();
     const activeSectionId = useActiveSection(NAV_IDS, pathname);
-    const pageId = navSections.find(section => section.page !== undefined && isOnPage(pathname, section.page))?.id;
+    const pageId = navSections.find(section => section.page !== undefined && isOnPage(pathname, localizedPath(locale, section.page)))?.id;
     const activeId = pageId ?? activeSectionId;
 
     useHeaderScroll(headerRef, styles.isScrolled, styles.isHidden);
@@ -74,27 +78,27 @@ export const SiteNav: FC<Props> = ({ tools }) => {
     useRouteFocus(pathname);
 
     const handleSectionClick = (event: MouseEvent<HTMLAnchorElement>, id: string) => {
-        if (pathname !== HOME || isModifiedClick(event) || !document.getElementById(id)) {
+        if (pathname !== home || isModifiedClick(event) || !document.getElementById(id)) {
             return;
         }
 
         event.preventDefault();
         scrollToSection(id, (href) => {
             router.push(href);
-        });
+        }, locale);
         // Next keeps its router in step with native history calls.
         window.history.pushState(null, '', `#${id}`);
     };
 
     return (
         <>
-            <a className="skip" href="#main">Skip to content</a>
+            <a className="skip" href="#main">{copy.nav.skipLink}</a>
 
             <header className={styles.nav} id="nav" ref={headerRef}>
                 <div className={`${styles.in} wrap`}>
                     <BrandMark />
 
-                    <nav className={styles.links} aria-label="Sections" ref={listRef} data-nav-item>
+                    <nav className={styles.links} aria-label={copy.nav.sections} ref={listRef} data-nav-item>
                         <span className={styles.pill} aria-hidden="true" ref={pillRef} />
 
                         {navSections.map((section) => {
@@ -104,12 +108,12 @@ export const SiteNav: FC<Props> = ({ tools }) => {
                                 return (
                                     <Link
                                         key={section.id}
-                                        href={section.page}
+                                        href={localizedPath(locale, section.page)}
                                         className={isActive ? styles.isActive : undefined}
                                         aria-current={isActive ? 'page' : undefined}
                                         data-nav-id={section.id}
                                     >
-                                        {section.label}
+                                        {copy.sections[section.id]}
                                     </Link>
                                 );
                             }
@@ -117,7 +121,7 @@ export const SiteNav: FC<Props> = ({ tools }) => {
                             return (
                                 <Link
                                     key={section.id}
-                                    href={`/#${section.id}`}
+                                    href={`${home}#${section.id}`}
                                     className={isActive ? styles.isActive : undefined}
                                     aria-current={isActive ? 'location' : undefined}
                                     data-nav-id={section.id}
@@ -125,7 +129,7 @@ export const SiteNav: FC<Props> = ({ tools }) => {
                                         handleSectionClick(event, section.id);
                                     }}
                                 >
-                                    {section.label}
+                                    {copy.sections[section.id]}
                                 </Link>
                             );
                         })}
@@ -141,7 +145,7 @@ export const SiteNav: FC<Props> = ({ tools }) => {
                             rel="noopener noreferrer"
                             ref={bookRef}
                         >
-                            <span className="btn__label">Book a call</span>
+                            <span className="btn__label">{copy.nav.book}</span>
                         </a>
                     </div>
                 </div>

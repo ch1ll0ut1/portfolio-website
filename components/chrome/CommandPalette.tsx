@@ -3,13 +3,18 @@
 import { type FC, type KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useMediaQuery } from '@/lib/motion';
-import { commands } from '@/config/commands';
+import { chromeCopy } from '@/config/chrome';
+import type { ChromeCopy } from '@/config/chrome/types';
+import { commandsFor } from '@/config/commands';
+import { useLocale } from '@/lib/i18n/LocaleContext';
 import { CommandList } from './CommandList';
 import { Overlay } from './Overlay';
 import { filterCommands } from './commandFilter';
 import { usePreference } from './preferences';
 import { runCommand } from './runCommand';
 import styles from './CommandPalette.module.css';
+
+type PaletteCopy = ChromeCopy['palette'];
 
 const LIST_ID = 'cmdk-list';
 const OPTION_PREFIX = 'cmdk-option';
@@ -35,6 +40,9 @@ interface Props {
  */
 export const CommandPalette: FC<Props> = ({ open, onClose, onOpenShortcuts }) => {
     const router = useRouter();
+    const locale = useLocale();
+    const copy = chromeCopy[locale].palette;
+    const commands = useMemo(() => commandsFor(locale), [locale]);
     const inputRef = useRef<HTMLInputElement>(null);
     const [query, setQuery] = useState('');
     const [selected, setSelected] = useState(0);
@@ -72,7 +80,7 @@ export const CommandPalette: FC<Props> = ({ open, onClose, onOpenShortcuts }) =>
         };
     }, [intro]);
 
-    const filtered = useMemo(() => filterCommands(commands, query), [query]);
+    const filtered = useMemo(() => filterCommands(commands, query), [commands, query]);
     // The filter can shrink the list under the selection, so the rendered index
     // is derived rather than stored — nothing has to chase it back into range.
     const active = Math.min(selected, Math.max(0, filtered.length - 1));
@@ -93,6 +101,7 @@ export const CommandPalette: FC<Props> = ({ open, onClose, onOpenShortcuts }) =>
             navigate: (href: string) => {
                 router.push(href);
             },
+            locale,
         };
 
         // Opening a tab has to stay inside the click's gesture or the popup
@@ -138,17 +147,17 @@ export const CommandPalette: FC<Props> = ({ open, onClose, onOpenShortcuts }) =>
     };
 
     return (
-        <Overlay open={open} label="Command menu" focusRef={inputRef} onClose={onClose}>
+        <Overlay open={open} label={copy.label} focusRef={inputRef} onClose={onClose}>
             <div className={styles.search}>
                 <input
                     className={styles.input}
                     ref={inputRef}
                     type="text"
-                    placeholder={narrow ? 'Search commands' : 'Jump to a section or run a command'}
+                    placeholder={narrow ? copy.placeholderNarrow : copy.placeholder}
                     autoComplete="off"
                     spellCheck={false}
                     role="combobox"
-                    aria-label="Search commands"
+                    aria-label={copy.search}
                     aria-autocomplete="list"
                     aria-expanded={expanded}
                     aria-controls={LIST_ID}
@@ -164,7 +173,7 @@ export const CommandPalette: FC<Props> = ({ open, onClose, onOpenShortcuts }) =>
                 {/* A button, not a bare keycap: on touch there is no Escape key,
                     and a chip that looks pressable has to be. Same control as
                     the shortcuts list's close. */}
-                <button className={styles.close} type="button" aria-label="Close command menu" onClick={onClose}>
+                <button className={styles.close} type="button" aria-label={copy.close} onClick={onClose}>
                     <kbd>esc</kbd>
                 </button>
             </div>
@@ -181,26 +190,26 @@ export const CommandPalette: FC<Props> = ({ open, onClose, onOpenShortcuts }) =>
                 onHover={setSelected}
                 onRun={run}
             />
-            {expanded ? null : <p className={styles.empty}>No matches. Try “work” or “linkedin”.</p>}
-            <p className="visually-hidden" role="status">{resultStatus(query, filtered.length)}</p>
+            {expanded ? null : <p className={styles.empty}>{copy.empty}</p>}
+            <p className="visually-hidden" role="status">{resultStatus(query, filtered.length, copy)}</p>
             <div className={styles.foot} aria-hidden="true">
                 <span>
                     <kbd>↑</kbd>
                     <kbd>↓</kbd>
                     {' '}
-                    move
+                    {copy.move}
                 </span>
                 <span>
                     <kbd>↵</kbd>
                     {' '}
-                    run
+                    {copy.run}
                 </span>
                 {singleKeys
                     ? (
                         <span>
                             <kbd>?</kbd>
                             {' '}
-                            shortcuts
+                            {copy.shortcuts}
                         </span>
                     )
                     : null}
@@ -214,14 +223,14 @@ export const CommandPalette: FC<Props> = ({ open, onClose, onOpenShortcuts }) =>
  * dialog's name and the input are announced already, and a count on top would
  * talk over them.
  */
-const resultStatus = (query: string, count: number) => {
+const resultStatus = (query: string, count: number, copy: PaletteCopy) => {
     if (query.trim() === '') {
         return '';
     }
 
     if (count === 0) {
-        return 'No matching commands';
+        return copy.noResults;
     }
 
-    return count === 1 ? '1 command' : `${count} commands`;
+    return copy.results(count);
 };
