@@ -9,11 +9,15 @@
  * to `/contact`).
  *
  * The contact form's Server Action posts to the page it lives on, so the
- * protected path is the page's. `lib/contact/botCheck.ts` reads the verdict.
+ * protected paths are the pages': without the German one, every German
+ * submission would fail the check. `lib/contact/botCheck.ts` reads the verdict.
  */
 
 import { initBotId } from 'botid/client/core';
 
 initBotId({
-    protect: [{ path: '/contact', method: 'POST' }],
+    protect: [
+        { path: '/contact', method: 'POST' },
+        { path: '/de/kontakt', method: 'POST' },
+    ],
 });

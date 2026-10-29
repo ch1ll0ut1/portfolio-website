@@ -2,9 +2,10 @@
  * Asks Vercel BotID whether a contact form submission came from a person.
  *
  * BotID works by the browser solving a challenge and attaching the answer as
- * headers to `fetch` calls on the protected path (`instrumentation-client.ts`
- * protects `POST /contact`). The form therefore only submits with JavaScript:
- * a native form post carries no answer, and on Vercel every submission must
+ * headers to `fetch` calls on the protected paths (`instrumentation-client.ts`
+ * protects `POST /contact` and `POST /de/kontakt`). The form therefore only
+ * submits with JavaScript: a native form post carries no answer, and on
+ * Vercel every submission must
  * have been through BotID.
  *
  * - `isJavaScriptSubmission` is the cheap first gate. React's `fetch` for a
