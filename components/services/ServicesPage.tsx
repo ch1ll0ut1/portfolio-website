@@ -26,7 +26,7 @@ export const ServicesPage: FC<Props> = ({ copy }) => (
         <ServicesHeader copy={copy} />
         <OfferChooser copy={copy} />
         {copy.offers.map(offer => (
-            <OfferSection key={offer.id} offer={offer} labels={copy.labels} />
+            <OfferSection key={offer.id} offer={offer} labels={copy.labels} locale={copy.lang} />
         ))}
         <ServicesProcess copy={copy} />
         <TimeZones copy={copy} />
