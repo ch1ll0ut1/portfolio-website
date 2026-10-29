@@ -18,11 +18,11 @@ interface Props {
  * The services page body, in the language of `copy`.
  *
  * `/services` and `/de/leistungen` both render this with their own copy
- * object. The root element carries the copy's `lang`, since the document's
- * `<html lang>` comes from the shared layout and stays English.
+ * object. The language itself is the document's: each page sits under the
+ * root layout of its language, which sets `<html lang>`.
  */
 export const ServicesPage: FC<Props> = ({ copy }) => (
-    <div className="wrap" lang={copy.lang}>
+    <div className="wrap">
         <ServicesHeader copy={copy} />
         <OfferChooser copy={copy} />
         {copy.offers.map(offer => (

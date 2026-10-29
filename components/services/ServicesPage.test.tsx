@@ -30,10 +30,11 @@ describe('ServicesPage', () => {
         expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(servicesEn.hero.title);
     });
 
-    it('should mark the German page body as German', () => {
+    // The German root layout's `<html lang="de">` says it for the whole page.
+    it('should leave the page language to the document', () => {
         const { container } = render(<ServicesPage copy={servicesDe} />);
 
-        expect(container.firstElementChild).toHaveAttribute('lang', 'de');
+        expect(container.firstElementChild).not.toHaveAttribute('lang');
     });
 
     it('should link to the page in the other language, marked with its language', () => {
