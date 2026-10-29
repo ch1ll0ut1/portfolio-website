@@ -2,6 +2,8 @@
  * Tests for the URL map between the English and the German pages.
  */
 
+import fs from 'node:fs';
+import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { DE_SEGMENTS, localeFromPath, localizedPath, pageAlternates, twinPath } from './paths';
 
@@ -118,5 +120,16 @@ describe('pageAlternates', () => {
 
     it('should map the home page to /de', () => {
         expect(pageAlternates('/')).toEqual({ 'en': '/', 'de': '/de', 'x-default': '/' });
+    });
+});
+
+describe('DE_SEGMENTS', () => {
+    it.each(Object.entries(DE_SEGMENTS))('should have a German route for /%s at app/de/%s', (_en, de) => {
+        // A German segment with no directory would send every link to it to the 404.
+        expect(fs.statSync(path.join(process.cwd(), 'app', 'de', de)).isDirectory()).toBe(true);
+    });
+
+    it('should have the German blog, whose segment stays as it is in English', () => {
+        expect(fs.statSync(path.join(process.cwd(), 'app', 'de', 'blog')).isDirectory()).toBe(true);
     });
 });
