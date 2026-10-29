@@ -6,7 +6,7 @@
  * rows share one lane width.
  *
  * The clip-path reveal and the pulse animation are gated on `html.motion`,
- * which the boot script in `app/layout.tsx` only sets when motion is allowed.
+ * which the boot script (lib/bootScript.ts) only sets when motion is allowed.
  * Reduced motion therefore gets the finished graph from the very first paint
  * instead of an empty gutter.
  */

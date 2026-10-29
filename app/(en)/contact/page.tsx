@@ -13,7 +13,7 @@ import { issueContactToken, sendContactMessage } from './actions';
 const TITLE = `Contact ${siteConfig.name} — hire a software architect & tech lead`;
 const DESCRIPTION = 'Hire a software architect & tech lead for your app, your MVP or your team. I reply within one working day from Bangkok, across European, US and Asian hours.';
 
-/* Every share field is set here, not inherited; see app/privacy/page.tsx. */
+/* Every share field is set here, not inherited; see app/(en)/privacy/page.tsx. */
 export const metadata: Metadata = {
     title: { absolute: TITLE },
     description: DESCRIPTION,

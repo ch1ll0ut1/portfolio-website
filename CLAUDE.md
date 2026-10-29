@@ -51,17 +51,22 @@ This is a Next.js 16 portfolio website built with TypeScript, React 19.3 and CSS
 - **Motion**: `lib/motion` — one shared ticker and scroll store behind hooks (`useReveal`, `useScrub`, `useIntro`), all of it inert under reduced motion. Subscription callbacks go through React's `useEffectEvent`
 - **Testing**: Vitest — Node environment by default, jsdom for `.tsx` tests and the DOM-touching `.ts` tests listed in `vitest.config.ts`
 - **Code Quality**: ESLint with TypeScript, stylistic, and import rules
-- **Fonts**: Bricolage Grotesque, Schibsted Grotesk and Martian Mono via `next/font/google`
+- **Fonts**: Bricolage Grotesque, Schibsted Grotesk and Martian Mono via `next/font/google`, loaded in `lib/fonts.ts`
 - **Deployment**: Vercel with automatic optimization
 
 ### Project Structure
 
 ```
 app/                    # Next.js app router pages
-├── blog/              # Blog functionality
+├── (en)/              # Every English page, under its root layout (<html lang="en">)
+│   ├── blog/          # Blog functionality
+│   ├── layout.tsx     # English root layout: SiteDocument with 'en'
+│   └── page.tsx       # Homepage
+├── de/                # German pages under their root layout (<html lang="de">),
+│                      #   a catch-all to the German 404, and the German error page
+├── global-not-found.tsx # 404 for unmatched URLs: a whole document, imports only globals.css
 ├── globals.css        # Global styles
-├── layout.tsx         # Root layout with metadata
-└── page.tsx           # Homepage
+└── ...                # Metadata routes (sitemap, robots, manifest, icons, feed.xml), global-error
 
 assets/fonts/          # Static font cuts (with their OFL licences) for share cards and icons
 
@@ -70,6 +75,7 @@ components/            # React components organized by domain
 ├── blog/             # Reading routes: index, article, 404 panel
 ├── chrome/           # Site-wide overlay: command palette, theme, cursor, progress
 ├── consent/          # Cookie banner and preferences dialog
+├── document/         # SiteDocument: the html/head/body shell both root layouts render
 ├── contact/          # /contact page body and the form (client)
 ├── home/             # One directory per homepage section
 │   ├── hero/         # ... contact, experience, process, proof,
@@ -90,6 +96,7 @@ lib/                  # Utilities and shared logic
 ├── analytics.ts      # GA4 event helpers
 ├── contact/          # Server-only contact form: validation, spam checks, Resend call
 ├── content/          # Server-only file reads: post markdown, image sizes
+├── i18n/             # Locales, the EN/DE URL map, LocaleProvider, page and layout metadata
 ├── motion/           # Ticker, scroll store and the motion hooks
 └── og/               # Share cards and icons: layout, fonts, `ogPalette` literals
 

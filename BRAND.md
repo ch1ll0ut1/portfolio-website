@@ -75,7 +75,7 @@ Rules:
 
 ## 5. Typography
 
-All three faces load through `next/font/google` in `app/layout.tsx`. The share cards and icons cannot use `next/font` or variable axes, so they read static, Latin-subset cuts from `assets/fonts` (see `lib/og/fonts.ts`).
+All three faces load through `next/font/google` in `lib/fonts.ts`. The share cards and icons cannot use `next/font` or variable axes, so they read static, Latin-subset cuts from `assets/fonts` (see `lib/og/fonts.ts`).
 
 - **Display: Bricolage Grotesque** (`--font-display`). Use it for headlines and big numbers. Large type uses the narrow width axis (`wdth` 75–90).
 - **Body: Schibsted Grotesk** (`--font-body`). Use it for running text, in roman and italic.

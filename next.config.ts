@@ -1,6 +1,7 @@
 import type { NextConfig } from 'next';
 import { withBotId } from 'botid/next/config';
 import { siteConfig } from './config/site';
+import { groupedImageRewrites } from './lib/og/groupedImageRewrites';
 import { CSP_HEADER_NAME, LOCAL_HOST_CONDITION, buildContentSecurityPolicy } from './lib/contentSecurityPolicy';
 
 const dev = process.env.NODE_ENV !== 'production';
@@ -62,6 +63,11 @@ const nextConfig: NextConfig = {
     poweredByHeader: false,
     compress: true,
     reactStrictMode: true,
+    experimental: {
+        // app/global-not-found.tsx: with a root layout per language there is
+        // no single layout to wrap the 404 of an unmatched URL in.
+        globalNotFound: true,
+    },
     images: {
         // AVIF first: noticeably smaller than WebP for the flat blog artwork.
         formats: ['image/avif', 'image/webp'],
@@ -78,6 +84,11 @@ const nextConfig: NextConfig = {
                 permanent: true,
             },
         ];
+    },
+    async rewrites() {
+        // The English share cards' URLs from before the `(en)` route group;
+        // see lib/og/groupedImageRewrites.ts.
+        return groupedImageRewrites();
     },
     async headers() {
         return [

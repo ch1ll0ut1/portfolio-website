@@ -1,7 +1,7 @@
 /**
  * A post's share card as page metadata.
  *
- * The card is a plain route (`app/blog/[slug]/card.png/route.tsx`), not an
+ * The card is a plain route (`app/(en)/blog/[slug]/card.png/route.tsx`), not an
  * `opengraph-image` file, so the post's own metadata links it, and can give
  * it the post's title as its alt text. Structured data links the same URL.
  */

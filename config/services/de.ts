@@ -27,7 +27,6 @@ export const servicesDe: ServicesPageCopy = {
     meta: {
         title: 'App retten, MVP entwickeln lassen & Tech Lead — Stefan Knoch',
         description: `Softwarearchitekt mit ${yearsShipping()} Jahren Erfahrung: App retten oder übernehmen, MVP entwickeln lassen, Tech Lead in Teilzeit. Auf Deutsch, mit DSGVO im Blick.`,
-        locale: 'de_DE',
         shareKicker: 'leistungen',
         shareHighlight: 'kleine Unternehmen',
     },

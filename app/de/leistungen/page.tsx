@@ -8,7 +8,7 @@ import { servicesJsonLd, servicesMetadata } from '@/lib/servicesPage';
 
 export const metadata: Metadata = servicesMetadata(servicesDe);
 
-/** The German services page. The layout's `<html lang="en">` stays; the page body says `lang="de"`. */
+/** The German services page, under the German root layout's `<html lang="de">`. */
 const Leistungen: FC = () => (
     <>
         <JsonLd data={servicesJsonLd(servicesDe)} />
