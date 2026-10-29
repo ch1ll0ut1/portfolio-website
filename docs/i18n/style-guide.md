@@ -47,7 +47,7 @@ Every translator works to this brief:
 
 | English | Literal (wrong) | German (right) |
 |---|---|---|
-| I build the hard part. | Ich baue den harten Teil. | Ich baue den schwierigen Teil. |
+| I build the hard part. | Ich baue den harten Teil. | not fixed yet: see the note below |
 | …what is urgent, in plain English | …was dringend ist, in einfachem Englisch | …was dringend ist, verständlich erklärt |
 | Every engagement is billed by the hour against a written plan. | Die Abrechnung jedes Auftrags erfolgt auf Stundenbasis unter Zugrundelegung eines schriftlichen Plans. | Jeder Auftrag wird nach Stunden abgerechnet, auf Basis eines schriftlichen Plans. |
 | A fixed price either pads for that risk or turns every change into a negotiation. | Ein Festpreis polstert entweder für dieses Risiko oder verwandelt jede Änderung in eine Verhandlung. | Ein Festpreis rechnet dieses Risiko entweder ein oder macht jede Änderung zur Verhandlung. |
@@ -55,14 +55,20 @@ Every translator works to this brief:
 | Free, and no deck needed. | Kostenlos, und kein Deck nötig. | Kostenlos, ohne Vorbereitung. |
 | Made a whole class of integration bugs fail the build instead of production | Eine ganze Klasse von Integrationsbugs den Build statt die Produktion scheitern lassen | Eine ganze Klasse von Integrationsfehlern im Build abgefangen statt in Produktion |
 | Taking on new projects | Nehme neue Projekte an | Offen für neue Projekte |
-| Startups love to brag about hustle. | Start-ups lieben es, mit Hustle anzugeben. | Start-ups prahlen gern damit, wie hart sie schuften. |
+| Startups love to brag about hustle. | Startups lieben es, mit Hustle anzugeben. | Startups prahlen gern damit, wie hart sie schuften. |
 | …shortcuts pile up like unpaid credit cards. | …Abkürzungen stapeln sich wie unbezahlte Kreditkarten. | …Abkürzungen häufen sich wie ein Dispo, den niemand zurückzahlt. |
 | The PO wasn't incompetent. They were just in the wrong role. | Der PO war nicht inkompetent. Sie waren nur in der falschen Rolle. | Inkompetent war die Person nicht. Sie saß nur an der falschen Stelle. |
 | Thank you, your message is on its way. I will reply to the address you gave. | Danke, Ihre Nachricht ist auf ihrem Weg. Ich werde an die Adresse antworten, die Sie gaben. | Danke, Ihre Nachricht ist unterwegs. Ich antworte an die angegebene Adresse. |
 
-The hero headline is stored in three parts (`before`, `highlight`, `after`),
-and the editor animation needs them. Keep the three parts:
-`'Ich baue den '`, `'schwierigen Teil'`, `'.'`.
+The hero headline is stored in three parts (`before`, `highlight`, `after`,
+see `config/hero.ts`), and the editor animation and the `headline.json` panel
+(`components/home/hero/headlineJson.ts`) need them. "I build the hard part."
+has **no fixed German yet**. Whoever translates the home copy proposes three
+German alternatives, each split into the same three parts (`before` ending in a
+space, `highlight` the phrase the editor marks, `after` the closing
+punctuation), with a one-line rationale each. Stefan picks one in review. Put
+the first alternative in the code as a placeholder and list all three in the
+hand-over.
 
 ## 3. Gender-neutral German
 
@@ -89,6 +95,13 @@ In order of preference:
 - Compounds whose first part is masculine ("Nutzerfreundlichkeit",
   "Kundenplattform", "Mitarbeiterkommunikation").
 - Legal terms in the privacy policy ("der Verantwortliche").
+- **One deliberate SEO exception:** the title of `how-to-hire-your-first-developer`,
+  "Den ersten Entwickler einstellen: So geht’s" (58 characters with the
+  ` | Stefan Knoch` suffix). "ersten Entwickler einstellen" is what German
+  founders search for, and no neutral phrasing carries it. The exception covers
+  that title (and its `#` heading and link text) only. The post body stays
+  neutral: "die erste Stelle in der Entwicklung", "Ihr erstes Entwicklungsteam",
+  "wer Ihren Code schreibt".
 
 Generic masculine in today's `de.ts`, with the rewrite to use from now on:
 
@@ -110,12 +123,12 @@ When the glossary and a general rule disagree, the glossary wins.
 ### Stays English
 
 Tech Lead, Fractional CTO, CTO, Interim-CTO, Founding Engineer, Product Owner,
-Product Manager, MVP, Start-up (the Duden spelling, as in `de.ts`), Code-Review,
-Pull-Request, Commit, Branch, Merge, Repository, Build, Deployment (verb
+Product Manager, MVP, Startup, Code Review,
+Pull Request, Commit, Branch, Merge, Repository, Build, Deployment (verb
 "deployen" only in developer posts), Release, Refactoring, Tests, Bug (developer
 posts; "Fehler" for buyers), Frontend, Backend, Full-Stack, Prompt, Vibe Coding,
 Workflow, Stakeholder, Roadmap, Sprint, Backlog, Burnout, Open Source, UX, UI,
-CI/CD, API, SDK, ORM, Clean Code, Live-Coding, Upwork, Calendly, LinkedIn.
+CI/CD, API, SDK, ORM, Clean Code, Live Coding, Upwork, Calendly, LinkedIn.
 
 The same goes for every product, technology, company and client name, exactly
 as written: Edithing, BlueReceipt, Social-Bee, Eko, Agoda, Slimwiki, DirectMail,
@@ -124,10 +137,23 @@ Supabase, HubSpot, AWS, AWS CDK, ECS, Claude, Claude Code, ChatGPT, Cursor, v0,
 Lovable, Bolt, HIPAA. Git output in the career log stays as it is too: hashes,
 `HEAD → indie`, `main`.
 
-**Hyphenation rule.** An English compound used as a German noun gets a hyphen
-(Code-Review, Pull-Request, Tech-Team, Health-Tech-Start-up, Rich-Text-Editor,
-Open-Source-Editor, Full-Stack-Entwicklung). Role names stay open: "Tech Lead"
-and "Fractional CTO", as in `de.ts`.
+**Spelling rule for English loanwords** (Stefan's call, overriding the Duden
+hyphen):
+
+1. **An English word stays one word**: "Startup", never "Start-up".
+2. **An established English term of two words stays open, as in English**:
+   "Code Review", "Pull Request", "Tech Team", "Open Source", "Tech Lead",
+   "Fractional CTO", "Vibe Coding", "Clean Code".
+3. **Hyphenate the whole compound when a German word joins it**, the normal
+   German rule for compounds with an English part: "Startup-Team",
+   "Code-Review-Prozess", "Tech-Team-Aufbau", "Open-Source-Editor",
+   "Full-Stack-Entwicklung", "KI-Tools".
+4. **Hyphenate too when English words are stacked into a compound that isn't
+   itself a set English term**: "Health-Tech-Startup", "Rich-Text-Editor".
+
+So: "ein Code Review", "zwei Pull Requests", "Ihr Tech Team", but "der
+Code-Review-Prozess" and "ein Startup-Team". Plurals follow English: "Startups",
+"Code Reviews".
 
 ### Fixed German renderings
 
@@ -137,7 +163,7 @@ and "Fractional CTO", as in `de.ts`.
 | GDPR | DSGVO | |
 | rescue (engagement) | Rettung, App-Rettung | as in `de.ts` |
 | health check | Check | "Gesundheits- und Sicherheitscheck" on first mention |
-| code audit / security review | Code-Review / Sicherheitsprüfung | as in `de.ts` |
+| code audit / security review | Code Review / Sicherheitsprüfung | as in `de.ts` |
 | product plan | Produktplan | |
 | engagement | Auftrag | never "Engagement" |
 | milestone | Etappe | as in `de.ts` |
@@ -154,7 +180,7 @@ and "Fractional CTO", as in `de.ts`.
 | software architect | Softwarearchitekt | |
 | case study | Referenz | URL `/de/referenzen`; never "Fallstudie" or "Case Study" |
 | free call | kostenloses Gespräch | |
-| founders | Gründungsteams, Start-ups, Gründerinnen und Gründer | see §3 |
+| founders | Gründungsteams, Startups, Gründerinnen und Gründer | see §3 |
 | Shopify brands | Shopify-Shops | |
 | $28M+ funded | über 28 Mio. USD finanziert | a fact, not a price: stays in USD |
 
@@ -212,14 +238,14 @@ title, so each one fits in 60 characters with the ` | Stefan Knoch` suffix:
 |---|---|
 | how-to-use-ai-to-build-apps-10x-speed | Mit KI Apps 10× schneller bauen |
 | nodejs-vs-python-framework-magic | Node.js vs Python: Was Framework-Magie kostet |
-| how-to-hire-your-first-developer | Die erste Stelle in der Entwicklung besetzen |
-| why-startups-dont-need-product-owners | Warum Start-ups keinen Product Owner brauchen |
-| how-to-build-a-startup-dev-team-for-real-world-success | Ein Start-up-Team aufbauen, das funktioniert |
-| startup-burnout-trap | Burnout: Wie Überarbeitung Start-ups ruiniert |
+| how-to-hire-your-first-developer | Den ersten Entwickler einstellen: So geht’s |
+| why-startups-dont-need-product-owners | Warum Startups keinen Product Owner brauchen |
+| how-to-build-a-startup-dev-team-for-real-world-success | Ein Startup-Team aufbauen, das funktioniert |
+| startup-burnout-trap | Burnout: Wie Überarbeitung Startups ruiniert |
 | 10-ai-workflows-every-developer-should-know-2025 | 10 KI-Workflows für Entwicklungsteams |
 | why-good-software-engineering-is-expensive | Warum gute Softwareentwicklung teuer ist |
 
-Tag labels: AI → KI, Startups → Start-ups, Hiring → Einstellung, Tech
+Tag labels: AI → KI, Startups → Startups, Hiring → Einstellung, Tech
 Leadership → Technische Führung, Productivity → Produktivität, Development →
 Entwicklung, Developers → Entwicklungsteams, Team Building → Teamaufbau,
 Software Teams → Softwareteams, Engineering Culture → Entwicklungskultur,
@@ -240,7 +266,7 @@ Coding, Workflows, Clean Code, Fractional CTO) stay as they are.
   Don't change the name separator in page titles ("— Stefan Knoch",
   "| Stefan Knoch"). The template sets it.
 - **Numbers:** a period groups thousands and a comma marks decimals: "5.000",
-  "1,5". Write one to twelve as words in prose ("drei Tech-Teams") unless the
+  "1,5". Write one to twelve as words in prose ("drei Tech Teams") unless the
   English uses a figure for a metric.
 - **Units and signs** take a no-break space (U+00A0): "5.000 €", "30 Min.",
   "10 %", "28 Mio. USD". In TypeScript, the pricing helpers already insert it.
@@ -257,10 +283,11 @@ Coding, Workflows, Clean Code, Fractional CTO) stay as they are.
   endings: "Gesundheits- und Sicherheitscheck".
 - **"&"** only in short labels, kickers and titles. Use "und" in sentences.
 - **Headings** follow normal German capitalization. There is no Title Case:
-  "How to Hire Your First Developer" becomes "Die erste Stelle in der
-  Entwicklung besetzen".
-- **Spelling:** "E-Mail" (never Email), "online", "Start-up", "Softwareentwicklung"
-  (one word), "Open-Source-Editor".
+  "How to Hire Your First Developer" becomes "Den ersten Entwickler
+  einstellen: So geht’s".
+- **Spelling:** "E-Mail" (never Email), "online", "Startup", "Code Review",
+  "Softwareentwicklung" (one word), "Open-Source-Editor". English loanwords
+  follow the spelling rule in §4.
 
 ## 6. Prices
 
@@ -307,8 +334,8 @@ Coding, Workflows, Clean Code, Fractional CTO) stay as they are.
   replace it with one that lands the same way. Keep the point, the example's
   role and the order of the argument. Add no claims and drop no points.
 - **Developer jargon:** write what German developers say: Refactoring, Tests,
-  Build, Deployment, Commit, Pull-Request, Code-Review, Framework, Bug, Feature,
-  Live-Coding. Don't force German where nobody uses it ("Quelltextüberprüfung"),
+  Build, Deployment, Commit, Pull Request, Code Review, Framework, Bug, Feature,
+  Live Coding. Don't force German where nobody uses it ("Quelltextüberprüfung"),
   and don't use English where German is normal ("Anforderungen", not
   "Requirements"; "Einstellung", not "Hiring").
 - **Address:** the posts talk to the reader. Use "Sie", even in tips and
@@ -321,8 +348,8 @@ Coding, Workflows, Clean Code, Fractional CTO) stay as they are.
   as `caseStudyDetails.ts` notes.
 - **Description** at most 155 characters.
 - **Search terms.** Use the words German buyers search for, as `de.ts` does: "App
-  retten", "MVP entwickeln lassen", "Tech Lead in Teilzeit", "Code-Review",
-  "Softwarearchitekt", "DSGVO", "Start-up". Put the main term early in the title.
+  retten", "MVP entwickeln lassen", "Tech Lead in Teilzeit", "Code Review",
+  "Softwarearchitekt", "DSGVO", "Startup". Put the main term early in the title.
   Don't stuff keywords: the title must still read like a sentence fragment
   Stefan would write.
 - Count characters before you hand in. Don't guess.
@@ -404,7 +431,8 @@ Use the DSGVO's own terms, exactly:
    Nothing is added and nothing is dropped.
 6. Check the glossary: same term every time, and none of the banned words.
 7. Check gender: no star, colon or Binnen-I, no "-ende" participles, and no generic
-   masculine for people other than Stefan.
+   masculine for people other than Stefan (the one title exception in §3 aside).
+   Check loanwords: "Startup", "Code Review", "Pull Request", no "Start-up".
 8. Check typography: „…“ quotes, " – " dashes, "5.000 €", "14. August 2025", no
    serial comma.
 9. Markdown: same headings and levels, code untouched, internal links on
