@@ -20,6 +20,9 @@
 import { type FC, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
+import { consentCopy } from '@/config/consent';
+import { localizedPath } from '@/lib/i18n/paths';
+import { useLocale } from '@/lib/i18n/LocaleContext';
 import { useConsent } from './ConsentContext';
 import { useBannerFocusReturn } from './useBannerFocusReturn';
 import { useFixedBottomInset } from './useFixedBottomInset';
@@ -32,6 +35,8 @@ const ConsentPreferencesModal = dynamic(loadPreferences, { ssr: false });
 export const CookieConsent: FC = () => {
     const { consent, showBanner, preferencesOpen, acceptAll, rejectAll, openPreferences, closePreferences } = useConsent();
     /** The stored choice is not read yet: the server render, and hydration. */
+    const locale = useLocale();
+    const copy = consentCopy[locale];
     const pending = consent === null;
     const bannerRef = useRef<HTMLElement>(null);
     const focus = useBannerFocusReturn(bannerRef, showBanner);
@@ -64,13 +69,11 @@ export const CookieConsent: FC = () => {
             >
                 <div className={styles.panel}>
                     <div>
-                        <h2 className={styles.title} id="consent-banner-title">Cookie preferences</h2>
+                        <h2 className={styles.title} id="consent-banner-title">{copy.title}</h2>
                         <p className={styles.body}>
-                            I use cookies to understand how the site is used. Essential cookies are always
-                            on; analytics cookies are up to you, and you can change your mind any time
-                            under Cookie settings in the footer.
+                            {copy.banner.body}
                             {' '}
-                            <Link className={styles.link} href="/privacy">Privacy policy</Link>
+                            <Link className={styles.link} href={localizedPath(locale, '/privacy')}>{copy.privacyLink}</Link>
                         </p>
                     </div>
 
@@ -80,7 +83,7 @@ export const CookieConsent: FC = () => {
                             type="button"
                             onClick={openPreferences}
                         >
-                            <span className="btn__label">Customize</span>
+                            <span className="btn__label">{copy.banner.customize}</span>
                         </button>
                         <button
                             className="btn"
@@ -90,7 +93,7 @@ export const CookieConsent: FC = () => {
                                 rejectAll();
                             }}
                         >
-                            <span className="btn__label">Reject all</span>
+                            <span className="btn__label">{copy.banner.rejectAll}</span>
                         </button>
                         <button
                             className="btn btn--primary"
@@ -100,7 +103,7 @@ export const CookieConsent: FC = () => {
                                 acceptAll();
                             }}
                         >
-                            <span className="btn__label">Accept all</span>
+                            <span className="btn__label">{copy.banner.acceptAll}</span>
                         </button>
                     </div>
                 </div>

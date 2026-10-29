@@ -11,10 +11,13 @@
 
 import { type FC, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import { consentCopy } from '@/config/consent';
 import type { ConsentState } from '@/lib/consentStorage';
+import { localizedPath } from '@/lib/i18n/paths';
+import { useLocale } from '@/lib/i18n/LocaleContext';
 import { useConsent } from './ConsentContext';
 import { ConsentCategoryRow } from './ConsentCategoryRow';
-import { consentCategories } from './consentCategories';
+import { consentCategoriesFor } from './consentCategories';
 import styles from './ConsentPreferencesModal.module.css';
 
 interface Props {
@@ -23,6 +26,8 @@ interface Props {
 }
 
 export const ConsentPreferencesModal: FC<Props> = ({ onClose, onSave }) => {
+    const locale = useLocale();
+    const copy = consentCopy[locale];
     const { consent, updateConsent } = useConsent();
     const dialogRef = useRef<HTMLDialogElement>(null);
     const closeRef = useRef<HTMLButtonElement>(null);
@@ -116,12 +121,12 @@ export const ConsentPreferencesModal: FC<Props> = ({ onClose, onSave }) => {
             <div className={styles.scrim} onClick={onClose} aria-hidden="true" />
             <div className={styles.panel}>
                 <div className={styles.head}>
-                    <h2 className={styles.title} id="consent-dialog-title">Cookie preferences</h2>
+                    <h2 className={styles.title} id="consent-dialog-title">{copy.title}</h2>
                     <button
                         className={styles.close}
                         ref={closeRef}
                         type="button"
-                        aria-label="Close cookie preferences"
+                        aria-label={copy.dialog.close}
                         onClick={onClose}
                     >
                         <kbd>esc</kbd>
@@ -130,11 +135,10 @@ export const ConsentPreferencesModal: FC<Props> = ({ onClose, onSave }) => {
 
                 <div className={styles.body}>
                     <p className={styles.intro}>
-                        Switch each kind of cookie on or off. Essential cookies stay on, because the site
-                        needs them to work.
+                        {copy.dialog.intro}
                     </p>
                     <ul className={styles.list}>
-                        {consentCategories.map(category => (
+                        {consentCategoriesFor(locale).map(category => (
                             <ConsentCategoryRow
                                 category={category}
                                 checked={category.key === 'essential' || analytics}
@@ -146,13 +150,13 @@ export const ConsentPreferencesModal: FC<Props> = ({ onClose, onSave }) => {
                 </div>
 
                 <div className={styles.foot}>
-                    <Link className={styles.policy} href="/privacy">Privacy policy</Link>
+                    <Link className={styles.policy} href={localizedPath(locale, '/privacy')}>{copy.privacyLink}</Link>
                     <div className={styles.actions}>
                         <button className="btn" type="button" onClick={onClose}>
-                            <span className="btn__label">Cancel</span>
+                            <span className="btn__label">{copy.dialog.cancel}</span>
                         </button>
                         <button className="btn btn--primary" type="button" onClick={handleSave}>
-                            <span className="btn__label">Save preferences</span>
+                            <span className="btn__label">{copy.dialog.save}</span>
                         </button>
                     </div>
                 </div>
