@@ -24,7 +24,7 @@ export const blogIndexCard = (locale: Locale) => {
     const heading = blogCopy[locale].indexHeading;
 
     return createOgImage(
-        <OgLayout kicker={heading.kicker.toLowerCase()}>
+        <OgLayout locale={locale} kicker={heading.kicker.toLowerCase()}>
             <OgHeadline text={heading.title} highlight={heading.highlight} fontSize={72} />
             <span
                 style={{

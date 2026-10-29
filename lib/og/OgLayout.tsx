@@ -1,11 +1,14 @@
 import type { FC, ReactNode } from 'react';
 import { siteConfig } from '@/config/site';
+import type { Locale } from '@/lib/i18n/locale';
 import { ogFonts } from './fonts';
 import { OgMono } from './OgMono';
 import { ogPalette } from './palette';
 import { siteMetaLine } from './text';
 
 interface Props {
+    /** The language of the site line at the bottom. */
+    locale: Locale;
     /** Mono label at the top right, naming the part of the site the card is for. */
     kicker?: string;
     children: ReactNode;
@@ -16,7 +19,7 @@ interface Props {
  * the name at the top and the site's mono metadata line at the bottom.
  * The page's own content (headline, lede, metadata) goes in between.
  */
-export const OgLayout: FC<Props> = ({ kicker, children }) => (
+export const OgLayout: FC<Props> = ({ locale, kicker, children }) => (
     <div
         style={{
             display: 'flex',
@@ -77,7 +80,7 @@ export const OgLayout: FC<Props> = ({ kicker, children }) => (
                     borderTop: `1px solid ${ogPalette.line}`,
                 }}
             >
-                <OgMono>{siteMetaLine()}</OgMono>
+                <OgMono>{siteMetaLine(locale)}</OgMono>
             </div>
         </div>
     </div>

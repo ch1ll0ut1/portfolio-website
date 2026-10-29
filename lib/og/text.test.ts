@@ -91,7 +91,11 @@ describe('headlineSize', () => {
 
 describe('metadata lines', () => {
     it('should build the site line from the config', () => {
-        expect(siteMetaLine()).toBe('stefanknoch.com · Bangkok · since 2008');
+        expect(siteMetaLine('en')).toBe('stefanknoch.com · Bangkok · since 2008');
+    });
+
+    it('should build the German site line from the German site copy', () => {
+        expect(siteMetaLine('de')).toBe('stefanknoch.com · Bangkok · seit 2008');
     });
 
     it('should build the post line from the date and the reading time', () => {

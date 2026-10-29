@@ -4,7 +4,7 @@
  */
 
 import { notFound } from 'next/navigation';
-import { caseStudies, findCaseStudy } from '@/config/caseStudies';
+import { caseStudiesFor } from '@/config/caseStudies';
 import { workCopy } from '@/config/caseStudyDetails';
 import { siteConfig } from '@/config/site';
 import type { Locale } from '@/lib/i18n/locale';
@@ -23,11 +23,11 @@ const TAGS_SHOWN = 3;
 export const caseStudyCardAlt = (locale: Locale) => workCopy[locale].card.alt(siteConfig.name);
 
 /** One card per case. */
-export const caseStudyCardParams = () => caseStudies.map(study => ({ slug: study.slug }));
+export const caseStudyCardParams = () => caseStudiesFor('en').map(study => ({ slug: study.slug }));
 
 /** The card of the case at `slug` in `locale`. */
 export const caseStudyCard = (slug: string, locale: Locale) => {
-    const study = findCaseStudy(slug);
+    const study = caseStudiesFor(locale).find(candidate => candidate.slug === slug);
 
     // Unreachable with the route's `dynamicParams` off; narrows `study` for the render.
     if (!study) {
@@ -38,7 +38,7 @@ export const caseStudyCard = (slug: string, locale: Locale) => {
     const title = truncateAtWord(copy.details[study.id].heading, TITLE_MAX);
 
     return createOgImage(
-        <OgLayout kicker={copy.card.kicker}>
+        <OgLayout locale={locale} kicker={copy.card.kicker}>
             <OgHeadline text={title} fontSize={headlineSize(title)} />
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 36 }}>
                 <OgMono>{[copy.card.metaKicker, study.years, study.role].join(' · ')}</OgMono>

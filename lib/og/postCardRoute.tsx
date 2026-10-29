@@ -40,7 +40,7 @@ export const postCardResponse = (slug: string, locale: Locale) => {
     const title = truncateAtWord(post.title, TITLE_MAX);
 
     return createOgImage(
-        <OgLayout>
+        <OgLayout locale={locale}>
             <OgHeadline text={title} fontSize={headlineSize(title)} />
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 36 }}>
                 <OgMono>{postMetaLine(post, locale)}</OgMono>

@@ -1,33 +1,10 @@
-import { engagements } from '@/config/engagements';
-import { siteConfig, siteTitle } from '@/config/site';
-import { createOgImage, ogContentType, ogImageSize } from '@/lib/og/createOgImage';
-import { ogFonts } from '@/lib/og/fonts';
-import { OgHeadline } from '@/lib/og/OgHeadline';
-import { OgLayout } from '@/lib/og/OgLayout';
-import { ogPalette } from '@/lib/og/palette';
+import { ogContentType, ogImageSize } from '@/lib/og/createOgImage';
+import { siteCard, siteCardAlt } from '@/lib/og/siteCard';
 
-export const alt = siteTitle;
+export const alt = siteCardAlt('en');
 export const size = ogImageSize;
 export const contentType = ogContentType;
 
-/** The phrase of the positioning line the card selects. Must appear in `jobTitle`. */
-const HIGHLIGHT = 'tech lead';
-
 export default async function Image() {
-    return createOgImage(
-        <OgLayout>
-            <OgHeadline text={siteConfig.jobTitle} highlight={HIGHLIGHT} fontSize={80} />
-            <span
-                style={{
-                    marginTop: 36,
-                    fontFamily: ogFonts.body,
-                    fontWeight: 500,
-                    fontSize: 30,
-                    color: ogPalette.fg2,
-                }}
-            >
-                {engagements.map(engagement => engagement.short).join('  ·  ')}
-            </span>
-        </OgLayout>,
-    );
+    return siteCard('en');
 }
