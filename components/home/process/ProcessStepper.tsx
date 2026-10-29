@@ -14,7 +14,7 @@
  * after hydration on every desktop load, and nothing at all without JavaScript.
  */
 
-import { FC, useCallback, useEffect, useRef, useState } from 'react';
+import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
     REDUCED_MOTION_QUERY,
     clamp,
@@ -25,7 +25,9 @@ import {
     useScrub,
     watchMedia,
 } from '@/lib/motion';
-import { processSteps, processTitle } from '@/config/processSteps';
+import { processCopy } from '@/config/home/process';
+import { processStepsFor } from '@/config/processSteps';
+import { useLocale } from '@/lib/i18n/LocaleContext';
 import { StepList } from './StepList';
 import { Terminal } from './Terminal';
 import { type Typer, createTyper } from './terminalTyper';
@@ -42,6 +44,8 @@ const TRACK_START = 0.12;
 const TRACK_END = 0.88;
 
 export const ProcessStepper: FC = () => {
+    const locale = useLocale();
+    const processSteps = useMemo(() => processStepsFor(locale), [locale]);
     const trackRef = useRef<HTMLDivElement>(null);
     const termRef = useRef<HTMLDivElement>(null);
     const typersRef = useRef<Typer[]>([]);
@@ -113,7 +117,7 @@ export const ProcessStepper: FC = () => {
 
         unscrambleRef.current?.();
         unscrambleRef.current = scrambleInto(heading, step.title);
-    }, []);
+    }, [processSteps]);
 
     const setStep = useCallback((next: number) => {
         const previous = indexRef.current;
@@ -144,7 +148,7 @@ export const ProcessStepper: FC = () => {
 
         trackRef.current?.style.setProperty('--p', travelled.toFixed(4));
         setStep(Math.min(processSteps.length - 1, Math.floor(travelled * processSteps.length)));
-    }, [pinned, setStep]);
+    }, [pinned, processSteps.length, setStep]);
 
     useScrub(trackRef, apply, { start: 0, end: 1 });
 
@@ -209,7 +213,7 @@ export const ProcessStepper: FC = () => {
             <div className={styles.sticky}>
                 <div className={`wrap ${styles.grid}`}>
                     <div>
-                        <h2 className={styles.title} id="process-title">{processTitle}</h2>
+                        <h2 className={styles.title} id="process-title">{processCopy[locale].title}</h2>
                         <StepList steps={processSteps} activeIndex={activeIndex} pinned={pinned} />
                     </div>
 

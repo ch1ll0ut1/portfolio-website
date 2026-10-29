@@ -8,8 +8,10 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { REDUCED_MOTION_QUERY } from '@/lib/motion';
 import { installIntersectionObserver, installMatchMedia } from '@/test/motionEnv';
-import { featureCycleContent } from '@/config/featureCycle';
+import { featureCycleFor } from '@/config/featureCycle';
 import { FeatureCycle } from './FeatureCycle';
+
+const featureCycleContent = featureCycleFor('en');
 
 describe('Feature Cycle Block', () => {
     let restoreMedia: () => void;

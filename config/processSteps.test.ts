@@ -5,12 +5,20 @@
 
 import { describe, it, expect } from 'vitest';
 import { itemAt } from '@/test/itemAt';
-import { processSteps, processTitle, terminalPath } from './processSteps';
+import { processEn } from './home/process/en';
+import { processSteps, processStepsFor, terminalPath } from './processSteps';
+
+const processTitle = processEn.title;
 
 const TONES = ['prompt', 'dim', 'ok', 'warn'];
 
 describe('Process Steps Configuration', () => {
     describe('Process Steps Data Integrity', () => {
+        it('should tell the English steps, the ones the services page reads, from the English dictionary', () => {
+            expect(processSteps).toEqual(processStepsFor('en'));
+            expect(processSteps.map(step => step.title)).toEqual(Object.values(processEn.steps).map(step => step.title));
+        });
+
         it('should have exactly four steps', () => {
             expect(processSteps).toHaveLength(4);
         });

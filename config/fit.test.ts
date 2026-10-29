@@ -4,10 +4,16 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { fitContent } from './fit';
+import { fitContent, fitFor } from './fit';
+import { processEn } from './home/process/en';
 
 describe('Fit Configuration', () => {
     describe('Fit Data Integrity', () => {
+        it('should tell the English lists, the ones the services page reads, from the English dictionary', () => {
+            expect(fitContent).toEqual(fitFor('en'));
+            expect(fitContent.lists[0].items).toEqual(processEn.fit.lists['good-fit'].items);
+        });
+
         it('should have exactly two lists', () => {
             expect(fitContent.lists).toHaveLength(2);
         });

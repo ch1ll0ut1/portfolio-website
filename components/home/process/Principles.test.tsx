@@ -6,8 +6,10 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { installIntersectionObserver, installMatchMedia } from '@/test/motionEnv';
-import { principlesContent } from '@/config/principles';
+import { principlesFor } from '@/config/principles';
 import { Principles } from './Principles';
+
+const principlesContent = principlesFor('en');
 
 describe('Principles Block', () => {
     let restoreMedia: () => void;
