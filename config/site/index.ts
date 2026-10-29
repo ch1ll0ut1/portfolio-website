@@ -7,6 +7,7 @@
  */
 
 import type { Locale } from '@/lib/i18n/locale';
+import { siteDe } from './de';
 import { siteEn } from './en';
 import { type SiteIdentity, siteIdentity } from './identity';
 import type { SiteCopy } from './types';
@@ -17,7 +18,7 @@ export type { SiteCopy } from './types';
 /** The site's title, positioning line and description in each language. */
 export const siteCopy: Record<Locale, SiteCopy> = {
     en: siteEn,
-    de: siteEn, // i18n: German copy pending
+    de: siteDe,
 };
 
 /** The identity with the English words, for everything that is English only. */

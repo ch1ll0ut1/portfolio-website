@@ -30,8 +30,8 @@ const renderForm = async (action: Action) => {
     return view;
 };
 
-const send = async () => {
-    await userEvent.click(screen.getByRole('button', { name: /send message/i }));
+const send = async (name = /send message/i) => {
+    await userEvent.click(screen.getByRole('button', { name }));
 };
 
 describe('ContactForm', () => {
@@ -115,7 +115,7 @@ describe('ContactForm', () => {
         });
 
         // Act
-        await send();
+        await send(/nachricht senden/i);
 
         // Assert
         await waitFor(() => {
