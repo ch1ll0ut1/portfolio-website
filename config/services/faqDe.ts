@@ -61,7 +61,7 @@ export const faqDe: FaqCopy[] = [
     },
     {
         question: 'Können Sie mir helfen, eigene Entwickler einzustellen?',
-        answer: 'Ja. Ich habe dreimal ein Tech-Team von null aufgebaut: Stellen beschrieben, Interviews geführt, Abläufe aufgesetzt und die Leute im Team begleitet. Ich kann Ihre technischen Interviews führen, Arbeitsproben bewerten und neue Entwickler in den Code einarbeiten.',
+        answer: 'Ja. Ich habe dreimal ein Tech Team von null aufgebaut: Stellen beschrieben, Interviews geführt, Abläufe aufgesetzt und die Leute im Team begleitet. Ich kann Ihre technischen Interviews führen, Arbeitsproben bewerten und neue Entwickler in den Code einarbeiten.',
     },
     {
         question: 'Wann können Sie anfangen?',

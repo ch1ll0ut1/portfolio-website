@@ -4,7 +4,7 @@
  * The German counterpart of `en.ts`: same structure, same facts. Prices come
  * from `config/pricing.ts` in euros, set for DACH in their own right and in
  * German number format. Written for DACH
- * search terms (App retten, MVP entwickeln lassen, Code-Review, DSGVO).
+ * search terms (App retten, MVP entwickeln lassen, Code Review, DSGVO).
  * NEEDS STEFAN'S REVIEW before it is promoted anywhere.
  */
 
@@ -41,7 +41,7 @@ export const servicesDe: ServicesPageCopy = {
     },
     hero: {
         kicker: 'Leistungen',
-        title: 'Erfahrene Software-Hilfe für Start-ups und kleine Unternehmen',
+        title: 'Erfahrene Software-Hilfe für Startups und kleine Unternehmen',
         lede: `Ich rette Apps, die nicht mehr rund laufen, entwickle neue Apps von Anfang an sauber und führe Entwicklerteams, denen eine erfahrene technische Leitung fehlt. ${yearsShipping()} Jahre Erfahrung, auf Deutsch oder Englisch, zu europäischen, amerikanischen und asiatischen Arbeitszeiten.`,
         callLabel: 'Kostenloses Gespräch buchen',
         writeLabel: 'Nachricht schreiben',
@@ -67,7 +67,7 @@ export const servicesDe: ServicesPageCopy = {
         {
             id: 'rescue',
             name: 'Ihre App retten oder übernehmen',
-            subtitle: 'Code-Review, Sicherheitsprüfung & App-Rettung',
+            subtitle: 'Code Review, Sicherheitsprüfung & App-Rettung',
             problem: '„Der Entwickler ist weg, die App bricht ständig zusammen, und niemand kann mir sagen, wie schlimm es wirklich ist.“',
             forWho: 'Für Apps, die fehlerhaft sind, feststecken oder vom letzten Entwickler zurückgelassen wurden, auch solche, die mit KI-Tools gebaut wurden.',
             youGet: [
@@ -123,7 +123,7 @@ export const servicesDe: ServicesPageCopy = {
             problem: '„Ich habe Entwickler oder stelle bald welche ein, aber niemanden mit Erfahrung, der mir sagt, ob die Arbeit gut ist.“',
             forWho: 'Für Unternehmen mit Entwicklern, aber ohne erfahrene technische Leitung, oder ganz ohne technische Leute im Haus.',
             youGet: [
-                'Code-Reviews und Prüfung von Plänen und Schätzungen Ihrer Entwickler',
+                'Code Reviews und Prüfung von Plänen und Schätzungen Ihrer Entwickler',
                 'Hilfe bei der Einstellung: Stellenprofile, technische Interviews und Einarbeitung',
                 'Eine Roadmap und ein Budget in verständlicher Sprache',
                 'Jemand auf Ihrer Seite in Gesprächen mit Agenturen und Dienstleistern',
@@ -137,8 +137,8 @@ export const servicesDe: ServicesPageCopy = {
             ],
             range: `Mindestens ${TECH_LEAD_MIN_HOURS_PER_MONTH} Stunden im Monat, ab etwa ${eurAmountDe(TECH_LEAD_MONTHLY_MIN_EUR)} · jederzeit kündbar`,
             proof: [
-                'Dreimal ein Tech-Team von null aufgebaut, von der Einstellung bis zu den Abläufen',
-                'Interim-CTO eines jungen Health-Tech-Start-ups: ein Team von acht Personen geführt und die HIPAA-Compliance geplant',
+                'Dreimal ein Tech Team von null aufgebaut, von der Einstellung bis zu den Abläufen',
+                'Interim-CTO eines jungen Health-Tech-Startups: ein Team von acht Personen geführt und die HIPAA-Compliance geplant',
                 'Entwickler bei Agoda geführt und betreut, davor ein verteiltes Team von zwölf Entwicklern',
             ],
         },
@@ -182,7 +182,7 @@ export const servicesDe: ServicesPageCopy = {
             'Unternehmen, die zuverlässige individuelle Software brauchen',
             'Teams, denen Nutzerfreundlichkeit und Wartbarkeit wichtig sind',
             'Kunden, die technische Beratung wollen, nicht nur Code',
-            'Start-ups, die erfahrenes Urteilsvermögen in der Produktentwicklung brauchen',
+            'Startups, die erfahrenes Urteilsvermögen in der Produktentwicklung brauchen',
             'Firmen mit fehlerhafter oder unfertiger Software, die gerettet oder neu geordnet werden muss',
         ],
         notTitle: 'Was nicht gut passt',
