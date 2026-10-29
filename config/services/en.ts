@@ -36,7 +36,6 @@ export const servicesEn: ServicesPageCopy = {
     meta: {
         title: 'App rescue, MVP development & fractional CTO — Stefan Knoch',
         description: 'Senior software help for founders and small businesses: fix or take over your app, build your MVP properly, or get a part-time tech lead.',
-        locale: 'en_US',
         shareKicker: 'services',
         shareHighlight: 'founders',
     },

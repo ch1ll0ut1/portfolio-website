@@ -6,8 +6,7 @@
 
 import type { EngagementId } from '../engagements';
 import type { CaseVisualId } from '../caseStudies';
-
-export type ServicesLanguage = 'en' | 'de';
+import type { Locale } from '@/lib/i18n/locale';
 
 /** One engagement, told in full on the services page. */
 export interface ServiceOfferCopy {
@@ -55,14 +54,12 @@ export interface FaqCopy {
 }
 
 export interface ServicesPageCopy {
-    lang: ServicesLanguage;
+    lang: Locale;
     /** This page's path, which is also its canonical URL. */
     path: string;
     meta: {
         title: string;
         description: string;
-        /** `og:locale`, such as `de_DE`. */
-        locale: string;
         /** The share card's mono label. */
         shareKicker: string;
         /** The phrase of `hero.title` the share card selects. */
@@ -75,7 +72,7 @@ export interface ServicesPageCopy {
     /** The visible link to the same page in the other language. */
     otherLanguage: {
         label: string;
-        lang: ServicesLanguage;
+        lang: Locale;
         href: string;
     };
     hero: {
