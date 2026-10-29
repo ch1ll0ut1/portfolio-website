@@ -21,7 +21,7 @@ const post: BlogPost = {
 describe('PagerLink Component', () => {
     it('should link to the post route', () => {
         // Arrange
-        render(<PagerLink post={post} label="Older" />);
+        render(<PagerLink locale="en" post={post} label="Older" />);
 
         // Assert
         expect(screen.getByRole('link')).toHaveAttribute('href', '/blog/an-older-post');
@@ -29,7 +29,7 @@ describe('PagerLink Component', () => {
 
     it('should name the link by its label and the post title', () => {
         // Arrange
-        render(<PagerLink post={post} label="Older" />);
+        render(<PagerLink locale="en" post={post} label="Older" />);
 
         // Act
         const link = screen.getByRole('link');

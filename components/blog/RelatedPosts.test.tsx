@@ -21,7 +21,7 @@ const listed = (slug: string, title: string): ListedPost => ({
 describe('RelatedPosts', () => {
     it('should list each post as a link under a heading', () => {
         // Arrange
-        render(<RelatedPosts posts={[listed('one', 'Post One'), listed('two', 'Post Two')]} />);
+        render(<RelatedPosts locale="en" posts={[listed('one', 'Post One'), listed('two', 'Post Two')]} />);
 
         // Act
         const section = screen.getByRole('region', { name: 'Related posts' });
@@ -36,7 +36,7 @@ describe('RelatedPosts', () => {
 
     it('should render nothing without posts', () => {
         // Arrange
-        const { container } = render(<RelatedPosts posts={[]} />);
+        const { container } = render(<RelatedPosts locale="en" posts={[]} />);
 
         // Assert
         expect(container).toBeEmptyDOMElement();

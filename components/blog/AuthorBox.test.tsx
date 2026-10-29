@@ -10,7 +10,7 @@ import { AuthorBox } from './AuthorBox';
 describe('AuthorBox', () => {
     it('should name the author and link the name to the homepage', () => {
         // Arrange
-        render(<AuthorBox />);
+        render(<AuthorBox locale="en" />);
 
         // Act
         const name = screen.getByRole('link', { name: siteConfig.name });
@@ -23,7 +23,7 @@ describe('AuthorBox', () => {
 
     it('should show a headshot of the author', () => {
         // Arrange
-        render(<AuthorBox />);
+        render(<AuthorBox locale="en" />);
 
         // Act
         const photo = screen.getByRole('img', { name: 'Stefan Knoch' });
@@ -34,7 +34,7 @@ describe('AuthorBox', () => {
 
     it('should say what the author does, since when, and from where', () => {
         // Arrange
-        render(<AuthorBox />);
+        render(<AuthorBox locale="en" />);
 
         // Assert
         const bio = screen.getByText(/Software architect & tech lead since/);
@@ -44,7 +44,7 @@ describe('AuthorBox', () => {
 
     it('should lead on to the services and the contact page', () => {
         // Arrange
-        render(<AuthorBox />);
+        render(<AuthorBox locale="en" />);
 
         // Assert
         expect(screen.getByRole('link', { name: 'How I can help' })).toHaveAttribute('href', '/services');
