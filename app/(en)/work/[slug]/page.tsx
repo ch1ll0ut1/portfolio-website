@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import type { Metadata } from 'next';
 import { CaseStudyPage } from '@/components/work/pages/CaseStudyPage';
-import { caseStudies } from '@/config/caseStudies';
+import { caseStudiesFor } from '@/config/caseStudies';
 import { caseStudyMetadata } from '@/lib/work/caseStudyMetadata';
 
 /*
@@ -17,7 +17,7 @@ interface Props {
 
 /** One page per case study, generated at build time. */
 export async function generateStaticParams() {
-    return caseStudies.map(study => ({ slug: study.slug }));
+    return caseStudiesFor('en').map(study => ({ slug: study.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import Link from 'next/link';
-import { type CaseStudy, caseStudies, caseStudyPath } from '@/config/caseStudies';
+import { type CaseStudy, caseStudiesFor, caseStudyPath } from '@/config/caseStudies';
 import { workCopy } from '@/config/caseStudyDetails';
 import type { Locale } from '@/lib/i18n/locale';
 import { localizedPath } from '@/lib/i18n/paths';
@@ -18,7 +18,7 @@ interface Props {
  */
 export const CaseStudyNext: FC<Props> = ({ current, locale }) => {
     const copy = workCopy[locale];
-    const others = caseStudies.filter(study => study.id !== current.id);
+    const others = caseStudiesFor(locale).filter(study => study.id !== current.id);
 
     return (
         <>

@@ -8,6 +8,7 @@ import { describe, it, expect, afterAll, beforeAll } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { Article } from './Article';
 import { type BlogPost, type ListedPost } from '@/config/blog';
+import { markdownCopy } from '@/config/markdown';
 import { formatDate } from '@/lib/date';
 import { installMatchMedia } from '@/test/motionEnv';
 
@@ -51,6 +52,14 @@ describe('Article Component', () => {
 
     afterAll(() => {
         restoreMatchMedia();
+    });
+
+    it('should render the markdown in the article\'s language', () => {
+        // Arrange
+        render(<Article locale="de" post={post} />);
+
+        // Assert
+        expect(screen.getByRole('link', { name: markdownCopy.de.headingLink('A section heading') })).toHaveAttribute('href', '#a-section-heading');
     });
 
     it('should render the post title as the page heading', () => {
