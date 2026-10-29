@@ -1,0 +1,138 @@
+/*
+ * The primary call to action. Ported from the prototype's `.btn--xl`, `.c-cta*`
+ * and `.c-roll*` rules.
+ *
+ * `--bx` / `--by` are written by `useMagnet` (spring); `.btn` in `app/globals.css`
+ * seeds them at `0px`. Several selectors double their own class to outrank the
+ * global `.btn--primary:hover`, whose caret-orange background would otherwise
+ * fight the circle fill.
+ */
+
+.cta {
+    --fx: 50%;
+    --fy: 50%;
+
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    gap: .75em;
+    min-height: 64px;
+    padding: 0 1.6em 0 2em;
+    font-size: 1.1rem;
+    transform: translate3d(var(--bx), var(--by), 0);
+    will-change: transform;
+}
+
+.cta.cta:hover {
+    background: var(--fg);
+    border-color: var(--fg);
+    color: var(--on-accent);
+}
+
+/* The fill grows out of wherever the pointer crossed the edge. */
+.cta::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    z-index: -1;
+    background: var(--caret-fill);
+    clip-path: circle(0% at var(--fx) var(--fy));
+    transition: clip-path .6s var(--ease-out);
+}
+
+.cta:hover::before,
+.cta:focus-visible::before {
+    clip-path: circle(150% at var(--fx) var(--fy));
+}
+
+.cta.cta:focus-visible {
+    color: var(--on-accent);
+}
+
+/* The inner content trails the button at a fraction of its offset, which reads
+   as depth rather than as a second animation. */
+.in {
+    display: inline-flex;
+    align-items: center;
+    gap: .75em;
+    transform: translate3d(calc(var(--bx) * .35), calc(var(--by) * .35), 0);
+    will-change: transform;
+}
+
+.roll {
+    display: inline-grid;
+    overflow: hidden;
+    line-height: 1.25;
+    padding-block: .1em;
+}
+
+.roll > span {
+    grid-area: 1 / 1;
+    transition: transform .55s var(--ease-out);
+}
+
+.rollB {
+    transform: translateY(115%);
+}
+
+.cta:hover .rollA,
+.cta:focus-visible .rollA {
+    transform: translateY(-115%);
+}
+
+.cta:hover .rollB,
+.cta:focus-visible .rollB {
+    transform: none;
+}
+
+.arrow {
+    display: inline-grid;
+    width: 30px;
+    height: 30px;
+    place-items: center;
+    border-radius: 50%;
+    overflow: hidden;
+    background: color-mix(in srgb, var(--bg) 14%, transparent);
+}
+
+.arrow svg {
+    grid-area: 1 / 1;
+    transition: transform .5s var(--ease-out);
+}
+
+.arrow svg + svg {
+    transform: translate(-150%, 150%);
+}
+
+.cta:hover .arrow svg:first-child,
+.cta:focus-visible .arrow svg:first-child {
+    transform: translate(150%, -150%);
+}
+
+.cta:hover .arrow svg + svg,
+.cta:focus-visible .arrow svg + svg {
+    transform: none;
+    transition-delay: .06s;
+}
+
+@media (max-width: 560px) {
+    .cta {
+        justify-content: space-between;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .cta,
+    .in {
+        transform: none;
+    }
+
+    .roll > span,
+    .arrow svg {
+        transition: none;
+    }
+
+    .cta::before {
+        transition: clip-path .2s linear;
+    }
+}

@@ -1,6 +1,6 @@
 # How to Use AI to Build Apps at 10× Speed
 
-![How to Use AI to Build Apps at 10× Speed](how-to-use-ai-to-build-apps-10x-speed.png)
+![A developer at a laptop, surrounded by a chat assistant, a UI wireframe and code](how-to-use-ai-to-build-apps-10x-speed.webp)
 
 Building apps today isn’t what it used to be.  
 I remember when a “prototype in a week” felt fast. Now, with the right AI setup, I can get there in a day — **if I use the tools together in the right way**.
@@ -144,6 +144,8 @@ The key is:
 - Document your preferences so AI doesn’t forget.
 
 That’s how I get to **10× speed** without burning out or drowning in AI mistakes.
+
+Building features is only one part of the job, though. For the rest of the cycle, from planning to reviews and deployment, see [10 AI Workflows Every Developer Should Know](/blog/10-ai-workflows-every-developer-should-know-2025).
 
 ---
 

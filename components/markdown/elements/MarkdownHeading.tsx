@@ -1,40 +1,32 @@
-import React, { FC } from 'react';
-import { type HeadingElement } from '../markdownProcessor';
+import { FC } from 'react';
+import { type RankedHeading } from '../bodyOutline';
+import styles from '../Markdown.module.css';
 
 interface Props {
-    element: HeadingElement;
+    element: RankedHeading;
+    /** The heading's fragment id, unique within its document. */
+    id: string;
 }
 
-export const MarkdownHeading: FC<Props> = ({ element }) => {
-    const { level, content } = element;
-
-    if (level === 1) {
-        return (
-            <h4 className="text-lg font-semibold text-primary mt-6 mb-3">
-                {content}
-            </h4>
-        );
-    }
-
-    if (level === 2) {
-        return (
-            <h2 className="text-2xl font-bold text-primary mt-12 mb-6">
-                {content}
-            </h2>
-        );
-    }
-
-    if (level === 3) {
-        return (
-            <h3 className="text-xl font-semibold text-primary mt-8 mb-4">
-                {content}
-            </h3>
-        );
-    }
+/**
+ * Renders a heading at the rank `bodyOutline` gave it, with an id and a link
+ * to itself that shows on hover or keyboard focus. Ranks 2 and 3 have their
+ * own styles; anything deeper shares the `h4` style, keeping its semantic
+ * level.
+ *
+ * The link's "#" is drawn by CSS, so the heading's text content stays its
+ * own. The heading is named by that text alone: without the label, the
+ * link's label would be read as part of the heading's name.
+ */
+export const MarkdownHeading: FC<Props> = ({ element, id }) => {
+    const { rank, content } = element;
+    const Tag: `h${typeof rank}` = `h${rank}`;
+    const className = rank === 2 ? styles.h2 : rank === 3 ? styles.h3 : styles.h4;
 
     return (
-        <h4 className="text-lg font-semibold text-primary mt-6 mb-3">
+        <Tag id={id} className={`${className} ${styles.anchored}`} aria-label={content}>
             {content}
-        </h4>
+            <a href={`#${id}`} className={styles.anchor} aria-label={`Link to section: ${content}`} />
+        </Tag>
     );
 };

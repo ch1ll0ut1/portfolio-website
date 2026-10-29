@@ -1,0 +1,53 @@
+/* The one route nobody designs for. It carries the site's chrome, so the
+   content between the nav and the footer needs the same type scale and enough
+   height that it does not sit crammed under the fixed header. */
+
+.panel {
+    display: grid;
+    justify-items: start;
+    gap: 18px;
+    max-width: 52ch;
+    min-height: 42vh;
+    align-content: center;
+    padding-block-end: clamp(32px, 6vw, 72px);
+}
+
+.kicker {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    letter-spacing: .08em;
+    color: var(--muted);
+    font-variation-settings: 'wdth' 88;
+}
+
+.kicker::after {
+    content: '';
+    width: 2px;
+    height: .95em;
+    margin-left: .4em;
+    background: var(--caret);
+}
+
+:global(.motion) .kicker::after {
+    animation: var(--caret-blink) 1.1s steps(1, end) infinite;
+}
+
+.title {
+    font-size: var(--fs-1);
+    font-variation-settings: 'wdth' 84;
+}
+
+.body {
+    color: var(--fg-2);
+    font-size: clamp(1.05rem, 1.4vw, 1.25rem);
+}
+
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 10px;
+}
+

@@ -1,0 +1,137 @@
+/* One case study: text on the left, the visual well on the right.
+   Cards stick under the header so each one is slid over by the next. */
+
+.case {
+    position: sticky;
+    top: calc(88px + var(--i) * 18px + env(safe-area-inset-top, 0px));
+}
+
+/* The lift that raises a focused link clear of the consent banner (see
+   stackFocus.ts) eases in and out rather than jumping. */
+:global(.motion) .case {
+    transition: transform var(--dur-s) var(--ease-out);
+}
+
+.inner {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr);
+    min-height: min(78vh, 720px);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-l);
+    background: var(--bg-2);
+    overflow: hidden;
+    transform-origin: 50% 0;
+}
+
+/* The stacking dim, driven by --dim from the stack effect on desktop. */
+.inner::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    background: var(--bg);
+    opacity: var(--dim, 0);
+    pointer-events: none;
+}
+
+.text {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: clamp(24px, 4vw, 52px);
+    min-width: 0;
+}
+
+.meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 18px;
+    color: var(--muted);
+    font-size: var(--fs-small);
+}
+
+.meta span:first-child {
+    font-variant-numeric: tabular-nums;
+    color: var(--fg-2);
+}
+
+.title {
+    font-size: clamp(2.6rem, 5.5vw, 4.6rem);
+    letter-spacing: -.045em;
+    font-variation-settings: 'wdth' 76;
+}
+
+.client {
+    margin-top: -10px;
+    font-size: 1.08rem;
+    color: var(--fg-2);
+}
+
+.story {
+    display: grid;
+    gap: 14px;
+    margin-top: 6px;
+}
+
+.story div {
+    display: grid;
+    grid-template-columns: 7.5rem minmax(0, 1fr);
+    gap: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+}
+
+.story dt {
+    font-size: var(--fs-small);
+    color: var(--muted);
+}
+
+.story dd {
+    margin: 0;
+    font-size: .98rem;
+    line-height: 1.55;
+    color: var(--fg-2);
+    max-width: 56ch;
+}
+
+/* The way on: the case's own page, then any outbound link. Pinned to the
+   bottom of the text column. */
+.links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 28px;
+    margin-top: auto;
+}
+
+.link {
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--fg);
+}
+
+.linkSecondary {
+    font-weight: 500;
+    color: var(--fg-2);
+}
+
+@media (max-width: 900px) {
+    .case {
+        position: relative;
+        top: auto;
+    }
+
+    .inner {
+        grid-template-columns: minmax(0, 1fr);
+        min-height: 0;
+    }
+
+    .inner::after {
+        display: none;
+    }
+
+    .story div {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 4px;
+    }
+}

@@ -1,6 +1,6 @@
 # Stefan Knoch - Portfolio Website
 
-A modern, responsive portfolio website built with Next.js 15, React 19, and TypeScript.
+A modern, responsive portfolio website built with Next.js 16, React 19, and TypeScript.
 
 ## 🚀 **Live Demo**
 
@@ -11,10 +11,11 @@ A modern, responsive portfolio website built with Next.js 15, React 19, and Type
 ### **Core Functionality**
 
 - **Responsive Design** - Optimized for all devices and screen sizes
-- **Modern Tech Stack** - Built with Next.js 15, React 19, and TypeScript
+- **Modern Tech Stack** - Built with Next.js 16, React 19, and TypeScript
 - **Performance Optimized** - Server-side rendering and optimized assets
 - **SEO Optimized** - Comprehensive SEO with structured data, Open Graph, and sitemaps
 - **Accessibility** - WCAG AA compliant with proper ARIA labels
+- **Contact form** - `/contact`, a prerendered page whose form sends through a Server Action and Resend; it needs JavaScript, because every submission must pass Vercel BotID, and is rate limited per IP by the Vercel Firewall, behind a honeypot and a signed minimum fill time, with no third-party captcha
 
 ### **Content Management**
 
@@ -33,16 +34,16 @@ A modern, responsive portfolio website built with Next.js 15, React 19, and Type
 
 ### **Frontend Framework**
 
-- **Next.js 15** - React framework with App Router
+- **Next.js 16** - React framework with App Router, built with Turbopack
 - **React 19** - Latest React with concurrent features
 - **TypeScript** - Type-safe development
 
 ### **Styling & UI**
 
-- **Tailwind CSS 4** - Utility-first CSS framework
-- **Shadcn/ui** - High-quality React components
-- **Lucide React** - Beautiful, customizable icons
-- **Geist Font** - Modern, readable typography
+- **CSS Modules** - Component styling driven by the design tokens in `app/globals.css`
+- **Global layer** - `app/globals.css` holds the tokens, a small reset and the few global primitives; no CSS framework
+- **Bricolage Grotesque / Schibsted Grotesk / Martian Mono** - Display, body and mono typography
+- **Hand-rolled motion** - One shared ticker and scroll store in `lib/motion`, inert under reduced motion
 
 ### **Content & Code**
 
@@ -55,16 +56,14 @@ A modern, responsive portfolio website built with Next.js 15, React 19, and Type
 
 - **Vitest** - Fast unit testing framework
 - **React Testing Library** - Component testing utilities
-- **Storybook** - Component development and documentation
-- **Chromatic** - Visual regression testing and review
+- **Visual Check** - `pnpm visual-check` sweeps every route type in both themes, at 1440px and 390px, and with reduced motion
 - **ESLint** - Code quality and style enforcement
 - **TypeScript** - Static type checking
 
 ### **Development Tools**
 
 - **pnpm** - Fast, disk space efficient package manager
-- **PostCSS** - CSS processing and optimization
-- **Autoprefixer** - CSS vendor prefixing
+- **Playwright** - Drives the visual check
 
 ## 📁 **Project Structure**
 
@@ -74,58 +73,65 @@ portfolio-website/
 │   ├── blog/                     # Blog pages
 │   │   ├── [slug]/              # Individual blog post pages
 │   │   └── page.tsx             # Blog index page
+│   ├── contact/                  # Contact page and its Server Action
+│   ├── privacy/                  # Privacy policy
 │   ├── globals.css              # Global styles and CSS variables
 │   ├── layout.tsx               # Root layout component
 │   └── page.tsx                 # Home page
 ├── components/                   # Reusable React components
-│   ├── blog/                    # Blog-specific components
-│   │   ├── BlogHero.tsx         # Blog page hero section
-│   │   ├── BlogPostCard.tsx     # Blog post preview card
-│   │   ├── BlogPostHeader.tsx   # Blog post header
-│   │   ├── BlogPostList.tsx     # Blog post list container
-│   │   └── BlogPostPage.tsx     # Individual blog post page
+│   ├── analytics/               # Page view, scroll and time tracking wrappers
+│   ├── blog/                    # Reading routes
+│   │   ├── BlogIndex.tsx        # Writing index
+│   │   ├── Article.tsx          # Article body, header and pager
+│   │   ├── ReadingShell.tsx     # Page frame for the reading routes
+│   │   ├── ReadingProgress.tsx  # Article-scoped reading caret
+│   │   └── NotFoundPanel.tsx    # Shared body of both 404 pages
+│   ├── chrome/                  # Site-wide overlay
+│   │   ├── GlobalChrome.tsx     # Mounts the whole chrome layer
+│   │   ├── CommandPalette.tsx   # Cmd-K palette
+│   │   ├── ThemeToggle.tsx      # Theme switch
+│   │   └── ... (cursor, grain, scroll progress, shortcuts)
+│   ├── consent/                 # Cookie banner and preferences dialog
+│   ├── contact/                 # Contact page body and the form
+│   ├── home/                    # One directory per homepage section
+│   │   ├── hero/                # Headline as a working editor
+│   │   ├── process/             # Pinned stepper and typing terminal
+│   │   └── ... (proof, work, services, experience, writing, contact)
 │   ├── markdown/                # Markdown processing components
 │   │   ├── Markdown.tsx         # Main markdown renderer
 │   │   ├── InlineContent.tsx    # Inline formatting component
-│   │   ├── markdownProcessor.ts # Markdown parsing logic
+│   │   ├── parser/              # Pure parsing: block, inline, list, table
 │   │   └── elements/            # Individual markdown element components
 │   │       ├── MarkdownHeading.tsx
 │   │       ├── MarkdownCodeBlock.tsx
 │   │       ├── MarkdownList.tsx
 │   │       ├── MarkdownTable.tsx
 │   │       └── ... (other elements)
-│   ├── cards/                   # Card components
-│   │   ├── ProjectCard.tsx      # Portfolio project card
-│   │   └── ServiceCard.tsx      # Service offering card
-│   ├── layout/                  # Layout components
-│   │   ├── Footer.tsx           # Site footer
-│   │   ├── Header.tsx           # Site header
-│   │   └── Navigation.tsx       # Navigation component
-│   ├── sections/                # Page section components
-│   │   ├── AboutSection.tsx     # About section
-│   │   ├── CtaSection.tsx       # Call-to-action section
-│   │   ├── ExperienceSection.tsx # Experience and skills section
-│   │   ├── HeroSection.tsx      # Hero section
-│   │   ├── PortfolioSection.tsx # Portfolio projects section
-│   │   └── ServicesSection.tsx  # Services section
-│   └── ui/                      # Base UI components (Shadcn/ui)
-│       ├── Badge.tsx            # Badge component
-│       ├── Button.tsx           # Button component
-│       └── Card.tsx             # Card component
-├── config/                      # Configuration and data files
+│   └── nav/                     # Site navigation
+│       ├── SiteNav.tsx          # The nav itself
+│       ├── BrandMark.tsx        # Retyping wordmark
+│       └── NavTools.tsx         # Slot for the chrome's tools
+├── config/                      # Section data and types, one file per section
 │   ├── blog.ts                  # Blog post metadata
-│   ├── experience.ts            # Experience and skills data
-│   ├── portfolio.ts             # Portfolio projects data
-│   └── services.ts              # Services data
+│   ├── sections.ts              # Section ids and nav order
+│   ├── career.ts                # Roles behind the experience section
+│   └── ... (caseStudies, engagements, proof, processSteps, principles, fit)
 ├── content/                     # Content files
 │   └── blog/                    # Markdown blog posts
 │       ├── how-to-hire-your-first-developer.md
 │       ├── how-to-use-ai-to-build-apps-10x-speed.md
-│       └── nodejs-vs-python-framework-magic.md
+│       └── ... (one file per post)
 ├── lib/                         # Utility functions
-│   ├── cssUtils.ts              # CSS utility functions
+│   ├── analytics.ts             # GA4 event helpers
+│   ├── contact/                 # Server-only contact form: checks, spam defences, Resend call
+│   ├── content/                 # Server-only reads: post markdown, image sizes
 │   ├── date.ts                  # Date formatting utilities
-│   └── opengraphUtils.tsx       # Open Graph image generation utilities
+│   ├── motion/                  # Ticker, scroll store and the motion hooks
+│   └── og/                      # Share cards and icons: layout, fonts, palette
+├── scripts/                     # Tooling
+│   ├── a11y-check.mjs           # axe-core accessibility scan
+│   ├── visual-check.mjs         # Playwright visual sweep
+│   └── visual-check/            # The sweep's modules
 ├── public/                      # Static assets
 ├── test/                        # Test configuration
 │   └── setup.ts                 # Test setup file
@@ -164,7 +170,7 @@ This project follows the brand guidelines defined in `BRAND.md`:
 
 ### **Prerequisites**
 
-- Node.js 18+
+- Node.js 24 (see `.nvmrc`)
 - pnpm (recommended) or npm
 
 ### **Installation**
@@ -191,6 +197,45 @@ This project follows the brand guidelines defined in `BRAND.md`:
 4. **Open your browser**
    Navigate to [http://localhost:3000](http://localhost:3000)
 
+### **Contact form environment variables**
+
+Set in the Vercel project, never committed. Without them the site still builds
+and the form answers "not set up" (the server log names what is missing).
+
+| Variable | What it is |
+| --- | --- |
+| `RESEND_API_KEY` | Sending-only Resend API key for the site's domain |
+| `CONTACT_TO_EMAIL` | The inbox messages are delivered to |
+| `CONTACT_FORM_SECRET` | Any long random string (e.g. `openssl rand -base64 32`); signs the token the form fetches when it loads |
+
+BotID needs no variable: it runs on Vercel through the project's OIDC token.
+Turn on BotID Deep Analysis under Firewall > Rules if you want it. Vercel sets
+`VERCEL=1` itself; BotID and the rate limit run only where it is set, so a
+local `next dev` or `next start` sends without them.
+
+### **Contact form rate limit (Vercel Firewall)**
+
+The Server Action asks a Firewall rule for its verdict through
+`@vercel/firewall` (`lib/contact/rateLimit.ts`), so a limited visitor sees the
+form's own "too many messages" error rather than a bare 429. Until the rule
+exists the form works unlimited, and the function log warns
+`No Firewall rate-limit rule "contact-form" yet`. To create it:
+
+1. Vercel dashboard > the project > **Firewall** > **Configure** (custom
+   rules) > **+ New Rule**.
+2. **Name**: `Contact form rate limit`.
+3. **If**: `@vercel/firewall` **equals** `contact-form` (the rate limit ID in
+   the code). Add no path or method condition: the check reaches the Firewall
+   as its own `GET /.well-known/vercel/rate-limit-api/contact-form`, not as
+   `POST /contact`, so a `/contact` path condition would never match.
+4. **Then**: **Rate Limit**, **Fixed Window**, **10 minutes**, **5 requests**,
+   keyed by **IP Address**; when exceeded, **Too Many Requests (429)** (the
+   default; **Deny** works too, the code reads both as "limited").
+5. **Save**, then **Review Changes** > **Publish**.
+
+Only submissions that pass the honeypot, the field checks and the signed fill
+time are counted. Counters are kept per region, so the cap is approximate.
+
 ### **Available Scripts**
 
 ```bash
@@ -203,10 +248,6 @@ pnpm start            # Start production server
 pnpm test             # Run tests
 pnpm test:watch       # Run tests in watch mode
 pnpm test:coverage    # Run tests with coverage
-
-# Storybook
-pnpm storybook        # Start Storybook development server
-pnpm build-storybook  # Build static Storybook
 
 # Code Quality
 pnpm lint             # Run ESLint
@@ -241,94 +282,11 @@ pnpm test:watch
 pnpm test:coverage
 ```
 
-## 📚 **Storybook & Visual Testing**
-
-This project uses Storybook for component development and documentation, with Chromatic for visual regression testing.
-
-### **Storybook**
-
-Storybook provides an isolated environment for developing and documenting components:
-
-- **Component Development** - Build components in isolation
-- **Documentation** - Auto-generated component docs and props
-- **Interactive Testing** - Test different component states and props
-- **Design System** - Visual component library and guidelines
-
-#### **Running Storybook**
-
-```bash
-# Start Storybook development server
-pnpm storybook
-
-# Build static Storybook for production
-pnpm build-storybook
-```
-
-#### **Writing Stories**
-
-Stories are located alongside components with `.stories.tsx` extension:
-
-```typescript
-// components/ui/Button.stories.tsx
-import type { Meta, StoryObj } from '@storybook/react';
-import { Button } from './Button';
-
-const meta: Meta<typeof Button> = {
-  title: 'UI/Button',
-  component: Button,
-  parameters: {
-    layout: 'centered',
-  },
-  tags: ['autodocs'],
-};
-
-export default meta;
-type Story = StoryObj<typeof meta>;
-
-export const Primary: Story = {
-  args: {
-    variant: 'default',
-    children: 'Button',
-  },
-};
-```
-
-### **Chromatic Visual Testing**
-
-Chromatic provides automated visual regression testing and review workflows:
-
-- **Visual Regression Testing** - Catch unintended visual changes
-- **Cross-browser Testing** - Test across different browsers and devices
-- **Review Workflow** - Approve or reject visual changes
-- **Design Token Validation** - Ensure consistent design system usage
-
-#### **Chromatic Workflow**
-
-Chromatic runs **automatically via GitHub Actions** on every push and pull request:
-
-1. **Automatic Deployment** - Chromatic builds triggered by GitHub Actions CI/CD
-2. **Visual Comparison** - New screenshots automatically compared against baselines
-3. **PR Integration** - Visual changes shown as checks in pull requests
-4. **Review Process** - Changes flagged for manual review and approval
-5. **Baseline Updates** - Approved changes automatically become new baselines
-
-#### **Chromatic Integration**
-
-**Fully automated setup:**
-
-- **GitHub Actions Trigger** - Runs on every push and PR automatically
-- **Zero Manual Setup** - No local Chromatic commands needed
-- **PR Status Checks** - Visual regression results visible in GitHub PR interface
-- **Automatic Baseline Management** - Baselines update on main branch merges
-
-**No manual intervention required** - Chromatic testing happens seamlessly as part of the standard development workflow.
-
 ### **Testing Strategy Overview**
 
 | Test Type | Tool | Purpose | Scope |
 |-----------|------|---------|-------|
 | **Unit Tests** | Vitest + RTL | Component behavior, logic, accessibility | Individual components |
-| **Visual Tests** | Chromatic | Visual appearance, responsive design | Component rendering |
 | **Integration** | Vitest | Component interaction, data flow | Multiple components |
 | **End-to-end** | Manual/Future | User workflows, full application | Complete user journeys |
 
@@ -364,10 +322,12 @@ Blog posts are written in Markdown and stored in `content/blog/` with comprehens
 
 Content is managed through TypeScript configuration files:
 
-- `config/blog.ts` - Blog post metadata
-- `config/portfolio.ts` - Portfolio projects
-- `config/services.ts` - Service offerings
-- `config/experience.ts` - Experience and skills
+- `config/blog.ts` - Blog post metadata, including `published` and `featured`
+- `config/sections.ts` - Section ids and nav order
+- `config/caseStudies.ts` - Case studies behind the work section
+- `config/engagements.ts` - The three engagement models
+- `config/career.ts` - Roles behind the experience section
+- `config/processSteps.ts` - The process stepper's steps and transcripts
 
 ## 🎯 **Development Standards**
 
@@ -407,11 +367,11 @@ This project follows the development standards outlined in `DEVELOPMENT_GUIDE.md
 - Import rules for proper module organization
 - React-specific rules for component best practices
 
-### **Tailwind Configuration**
+### **Styling**
 
-- Custom color palette matching brand guidelines
-- Responsive design utilities
-- Animation and transition classes
+- Design tokens (colors, type scale, spacing, motion) as custom properties in `app/globals.css`, with a dark and a light palette
+- A small reset in a cascade layer, so every component rule wins over it
+- Component styles in co-located CSS Modules
 
 ## 📊 **Performance & SEO**
 

@@ -1,0 +1,54 @@
+/* The services pages' fit lists, with the homepage's markers: a caret for a
+   fit, the same mark struck out for a mismatch. */
+
+.fitLists {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+    gap: clamp(24px, 4vw, 56px);
+}
+
+.fitLists h3 {
+    font-size: var(--fs-3);
+}
+
+.fitLists > div {
+    display: grid;
+    align-content: start;
+    gap: 14px;
+}
+
+.fitItems {
+    display: grid;
+    gap: 9px;
+}
+
+.fitItems li {
+    display: grid;
+    grid-template-columns: 14px minmax(0, 1fr);
+    gap: 10px;
+    color: var(--fg-2);
+}
+
+.fitItems li::before {
+    content: '';
+    align-self: center;
+}
+
+.isFit li::before {
+    width: 2px;
+    height: 1.05em;
+    margin-left: 6px;
+    background: var(--caret);
+}
+
+.isUnfit li {
+    color: var(--muted);
+}
+
+.isUnfit li::before {
+    width: 10px;
+    height: 1px;
+    margin-left: 2px;
+    background: currentColor;
+    opacity: .7;
+}

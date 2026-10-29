@@ -1,0 +1,59 @@
+/*
+ * The LinkedIn link: the outline `.btn` from `app/globals.css`, sized to sit
+ * beside the booking call to action, with that button's arrow swap.
+ */
+
+.link {
+    gap: .75em;
+    min-height: 64px;
+    padding: 0 1.4em 0 1.8em;
+    background: var(--bg);
+    font-size: 1.05rem;
+}
+
+.link:hover,
+.link:focus-visible {
+    border-color: color-mix(in srgb, var(--fg-2) 60%, var(--line));
+}
+
+.arrow {
+    display: inline-grid;
+    width: 28px;
+    height: 28px;
+    place-items: center;
+    border-radius: 50%;
+    overflow: hidden;
+    background: var(--surface);
+}
+
+.arrow svg {
+    grid-area: 1 / 1;
+    transition: transform .5s var(--ease-out);
+}
+
+.arrow svg + svg {
+    transform: translate(-150%, 150%);
+}
+
+.link:hover .arrow svg:first-child,
+.link:focus-visible .arrow svg:first-child {
+    transform: translate(150%, -150%);
+}
+
+.link:hover .arrow svg + svg,
+.link:focus-visible .arrow svg + svg {
+    transform: none;
+    transition-delay: .06s;
+}
+
+@media (max-width: 560px) {
+    .link {
+        justify-content: space-between;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .arrow svg {
+        transition: none;
+    }
+}

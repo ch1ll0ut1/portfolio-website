@@ -1,38 +1,71 @@
 import { MetadataRoute } from 'next';
-import { blogPosts } from '@/config/blog';
+import { blogPosts, lastModified } from '@/config/blog';
+import { caseStudies, caseStudyPath } from '@/config/caseStudies';
+import { absoluteUrl, siteConfig } from '@/config/site';
+import { servicesLanguages } from '@/lib/servicesPage';
 
+/**
+ * Every indexable page with a real last-modified date: posts carry their own,
+ * and the static pages share one fixed date so a deploy alone does not mark
+ * them changed. The blog index changes when any of its posts does. The case
+ * study pages count as static pages.
+ *
+ * Only published posts are listed, whatever the environment: the dev server
+ * shows drafts, but the sitemap is what tooling reads as "the posts this site
+ * serves" (the visual and accessibility checks sample it).
+ *
+ * No `changeFrequency` or `priority`: Google ignores both, and only an honest
+ * `lastModified` moves anything.
+ */
 export default function sitemap(): MetadataRoute.Sitemap {
-    const baseUrl = 'https://stefanknoch.com';
+    const posts = blogPosts.filter(post => post.published);
+    const staticUpdated = new Date(siteConfig.staticPagesUpdated);
+    const newestChange = posts.map(lastModified).sort().at(-1);
+    const blogUpdated = newestChange ? new Date(newestChange) : staticUpdated;
 
-    // Static pages
-    const staticPages = [
+    const staticPages: MetadataRoute.Sitemap = [
         {
-            url: baseUrl,
-            lastModified: new Date(),
-            changeFrequency: 'weekly' as const,
-            priority: 1,
+            url: absoluteUrl('/'),
+            lastModified: staticUpdated,
         },
         {
-            url: `${baseUrl}/blog`,
-            lastModified: new Date(),
-            changeFrequency: 'daily' as const,
-            priority: 0.8,
+            url: absoluteUrl('/blog'),
+            lastModified: blogUpdated,
+        },
+        ...servicesPages(staticUpdated),
+        {
+            url: absoluteUrl('/contact'),
+            lastModified: staticUpdated,
         },
         {
-            url: `${baseUrl}/privacy`,
-            lastModified: new Date(),
-            changeFrequency: 'monthly' as const,
-            priority: 0.3,
+            url: absoluteUrl('/privacy'),
+            lastModified: staticUpdated,
         },
     ];
 
-    // Blog posts
-    const blogPages = blogPosts.map(post => ({
-        url: `${baseUrl}/blog/${post.slug}`,
-        lastModified: new Date(post.date),
-        changeFrequency: 'monthly' as const,
-        priority: 0.6,
+    const blogPages: MetadataRoute.Sitemap = posts.map(post => ({
+        url: absoluteUrl(`/blog/${post.slug}`),
+        lastModified: new Date(lastModified(post)),
     }));
 
-    return [...staticPages, ...blogPages];
+    const casePages: MetadataRoute.Sitemap = caseStudies.map(study => ({
+        url: absoluteUrl(caseStudyPath(study)),
+        lastModified: staticUpdated,
+    }));
+
+    return [...staticPages, ...blogPages, ...casePages];
 }
+
+/** The English and the German services page, each listing both as its translations. */
+const servicesPages = (updated: Date): MetadataRoute.Sitemap => {
+    const languages = {
+        en: absoluteUrl(servicesLanguages.en),
+        de: absoluteUrl(servicesLanguages.de),
+    };
+
+    return [servicesLanguages.en, servicesLanguages.de].map(path => ({
+        url: absoluteUrl(path),
+        lastModified: updated,
+        alternates: { languages },
+    }));
+};

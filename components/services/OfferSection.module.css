@@ -1,0 +1,145 @@
+/* One engagement on the services pages: the pitch on the left (problem, who,
+   size, call to action), the detail on the right. One column on phones. */
+
+.offer {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: clamp(28px, 5vw, 80px);
+    padding-block: clamp(56px, 7vw, 96px);
+    border-top: 1px solid var(--line);
+
+    /* Clears the fixed header when the homepage cards or the chooser jump here. */
+    scroll-margin-top: 88px;
+}
+
+@media (max-width: 900px) {
+    .offer {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.lead,
+.detail {
+    display: grid;
+    align-content: start;
+    gap: 24px;
+    min-width: 0;
+}
+
+.subtitle {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    letter-spacing: .02em;
+    color: var(--muted);
+    font-variation-settings: 'wdth' 88;
+}
+
+.name {
+    margin-top: -12px;
+    font-size: var(--fs-2);
+    letter-spacing: -.035em;
+    font-variation-settings: 'wdth' 80;
+}
+
+/* The buyer's words, set like a selected line in the editor. */
+.problem {
+    margin: 0;
+    padding-left: 16px;
+    border-left: 2px solid var(--select);
+    font-size: clamp(1.05rem, 1.4vw, 1.2rem);
+    font-style: italic;
+    color: var(--fg);
+}
+
+.block {
+    display: grid;
+    gap: 10px;
+}
+
+.block p {
+    color: var(--fg-2);
+}
+
+.label {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    font-weight: 400;
+    letter-spacing: .08em;
+    line-height: 1.4;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-variation-settings: 'wdth' 88;
+}
+
+.range {
+    display: grid;
+    gap: 6px;
+    padding: 18px 20px;
+    border: 1px dashed var(--line);
+    border-radius: var(--radius-m);
+}
+
+.rangeValue {
+    font-weight: 600;
+}
+
+.billing {
+    font-size: var(--fs-small);
+    color: var(--muted);
+}
+
+.cta {
+    justify-self: start;
+}
+
+/* The caret-marker list of the homepage cards. */
+.list li {
+    position: relative;
+    padding: 11px 0 11px 24px;
+    border-top: 1px solid var(--line);
+    color: var(--fg-2);
+}
+
+.list li::before {
+    content: '';
+    position: absolute;
+    left: 2px;
+    top: 1.3em;
+    width: 10px;
+    height: 2px;
+    background: var(--caret);
+    border-radius: 1px;
+}
+
+.steps {
+    display: grid;
+    gap: 10px;
+    counter-reset: step;
+}
+
+.steps li {
+    display: grid;
+    grid-template-columns: 2.2em minmax(0, 1fr);
+    color: var(--fg-2);
+    counter-increment: step;
+}
+
+.steps li::before {
+    content: counter(step, decimal-leading-zero);
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    line-height: 2.1;
+    color: var(--caret-text);
+}
+
+.proof {
+    display: grid;
+    gap: 8px;
+}
+
+.proof li {
+    padding-left: 14px;
+    border-left: 1px solid var(--line);
+    font-size: var(--fs-small);
+    color: var(--fg-2);
+}

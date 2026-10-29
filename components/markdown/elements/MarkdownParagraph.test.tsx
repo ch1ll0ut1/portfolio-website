@@ -6,7 +6,7 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { MarkdownParagraph } from './MarkdownParagraph';
-import { type ParagraphElement } from '../markdownProcessor';
+import { type ParagraphElement } from '../parser/types';
 
 describe('MarkdownParagraph Component', () => {
     it('should render paragraph with plain text', () => {
@@ -59,42 +59,28 @@ describe('MarkdownParagraph Component', () => {
         expect(link).toHaveAttribute('href', 'https://example.com');
     });
 
-    it('should render empty div for empty content', () => {
+    it('should render spacing instead of a paragraph for empty content', () => {
         const element: ParagraphElement = {
             type: 'paragraph',
             segments: [{ text: '' }],
         };
 
-        render(<MarkdownParagraph element={element} />);
+        const { container } = render(<MarkdownParagraph element={element} />);
 
-        const emptyDiv = document.querySelector('div.h-4');
-        expect(emptyDiv).toBeInTheDocument();
-        expect(screen.queryByRole('paragraph')).not.toBeInTheDocument();
+        expect(container.querySelector('p')).not.toBeInTheDocument();
+        expect(container.firstElementChild?.tagName).toBe('DIV');
     });
 
-    it('should render empty div for whitespace-only content', () => {
+    it('should render spacing instead of a paragraph for whitespace-only content', () => {
         const element: ParagraphElement = {
             type: 'paragraph',
             segments: [{ text: '   \n\t   ' }],
         };
 
-        render(<MarkdownParagraph element={element} />);
+        const { container } = render(<MarkdownParagraph element={element} />);
 
-        const emptyDiv = document.querySelector('div.h-4');
-        expect(emptyDiv).toBeInTheDocument();
-    });
-
-    it('should apply correct CSS classes to paragraph', () => {
-        const element: ParagraphElement = {
-            type: 'paragraph',
-            segments: [{ text: 'Test paragraph' }],
-        };
-
-        render(<MarkdownParagraph element={element} />);
-
-        const paragraphElement = document.querySelector('p');
-        expect(paragraphElement).toHaveClass('text-muted-foreground', 'leading-relaxed', 'mb-4');
-        expect(screen.getByText('Test paragraph')).toBeInTheDocument();
+        expect(container.querySelector('p')).not.toBeInTheDocument();
+        expect(container.firstElementChild?.tagName).toBe('DIV');
     });
 
     it('should handle special characters', () => {
@@ -106,18 +92,6 @@ describe('MarkdownParagraph Component', () => {
         render(<MarkdownParagraph element={element} />);
 
         expect(screen.getByText('Paragraph with & special < characters >')).toBeInTheDocument();
-    });
-
-    it('should handle very long content', () => {
-        const longContent = 'This is a very long paragraph that contains a lot of text and should still be rendered correctly without breaking the layout or causing any issues with the styling and text wrapping';
-        const element: ParagraphElement = {
-            type: 'paragraph',
-            segments: [{ text: longContent }],
-        };
-
-        render(<MarkdownParagraph element={element} />);
-
-        expect(screen.getByText(longContent)).toBeInTheDocument();
     });
 
     it('should handle mixed formatting correctly', () => {
@@ -183,10 +157,9 @@ describe('MarkdownParagraph Component', () => {
             segments: [{ text: '   ' }],
         };
 
-        render(<MarkdownParagraph element={element} />);
+        const { container } = render(<MarkdownParagraph element={element} />);
 
-        const emptyDiv = document.querySelector('div.h-4');
-        expect(emptyDiv).toBeInTheDocument();
+        expect(container.querySelector('p')).not.toBeInTheDocument();
         expect(screen.queryByText('   ')).not.toBeInTheDocument();
     });
 });

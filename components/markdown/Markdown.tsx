@@ -1,5 +1,8 @@
-import React, { FC } from 'react';
-import { processMarkdownContent } from './markdownProcessor';
+import { FC } from 'react';
+import { readImageDimensions } from '@/lib/content/blogImages';
+import { parseMarkdown } from './parser/blockParser';
+import { bodyOutline } from './bodyOutline';
+import { createSlugger } from './headingSlugger';
 import { MarkdownHeading } from './elements/MarkdownHeading';
 import { MarkdownCodeBlock } from './elements/MarkdownCodeBlock';
 import { MarkdownList } from './elements/MarkdownList';
@@ -8,6 +11,7 @@ import { MarkdownTable } from './elements/MarkdownTable';
 import { MarkdownParagraph } from './elements/MarkdownParagraph';
 import { MarkdownSeparator } from './elements/MarkdownSeparator';
 import { MarkdownImage } from './elements/MarkdownImage';
+import styles from './Markdown.module.css';
 
 interface Props {
     content: string;
@@ -15,14 +19,17 @@ interface Props {
 }
 
 export const Markdown: FC<Props> = ({ content, className = '' }) => {
-    const elements = processMarkdownContent(content);
+    const elements = bodyOutline(parseMarkdown(content, readImageDimensions));
+    const firstImage = elements.findIndex(element => element.type === 'image');
+    // Per render, so heading ids are unique within this document only.
+    const headingId = createSlugger();
 
     return (
-        <div className={`prose prose-lg max-w-none ${className}`}>
+        <div className={`${styles.prose} ${className}`.trim()} data-testid="markdown">
             {elements.map((element, index) => {
                 switch (element.type) {
                     case 'heading':
-                        return <MarkdownHeading key={index} element={element} />;
+                        return <MarkdownHeading key={index} element={element} id={headingId(element.content)} />;
 
                     case 'codeBlock':
                         return <MarkdownCodeBlock key={index} element={element} />;
@@ -40,7 +47,7 @@ export const Markdown: FC<Props> = ({ content, className = '' }) => {
                         return <MarkdownSeparator key={index} element={element} />;
 
                     case 'image':
-                        return <MarkdownImage key={index} element={element} />;
+                        return <MarkdownImage key={index} element={element} priority={index === firstImage} />;
 
                     case 'paragraph':
                     default:

@@ -1,0 +1,33 @@
+/* The pending `g` chord, printed bottom-right like an editor's status bar. */
+.hint {
+    position: fixed;
+    right: 16px;
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    z-index: 90;
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    padding: 6px 8px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--surface);
+    font-family: var(--font-mono);
+    font-size: .7rem;
+    color: var(--muted);
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity var(--dur-xs) var(--ease-ui), transform var(--dur-xs) var(--ease-ui);
+}
+
+.on {
+    opacity: 1;
+    transform: none;
+}
+
+.hint kbd {
+    padding: 1px 6px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    color: var(--fg);
+}
