@@ -1,40 +1,30 @@
 import type { Metadata } from 'next';
 import { contactCopy } from '@/config/contact';
 import { absoluteUrl } from '@/config/site';
-import { baseOpenGraph } from '@/lib/baseOpenGraph';
 import type { Locale } from '@/lib/i18n/locale';
+import { pageMetadata } from '@/lib/i18n/metadata';
 import { localizedPath } from '@/lib/i18n/paths';
 import { WEBSITE_ID, breadcrumbSchema, jsonLdGraph, personRef } from '@/lib/structuredData';
-import { twitterCard } from '@/lib/twitterCard';
 
 /**
- * The contact page's metadata in `locale`. The title is absolute, as it
- * already names him: the layout's "| Stefan Knoch" would repeat it. Every
- * share field is set here, not inherited; see components/privacy/privacyMetadata.ts.
+ * The contact page's metadata in `locale`, with its twin. The title is
+ * absolute, as it already names him: the layout's "| Stefan Knoch" would
+ * repeat it. Every share field is set here, not inherited; see
+ * components/privacy/privacyMetadata.ts.
  */
 export const contactMetadata = (locale: Locale): Metadata => {
     const { title, description } = contactCopy[locale].meta;
-    const path = localizedPath(locale, '/contact');
 
-    return {
+    return pageMetadata({
+        locale,
+        enPath: '/contact',
         title: { absolute: title },
         description,
-        openGraph: {
-            ...baseOpenGraph,
-            title,
-            description,
-            url: absoluteUrl(path),
-            type: 'website',
-        },
-        twitter: twitterCard(title, description),
         robots: {
             index: true,
             follow: true,
         },
-        alternates: {
-            canonical: path,
-        },
-    };
+    });
 };
 
 /** The page as a ContactPage whose subject is the site owner, with its breadcrumb trail. */

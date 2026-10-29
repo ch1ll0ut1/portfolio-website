@@ -7,13 +7,11 @@ import type { Metadata } from 'next';
 import { notFoundMetadata } from '@/components/errors/notFoundMetadata';
 import { caseStudyPath, findCaseStudy } from '@/config/caseStudies';
 import { workCopy } from '@/config/caseStudyDetails';
-import { absoluteUrl, siteConfig } from '@/config/site';
-import { baseOpenGraph } from '@/lib/baseOpenGraph';
-import { type Locale, ogLocale } from '@/lib/i18n/locale';
-import { localizedPath } from '@/lib/i18n/paths';
-import { twitterCard } from '@/lib/twitterCard';
+import { siteConfig } from '@/config/site';
+import type { Locale } from '@/lib/i18n/locale';
+import { pageMetadata } from '@/lib/i18n/metadata';
 
-/** The metadata of the case at `slug` in `locale`, or its 404's for a slug with no case. */
+/** The metadata of the case at `slug` in `locale`, with its twin, or its 404's for a slug with no case. */
 export const caseStudyMetadata = (slug: string, locale: Locale): Metadata => {
     const study = findCaseStudy(slug);
 
@@ -23,26 +21,15 @@ export const caseStudyMetadata = (slug: string, locale: Locale): Metadata => {
     }
 
     const detail = workCopy[locale].details[study.id];
-    const path = localizedPath(locale, caseStudyPath(study));
-    /** What the share cards show: the page title with the layout's name suffix. */
-    const shareTitle = `${detail.metaTitle} | ${siteConfig.name}`;
 
-    return {
+    return pageMetadata({
+        locale,
+        enPath: caseStudyPath(study),
         title: detail.metaTitle,
         description: detail.description,
-        openGraph: {
-            ...baseOpenGraph,
-            locale: ogLocale[locale],
-            title: shareTitle,
-            description: detail.description,
-            url: absoluteUrl(path),
-            type: 'article',
+        article: {
             authors: [siteConfig.name],
             tags: study.tags,
         },
-        twitter: twitterCard(shareTitle, detail.description),
-        alternates: {
-            canonical: path,
-        },
-    };
+    });
 };

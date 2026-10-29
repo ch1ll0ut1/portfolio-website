@@ -37,7 +37,7 @@ export const layoutMetadata = (locale: Locale): Metadata => {
         // Only the feed link. A page's own `alternates` replaces this whole, so a
         // page that should keep announcing the feed (the blog's) spreads it in.
         alternates: {
-            types: feedAlternateTypes,
+            types: feedAlternateTypes(locale),
         },
         openGraph: {
             ...baseOpenGraph,

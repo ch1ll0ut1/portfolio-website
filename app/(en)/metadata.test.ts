@@ -52,7 +52,11 @@ describe('route metadata', () => {
     });
 
     it('should announce the RSS feed on the writing index', () => {
-        expect(blog.alternates).toEqual({ canonical: '/blog', types: feedAlternateTypes });
+        expect(blog.alternates).toEqual({
+            canonical: '/blog',
+            languages: { 'en': '/blog', 'de': '/de/blog', 'x-default': '/blog' },
+            types: feedAlternateTypes('en'),
+        });
     });
 
     it('should title the homepage with the positioning, within 60 characters', () => {
@@ -80,12 +84,12 @@ describe('route metadata', () => {
         expect(title.length).toBeLessThanOrEqual(60);
         expect(contact.openGraph).toMatchObject({ title, description, type: 'website', url: `${siteConfig.url}/contact` });
         expect(contact.twitter).toMatchObject({ title, description });
-        expect(contact.alternates).toEqual({ canonical: '/contact' });
+        expect(contact.alternates).toEqual({ canonical: '/contact', languages: { 'en': '/contact', 'de': '/de/kontakt', 'x-default': '/contact' } });
     });
 
     // A canonical in the layout would reach the 404 and error pages too.
     it('should leave the canonical URL and the generator tag out of the layout', () => {
-        expect(layout.alternates).toEqual({ types: feedAlternateTypes });
+        expect(layout.alternates).toEqual({ types: feedAlternateTypes('en') });
         expect(layout).not.toHaveProperty('generator');
         expect(layout.openGraph).toMatchObject({ siteName: siteConfig.name, locale: 'en_US' });
         expect(layout.openGraph).not.toHaveProperty('url');
