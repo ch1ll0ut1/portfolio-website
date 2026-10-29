@@ -27,7 +27,7 @@ export const informationUses: PolicyItem[] = [
 ];
 
 export const storageTypes: PolicyItem[] = [
-    { label: 'Notwendiger Speicher', text: 'Ihre Cookie-Auswahl, Ihr helles oder dunkles Farbschema und, falls Sie sie ausschalten, die Tastenkürzel mit einzelnen Tasten und der eigene Textcursor. Diese Angaben liegen im lokalen Speicher (Local Storage) Ihres Browsers, unter cookie-consent, sk-theme, sk-single-key-shortcuts und sk-caret-cursor. Sie verlassen Ihr Gerät nie, ich sehe sie also nie. Abschalten lassen sie sich nicht, weil die Website sie braucht, um sich Ihre Auswahl zu merken.' },
+    { label: 'Notwendiger Speicher', text: 'Ihre Cookie-Auswahl, Ihr helles oder dunkles Farbschema, die auf der Website gewählte Sprache und, falls Sie sie ausschalten, die Tastenkürzel mit einzelnen Tasten und der eigene Textcursor. Diese Angaben liegen im lokalen Speicher (Local Storage) Ihres Browsers, unter cookie-consent, sk-theme, sk-lang, sk-single-key-shortcuts und sk-caret-cursor. Sie verlassen Ihr Gerät nie, ich sehe sie also nie. Abschalten lassen sie sich nicht, weil die Website sie braucht, um sich Ihre Auswahl zu merken.' },
     { label: 'Statistik-Cookies', text: 'Cookies von Google Analytics (_ga und _ga_*), die erst gesetzt werden, nachdem Sie die Statistik akzeptiert haben. Bis dahin wird das Skript von Google Analytics gar nicht geladen.' },
 ];
 
