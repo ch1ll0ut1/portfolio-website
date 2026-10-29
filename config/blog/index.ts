@@ -5,6 +5,7 @@
 
 import { sortByDate } from '@/lib/date';
 import type { Locale } from '@/lib/i18n/locale';
+import { blogDe } from './de';
 import { blogEn } from './en';
 import { rawBlogPosts } from './posts';
 import type { BlogCopy, BlogPost } from './types';
@@ -13,7 +14,7 @@ export type { BlogCopy, BlogPost, ListedPost } from './types';
 
 export const blogCopy: Record<Locale, BlogCopy> = {
     en: blogEn,
-    de: blogEn, // i18n: German copy pending
+    de: blogDe,
 };
 
 /** In production only published posts are shown; in development, drafts too. */

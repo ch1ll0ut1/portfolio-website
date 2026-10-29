@@ -57,13 +57,6 @@ export interface WorkCopy {
         contact: string;
         others: string;
     };
-    /** The 404 of an unknown slug: page metadata and panel. */
-    notFound: {
-        title: string;
-        description: string;
-        body: string;
-        action: string;
-    };
     card: {
         alt: (name: string) => string;
         /** The card's kicker, "case study". */

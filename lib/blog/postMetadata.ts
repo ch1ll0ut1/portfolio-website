@@ -4,6 +4,7 @@
  */
 
 import type { Metadata } from 'next';
+import { notFoundMetadata } from '@/components/errors/notFoundMetadata';
 import { blogCopy, lastModified } from '@/config/blog';
 import { absoluteUrl, siteConfig } from '@/config/site';
 import { baseOpenGraph } from '@/lib/baseOpenGraph';
@@ -40,18 +41,6 @@ export const blogIndexMetadata = (locale: Locale): Metadata => {
     };
 };
 
-/**
- * A post's 404 metadata in `locale`. `robots` is null, not `{ index: false }`:
- * Next already answers every 404 with its own `<meta name="robots"
- * content="noindex">`, so a value here would only add a second tag. Null
- * still clears the layout's "index, follow".
- */
-export const postNotFoundMetadata = (locale: Locale): Metadata => ({
-    title: blogCopy[locale].notFound.title,
-    description: blogCopy[locale].notFound.description,
-    robots: null,
-});
-
 /** The metadata of the post at `slug` in `locale`, or its 404's for a slug with no post. */
 export const blogPostMetadata = (slug: string, locale: Locale): Metadata => {
     const data = getBlogPostData(slug, locale);
@@ -59,7 +48,7 @@ export const blogPostMetadata = (slug: string, locale: Locale): Metadata => {
     // Guards the property reads below. Matches the not-found page, robots
     // included (this result does reach the page).
     if (!data) {
-        return postNotFoundMetadata(locale);
+        return notFoundMetadata(locale, 'post');
     }
 
     const { post } = data;

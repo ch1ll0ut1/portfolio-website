@@ -1,7 +1,7 @@
 import { FC, ReactNode, Suspense } from 'react';
 import { getBlogPostData } from '@/lib/content/blogPosts';
 import type { Locale } from '@/lib/i18n/locale';
-import { BlogPostNotFound } from './BlogPostNotFound';
+import { NotFoundPage } from '@/components/errors/NotFoundPage';
 
 interface Props {
     slug: string;
@@ -37,7 +37,7 @@ export const BlogPostBoundary: FC<Props> = ({ slug, locale, children }) => {
     }
 
     return (
-        <Suspense fallback={<BlogPostNotFound locale={locale} />}>
+        <Suspense fallback={<NotFoundPage locale={locale} kind="post" />}>
             {children}
         </Suspense>
     );
