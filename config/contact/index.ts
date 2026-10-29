@@ -11,9 +11,3 @@ export const contactCopy: Record<Locale, ContactCopy> = {
     en: contactEn,
     de: contactDe,
 };
-
-/**
- * The English invitation, for the homepage's contact band until it reads
- * `contactCopy[locale].invitation` itself.
- */
-export const contactInvitation = contactEn.invitation;

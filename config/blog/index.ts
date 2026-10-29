@@ -38,7 +38,7 @@ export const blogPostsFor = (locale: Locale) => postsByLocale[locale];
 
 /**
  * The English posts. Their facts — slugs, dates, tags, flags — are every
- * language's, so the sitemap, the feed and the homepage read them from here.
+ * language's, so the sitemap and the feed read them from here.
  */
 export const blogPosts = postsByLocale.en;
 

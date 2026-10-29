@@ -4,7 +4,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { blogPosts } from '@/config/blog';
+import { blogPosts, blogPostsFor } from '@/config/blog';
 import { allArticlesFor, featuredPostsFor } from './featuredPosts';
 
 const allArticles = allArticlesFor('en');
@@ -56,5 +56,19 @@ describe('featuredPosts', () => {
     it('should point the all-articles row at the blog index', () => {
         // Assert
         expect(allArticles.href).toBe('/blog');
+    });
+
+    it('should title German posts as the German blog does, linked under /de', () => {
+        // Act
+        const germanPosts = featuredPostsFor('de');
+
+        // Assert
+        expect(germanPosts.map(post => post.slug)).toEqual(featuredPosts.map(post => post.slug));
+        germanPosts.forEach((post) => {
+            const source = blogPostsFor('de').find(candidate => candidate.slug === post.slug);
+
+            expect(post.title).toBe(source?.title);
+            expect(post.href).toBe(`/de/blog/${post.slug}`);
+        });
     });
 });

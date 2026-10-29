@@ -9,7 +9,7 @@ import {
     useReveal,
     useStageEvent,
 } from '@/lib/motion';
-import { contactInvitation } from '@/config/contact';
+import { contactCopy } from '@/config/contact';
 import { homeContactCopy } from '@/config/home/contact';
 import { useLocale } from '@/lib/i18n/LocaleContext';
 import { ContactFooter } from './ContactFooter';
@@ -36,7 +36,9 @@ const SWEEP_DELAY_MS = 620;
  * renders in anyway.
  */
 export const Contact: FC = () => {
-    const { title } = homeContactCopy[useLocale()];
+    const locale = useLocale();
+    const { title } = homeContactCopy[locale];
+    const { invitation } = contactCopy[locale];
     const sectionRef = useRef<HTMLElement>(null);
     const titleRef = useRef<HTMLHeadingElement>(null);
     const markRef = useRef<HTMLElement>(null);
@@ -112,7 +114,7 @@ export const Contact: FC = () => {
                     <mark className={styles.mark} ref={markRef}>{title.highlight}</mark>
                     {title.after}
                 </h2>
-                <p className={styles.lede} ref={ledeRef}>{contactInvitation}</p>
+                <p className={styles.lede} ref={ledeRef}>{invitation}</p>
                 <div className={styles.actions} ref={actionsRef}>
                     <CtaMagnet />
                     <LinkedInMessage />
