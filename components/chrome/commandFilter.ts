@@ -21,10 +21,10 @@ export interface CommandGroup {
 }
 
 /**
- * Substring match across label, hint and group.
+ * Substring match across label, hint, group and the unseen search words.
  *
- * One flat haystack on purpose: typing "elsewhere" or "calendly" should find a
- * row just as readily as typing its label.
+ * One flat haystack on purpose: typing "elsewhere", "calendly" or "price"
+ * should find a row just as readily as typing its label.
  */
 export const filterCommands = (commands: Command[], query: string) => {
     const needle = query.trim().toLowerCase();
@@ -34,7 +34,7 @@ export const filterCommands = (commands: Command[], query: string) => {
     }
 
     return commands.filter(
-        command => `${command.label} ${command.hint} ${command.group}`.toLowerCase().includes(needle),
+        command => `${command.label} ${command.hint} ${command.group} ${command.keywords ?? ''}`.toLowerCase().includes(needle),
     );
 };
 

@@ -33,6 +33,12 @@ describe('filterCommands', () => {
         expect(filterCommands(sample, 'serv').map(command => command.id)).toEqual(['services']);
     });
 
+    it('should match on the unseen search words', () => {
+        const priced: Command = { ...make('services', 'Go to', 'Services', 'G S'), keywords: 'price cost' };
+
+        expect(filterCommands([...sample, priced], 'PRICE').map(command => command.id)).toEqual(['services']);
+    });
+
     it('should match on the hint', () => {
         expect(filterCommands(sample, 'withdraw').map(command => command.id)).toEqual(['cookies']);
     });
