@@ -117,6 +117,9 @@ describe('BOOT_SCRIPT', () => {
                 ['en', '/de/leistungen', '/services'],
                 ['de', '/services', '/de/leistungen'],
                 ['de', '/de/leistungen', null],
+                ['de', '/', '/de'],
+                ['en', '/de', '/'],
+                ['en', '/de/', '/'],
             ] as const)('stored %s on %s should go to %s', (stored, path, target) => {
                 expect(visit({ path, stored })).toBe(target);
             });
