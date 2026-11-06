@@ -1,4 +1,4 @@
-# Mit KI Apps 10× schneller bauen
+# Wie ich mit KI schneller Apps baue
 
 ![Jemand am Laptop, umgeben von einem Chat-Assistenten, einem UI-Wireframe und Code](how-to-use-ai-to-build-apps-10x-speed.webp)
 
@@ -130,7 +130,7 @@ Vor Kurzem habe ich für ein Kundenprojekt ein Dashboard-Widget in weniger als 2
 4. **Bugfixes** – Einen Bug hat die KI gelöst, die Lösung für einen anderen fand ich auf Stack Overflow.  
 Gesamtzeit: rund 7 Stunden. Auf dem klassischen Weg wären es 2–3 Tage gewesen.
 
-> *Das Beste daran? Auf Kundenseite dachte man, ich hätte eine Woche daran gearbeitet.*
+> *Was die Geschwindigkeit gebracht hat: Die Stunden, die mir die KI beim Routinecode erspart hat, gingen in die Sonderfälle, also in den Teil des Widgets, der stimmen musste.*
 
 ---
 
@@ -143,7 +143,7 @@ Worauf es ankommt:
 - In kurzen, geplanten Iterationen arbeiten.
 - Die eigenen Vorlieben aufschreiben, damit die KI sie nicht vergisst.
 
-So arbeite ich **zehnmal so schnell**, ohne auszubrennen oder in KI-Fehlern zu versinken.
+So arbeite ich **um ein Vielfaches schneller**, ohne auszubrennen oder in KI-Fehlern zu versinken.
 
 Features zu bauen ist allerdings nur ein Teil der Arbeit. Wie KI im restlichen Zyklus hilft, von der Planung über Code Reviews bis zum Deployment, beschreibe ich in [10 KI-Workflows für Entwicklungsteams](/de/blog/10-ai-workflows-every-developer-should-know-2025).
 

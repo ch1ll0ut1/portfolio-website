@@ -13,7 +13,7 @@ import type { BlogCopy } from './types';
 export const blogDe: BlogCopy = {
     posts: {
         'how-to-use-ai-to-build-apps-10x-speed': {
-            title: 'Mit KI Apps 10× schneller bauen',
+            title: 'Wie ich mit KI schneller Apps baue',
             excerpt: 'Mein Workflow aus der Praxis: ChatGPT, v0, Claude Code und Cursor kombinieren, Apps viel schneller bauen und die KI auf Kurs halten, wenn sie danebenliegt.',
         },
         'nodejs-vs-python-framework-magic': {

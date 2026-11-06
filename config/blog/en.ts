@@ -8,7 +8,7 @@ import type { BlogCopy } from './types';
 export const blogEn: BlogCopy = {
     posts: {
         'how-to-use-ai-to-build-apps-10x-speed': {
-            title: 'How to Use AI to Build Apps at 10× Speed',
+            title: 'How I Use AI to Build Apps Faster',
             excerpt: 'My real-world workflow for combining ChatGPT, v0, Claude Code and Cursor to build apps far faster, and how to keep the AI on track when it goes wrong.',
         },
         'nodejs-vs-python-framework-magic': {

@@ -1,4 +1,4 @@
-# How to Use AI to Build Apps at 10× Speed
+# How I Use AI to Build Apps Faster
 
 ![A developer at a laptop, surrounded by a chat assistant, a UI wireframe and code](how-to-use-ai-to-build-apps-10x-speed.webp)
 
@@ -130,7 +130,7 @@ I recently built a dashboard widget for a client in under 24 hours:
 4. **Bug Fixes** – One bug was solved by AI, another I found on Stack Overflow.  
 Total time: ~7 hours. Traditionally, this would have been 2–3 days.
 
-> *The best part? The client thought I’d been working on it for a week.*
+> *What the speed bought: the hours AI saved on boilerplate went into the edge cases, the part of the widget that had to be right.*
 
 ---
 
@@ -143,7 +143,7 @@ The key is:
 - Work in short, planned iterations.
 - Document your preferences so AI doesn’t forget.
 
-That’s how I get to **10× speed** without burning out or drowning in AI mistakes.
+That’s how I work **several times faster** without burning out or drowning in AI mistakes.
 
 Building features is only one part of the job, though. For the rest of the cycle, from planning to reviews and deployment, see [10 AI Workflows Every Developer Should Know](/blog/10-ai-workflows-every-developer-should-know-2025).
 
