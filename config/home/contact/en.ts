@@ -15,6 +15,7 @@ export const homeContactEn: HomeContactCopy = {
             linkedin: 'LinkedIn',
             blog: 'Blog',
             privacy: 'Privacy',
+            imprint: 'Legal notice',
             contact: 'Contact',
         },
         cookieSettings: 'Cookie settings',

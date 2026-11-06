@@ -15,6 +15,7 @@ import { metadata as contact } from './contact/page';
 import { metadata as notFound } from './not-found';
 import { metadata as layout, viewport } from './layout';
 import { metadata as home } from './page';
+import { metadata as imprint } from './imprint/page';
 import { metadata as privacy } from './privacy/page';
 import { metadata as services } from './services/page';
 
@@ -29,6 +30,7 @@ const pages: [string, Metadata][] = [
     ['/', home],
     ['/blog', blog],
     ['/privacy', privacy],
+    ['/imprint', imprint],
     ['/contact', contact],
     ['/services', services],
 ];

@@ -65,6 +65,7 @@ const ROUTES = [
     '/services',
     '/contact',
     '/privacy',
+    '/imprint',
     '/de',
     '/de/blog',
     '/de/blog/x',
@@ -72,6 +73,7 @@ const ROUTES = [
     '/de/leistungen',
     '/de/kontakt',
     '/de/datenschutz',
+    '/de/impressum',
 ];
 
 describe('BOOT_SCRIPT', () => {

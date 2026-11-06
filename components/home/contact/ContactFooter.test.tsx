@@ -68,6 +68,7 @@ describe('ContactFooter', () => {
         // Assert
         expect(screen.getByRole('link', { name: 'Blog' })).toHaveAttribute('href', '/blog');
         expect(screen.getByRole('link', { name: 'Privacy' })).toHaveAttribute('href', '/privacy');
+        expect(screen.getByRole('link', { name: 'Legal notice' })).toHaveAttribute('href', '/imprint');
         expect(screen.getByRole('link', { name: 'Contact' })).toHaveAttribute('href', '/contact');
     });
 

@@ -28,11 +28,12 @@ export const privacyEn: PrivacyCopy = {
     title: 'Privacy Policy',
     lastUpdated: 'Last updated {date}',
     contactFormLink: 'contact form',
+    legalNoticeLink: 'legal notice',
     sections: [
         {
             heading: 'Introduction',
             blocks: [
-                { type: 'paragraph', text: '{name} (“I”, “me”, or “my”) runs {host} (the “Website”) and is the controller responsible for processing your data on the Website. This policy explains what personal data the Website processes when you visit it or get in touch, why, and what you can do about it.' },
+                { type: 'paragraph', text: '{name} (“I”, “me”, or “my”) runs {host} (the “Website”) and is the controller responsible for processing your data on the Website. My postal address is in the {legalNotice}. This policy explains what personal data the Website processes when you visit it or get in touch, why, and what you can do about it.' },
                 { type: 'paragraph', text: 'The Website collects as little as it can. It was written with the General Data Protection Regulation (GDPR) and the California Consumer Privacy Act (CCPA) in mind.' },
             ],
         },

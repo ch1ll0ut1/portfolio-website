@@ -6,7 +6,7 @@
  */
 
 /** The footer's links, in order; their targets are in `ContactFooter`. */
-export type FooterLinkId = 'github' | 'linkedin' | 'blog' | 'privacy' | 'contact';
+export type FooterLinkId = 'github' | 'linkedin' | 'blog' | 'privacy' | 'imprint' | 'contact';
 
 export interface HomeContactCopy {
     /** The heading in three runs, `highlight` drawn as a marked phrase. */

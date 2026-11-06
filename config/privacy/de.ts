@@ -32,11 +32,12 @@ export const privacyDe: PrivacyCopy = {
     title: 'Datenschutzerklärung',
     lastUpdated: 'Stand: {date}',
     contactFormLink: 'Kontaktformular',
+    legalNoticeLink: 'Impressum',
     sections: [
         {
             heading: 'Einleitung',
             blocks: [
-                { type: 'paragraph', text: '{name} („ich“) betreibt {host} (die „Website“) und ist Verantwortlicher für die Verarbeitung Ihrer Daten auf der Website. Diese Datenschutzerklärung beschreibt, welche personenbezogenen Daten die Website verarbeitet, wenn Sie sie besuchen oder Kontakt aufnehmen, warum sie das tut und welche Möglichkeiten Sie haben.' },
+                { type: 'paragraph', text: '{name} („ich“) betreibt {host} (die „Website“) und ist Verantwortlicher für die Verarbeitung Ihrer Daten auf der Website. Meine Anschrift steht im {legalNotice}. Diese Datenschutzerklärung beschreibt, welche personenbezogenen Daten die Website verarbeitet, wenn Sie sie besuchen oder Kontakt aufnehmen, warum sie das tut und welche Möglichkeiten Sie haben.' },
                 { type: 'paragraph', text: 'Die Website erhebt so wenige Daten wie möglich. Sie wurde mit Blick auf die Datenschutz-Grundverordnung (DSGVO) und den California Consumer Privacy Act (CCPA) gebaut.' },
             ],
         },

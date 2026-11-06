@@ -41,6 +41,7 @@ export const PrivacyPolicy: FC<Props> = ({ locale, lastUpdated }) => {
         name: siteConfig.name,
         host: SITE_HOST,
         contactForm: <Link href={privacyRequestHref}>{copy.contactFormLink}</Link>,
+        legalNotice: <Link href={localizedPath(locale, '/imprint')}>{copy.legalNoticeLink}</Link>,
     };
 
     const renderBlock = (block: PolicyBlock, index: number) => {

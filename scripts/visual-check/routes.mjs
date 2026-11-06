@@ -78,7 +78,7 @@ const sampleCaseStudies = async (base) => {
  * The German twin of an English path, as `localizedPath` in lib/i18n/paths.ts
  * maps it: the slugs are shared, only the first segment may differ.
  */
-const GERMAN_SEGMENTS = { work: 'referenzen', contact: 'kontakt', privacy: 'datenschutz', services: 'leistungen' };
+const GERMAN_SEGMENTS = { work: 'referenzen', contact: 'kontakt', privacy: 'datenschutz', imprint: 'impressum', services: 'leistungen' };
 
 export const germanPath = path => path === '/' ? '/de' : `/de${path.replace(/^\/([^/]+)/, (_match, segment) => `/${GERMAN_SEGMENTS[segment] ?? segment}`)}`;
 
@@ -92,7 +92,7 @@ export const resolveRoutes = async (base) => {
 
     const articles = await sampleArticles(base);
     const cases = await sampleCaseStudies(base);
-    const twins = ['/', '/blog', ...articles, ...cases, '/privacy', '/contact', '/services'];
+    const twins = ['/', '/blog', ...articles, ...cases, '/privacy', '/imprint', '/contact', '/services'];
 
     return [...twins, MISSING_ARTICLE, ...twins.map(germanPath), MISSING_GERMAN_ARTICLE];
 };

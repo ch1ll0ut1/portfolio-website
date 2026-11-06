@@ -15,6 +15,7 @@ export const DE_SEGMENTS = {
     services: 'leistungen',
     contact: 'kontakt',
     privacy: 'datenschutz',
+    imprint: 'impressum',
     work: 'referenzen',
 } as const;
 

@@ -19,7 +19,7 @@ const ENGLISH_GROUP = '(en)';
  * group, in Next's `[param]` form. ./groupedImageRewrites.test.ts checks
  * this list against the files.
  */
-export const ENGLISH_IMAGE_DIRS = ['', '/blog', '/contact', '/privacy', '/services', '/work/[slug]'];
+export const ENGLISH_IMAGE_DIRS = ['', '/blog', '/contact', '/imprint', '/privacy', '/services', '/work/[slug]'];
 
 const IMAGES = ['opengraph-image', 'twitter-image'];
 
