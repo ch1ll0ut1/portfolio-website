@@ -13,12 +13,12 @@ import type { LegalNoticeCopy } from './types';
 export const legalNoticeDe: LegalNoticeCopy = {
     meta: {
         title: 'Impressum',
-        description: 'Wer stefanknoch.com anbietet und wie Sie ihn erreichen: die Anbieterkennzeichnung nach § 5 DDG.',
+        description: 'Wer stefanknoch.com anbietet und wie Sie ihn erreichen: die Anbieterkennzeichnung nach §\u00a05 DDG.',
     },
     kicker: 'Rechtliches',
     title: 'Impressum',
     provider: {
-        heading: 'Angaben gemäß § 5 DDG',
+        heading: 'Angaben gemäß §\u00a05 DDG',
         designation: 'Selbstständiger Softwarearchitekt und Softwareentwickler',
     },
     contact: {
@@ -28,9 +28,9 @@ export const legalNoticeDe: LegalNoticeCopy = {
     },
     vatId: {
         heading: 'Umsatzsteuer-ID',
-        text: 'Umsatzsteuer-Identifikationsnummer gemäß § 27a Umsatzsteuergesetz: {vatId}',
+        text: 'Umsatzsteuer-Identifikationsnummer gemäß §\u00a027a Umsatzsteuergesetz: {vatId}',
     },
     editorialResponsible: {
-        heading: 'Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV',
+        heading: 'Verantwortlich für den Inhalt nach §\u00a018 Abs. 2 MStV',
     },
 };

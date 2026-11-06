@@ -29,8 +29,8 @@ describe('LegalNotice', () => {
         render(<LegalNotice locale="de" />);
 
         // Assert
-        expect(screen.getByRole('heading', { name: 'Angaben gemäß § 5 DDG' })).toBeInTheDocument();
-        expect(screen.getByRole('heading', { name: 'Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV' })).toBeInTheDocument();
+        expect(screen.getByRole('heading', { name: 'Angaben gemäß §\u00a05 DDG' })).toBeInTheDocument();
+        expect(screen.getByRole('heading', { name: 'Verantwortlich für den Inhalt nach §\u00a018 Abs. 2 MStV' })).toBeInTheDocument();
     });
 
     it('should offer the contact form in the page\'s language as a second way to write', () => {

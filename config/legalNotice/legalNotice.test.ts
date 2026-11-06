@@ -63,9 +63,9 @@ describe('legal notice copy', () => {
     });
 
     it('should cite the provisions in the German terms', () => {
-        expect(legalNoticeDe.provider.heading).toBe('Angaben gemäß § 5 DDG');
-        expect(legalNoticeDe.editorialResponsible.heading).toBe('Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV');
-        expect(legalNoticeDe.vatId.text).toContain('§ 27a Umsatzsteuergesetz');
+        expect(legalNoticeDe.provider.heading).toBe('Angaben gemäß §\u00a05 DDG');
+        expect(legalNoticeDe.editorialResponsible.heading).toBe('Verantwortlich für den Inhalt nach §\u00a018 Abs. 2 MStV');
+        expect(legalNoticeDe.vatId.text).toContain('§\u00a027a Umsatzsteuergesetz');
     });
 
     it('should use the same slots in both languages', () => {
