@@ -25,9 +25,12 @@ export const OfferSection: FC<Props> = ({ offer, labels, locale }) => {
             <div className={styles.lead}>
                 <p className={styles.subtitle}>{offer.subtitle}</p>
                 <h2 id={titleId} className={styles.name}>{offer.name}</h2>
-                <blockquote className={styles.problem}>
-                    <p>{offer.problem}</p>
-                </blockquote>
+                {/* The buyer's situation in their own words, led in as such: no
+                    blockquote, so it cannot pass for an unattributed testimonial. */}
+                <div className={styles.problem}>
+                    <p className={styles.problemLead}>{labels.problemLead}</p>
+                    <p className={styles.problemText}>{offer.problem}</p>
+                </div>
                 <div className={styles.block}>
                     <h3 className={styles.label}>{labels.forWho}</h3>
                     <p>{offer.forWho}</p>

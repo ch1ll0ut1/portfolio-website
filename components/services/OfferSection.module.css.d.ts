@@ -10,6 +10,8 @@ declare const styles: {
     readonly name: string;
     readonly offer: string;
     readonly problem: string;
+    readonly problemLead: string;
+    readonly problemText: string;
     readonly proof: string;
     readonly range: string;
     readonly rangeValue: string;

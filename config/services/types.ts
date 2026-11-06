@@ -92,6 +92,8 @@ export interface ServicesPageCopy {
         howItRuns: string;
         typical: string;
         proof: string;
+        /** Leads in each offer's problem as the reader's own thought, not a quote from a client. */
+        problemLead: string;
         offerCta: string;
         /** Beside `offerCta`: the 30-minute call, booked directly. */
         bookCta: string;
