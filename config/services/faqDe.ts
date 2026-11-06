@@ -43,7 +43,7 @@ export const faqDe: FaqCopy[] = [
     },
     {
         question: 'Interim-CTO oder Fractional CTO: Was ist der Unterschied?',
-        answer: 'Ein Interim-CTO übernimmt die Rolle für eine feste Zeit in Vollzeit, oft bis eine feste Besetzung gefunden ist. Ein Fractional CTO macht dieselbe Arbeit in Teilzeit, so lange es hilft. Manche sagen auch CTO as a Service dazu. Ich arbeite als Fractional CTO, beratend oder im Team, und war selbst Interim-CTO eines jungen Health-Tech-Startups.',
+        answer: 'Ein Interim-CTO übernimmt die Rolle für eine begrenzte Zeit in Vollzeit, oft bis die Stelle dauerhaft besetzt ist. Ein Fractional CTO macht dieselbe Arbeit in Teilzeit, solange es hilft. Manche sagen auch Teilzeit-CTO oder CTO as a Service dazu. Ich arbeite als Fractional CTO, beratend oder im Team, und war selbst Interim-CTO eines jungen Health-Tech-Startups.',
     },
     {
         question: 'Sie sitzen in Bangkok. Wie funktioniert das mit der Zeitverschiebung?',

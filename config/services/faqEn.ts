@@ -40,7 +40,7 @@ export const faqEn: FaqCopy[] = [
     },
     {
         question: 'Why a fixed price per phase, and not hourly?',
-        answer: 'Because you should know the cost before the work starts. One fixed price for a whole project would have to pad for everything nobody knows yet, so I price one phase at a time: each gets a written scope and a fixed price, set from what the Health Check or the product plan found. If your priorities change, we rescope the next phase instead of counting hours. And you pay for the result, not my hours: if I finish a phase sooner, it costs the same and you have it earlier.',
+        answer: 'Because you should know the cost before the work starts. One fixed price for a whole project would have to pad for everything nobody knows yet, so I price one phase at a time: each gets a written scope and a fixed price, set from what the App Health Check or the product plan found. If your priorities change, we rescope the next phase instead of counting hours. And you pay for the result, not my hours: if I finish a phase sooner, it costs the same and you have it earlier.',
     },
     {
         question: 'Interim CTO or fractional CTO: what is the difference?',

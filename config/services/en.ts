@@ -106,7 +106,7 @@ export const servicesEn: ServicesPageCopy = {
                 'The rescue, in fixed-price phases: fixes shipped every week, with a short written update.',
                 'A clean hand-over, or I stay on for the next phase.',
             ],
-            range: `Most rescues ${usdRangeEn(RESCUE_RANGE_USD)}, a fixed price per phase, set after the Health Check`,
+            range: `Most rescues ${usdRangeEn(RESCUE_RANGE_USD)}, a fixed price per phase, set after the App Health Check`,
             proof: [
                 'Doubled real-time messaging performance at Eko by rebuilding the core messaging system under load',
                 'Ran a department-wide code quality initiative at Agoda, one of Asia’s largest travel platforms',
