@@ -14,37 +14,37 @@ const details: WorkCopy['details'] = {
     edithing: {
         heading: 'Ein Gesetzeseditor für das isländische Parlament',
         metaTitle: 'Gesetzeseditor für das isländische Parlament',
-        description: 'Ich leitete das Design von Edithing: ein Open-Source-Editor, in dem Islands Parlament Gesetze, Entwürfe und Änderungsanträge strukturell gültig verfasst.',
+        description: 'Ich leitete die Konzeption von Edithing: ein Open-Source-Editor für das isländische Parlament, um Gesetze, Entwürfe und Änderungen gültig zu verfassen.',
         lede: 'Das isländische Parlament schreibt seine Gesetze, Gesetzentwürfe und Änderungsanträge als lange Dokumente mit strenger Struktur. Ich habe Konzeption und Bau von Edithing geleitet, einem Open-Source-Editor, der diese Struktur beim Schreiben bewahrt.',
         problem: [
             'Isländisches Recht steckt in tief verschachtelten Dokumenten: Kapitel, Artikel, Absätze und nummerierte Punkte. Die Struktur gehört zum Gesetz selbst, sie ist nicht bloß Layout.',
-            'Gewöhnliche Editoren behandeln ein Dokument als Fließtext. Sie ebnen die Struktur ein oder lassen sie zerbrechen, und dann muss jemand sie von Hand prüfen und reparieren.',
+            'Gewöhnliche Editoren behandeln ein Dokument als Fließtext. Dabei geht die Struktur verloren oder gerät durcheinander, und dann muss jemand sie von Hand prüfen und reparieren.',
         ],
         did: [
-            'Ich habe die Struktur isländischer Gesetzestexte in Konzepte für das Bearbeiten und in ein technisches Design übersetzt.',
+            'Ich habe die Struktur isländischer Gesetzestexte in ein Bearbeitungskonzept und ein technisches Design übersetzt.',
             'Ich habe ein Dokumentmodell entworfen, das weiß, was ein Kapitel, ein Artikel, ein Absatz und ein nummerierter Punkt ist und wie sie ineinandergreifen.',
             'Der Editor prüft dieses Modell laufend. So bleibt die rechtliche Struktur bei jedem Tastendruck gültig, statt später repariert werden zu müssen.',
             'Als leitender Architekt war ich für das Systemdesign verantwortlich, vom Editor im Browser bis zum Server und zur Datenbank dahinter.',
         ],
         result: [
-            'Ein Open-Source-Editor, in dem Islands Gesetzessammlung, Gesetzentwürfe und Änderungsanträge verfasst werden. Der Quellcode ist öffentlich auf GitHub.',
+            'Ein Open-Source-Editor, um die isländische Gesetzessammlung, Gesetzentwürfe und Änderungsanträge zu verfassen. Der Quellcode ist öffentlich auf GitHub.',
             'Es ist mein dritter Rich-Text-Editor im Produktiveinsatz, nach Slimwiki und DirectMail.',
         ],
         technical: [
             'Ein typisiertes, hierarchisches Dokumentmodell auf Slate.js mit laufender Normalisierung: Nach jeder Änderung prüft der Editor den Baum gegen das Modell und repariert ihn. So lässt sich das Dokument nie in ungültiger Form speichern.',
-            'TypeScript und React im Browser, mit der Bibliothek Zustand für den State. Node.js und MySQL auf dem Server.',
+            'TypeScript und React im Browser, mit der State-Management-Bibliothek Zustand. Node.js und MySQL auf dem Server.',
         ],
         topics: ['Gesetzesredaktion', 'Rich-Text-Editor', 'Strukturierte Dokumente', 'Open Source'],
     },
     bluereceipt: {
         heading: 'BlueReceipt: eine SMS-Marketing-Plattform für Shopify-Shops',
         metaTitle: 'SMS-Marketing für Shopify-Shops: BlueReceipt',
-        description: 'Technischer Mitgründer von BlueReceipt: SMS-Marketing für Shopify-Shops gebaut, ein Team von sechs geführt, eine typisierte Datenschicht von DB bis UI.',
+        description: 'Technischer Mitgründer von BlueReceipt: SMS-Marketing für Shopify-Shops, ein Team von sechs Personen, eine typisierte Datenschicht von der DB bis zur UI.',
         lede: 'Mit BlueReceipt konnten Shopify-Shops ihre Kundschaft per SMS bewerben. Ich habe es als Tech Lead mitgegründet: Ich habe das Entwicklungsteam eingestellt und geführt und den Kern der Plattform selbst gebaut.',
         team: 'Sechs Personen in der Entwicklung',
         problem: [
-            'Vier Systeme mussten mit denselben Daten arbeiten, ohne sich zu widersprechen: die Marketing-Automatisierungen, ein gemeinsamer Editor für die Nachrichten, der Shopify-Shop der Marke und Twilio, das die SMS verschickt.',
-            'Jede Nachricht musste zuverlässig über Twilio rausgehen, passend zu den Shopify-Daten der jeweiligen Marke.',
+            'Vier Systeme mussten mit denselben Daten arbeiten, ohne sich zu widersprechen: die Marketing-Automatisierungen, ein gemeinsamer Editor für die Nachrichten, der jeweilige Shopify-Shop und Twilio, das die SMS verschickt.',
+            'Jede Nachricht musste zuverlässig über Twilio verschickt werden, passend zu den Daten des jeweiligen Shops.',
         ],
         did: [
             'Ich habe ein Entwicklungsteam von sechs Personen aufgebaut und geführt, selbst weiter als leitender Entwickler programmiert und das Projektmanagement übernommen.',
@@ -53,7 +53,7 @@ const details: WorkCopy['details'] = {
             'Die Infrastruktur habe ich nach Kosten ebenso wie nach Skalierbarkeit gewählt, und jedes Deployment habe ich automatisiert.',
         ],
         result: [
-            'Eine Schemaänderung, die etwas kaputt machte, ließ den Build scheitern, statt in Produktion zu landen.',
+            'Brach eine Schemaänderung etwas, scheiterte der Build, und der Fehler kam nie in Produktion.',
             'Ein Team von sechs Personen, das nach denselben Standards arbeitete, und Deployments, die von Anfang bis Ende automatisch liefen.',
         ],
         technical: [
@@ -135,7 +135,7 @@ export const workDe: WorkCopy = {
     },
     next: {
         title: 'Haben Sie ein ähnliches Projekt?',
-        body: 'Ich baue neue Apps, repariere kaputte und führe Ihr Entwicklungsteam. Erzählen Sie mir, woran Sie arbeiten, und ich sage Ihnen ehrlich, ob ich zu Ihrem Projekt passe.',
+        body: 'Ich baue neue Apps, rette fehlerhafte und führe Ihr Entwicklungsteam. Erzählen Sie mir, woran Sie arbeiten, und ich sage Ihnen ehrlich, ob ich zu Ihrem Projekt passe.',
         services: 'Wie ich helfen kann',
         contact: 'Kontakt aufnehmen',
         others: 'Weitere Referenzen',
