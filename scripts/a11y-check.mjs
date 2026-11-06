@@ -40,10 +40,9 @@ const routes = async () => {
         return listed.split(',');
     }
 
-    // The German homepage, `/de`, is not built yet.
-    const twins = ['/blog', ...await newestArticle(), ...await firstCaseStudy(), '/privacy', '/contact', '/services'];
+    const twins = ['/', '/blog', ...await newestArticle(), ...await firstCaseStudy(), '/privacy', '/contact', '/services'];
 
-    return ['/', ...twins, ...twins.map(germanPath), '/de/blog/this-article-does-not-exist'];
+    return [...twins, ...twins.map(germanPath), '/de/blog/this-article-does-not-exist'];
 };
 
 const scan = async (browser, route, theme) => {
