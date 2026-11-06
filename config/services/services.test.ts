@@ -52,11 +52,6 @@ describe('services copy', () => {
         });
     });
 
-    it('should link each page to the other', () => {
-        expect(servicesEn.otherLanguage.href).toBe(servicesDe.path);
-        expect(servicesDe.otherLanguage.href).toBe(servicesEn.path);
-    });
-
     it('should count the years from the start year, not by hand', () => {
         expect(servicesEn.hero.lede).toContain(`${yearsShipping()} years`);
         expect(servicesDe.hero.lede).toContain(`${yearsShipping()} Jahre`);

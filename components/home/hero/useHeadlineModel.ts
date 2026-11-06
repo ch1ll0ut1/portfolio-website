@@ -1,8 +1,7 @@
 'use client';
 
 import { type RefObject, useCallback, useEffect, useRef, useState } from 'react';
-import { heroCopy } from '@/config/home/hero';
-import { useLocale } from '@/lib/i18n/LocaleContext';
+import { useCopy } from '@/lib/i18n/CopyContext';
 import type { PanelState } from './DocumentModelPanel';
 import { serializeEditor } from './editorDom';
 import { type HeadingDoc, type Leaf, createDoc, leafKey } from './editorModel';
@@ -42,9 +41,8 @@ export interface HeadlineModel {
  * (DOM → model → panel) structural rather than merely documented.
  */
 export const useHeadlineModel = (titleRef: RefObject<HTMLElement | null>): HeadlineModel => {
-    const locale = useLocale();
-    const { editor } = heroCopy[locale];
-    const [model, setModel] = useState<PanelModel>(() => ({ doc: createDoc(initialHeadline(locale)), baseline: [] }));
+    const { headline, editor } = useCopy('hero');
+    const [model, setModel] = useState<PanelModel>(() => ({ doc: createDoc(initialHeadline(headline)), baseline: [] }));
     const [panelState, setPanelState] = useState<PanelState>('synced');
     const [position, setPosition] = useState('');
     const dirtyTimer = useRef(0);

@@ -17,6 +17,7 @@ import { heroCtas, heroLocation } from '@/config/hero';
 import { heroEn } from '@/config/home/hero/en';
 import { yearsShipping } from '@/config/site';
 import { LocaleProvider } from '@/lib/i18n/LocaleContext';
+import { GermanHomeCopy } from '../GermanHomeCopy';
 import { Hero } from './Hero';
 import { itemAt } from '@/test/itemAt';
 import { selectOffsets } from './editorDom';
@@ -166,7 +167,9 @@ describe('Hero', () => {
         vi.spyOn(navigator, 'userAgent', 'get').mockReturnValue('Mozilla/5.0 (X11; Linux x86_64)');
         render(
             <LocaleProvider locale="de">
-                <Hero />
+                <GermanHomeCopy>
+                    <Hero />
+                </GermanHomeCopy>
             </LocaleProvider>,
         );
 

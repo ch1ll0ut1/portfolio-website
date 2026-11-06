@@ -3,8 +3,7 @@
 import { type FC, useCallback, useEffect, useRef } from 'react';
 import { clamp, useMagnet, useReducedMotion, useScrub, useStageEvent } from '@/lib/motion';
 import { heroCtas, heroLocation } from '@/config/hero';
-import { heroCopy } from '@/config/home/hero';
-import { useLocale } from '@/lib/i18n/LocaleContext';
+import { useCopy } from '@/lib/i18n/CopyContext';
 import { DocumentModelPanel } from './DocumentModelPanel';
 import { FormatToolbar } from './FormatToolbar';
 import { HeadlineEditor } from './HeadlineEditor';
@@ -44,7 +43,7 @@ export const Hero: FC = () => {
     /** The section's height, measured on layout so the scrub never reads it. */
     const heightRef = useRef(0);
     const reduced = useReducedMotion();
-    const copy = heroCopy[useLocale()];
+    const copy = useCopy('hero');
 
     const ripple = useCallback((clientX: number, clientY: number) => {
         fieldRef.current?.ripple(clientX, clientY);

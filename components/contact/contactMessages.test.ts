@@ -13,7 +13,7 @@ describe('fieldErrorMessages', () => {
             name: { kind: 'required' },
             email: { kind: 'required' },
             message: { kind: 'required' },
-        }, 'en');
+        }, contactCopy.en, 'en');
 
         // Assert
         expect(messages).toEqual({
@@ -24,7 +24,7 @@ describe('fieldErrorMessages', () => {
     });
 
     it('should word an address that does not look like one', () => {
-        expect(fieldErrorMessages({ email: { kind: 'invalidEmail' } }, 'en')).toEqual({
+        expect(fieldErrorMessages({ email: { kind: 'invalidEmail' } }, contactCopy.en, 'en')).toEqual({
             email: 'This does not look like an email address. Please check it.',
         });
     });
@@ -34,7 +34,7 @@ describe('fieldErrorMessages', () => {
         const messages = fieldErrorMessages({
             name: { kind: 'tooLong', max: 100 },
             message: { kind: 'tooLong', max: 5000, length: 5001 },
-        }, 'en');
+        }, contactCopy.en, 'en');
 
         // Assert
         expect(messages).toEqual({
@@ -45,7 +45,7 @@ describe('fieldErrorMessages', () => {
 
     it('should format the numbers for a German page', () => {
         // Act
-        const messages = fieldErrorMessages({ message: { kind: 'tooLong', max: 5000, length: 5001 } }, 'de');
+        const messages = fieldErrorMessages({ message: { kind: 'tooLong', max: 5000, length: 5001 } }, contactCopy.de, 'de');
 
         // Assert
         expect(messages.message).toContain('5.000');
@@ -58,12 +58,12 @@ describe('fieldErrorMessages', () => {
             name: { kind: 'required' },
             email: { kind: 'required' },
             message: { kind: 'required' },
-        }, 'de');
+        }, contactCopy.de, 'de');
         const wrong = fieldErrorMessages({
             name: { kind: 'tooLong', max: 100 },
             email: { kind: 'invalidEmail' },
             message: { kind: 'tooLong', max: 5000, length: 5001 },
-        }, 'de');
+        }, contactCopy.de, 'de');
 
         // Assert
         expect(required).toEqual({
@@ -79,7 +79,7 @@ describe('fieldErrorMessages', () => {
     });
 
     it('should leave fields without an error out', () => {
-        expect(fieldErrorMessages({}, 'en')).toEqual({});
+        expect(fieldErrorMessages({}, contactCopy.en, 'en')).toEqual({});
     });
 });
 
@@ -87,14 +87,14 @@ describe('failureMessage', () => {
     const reasons: ContactFailure[] = ['notConfigured', 'expired', 'rateLimited', 'botCheckFailed', 'sendFailed'];
 
     it.each(reasons)('should word %s from the dictionary', (reason) => {
-        expect(failureMessage(reason, 'en')).toBe(contactCopy.en.failures[reason]);
-        expect(failureMessage(reason, 'de')).toBe(contactCopy.de.failures[reason]);
+        expect(failureMessage(reason, contactCopy.en)).toBe(contactCopy.en.failures[reason]);
+        expect(failureMessage(reason, contactCopy.de)).toBe(contactCopy.de.failures[reason]);
     });
 
     it.each(['rateLimited', 'botCheckFailed', 'sendFailed', 'notConfigured'] as const)(
         'should point a visitor stuck on %s to LinkedIn',
         (reason) => {
-            expect(failureMessage(reason, 'en')).toContain('LinkedIn');
+            expect(failureMessage(reason, contactCopy.en)).toContain('LinkedIn');
         },
     );
 });

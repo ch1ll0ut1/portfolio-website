@@ -1,7 +1,7 @@
 'use client';
 
 import { FC, useEffect } from 'react';
-import { errorsCopy } from '@/config/errors';
+import type { ErrorsCopy } from '@/config/errors/types';
 import type { Locale } from '@/lib/i18n/locale';
 import { localizedPath } from '@/lib/i18n/paths';
 import { NotFoundPanel } from './NotFoundPanel';
@@ -10,6 +10,8 @@ interface Props {
     error: Error & { digest?: string };
     /** Re-renders the segment that failed, from Next's error boundary. */
     onRetry: () => void;
+    /** The panel's words, in the language of the page that failed. */
+    copy: ErrorsCopy['error'];
     /** The language of the page that failed; English by default. */
     locale?: Locale;
 }
@@ -21,13 +23,14 @@ interface Props {
  * as Next's bare fallback. The error itself is logged rather than shown: its
  * message can carry internals, and in production Next replaces it with a
  * generic one anyway — the digest is what ties it to the server log.
+ *
+ * Its words come in as `copy`: each language's error page imports only its
+ * own dictionary.
  */
-export const ErrorPanel: FC<Props> = ({ error, onRetry, locale = 'en' }) => {
+export const ErrorPanel: FC<Props> = ({ error, onRetry, copy, locale = 'en' }) => {
     useEffect(() => {
         console.error(error);
     }, [error]);
-
-    const copy = errorsCopy[locale].error;
 
     return (
         <NotFoundPanel

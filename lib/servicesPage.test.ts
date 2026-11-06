@@ -52,7 +52,7 @@ describe('servicesJsonLd', () => {
                 '@id': `${siteConfig.url}/de/leistungen#${offer.id}`,
                 'name': offer.name,
                 'provider': { '@id': PERSON_ID },
-                'inLanguage': 'de',
+                'inLanguage': 'de-DE',
             })),
             expect.objectContaining({
                 '@type': 'BreadcrumbList',

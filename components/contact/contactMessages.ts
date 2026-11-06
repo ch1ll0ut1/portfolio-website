@@ -1,22 +1,18 @@
 /**
  * The Server Action's codes in the visitor's language. The server never
- * writes a sentence the visitor reads; these do, from `contactCopy`, with
- * numbers formatted for the language.
+ * writes a sentence the visitor reads; these do, from the page language's
+ * contact words, with numbers formatted for the language.
  */
 
-import {
-    type ContactFailure,
-    type ContactField,
-    type ContactFieldErrors,
-    contactCopy,
-} from '@/config/contact';
+import type { ContactFailure, ContactField, ContactFieldErrors } from '@/config/contact/form';
+import type { ContactCopy } from '@/config/contact/types';
 import { type Locale, intlLocale } from '@/lib/i18n/locale';
 
 /** Each field's error as text, keyed like the codes. */
 export type ContactFieldMessages = Partial<Record<ContactField, string>>;
 
-export const fieldErrorMessages = (errors: ContactFieldErrors, locale: Locale): ContactFieldMessages => {
-    const words = contactCopy[locale].fieldErrors;
+export const fieldErrorMessages = (errors: ContactFieldErrors, copy: ContactCopy, locale: Locale): ContactFieldMessages => {
+    const words = copy.fieldErrors;
     const format = (value: number) => value.toLocaleString(intlLocale[locale]);
     const messages: ContactFieldMessages = {};
 
@@ -39,4 +35,4 @@ export const fieldErrorMessages = (errors: ContactFieldErrors, locale: Locale): 
     return messages;
 };
 
-export const failureMessage = (reason: ContactFailure, locale: Locale) => contactCopy[locale].failures[reason];
+export const failureMessage = (reason: ContactFailure, copy: ContactCopy) => copy.failures[reason];

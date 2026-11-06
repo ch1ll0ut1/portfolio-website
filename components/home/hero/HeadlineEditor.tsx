@@ -1,9 +1,8 @@
 'use client';
 
 import { type FC, type RefObject, memo, useEffect } from 'react';
-import { heroCopy } from '@/config/home/hero';
-import { yearsShipping } from '@/config/site';
-import { useLocale } from '@/lib/i18n/LocaleContext';
+import { yearsShipping } from '@/config/site/identity';
+import { useCopy } from '@/lib/i18n/CopyContext';
 import styles from './Hero.module.css';
 
 const KICKER_SEPARATOR = ' · ';
@@ -19,7 +18,7 @@ export interface Props {
 }
 
 const HeadlineEditorView: FC<Props> = ({ titleRef, hintId, onInput, onKeyDown, onPaste, onBlur }) => {
-    const { headline, kicker: kickerFor, editor } = heroCopy[useLocale()];
+    const { headline, kicker: kickerFor, editor } = useCopy('hero');
     const kicker = kickerFor(yearsShipping());
     const headingName = `${headline.before}${headline.highlight}${headline.after}`;
     const editorLabel = editor.label;

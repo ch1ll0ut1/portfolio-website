@@ -69,12 +69,6 @@ export interface ServicesPageCopy {
         home: string;
         page: string;
     };
-    /** The visible link to the same page in the other language. */
-    otherLanguage: {
-        label: string;
-        lang: Locale;
-        href: string;
-    };
     hero: {
         kicker: string;
         title: string;

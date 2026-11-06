@@ -9,6 +9,7 @@ import { engagementsEn } from '@/config/home/services/en';
 import { itemAt } from '@/test/itemAt';
 import { installIntersectionObserver, installMatchMedia, settleIntro } from '../../../test/motionEnv';
 import { LocaleProvider } from '@/lib/i18n/LocaleContext';
+import { GermanHomeCopy } from '../GermanHomeCopy';
 import { Services } from './Services';
 import styles from './Services.module.css';
 
@@ -126,7 +127,9 @@ describe('Services', () => {
         // Act
         render(
             <LocaleProvider locale="de">
-                <Services locale="de" />
+                <GermanHomeCopy>
+                    <Services locale="de" />
+                </GermanHomeCopy>
             </LocaleProvider>,
         );
 

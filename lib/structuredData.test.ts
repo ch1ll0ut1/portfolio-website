@@ -62,7 +62,10 @@ describe('structuredData', () => {
                 '@type': 'Person',
                 '@id': `${siteConfig.url}/#person`,
                 'name': siteConfig.name,
-                'jobTitle': 'Freelance software architect & fractional CTO',
+                'jobTitle': [
+                    { '@value': 'Freelance software architect & fractional CTO', '@language': 'en-US' },
+                    { '@value': 'Freier Softwarearchitekt & Interim-CTO', '@language': 'de-DE' },
+                ],
                 'knowsLanguage': ['en', 'de'],
                 'sameAs': expect.arrayContaining([links.social.linkedin, links.social.github]),
             });
@@ -107,31 +110,27 @@ describe('structuredData', () => {
                 '@id': PERSON_ID,
                 'name': siteConfig.name,
                 'url': siteConfig.url,
-                'jobTitle': siteConfig.jobTitle,
+                'jobTitle': [
+                    { '@value': siteConfig.jobTitle, '@language': 'en-US' },
+                    { '@value': siteCopy.de.jobTitle, '@language': 'de-DE' },
+                ],
                 'sameAs': [links.social.linkedin, links.social.github],
             });
         });
     });
 
     describe('German pages', () => {
-        it('should give the author his German job title', () => {
+        // One @id, one node: what it says may not depend on the page it is on.
+        it('should describe the person in both languages on every page', () => {
             // Act
-            const ref = authorRef('de');
+            const schema = personSchema();
 
             // Assert
-            expect(ref).toMatchObject({ '@id': PERSON_ID, 'jobTitle': siteCopy.de.jobTitle });
-        });
-
-        it('should describe the person in German on the German homepage', () => {
-            // Act
-            const schema = personSchema({ locale: 'de' });
-
-            // Assert
-            expect(schema).toMatchObject({
-                '@id': PERSON_ID,
-                'jobTitle': siteCopy.de.jobTitle,
-                'description': siteCopy.de.description,
-            });
+            expect(schema.description).toEqual([
+                { '@value': siteCopy.en.description, '@language': 'en-US' },
+                { '@value': siteCopy.de.description, '@language': 'de-DE' },
+            ]);
+            expect(schema.jobTitle).toContainEqual({ '@value': siteCopy.de.jobTitle, '@language': 'de-DE' });
         });
 
         it('should make the German homepage a German profile page at its own URL', () => {
@@ -143,18 +142,19 @@ describe('structuredData', () => {
                 '@id': `${siteConfig.url}/de#profilepage`,
                 'url': `${siteConfig.url}/de`,
                 'name': siteCopy.de.title,
-                'inLanguage': 'de',
+                'inLanguage': 'de-DE',
                 'mainEntity': { '@id': PERSON_ID },
             });
         });
 
-        it('should credit a German post to the author with his German job title', () => {
+        it('should credit a German post to the same author node as an English one', () => {
             // Act
-            const schema = blogPostingSchema(post, 'de');
+            const german = blogPostingSchema(post, 'de');
+            const english = blogPostingSchema(post, 'en');
 
             // Assert
-            expect(schema.author).toMatchObject({ jobTitle: siteCopy.de.jobTitle });
-            expect(schema.publisher).toMatchObject({ jobTitle: siteCopy.de.jobTitle });
+            expect(german.author).toEqual(english.author);
+            expect(german.publisher).toEqual(authorRef());
         });
     });
 
@@ -169,7 +169,7 @@ describe('structuredData', () => {
                 '@id': `${siteConfig.url}/#website`,
                 'alternateName': 'stefanknoch.com',
                 'url': siteConfig.url,
-                'inLanguage': 'en',
+                'inLanguage': 'en-US',
                 'publisher': { '@id': PERSON_ID },
             });
         });
@@ -183,7 +183,7 @@ describe('structuredData', () => {
             expect(german).toMatchObject({
                 '@id': `${siteConfig.url}/de#website`,
                 'url': `${siteConfig.url}/de`,
-                'inLanguage': 'de',
+                'inLanguage': 'de-DE',
             });
             expect(german['@id']).not.toBe(english['@id']);
             expect(profilePageSchema('de')).toMatchObject({ isPartOf: { '@id': german['@id'] } });

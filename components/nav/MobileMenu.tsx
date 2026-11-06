@@ -6,11 +6,11 @@ import { usePathname } from 'next/navigation';
 import { LanguageSwitch } from '@/components/chrome/LanguageSwitch';
 import { Overlay } from '@/components/chrome/Overlay';
 import { ThemeToggle } from '@/components/chrome/ThemeToggle';
-import { chromeCopy } from '@/config/chrome';
 import { links } from '@/config/links';
 import { navSections } from '@/config/sections';
 import { localizedPath } from '@/lib/i18n/paths';
 import { useLocale } from '@/lib/i18n/LocaleContext';
+import { useCopy } from '@/lib/i18n/CopyContext';
 import { useSectionClick } from './useSectionClick';
 import styles from './MobileMenu.module.css';
 
@@ -35,7 +35,7 @@ interface Props {
  */
 export const MobileMenu: FC<Props> = ({ buttonClassName }) => {
     const locale = useLocale();
-    const { nav, sections } = chromeCopy[locale];
+    const { nav, sections } = useCopy('chrome');
     const copy = nav.mobileMenu;
     const home = localizedPath(locale, '/');
     const pathname = usePathname();

@@ -1,6 +1,7 @@
 import { type FC } from 'react';
 import Link from 'next/link';
 import { processCopy } from '@/config/home/process';
+import { processStepsFor } from '@/config/processSteps';
 import type { Locale } from '@/lib/i18n/locale';
 import { localizedPath } from '@/lib/i18n/paths';
 import { ProcessStepper } from './ProcessStepper';
@@ -17,11 +18,11 @@ interface Props {
  * buyer who wants that depth is already reading.
  */
 export const Process: FC<Props> = ({ locale }) => {
-    const { more } = processCopy[locale];
+    const { title, more } = processCopy[locale];
 
     return (
         <section className={styles.process} id="process" aria-labelledby="process-title">
-            <ProcessStepper />
+            <ProcessStepper title={title} processSteps={processStepsFor(locale)} />
 
             <div className="wrap">
                 <p className={styles.more}>

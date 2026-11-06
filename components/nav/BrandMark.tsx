@@ -3,9 +3,9 @@
 import { type FC, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { chromeCopy } from '@/config/chrome';
 import { localizedPath } from '@/lib/i18n/paths';
 import { useLocale } from '@/lib/i18n/LocaleContext';
+import { useCopy } from '@/lib/i18n/CopyContext';
 import { hasFinePointer } from '@/lib/motion';
 import { type Retype, createRetype } from './retypeMark';
 import styles from './BrandMark.module.css';
@@ -23,7 +23,7 @@ import styles from './BrandMark.module.css';
  */
 export const BrandMark: FC = () => {
     const locale = useLocale();
-    const { nav } = chromeCopy[locale];
+    const { nav } = useCopy('chrome');
     const home = localizedPath(locale, '/');
     const isHome = usePathname() === home;
     const markRef = useRef<HTMLSpanElement>(null);

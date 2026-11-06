@@ -1,6 +1,7 @@
 import { FC, ReactNode } from 'react';
 import type { Metadata, Viewport } from 'next';
 import '../globals.css';
+import { GermanSiteCopy } from '@/components/document/GermanSiteCopy';
 import { SiteDocument } from '@/components/document/SiteDocument';
 import { layoutMetadata, layoutViewport } from '@/lib/i18n/layoutMetadata';
 
@@ -12,7 +13,7 @@ export const viewport: Viewport = layoutViewport;
 
 /** The root layout of every German page: everything under `/de`. */
 const GermanLayout: FC<{ children: ReactNode }> = ({ children }) => (
-    <SiteDocument locale="de">
+    <SiteDocument locale="de" SiteCopy={GermanSiteCopy}>
         {children}
     </SiteDocument>
 );

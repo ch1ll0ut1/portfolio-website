@@ -10,20 +10,10 @@ interface Props {
     copy: ServicesPageCopy;
 }
 
-/** The page's kicker, h1, lede and calls to action, with the switch to the other language. */
+/** The page's kicker, h1, lede and calls to action. The nav's switch goes to the other language. */
 export const ServicesHeader: FC<Props> = ({ copy }) => (
     <header className={styles.header}>
-        <div className={styles.headerTop}>
-            <p className={styles.kicker}>{copy.hero.kicker}</p>
-            <Link
-                className={styles.language}
-                href={copy.otherLanguage.href}
-                hrefLang={copy.otherLanguage.lang}
-                lang={copy.otherLanguage.lang}
-            >
-                {copy.otherLanguage.label}
-            </Link>
-        </div>
+        <p className={styles.kicker}>{copy.hero.kicker}</p>
         <MaskHeading className={styles.title}>{copy.hero.title}</MaskHeading>
         <p className={styles.lede}>{copy.hero.lede}</p>
         <div className={styles.ctas}>

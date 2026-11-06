@@ -2,7 +2,7 @@
 
 import { type FC, type MouseEvent } from 'react';
 import { usePathname } from 'next/navigation';
-import { chromeCopy } from '@/config/chrome';
+import { languageOffers } from '@/config/chrome/languageOffers';
 import { otherLocale } from '@/lib/i18n/locale';
 import { useLocale } from '@/lib/i18n/LocaleContext';
 import { twinPath } from '@/lib/i18n/paths';
@@ -26,7 +26,7 @@ interface Props {
 export const LanguageSwitch: FC<Props> = ({ className, spelledOut = false }) => {
     const target = otherLocale(useLocale());
     const pathname = usePathname();
-    const offer = chromeCopy[target].languageOffer;
+    const offer = languageOffers[target];
 
     const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {
         // A right click only opens the context menu: nothing is chosen yet.

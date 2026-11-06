@@ -5,6 +5,7 @@
 import { describe, expect, it } from 'vitest';
 import { contactCopy } from '@/config/contact';
 import { siteConfig } from '@/config/site';
+import { intlLocale } from '@/lib/i18n/locale';
 import { contactJsonLd, contactMetadata } from './contactMetadata';
 
 describe('contactMetadata', () => {
@@ -34,7 +35,7 @@ describe('contactJsonLd', () => {
         const graph = JSON.stringify(contactJsonLd(locale));
 
         // Assert
-        expect(graph).toContain(`"inLanguage":"${locale}"`);
+        expect(graph).toContain(`"inLanguage":"${intlLocale[locale]}"`);
         expect(graph).toContain(`"@id":"${siteConfig.url}${path}#contactpage"`);
         expect(graph).toContain(`"name":"${contactCopy[locale].breadcrumbs.page}"`);
         expect(graph).toContain(`"item":"${home === '/' ? siteConfig.url : `${siteConfig.url}${home}`}"`);

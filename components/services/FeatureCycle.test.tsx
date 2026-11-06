@@ -29,20 +29,20 @@ describe('Feature Cycle Block', () => {
     });
 
     it('should render the block heading', () => {
-        render(<FeatureCycle />);
+        render(<FeatureCycle content={featureCycleFor('en')} />);
 
         expect(screen.getByRole('heading', { level: 3, name: featureCycleContent.heading })).toBeInTheDocument();
     });
 
     it('should explain that the cycle sits inside the Build step', () => {
-        render(<FeatureCycle />);
+        render(<FeatureCycle content={featureCycleFor('en')} />);
 
         expect(screen.getByText(featureCycleContent.bridge)).toBeInTheDocument();
         expect(featureCycleContent.bridge).toMatch(/Build/);
     });
 
     it('should render all nine steps with their descriptions', () => {
-        render(<FeatureCycle />);
+        render(<FeatureCycle content={featureCycleFor('en')} />);
 
         expect(featureCycleContent.steps).toHaveLength(9);
 
@@ -53,14 +53,14 @@ describe('Feature Cycle Block', () => {
     });
 
     it('should present the steps as one ordered list', () => {
-        render(<FeatureCycle />);
+        render(<FeatureCycle content={featureCycleFor('en')} />);
 
         expect(screen.getAllByRole('listitem')).toHaveLength(9);
         expect(screen.getByText('09')).toBeInTheDocument();
     });
 
     it('should not add headings that compete with the stepper steps', () => {
-        render(<FeatureCycle />);
+        render(<FeatureCycle content={featureCycleFor('en')} />);
 
         expect(screen.getAllByRole('heading')).toHaveLength(1);
     });

@@ -4,13 +4,14 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { fitContent, fitFor } from './fit';
+import { fitFor } from './fit';
 import { processEn } from './home/process/en';
+
+const fitContent = fitFor('en');
 
 describe('Fit Configuration', () => {
     describe('Fit Data Integrity', () => {
-        it('should tell the English lists, the ones the services page reads, from the English dictionary', () => {
-            expect(fitContent).toEqual(fitFor('en'));
+        it('should tell the English lists from the English dictionary', () => {
             expect(fitContent.lists[0].items).toEqual(processEn.fit.lists['good-fit'].items);
         });
 
@@ -24,14 +25,8 @@ describe('Fit Configuration', () => {
             expect([...new Set(ids)]).toHaveLength(ids.length);
         });
 
-        it('should pair a fit list with an unfit list', () => {
-            expect(fitContent.lists.map(list => list.tone)).toEqual(['fit', 'unfit']);
-        });
-
-        it('should have a label, a heading and an intro', () => {
-            expect(fitContent.label).toBe('Fit');
-            expect(fitContent.heading).toBeTruthy();
-            expect(fitContent.intro.length).toBeGreaterThan(40);
+        it('should put the fit list first, then the mismatch list', () => {
+            expect(fitContent.lists.map(list => list.id)).toEqual(['good-fit', 'not-a-fit']);
         });
 
         it('should have titles and at least five items per list', () => {

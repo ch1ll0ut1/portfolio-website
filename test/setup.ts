@@ -1,4 +1,4 @@
-import { afterEach } from 'vitest';
+import { afterEach, vi } from 'vitest';
 import { cleanup } from '@testing-library/react';
 // Registers the jest-dom matchers on Vitest's `expect` and types them. Imported
 // here rather than listed under `types` in tsconfig.json, so the config the app
@@ -108,6 +108,29 @@ if (typeof HTMLDialogElement !== 'undefined' && typeof HTMLDialogElement.prototy
         }
     });
 }
+
+/*
+ * Client components read their words through `useCopy`, which each page fills
+ * with its own language's dictionaries (lib/i18n/CopyContext.tsx). Rendered on
+ * its own here, a component reads English, as on an English page; a test of
+ * the German words wraps it in `GermanSiteCopy`, `GermanHomeCopy` or
+ * `GermanContactCopy`, which take precedence.
+ */
+vi.mock('@/lib/i18n/copyFallback', async () => {
+    const [chrome, consent, homeContact, hero, proof, engagements, work, writing, contact] = await Promise.all([
+        import('@/config/chrome/en').then(module => module.chromeEn),
+        import('@/config/consent/en').then(module => module.consentEn),
+        import('@/config/home/contact/en').then(module => module.homeContactEn),
+        import('@/config/home/hero/en').then(module => module.heroEn),
+        import('@/config/home/proof/en').then(module => module.proofEn),
+        import('@/config/home/services/en').then(module => module.engagementsEn),
+        import('@/config/home/work/en').then(module => module.workEn),
+        import('@/config/home/writing/en').then(module => module.writingEn),
+        import('@/config/contact/en').then(module => module.contactEn),
+    ]);
+
+    return { copyFallback: { chrome, consent, homeContact, hero, proof, engagements, work, writing, contact } };
+});
 
 // runs a cleanup after each test case
 afterEach(() => {

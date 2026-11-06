@@ -22,7 +22,7 @@ import {
     RESCUE_RANGE_USD,
 } from '@/config/pricing';
 import { absoluteUrl } from '@/config/site';
-import type { Locale } from './i18n/locale';
+import { type Locale, intlLocale } from './i18n/locale';
 import { localizedPath } from './i18n/paths';
 import { type JsonLdObject, personRef } from './structuredData';
 
@@ -59,7 +59,7 @@ export const serviceSchema = (service: ServiceDescription, path: string, languag
     'provider': personRef(),
     'areaServed': AREA_SERVED,
     'availableLanguage': ['en', 'de'],
-    'inLanguage': language,
+    'inLanguage': intlLocale[language],
     'offers': priceOffer(service.id, language),
 });
 

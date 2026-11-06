@@ -64,7 +64,8 @@ app/                    # Next.js app router pages
 │   └── page.tsx       # Homepage
 ├── de/                # German twins under their root layout (<html lang="de">):
 │                      #   thin routes over the shared page bodies with 'de',
-│                      #   a catch-all to the German 404, and the German error page
+│                      #   one static German 404 that unknown /de paths are rewritten to
+│                      #   (fallback rewrite in next.config.ts), and the German error page
 ├── global-not-found.tsx # 404 for unmatched URLs: a whole document, imports only globals.css
 ├── globals.css        # Global styles
 └── ...                # Metadata routes (sitemap, robots, manifest, icons, feed.xml), global-error
@@ -99,7 +100,7 @@ lib/                  # Utilities and shared logic
 ├── analytics.ts      # GA4 event helpers
 ├── contact/          # Server-only contact form: validation, spam checks, Resend call
 ├── content/          # Server-only file reads: post markdown, image sizes
-├── i18n/             # Locales, the EN/DE URL map, LocaleProvider, page and layout metadata
+├── i18n/             # Locales, the EN/DE URL map, LocaleProvider, useCopy, page and layout metadata
 ├── motion/           # Ticker, scroll store and the motion hooks
 └── og/               # Share cards and icons: layout, fonts, `ogPalette` literals
 
@@ -137,6 +138,28 @@ Blog content is managed through:
   `navigator.languages` is `de`. It embeds `DE_SEGMENTS`, so its mapping is
   `twinPath`'s. A crawler (en-US, nothing stored) is never moved.
 - **Other open tabs** do not follow a switch; they pick it up on their next load.
+  A page restored from the back/forward cache re-applies a stored choice
+  (`pageshow`, in the boot script).
+
+### Languages
+
+- **Dictionaries** are `Record<Locale, X>` in `config/<domain>/index.ts`, over
+  `en.ts` / `de.ts`, so a missing German key is a type error.
+  `config/i18n.test.ts` checks every pair (keys, empty strings, informal
+  „du“, `$`); a new pair goes into its table.
+- **Client components never import a dictionary index**: they read
+  `useCopy('<name>')` (`lib/i18n/CopyContext.tsx`), filled per language by
+  `EnglishSiteCopy` / `GermanSiteCopy` (root layouts), `…HomeCopy` and
+  `…ContactCopy` (routes), or take server-built data as props.
+  `lib/i18n/clientCopy.test.ts` fails if a client module can reach both
+  languages' files.
+- **A new page pair** touches: `app/(en)/x/page.tsx`; `app/de/<segment>/page.tsx`;
+  `DE_SEGMENTS` (`lib/i18n/paths.ts`); the `pages()` table in `app/sitemap.ts`
+  (`pnpm i18n-check` only sees sitemap pages); the share images in both trees
+  and `ENGLISH_IMAGE_DIRS` (`lib/og/groupedImageRewrites.ts`); BotID in
+  `instrumentation-client.ts` if it has a form; its dictionary pair in
+  `config/i18n.test.ts`. Unknown `/de` paths need nothing: a fallback rewrite
+  sends them to the German 404 (`app/de/nicht-gefunden`).
 
 ### Contact Form
 

@@ -14,7 +14,7 @@
  * after hydration on every desktop load, and nothing at all without JavaScript.
  */
 
-import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import {
     REDUCED_MOTION_QUERY,
     clamp,
@@ -25,9 +25,7 @@ import {
     useScrub,
     watchMedia,
 } from '@/lib/motion';
-import { processCopy } from '@/config/home/process';
-import { processStepsFor } from '@/config/processSteps';
-import { useLocale } from '@/lib/i18n/LocaleContext';
+import type { ProcessStep } from '@/config/processSteps';
 import { StepList } from './StepList';
 import { Terminal } from './Terminal';
 import { type Typer, createTyper } from './terminalTyper';
@@ -43,9 +41,14 @@ const PINNED_QUERY = '(min-width: 901px)';
 const TRACK_START = 0.12;
 const TRACK_END = 0.88;
 
-export const ProcessStepper: FC = () => {
-    const locale = useLocale();
-    const processSteps = useMemo(() => processStepsFor(locale), [locale]);
+interface Props {
+    /** The stepper's heading, and the section's name. */
+    title: string;
+    /** The steps in the page's language, from `processStepsFor` on the server. */
+    processSteps: ProcessStep[];
+}
+
+export const ProcessStepper: FC<Props> = ({ title, processSteps }) => {
     const trackRef = useRef<HTMLDivElement>(null);
     const termRef = useRef<HTMLDivElement>(null);
     const typersRef = useRef<Typer[]>([]);
@@ -213,7 +216,7 @@ export const ProcessStepper: FC = () => {
             <div className={styles.sticky}>
                 <div className={`wrap ${styles.grid}`}>
                     <div>
-                        <h2 className={styles.title} id="process-title">{processCopy[locale].title}</h2>
+                        <h2 className={styles.title} id="process-title">{title}</h2>
                         <StepList steps={processSteps} activeIndex={activeIndex} pinned={pinned} />
                     </div>
 

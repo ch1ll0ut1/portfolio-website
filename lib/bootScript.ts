@@ -20,7 +20,14 @@
  * `en` or `de` entry in the browser's languages is `de` — so a German page is
  * never left without a stored `en`, and a crawler (en-US, nothing stored) is
  * never moved. It cannot loop: the twin sees either the stored language it is
- * already in, or a same-site referrer. The twin is worked out as
+ * already in, or a same-site referrer. Leading slashes after `/de` collapse
+ * to one, so `/de//host` can never become the protocol-relative `//host`.
+ *
+ * A page restored from the back/forward cache runs no script, so the block
+ * runs again on `pageshow` when `persisted`: Back after a switch would
+ * otherwise show the page in the language just left, and keep the visitor
+ * there through client navigation. That run applies only a stored choice,
+ * the one input that can have changed since the page first loaded. The twin is worked out as
  * `twinPath` in `lib/i18n/paths.ts` works it out, from the same `DE_SEGMENTS`
  * embedded here, and the page is hidden only once it is being replaced.
  *
@@ -39,13 +46,14 @@ const TO_ENGLISH = Object.fromEntries(Object.entries(DE_SEGMENTS).map(([en, de])
  * The detection loop takes the first `en` or `de` entry, in any region.
  */
 const LANGUAGE_BLOCK = [
-    `try{var S=${JSON.stringify(DE_SEGMENTS)},E=${JSON.stringify(TO_ENGLISH)},p=location.pathname,cur=/^\\/de(\\/|$)/.test(p)?"de":"en",want=null,s=null;`,
+    `var L=function(o){try{var S=${JSON.stringify(DE_SEGMENTS)},E=${JSON.stringify(TO_ENGLISH)},p=location.pathname,cur=/^\\/de(\\/|$)/.test(p)?"de":"en",want=null,s=null;`,
     `try{s=localStorage.getItem(${JSON.stringify(LANGUAGE_STORAGE_KEY)});}catch(e){}`,
     'if(s==="en"||s==="de"){want=s;}',
-    'else if(cur==="en"){var r=document.referrer;if(!r||(r+"/").indexOf(location.origin+"/")!==0){var n=navigator,l=n.languages&&n.languages.length?n.languages:[n.language];for(var i=0;i<l.length;i++){var m=/^(en|de)(-|$)/i.exec(l[i]||"");if(m){if(m[1].toLowerCase()==="de"){want="de";}break;}}}}',
+    'else if(!o&&cur==="en"){var r=document.referrer;if(!r||(r+"/").indexOf(location.origin+"/")!==0){var n=navigator,l=n.languages&&n.languages.length?n.languages:[n.language];for(var i=0;i<l.length;i++){var m=/^(en|de)(-|$)/i.exec(l[i]||"");if(m){if(m[1].toLowerCase()==="de"){want="de";}break;}}}}',
     'if(want&&want!==cur){var h=Object.prototype.hasOwnProperty,f=function(x,M){return x.replace(/^\\/([^/]+)/,function(a,g){return "/"+(h.call(M,g)?M[g]:g);});},t;',
-    'if(want==="de"){t=f(p,S);t="/de"+(t==="/"?"":t);}else{t=p.slice(3);t=t===""?"/":f(t,E);}',
-    'd.style.visibility="hidden";location.replace(t+location.search+location.hash);}}catch(e){}',
+    'if(want==="de"){t=f(p,S);t="/de"+(t==="/"?"":t);}else{t=p.slice(3).replace(/^\\/+/,"/");t=t===""?"/":f(t,E);}',
+    'd.style.visibility="hidden";location.replace(t+location.search+location.hash);}}catch(e){}};',
+    'L();addEventListener("pageshow",function(e){if(e.persisted){L(1);}});',
 ].join('');
 
 export const BOOT_SCRIPT = [

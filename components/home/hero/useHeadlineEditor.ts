@@ -1,7 +1,7 @@
 'use client';
 
 import { type RefObject, useCallback } from 'react';
-import { useLocale } from '@/lib/i18n/LocaleContext';
+import { useCopy } from '@/lib/i18n/CopyContext';
 import { prefersReducedMotion } from '@/lib/motion';
 import type { FormatCommand } from './FormatToolbar';
 import type { PanelState } from './DocumentModelPanel';
@@ -59,7 +59,7 @@ export interface UseHeadlineEditorOptions {
  * render exactly once and then be left alone.
  */
 export const useHeadlineEditor = ({ titleRef, ripple, exitRef, toolbarRef }: UseHeadlineEditorOptions): HeadlineEditorApi => {
-    const locale = useLocale();
+    const { headline } = useCopy('hero');
     const model = useHeadlineModel(titleRef);
     const { sync, clearPosition } = model;
 
@@ -97,7 +97,7 @@ export const useHeadlineEditor = ({ titleRef, ripple, exitRef, toolbarRef }: Use
         }
 
         if (command === 'reset') {
-            sweep(resetHeadline(title, initialHeadline(locale)));
+            sweep(resetHeadline(title, initialHeadline(headline)));
             sync();
 
             return;
@@ -111,7 +111,7 @@ export const useHeadlineEditor = ({ titleRef, ripple, exitRef, toolbarRef }: Use
 
         sync();
         sweep(result.sweep);
-    }, [locale, sweep, sync, titleRef]);
+    }, [headline, sweep, sync, titleRef]);
 
     const onInput = useCallback(() => {
         const title = titleRef.current;

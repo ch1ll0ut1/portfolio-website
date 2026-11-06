@@ -1,20 +1,22 @@
 'use client';
 
-import { type FC, useMemo } from 'react';
-import { careerFor } from '@/config/career';
-import { useLocale } from '@/lib/i18n/LocaleContext';
+import { type FC } from 'react';
+import type { CareerCommit } from '@/config/career';
 import { CareerGraph } from './CareerGraph';
 import { CommitRow } from './CommitRow';
 import { useCareerLog } from './useCareerLog';
 import styles from './Experience.module.css';
 
+interface Props {
+    /** The roles in the page's language, from `careerFor` on the server. */
+    careerLog: CareerCommit[];
+}
+
 /**
  * The history as an ordered list of real text, beside the decorative graph
  * that draws the same two lanes and reveals them as the page scrolls.
  */
-export const CareerLog: FC = () => {
-    const locale = useLocale();
-    const careerLog = useMemo(() => careerFor(locale), [locale]);
+export const CareerLog: FC<Props> = ({ careerLog }) => {
     const {
         logRef,
         inkRef,

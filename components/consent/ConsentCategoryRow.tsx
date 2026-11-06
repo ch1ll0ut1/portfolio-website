@@ -8,9 +8,8 @@
 'use client';
 
 import { type FC } from 'react';
-import { consentCopy } from '@/config/consent';
 import type { ConsentState } from '@/lib/consentStorage';
-import { useLocale } from '@/lib/i18n/LocaleContext';
+import { useCopy } from '@/lib/i18n/CopyContext';
 import type { ConsentCategory } from './consentCategories';
 import styles from './ConsentCategoryRow.module.css';
 
@@ -21,7 +20,7 @@ interface Props {
 }
 
 export const ConsentCategoryRow: FC<Props> = ({ category, checked, onToggle }) => {
-    const alwaysOn = consentCopy[useLocale()].alwaysOn;
+    const alwaysOn = useCopy('consent').alwaysOn;
     const titleId = `consent-${category.key}-title`;
     const descriptionId = `consent-${category.key}-description`;
 

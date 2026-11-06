@@ -1,9 +1,8 @@
 'use client';
 
 import { type CSSProperties, type FC, useEffect, useRef } from 'react';
-import { chromeCopy } from '@/config/chrome';
 import type { Command } from '@/config/commands';
-import { useLocale } from '@/lib/i18n/LocaleContext';
+import { useCopy } from '@/lib/i18n/CopyContext';
 import { groupCommands } from './commandFilter';
 import styles from './CommandPalette.module.css';
 
@@ -49,7 +48,7 @@ interface Props {
  * layout effect, and for a key press or click before the frame is painted.
  */
 export const CommandList: FC<Props> = ({ id, optionIdPrefix, commands, selected, intro, onHover, onRun }) => {
-    const label = chromeCopy[useLocale()].palette.list;
+    const label = useCopy('chrome').palette.list;
     const groups = groupCommands(commands);
     const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
     const highlightRef = useRef<HTMLDivElement>(null);

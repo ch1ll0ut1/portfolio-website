@@ -3,10 +3,10 @@
 import { type FC, type KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useMediaQuery } from '@/lib/motion';
-import { chromeCopy } from '@/config/chrome';
 import type { ChromeCopy } from '@/config/chrome/types';
 import { commandsFor } from '@/config/commands';
 import { useLocale } from '@/lib/i18n/LocaleContext';
+import { useCopy } from '@/lib/i18n/CopyContext';
 import { CommandList } from './CommandList';
 import { Overlay } from './Overlay';
 import { filterCommands } from './commandFilter';
@@ -41,8 +41,9 @@ interface Props {
 export const CommandPalette: FC<Props> = ({ open, onClose, onOpenShortcuts }) => {
     const router = useRouter();
     const locale = useLocale();
-    const copy = chromeCopy[locale].palette;
-    const commands = useMemo(() => commandsFor(locale), [locale]);
+    const chrome = useCopy('chrome');
+    const copy = chrome.palette;
+    const commands = useMemo(() => commandsFor(locale, chrome), [locale, chrome]);
     const inputRef = useRef<HTMLInputElement>(null);
     const [query, setQuery] = useState('');
     const [selected, setSelected] = useState(0);
@@ -102,6 +103,7 @@ export const CommandPalette: FC<Props> = ({ open, onClose, onOpenShortcuts }) =>
                 router.push(href);
             },
             locale,
+            toasts: chrome.toasts,
         };
 
         // Opening a tab has to stay inside the click's gesture or the popup

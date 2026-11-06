@@ -18,7 +18,7 @@ describe('serviceSchema', () => {
             'provider': { '@id': PERSON_ID },
             'areaServed': AREA_SERVED,
             'availableLanguage': ['en', 'de'],
-            'inLanguage': 'de',
+            'inLanguage': 'de-DE',
         });
     });
 });
@@ -98,7 +98,7 @@ describe('engagementOffers', () => {
                 'itemOffered': {
                     '@id': `https://stefanknoch.com/de/leistungen#${itemAt(german, index).id}`,
                     'name': itemAt(german, index).name,
-                    'inLanguage': 'de',
+                    'inLanguage': 'de-DE',
                 },
             });
         });

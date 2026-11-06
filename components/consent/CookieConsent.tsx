@@ -23,9 +23,9 @@
 import { type FC, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { consentCopy } from '@/config/consent';
 import { localizedPath } from '@/lib/i18n/paths';
 import { useLocale } from '@/lib/i18n/LocaleContext';
+import { useCopy } from '@/lib/i18n/CopyContext';
 import { useConsent } from './ConsentContext';
 import { useBannerFocusReturn } from './useBannerFocusReturn';
 import { useFixedBottomInset } from './useFixedBottomInset';
@@ -39,7 +39,7 @@ export const CookieConsent: FC = () => {
     const { consent, showBanner, preferencesOpen, acceptAll, rejectAll, openPreferences, closePreferences } = useConsent();
     /** The stored choice is not read yet: the server render, and hydration. */
     const locale = useLocale();
-    const copy = consentCopy[locale];
+    const copy = useCopy('consent');
     const pending = consent === null;
     const bannerRef = useRef<HTMLElement>(null);
     const focus = useBannerFocusReturn(bannerRef, showBanner);

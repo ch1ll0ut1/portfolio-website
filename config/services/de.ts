@@ -40,11 +40,6 @@ export const servicesDe: ServicesPageCopy = {
         home: 'Startseite',
         page: 'Leistungen',
     },
-    otherLanguage: {
-        label: 'English',
-        lang: 'en',
-        href: '/services',
-    },
     hero: {
         kicker: 'Leistungen',
         title: 'Erfahrene Software-Hilfe für Gründungsteams und kleine Unternehmen',

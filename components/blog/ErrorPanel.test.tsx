@@ -7,6 +7,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { errorsDe } from '@/config/errors/de';
+import { errorsEn } from '@/config/errors/en';
 import { ErrorPanel } from './ErrorPanel';
 
 describe('ErrorPanel Component', () => {
@@ -22,7 +24,7 @@ describe('ErrorPanel Component', () => {
 
     it('should announce the failure as the page heading', () => {
         // Arrange
-        render(<ErrorPanel error={new Error('boom')} onRetry={vi.fn()} />);
+        render(<ErrorPanel error={new Error('boom')} onRetry={vi.fn()} copy={errorsEn.error} />);
 
         // Assert
         expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Something went wrong');
@@ -31,7 +33,7 @@ describe('ErrorPanel Component', () => {
     it('should retry when the reader asks to try again', async () => {
         // Arrange
         const onRetry = vi.fn();
-        render(<ErrorPanel error={new Error('boom')} onRetry={onRetry} />);
+        render(<ErrorPanel error={new Error('boom')} onRetry={onRetry} copy={errorsEn.error} />);
 
         // Act
         await userEvent.click(screen.getByRole('button', { name: 'Try again' }));
@@ -42,7 +44,7 @@ describe('ErrorPanel Component', () => {
 
     it('should offer a way back home', () => {
         // Arrange
-        render(<ErrorPanel error={new Error('boom')} onRetry={vi.fn()} />);
+        render(<ErrorPanel error={new Error('boom')} onRetry={vi.fn()} copy={errorsEn.error} />);
 
         // Assert
         expect(screen.getByRole('link', { name: 'Back to home' })).toHaveAttribute('href', '/');
@@ -53,7 +55,7 @@ describe('ErrorPanel Component', () => {
         const error = new Error('database password is hunter2');
 
         // Act
-        render(<ErrorPanel error={error} onRetry={vi.fn()} />);
+        render(<ErrorPanel error={error} onRetry={vi.fn()} copy={errorsEn.error} />);
 
         // Assert
         expect(consoleError).toHaveBeenCalledWith(error);
@@ -65,7 +67,7 @@ describe('ErrorPanel Component', () => {
         const error = Object.assign(new Error('boom'), { digest: '4021337' });
 
         // Act
-        render(<ErrorPanel error={error} onRetry={vi.fn()} />);
+        render(<ErrorPanel error={error} onRetry={vi.fn()} copy={errorsEn.error} />);
 
         // Assert
         expect(screen.getByText('Error 4021337')).toBeInTheDocument();
@@ -76,7 +78,7 @@ describe('ErrorPanel Component', () => {
         const error = Object.assign(new Error('boom'), { digest: '4021337' });
 
         // Act
-        render(<ErrorPanel error={error} onRetry={vi.fn()} locale="de" />);
+        render(<ErrorPanel error={error} onRetry={vi.fn()} copy={errorsDe.error} locale="de" />);
 
         // Assert
         expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Etwas ist schiefgelaufen');

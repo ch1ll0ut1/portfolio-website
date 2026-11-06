@@ -6,7 +6,7 @@
  */
 
 import { FC, RefObject } from 'react';
-import { type ProcessStep, terminalPath } from '@/config/processSteps';
+import type { ProcessStep } from '@/config/processSteps';
 import { TerminalScreen } from './TerminalScreen';
 import styles from './Process.module.css';
 
@@ -17,6 +17,9 @@ interface Props {
     rootRef: RefObject<HTMLDivElement | null>;
 }
 
+/** Shown in the title bar. */
+const TERMINAL_PATH = '~/your-product';
+
 const pad = (value: number) => String(value).padStart(2, '0');
 
 export const Terminal: FC<Props> = ({ steps, activeIndex, rootRef }) => (
@@ -25,7 +28,7 @@ export const Terminal: FC<Props> = ({ steps, activeIndex, rootRef }) => (
             <i />
             <i />
             <i />
-            <span className={styles.name}>{terminalPath}</span>
+            <span className={styles.name}>{TERMINAL_PATH}</span>
             <span className={styles.counter} data-counter="">
                 {pad(activeIndex + 1)}
                 {' / '}

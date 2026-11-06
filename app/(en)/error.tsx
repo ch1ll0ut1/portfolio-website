@@ -3,6 +3,7 @@
 import { FC } from 'react';
 import { ErrorPanel } from '@/components/blog/ErrorPanel';
 import { ReadingShell } from '@/components/blog/ReadingShell';
+import { errorsEn } from '@/config/errors/en';
 
 interface Props {
     error: Error & { digest?: string };
@@ -26,7 +27,7 @@ interface Props {
 const RouteError: FC<Props> = ({ error, reset }) => {
     return (
         <ReadingShell>
-            <ErrorPanel error={error} onRetry={reset} />
+            <ErrorPanel error={error} onRetry={reset} copy={errorsEn.error} />
         </ReadingShell>
     );
 };

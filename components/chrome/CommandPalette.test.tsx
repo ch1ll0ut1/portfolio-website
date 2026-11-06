@@ -9,6 +9,7 @@
 import { type Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { chromeEn } from '@/config/chrome/en';
 import { commandsFor } from '@/config/commands';
 import { itemAt } from '@/test/itemAt';
 import { installMatchMedia } from '../../test/motionEnv';
@@ -16,7 +17,7 @@ import { CommandPalette } from './CommandPalette';
 import styles from './CommandPalette.module.css';
 import { setPreference } from './preferences';
 
-const commands = commandsFor('en');
+const commands = commandsFor('en', chromeEn);
 
 const push = vi.fn();
 

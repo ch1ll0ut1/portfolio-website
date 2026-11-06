@@ -12,6 +12,7 @@ import { type Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vite
 import { act, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { links } from '@/config/links';
+import { GermanSiteCopy } from '@/components/document/GermanSiteCopy';
 import { LocaleProvider } from '@/lib/i18n/LocaleContext';
 import { itemAt } from '@/test/itemAt';
 import { installMatchMedia } from '../../test/motionEnv';
@@ -190,7 +191,9 @@ describe('<MobileMenu> Component', () => {
         navigation.pathname = '/de';
         render(
             <LocaleProvider locale="de">
-                <MobileMenu buttonClassName="" />
+                <GermanSiteCopy>
+                    <MobileMenu buttonClassName="" />
+                </GermanSiteCopy>
             </LocaleProvider>,
         );
 

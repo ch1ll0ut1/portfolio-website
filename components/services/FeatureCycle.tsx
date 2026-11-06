@@ -12,14 +12,17 @@
 
 import { FC, useRef } from 'react';
 import { useMaskReveal, useReveal } from '@/lib/motion';
-import { featureCycleFor } from '@/config/featureCycle';
-import { useLocale } from '@/lib/i18n/LocaleContext';
+import type { FeatureCycleContent } from '@/config/featureCycle';
 import styles from './WorkingMethod.module.css';
 
 const REVEAL_STAGGER = 0.035;
 
-export const FeatureCycle: FC = () => {
-    const featureCycleContent = featureCycleFor(useLocale());
+interface Props {
+    /** The cycle in the page's language, from `featureCycleFor` on the server. */
+    content: FeatureCycleContent;
+}
+
+export const FeatureCycle: FC<Props> = ({ content: featureCycleContent }) => {
     const ref = useRef<HTMLDivElement>(null);
     const headingRef = useRef<HTMLHeadingElement>(null);
 

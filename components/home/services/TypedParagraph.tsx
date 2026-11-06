@@ -2,8 +2,7 @@
 
 import { type FC, Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useInView, useScrub, useStageEvent } from '@/lib/motion';
-import { engagementsCopy } from '@/config/home/services';
-import { useLocale } from '@/lib/i18n/LocaleContext';
+import { useCopy } from '@/lib/i18n/CopyContext';
 import type { CssVars } from '@/lib/cssVars';
 import { type TypingEngine, createTypingEngine, splitNoteWords } from './noteTyping';
 import styles from './Services.module.css';
@@ -37,8 +36,8 @@ export const TypedParagraph: FC = () => {
     const engineRef = useRef<TypingEngine | null>(null);
     const writingRef = useRef(false);
     const [scrubEnd, setScrubEnd] = useState(SCRUB_END);
-    const locale = useLocale();
-    const words = useMemo(() => splitNoteWords(engagementsCopy[locale].note), [locale]);
+    const { note } = useCopy('engagements');
+    const words = useMemo(() => splitNoteWords(note), [note]);
     const lastSelectIndex = words.reduce((last, word) => Math.max(last, word.selectIndex), -1);
 
     useEffect(() => {

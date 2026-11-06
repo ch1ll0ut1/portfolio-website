@@ -1,12 +1,16 @@
 'use client';
 
-import { type FC, useCallback, useMemo, useRef, useState } from 'react';
-import { caseStudiesFor } from '@/config/caseStudies';
-import { useLocale } from '@/lib/i18n/LocaleContext';
+import { type FC, useCallback, useRef, useState } from 'react';
+import type { CaseStudy } from '@/config/caseStudies';
 import { CaseCard } from './CaseCard';
 import { useCaseStack } from './caseStack';
 import { useStackFocus } from './stackFocus';
 import styles from './Work.module.css';
+
+interface Props {
+    /** The case studies in the page's language, from `caseStudiesFor` on the server. */
+    caseStudies: CaseStudy[];
+}
 
 /**
  * The four case studies, stacking as you scroll: each sticks under the header
@@ -15,9 +19,7 @@ import styles from './Work.module.css';
  * Which card is covered is held here, because that is what tells an
  * illustration to pause.
  */
-export const CaseList: FC = () => {
-    const locale = useLocale();
-    const caseStudies = useMemo(() => caseStudiesFor(locale), [locale]);
+export const CaseList: FC<Props> = ({ caseStudies }) => {
     const casesRef = useRef<HTMLDivElement>(null);
     const [covered, setCovered] = useState<readonly boolean[]>(() => caseStudies.map(() => false));
 

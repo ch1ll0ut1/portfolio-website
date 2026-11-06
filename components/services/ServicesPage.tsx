@@ -30,7 +30,7 @@ export const ServicesPage: FC<Props> = ({ copy }) => (
             <OfferSection key={offer.id} offer={offer} labels={copy.labels} locale={copy.lang} />
         ))}
         <ServicesProcess copy={copy} />
-        <HowIWork />
+        <HowIWork locale={copy.lang} />
         <TimeZones copy={copy} />
         <Outcomes copy={copy} />
         <FitSection copy={copy} />

@@ -127,9 +127,6 @@ export const processEn: ProcessCopy = {
         link: 'How I work',
     },
     fit: {
-        label: 'Fit',
-        heading: 'The best work happens when expectations are honest.',
-        intro: 'I work best with clients who want a serious product partner, not just a pair of hands.',
         lists: {
             'good-fit': {
                 title: 'Who I work best with',

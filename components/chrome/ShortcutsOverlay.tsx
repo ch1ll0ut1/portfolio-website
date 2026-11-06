@@ -1,9 +1,8 @@
 'use client';
 
 import { type CSSProperties, type FC, useCallback, useRef } from 'react';
-import { chromeCopy } from '@/config/chrome';
 import type { ChromeCopy } from '@/config/chrome/types';
-import { useLocale } from '@/lib/i18n/LocaleContext';
+import { useCopy } from '@/lib/i18n/CopyContext';
 import { Overlay } from './Overlay';
 import { orderedChordSections } from './orderedChordSections';
 import { setPreference, usePreference } from './preferences';
@@ -38,7 +37,7 @@ interface Props {
  * user saying a word containing a `t` should not flip the page's theme.
  */
 export const ShortcutsOverlay: FC<Props> = ({ open, onClose }) => {
-    const copy = chromeCopy[useLocale()];
+    const copy = useCopy('chrome');
     const closeRef = useRef<HTMLButtonElement>(null);
     const apple = useApplePlatform();
     const singleKeys = usePreference('singleKeyShortcuts');

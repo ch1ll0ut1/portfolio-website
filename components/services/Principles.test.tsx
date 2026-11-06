@@ -26,13 +26,13 @@ describe('Principles Block', () => {
     });
 
     it('should render the block label as its heading', () => {
-        render(<Principles />);
+        render(<Principles content={principlesFor('en')} />);
 
         expect(screen.getByRole('heading', { level: 3, name: 'Working principles' })).toBeInTheDocument();
     });
 
     it('should render all three principles with both paragraphs', () => {
-        render(<Principles />);
+        render(<Principles content={principlesFor('en')} />);
 
         expect(principlesContent.principles).toHaveLength(3);
 
@@ -46,7 +46,7 @@ describe('Principles Block', () => {
     });
 
     it('should number the principles in list order', () => {
-        render(<Principles />);
+        render(<Principles content={principlesFor('en')} />);
 
         expect(screen.getByText('01')).toBeInTheDocument();
         expect(screen.getByText('02')).toBeInTheDocument();
@@ -54,7 +54,7 @@ describe('Principles Block', () => {
     });
 
     it('should present the principles as an ordered list', () => {
-        render(<Principles />);
+        render(<Principles content={principlesFor('en')} />);
 
         expect(screen.getAllByRole('listitem')).toHaveLength(3);
     });

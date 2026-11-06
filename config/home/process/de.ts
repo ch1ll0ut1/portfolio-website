@@ -131,9 +131,6 @@ export const processDe: ProcessCopy = {
         link: 'So arbeite ich',
     },
     fit: {
-        label: 'Passt es?',
-        heading: 'Die beste Arbeit entsteht, wenn beide Seiten ehrlich sagen, was sie erwarten.',
-        intro: 'Am besten arbeite ich mit Kundschaft, die einen ernsthaften Partner für ihr Produkt sucht, nicht nur zusätzliche Hände.',
         lists: {
             'good-fit': {
                 title: 'Mit wem ich am besten arbeite',

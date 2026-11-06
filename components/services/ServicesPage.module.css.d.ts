@@ -10,9 +10,7 @@ declare const styles: {
     readonly closing: string;
     readonly ctas: string;
     readonly header: string;
-    readonly headerTop: string;
     readonly kicker: string;
-    readonly language: string;
     readonly lede: string;
     readonly notes: string;
     readonly outcome: string;

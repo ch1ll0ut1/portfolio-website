@@ -6,6 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { contactCopy } from '@/config/contact';
 import { links } from '@/config/links';
+import { GermanSiteCopy } from '@/components/document/GermanSiteCopy';
 import { LocaleProvider } from '@/lib/i18n/LocaleContext';
 import { installIntersectionObserver, installMatchMedia, settleIntro } from '../../../test/motionEnv';
 import { Contact } from './Contact';
@@ -27,7 +28,7 @@ describe('Contact', () => {
 
     it('should render a labelled section anchored at the contact id', () => {
         // Act
-        const { container } = render(<Contact />);
+        const { container } = render(<Contact invitation={contactCopy.en.invitation} />);
 
         // Assert
         expect(container.querySelector('#contact')).toBeInTheDocument();
@@ -36,7 +37,7 @@ describe('Contact', () => {
 
     it('should render the headline with the highlighted phrase', () => {
         // Act
-        render(<Contact />);
+        render(<Contact invitation={contactCopy.en.invitation} />);
 
         // Assert
         const heading = screen.getByRole('heading', { level: 2 });
@@ -47,7 +48,7 @@ describe('Contact', () => {
 
     it('should render the lede', () => {
         // Act
-        render(<Contact />);
+        render(<Contact invitation={contactCopy.en.invitation} />);
 
         // Assert
         expect(screen.getByText(/i reply within one working day, from bangkok/i)).toBeInTheDocument();
@@ -57,7 +58,9 @@ describe('Contact', () => {
         // Act
         render(
             <LocaleProvider locale="de">
-                <Contact />
+                <GermanSiteCopy>
+                    <Contact invitation={contactCopy.de.invitation} />
+                </GermanSiteCopy>
             </LocaleProvider>,
         );
 
@@ -67,7 +70,7 @@ describe('Contact', () => {
 
     it('should offer both ways to get in touch', () => {
         // Act
-        render(<Contact />);
+        render(<Contact invitation={contactCopy.en.invitation} />);
 
         // Assert
         expect(screen.getByRole('link', { name: 'Book a 30-min call' })).toHaveAttribute('href', links.calendly);
@@ -76,7 +79,7 @@ describe('Contact', () => {
 
     it('should carry the footer', () => {
         // Act
-        render(<Contact />);
+        render(<Contact invitation={contactCopy.en.invitation} />);
 
         // Assert
         expect(screen.getByRole('contentinfo')).toBeInTheDocument();
@@ -91,7 +94,7 @@ describe('Contact', () => {
 
         try {
             // Act
-            render(<Contact />);
+            render(<Contact invitation={contactCopy.en.invitation} />);
             await settleIntro();
             // Past the delay a sweep would have started after.
             await new Promise((resolve) => {

@@ -11,6 +11,7 @@ import userEvent from '@testing-library/user-event';
 import type { ContactState } from '@/config/contact';
 import { links } from '@/config/links';
 import { LocaleProvider } from '@/lib/i18n/LocaleContext';
+import { GermanContactCopy } from './GermanContactCopy';
 import { ContactForm } from './ContactForm';
 
 type Action = (previous: ContactState, formData: FormData) => Promise<ContactState>;
@@ -107,7 +108,9 @@ describe('ContactForm', () => {
         const action = vi.fn<Action>().mockResolvedValue({ status: 'sent' });
         render(
             <LocaleProvider locale="de">
-                <ContactForm action={action} issueToken={issueToken} />
+                <GermanContactCopy>
+                    <ContactForm action={action} issueToken={issueToken} />
+                </GermanContactCopy>
             </LocaleProvider>,
         );
         await waitFor(() => {

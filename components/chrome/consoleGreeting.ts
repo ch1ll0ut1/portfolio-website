@@ -6,7 +6,7 @@
  */
 
 import { links } from '@/config/links';
-import { siteConfig } from '@/config/site';
+import { siteIdentity } from '@/config/site/identity';
 
 const MONO = 'font-family: ui-monospace, Menlo, monospace;';
 const CARET = '#ff8b3d';
@@ -21,7 +21,7 @@ export const printConsoleGreeting = () => {
     printed = true;
 
     console.log(
-        `%c▍%c ${siteConfig.name}`,
+        `%c▍%c ${siteIdentity.name}`,
         `${MONO} color:${CARET}; font-size:16px; font-weight:700;`,
         `${MONO} font-size:14px; font-weight:700;`,
     );

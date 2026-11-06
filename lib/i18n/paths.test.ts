@@ -93,6 +93,11 @@ describe('twinPath', () => {
         expect(twinPath('/work/x#top', 'de')).toBe('/de/referenzen/x#top');
     });
 
+    it('should collapse the slashes after /de, never returning a protocol-relative URL', () => {
+        expect(twinPath('/de//evil.com', 'en')).toBe('/evil.com');
+        expect(twinPath('/de///evil.com/x?y=1', 'en')).toBe('/evil.com/x?y=1');
+    });
+
     it('should map only the first German segment back', () => {
         expect(twinPath('/de/referenzen/leistungen', 'en')).toBe('/work/leistungen');
     });

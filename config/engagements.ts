@@ -40,5 +40,4 @@ export const engagementsFor = (locale: Locale): Engagement[] => engagementData.m
 /** The engagements in English: `/services`, the share card and the structured data read these. */
 export const engagements = engagementsFor('en');
 
-/** The English path of an engagement's section on the services page. */
-export const engagementPath = (id: EngagementId) => `/services#${id}`;
+export { engagementPath } from './pagePaths';

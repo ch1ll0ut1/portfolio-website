@@ -65,10 +65,8 @@ export interface ProcessCopy {
         text: string;
         link: string;
     };
+    /** Who the work suits and who it does not: the services pages' fit lists. */
     fit: {
-        label: string;
-        heading: string;
-        intro: string;
         lists: Record<FitListId, { title: string; items: string[] }>;
     };
 }

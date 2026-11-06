@@ -73,7 +73,7 @@ export const blogEn: BlogCopy = {
         headshotAlt: 'Stefan Knoch',
         kicker: 'Written by',
         bio: {
-            beforeYear: 'Software architect & tech lead since',
+            beforeYear: 'Freelance software architect & fractional CTO since',
             afterYear: '. I build new apps, fix broken ones and lead developers for startups and small businesses, working remotely from Bangkok in English and',
             german: 'Deutsch',
             end: '.',

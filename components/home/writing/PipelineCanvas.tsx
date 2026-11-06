@@ -1,8 +1,7 @@
 'use client';
 
 import { type CSSProperties, type FC, useEffect, useEffectEvent, useRef } from 'react';
-import { writingCopy } from '@/config/home/writing';
-import { useLocale } from '@/lib/i18n/LocaleContext';
+import { useCopy } from '@/lib/i18n/CopyContext';
 import { hasFinePointer, prefersReducedMotion, useStageEvent } from '@/lib/motion';
 import { type PipelineFlow, createPipelineFlow } from './pipelineFlow';
 import { type PipelineClasses, type PipelineNodeSpec, pipelineNodes } from './pipelineSpec';
@@ -44,7 +43,7 @@ const classes: PipelineClasses = {
  * hidden from assistive technology.
  */
 export const PipelineCanvas: FC<Props> = ({ onLiveChange }) => {
-    const { nodes, status } = writingCopy[useLocale()].pipeline;
+    const { nodes, status } = useCopy('writing').pipeline;
     const canvasRef = useRef<HTMLDivElement>(null);
     const svgRef = useRef<SVGSVGElement>(null);
     const stateRef = useRef<HTMLSpanElement>(null);

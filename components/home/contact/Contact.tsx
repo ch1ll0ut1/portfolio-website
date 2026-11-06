@@ -9,9 +9,7 @@ import {
     useReveal,
     useStageEvent,
 } from '@/lib/motion';
-import { contactCopy } from '@/config/contact';
-import { homeContactCopy } from '@/config/home/contact';
-import { useLocale } from '@/lib/i18n/LocaleContext';
+import { useCopy } from '@/lib/i18n/CopyContext';
 import { ContactFooter } from './ContactFooter';
 import { CtaMagnet } from './CtaMagnet';
 import { LinkedInMessage } from './LinkedInMessage';
@@ -22,6 +20,11 @@ import styles from './Contact.module.css';
 const EDGE_NEAR_MARGIN = '100% 0px 120% 0px';
 /** Head start the mask reveal gets before the selection sweeps. */
 const SWEEP_DELAY_MS = 620;
+
+interface Props {
+    /** What to send and when to expect an answer, as the contact page says it. */
+    invitation: string;
+}
 
 /**
  * The closing band, which also carries the site footer.
@@ -34,11 +37,13 @@ const SWEEP_DELAY_MS = 620;
  * Under reduced motion none of that runs. The clip stays open, the words are
  * already up, and the selection is already made, which is the state the markup
  * renders in anyway.
+ *
+ * `invitation` is the contact page's own line, which the server picks for
+ * the page's language: the rest of the contact dictionary stays out of the
+ * homepage's bundle.
  */
-export const Contact: FC = () => {
-    const locale = useLocale();
-    const { title } = homeContactCopy[locale];
-    const { invitation } = contactCopy[locale];
+export const Contact: FC<Props> = ({ invitation }) => {
+    const { title } = useCopy('homeContact');
     const sectionRef = useRef<HTMLElement>(null);
     const titleRef = useRef<HTMLHeadingElement>(null);
     const markRef = useRef<HTMLElement>(null);

@@ -37,14 +37,11 @@ describe('ServicesPage', () => {
         expect(container.firstElementChild).not.toHaveAttribute('lang');
     });
 
-    it('should link to the page in the other language, marked with its language', () => {
+    // The nav's switch stores the choice; a plain link to the twin would bounce off a stored language.
+    it('should leave switching language to the nav', () => {
         render(<ServicesPage copy={servicesEn} />);
 
-        const link = screen.getByRole('link', { name: 'Deutsch' });
-
-        expect(link).toHaveAttribute('href', '/de/leistungen');
-        expect(link).toHaveAttribute('hreflang', 'de');
-        expect(link).toHaveAttribute('lang', 'de');
+        expect(screen.queryByRole('link', { name: 'Deutsch' })).toBeNull();
     });
 
     // A buyer's situation, not a client's words: no blockquote, and led in as the reader's thought.

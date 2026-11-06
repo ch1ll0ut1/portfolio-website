@@ -2,10 +2,11 @@
 
 import { type FC, useRef } from 'react';
 import Link from 'next/link';
-import { type CaseStudy, caseStudyPath } from '@/config/caseStudies';
-import { workCopy } from '@/config/home/work';
+import type { CaseStudy } from '@/config/caseStudies';
+import { caseStudyPath } from '@/config/pagePaths';
 import { localizedPath } from '@/lib/i18n/paths';
 import { useLocale } from '@/lib/i18n/LocaleContext';
+import { useCopy } from '@/lib/i18n/CopyContext';
 import type { CssVars } from '@/lib/cssVars';
 import { useMaskReveal, useReveal } from '@/lib/motion';
 import { CaseVisual } from './visuals/CaseVisual';
@@ -29,7 +30,7 @@ interface Props {
  */
 export const CaseCard: FC<Props> = ({ study, index, covered }) => {
     const locale = useLocale();
-    const labels = workCopy[locale].card;
+    const labels = useCopy('work').card;
     const titleRef = useRef<HTMLHeadingElement>(null);
     const storyRef = useRef<HTMLDListElement>(null);
     // `--i` staggers the sticky offsets; `--dim` is written by the stack effect.

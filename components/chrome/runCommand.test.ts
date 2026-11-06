@@ -3,15 +3,16 @@
  */
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { chromeEn } from '@/config/chrome/en';
 import { commandsFor } from '@/config/commands';
 import { links } from '@/config/links';
 import { OPEN_CONSENT_PREFERENCES_EVENT } from '@/components/consent/ConsentContext';
 import { readPreference, setPreference } from './preferences';
 import { runCommand } from './runCommand';
 
-const commands = commandsFor('en');
+const commands = commandsFor('en', chromeEn);
 
-const handlers = () => ({ openShortcuts: vi.fn(), navigate: vi.fn(), locale: 'en' as const });
+const handlers = () => ({ openShortcuts: vi.fn(), navigate: vi.fn(), locale: 'en' as const, toasts: chromeEn.toasts });
 
 describe('runCommand', () => {
     it('should list a cookie settings command in the palette', () => {
