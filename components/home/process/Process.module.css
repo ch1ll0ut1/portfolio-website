@@ -359,7 +359,7 @@
 
 /* ---------- The way on to the services page's detail ---------- */
 .more {
-    padding-block: 8px clamp(56px, 7vw, 96px);
+    padding-top: 8px;
     max-width: 62ch;
     color: var(--fg-2);
 }
