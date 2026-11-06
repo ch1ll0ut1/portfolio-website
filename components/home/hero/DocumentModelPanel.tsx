@@ -1,6 +1,6 @@
 'use client';
 
-import { type FC, Fragment, type RefObject } from 'react';
+import type { FC, RefObject } from 'react';
 import { useApplePlatform } from '@/components/chrome/useApplePlatform';
 import { heroCopy } from '@/config/home/hero';
 import type { HeroPanelState } from '@/config/home/hero/types';
@@ -28,8 +28,6 @@ export interface Props {
     editButtonRef: RefObject<HTMLButtonElement | null>;
     onEdit: () => void;
 }
-
-const NEWLINE = '\n';
 
 const TOKEN_CLASS: Record<TokenKind, string> = {
     punct: styles.punct,
@@ -62,15 +60,16 @@ export const DocumentModelPanel: FC<Props> = ({ doc, baseline, position, state, 
             </div>
             <pre className={styles.treeCode} aria-live="off">
                 {headlineJsonLines(doc, baseline).map(line => (
-                    <Fragment key={line.id}>
-                        {line.indent}
-                        <span className={`${styles.ln} ${line.leaf ? styles.leaf : ''} ${line.flash ? styles.flash : ''}`}>
-                            {line.tokens.map((token, index) => (
-                                <span key={index} className={TOKEN_CLASS[token.kind]}>{token.text}</span>
-                            ))}
+                    <span key={line.id} className={styles.row}>
+                        <span className={styles.indent}>{line.indent}</span>
+                        <span className={styles.code}>
+                            <span className={`${styles.ln} ${line.leaf ? styles.leaf : ''} ${line.flash ? styles.flash : ''}`}>
+                                {line.tokens.map((token, index) => (
+                                    <span key={index} className={TOKEN_CLASS[token.kind]}>{token.text}</span>
+                                ))}
+                            </span>
                         </span>
-                        {NEWLINE}
-                    </Fragment>
+                    </span>
                 ))}
             </pre>
             <div className={styles.treeHint}>

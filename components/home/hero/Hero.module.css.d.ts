@@ -5,6 +5,7 @@ declare const styles: {
     readonly chip: string;
     readonly chipDot: string;
     readonly chipTz: string;
+    readonly code: string;
     readonly copy: string;
     readonly ctas: string;
     readonly doc: string;
@@ -14,6 +15,7 @@ declare const styles: {
     readonly hasFlag: string;
     readonly hero: string;
     readonly ibeam: string;
+    readonly indent: string;
     readonly inner: string;
     readonly isDirty: string;
     readonly isDragging: string;
@@ -26,6 +28,7 @@ declare const styles: {
     readonly lede: string;
     readonly ln: string;
     readonly punct: string;
+    readonly row: string;
     readonly status: string;
     readonly str: string;
     readonly sweeping: string;
