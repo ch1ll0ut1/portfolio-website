@@ -12,7 +12,7 @@ interface Props {
 }
 
 /**
- * The services section: three engagement models, then the note on how the work
+ * The services section: four engagement models, then the note on how the work
  * actually runs.
  *
  * The heading rises line by line, the cards arrive in a short stagger, and the

@@ -4,11 +4,13 @@
  */
 
 import {
-    FIRST_STEP_PRICE_EUR,
+    ADVISOR_MONTHLY_MIN_EUR,
+    EMBEDDED_MONTHLY_RANGE_EUR,
+    FEE_CREDIT_DAYS,
     FIRST_VERSION_RANGE_EUR,
+    HEALTH_CHECK_PRICE_EUR,
+    HEALTH_CHECK_WITH_SECURITY_EUR,
     RESCUE_RANGE_EUR,
-    TECH_LEAD_MIN_HOURS_PER_MONTH,
-    TECH_LEAD_MONTHLY_MIN_EUR,
     eurAmountDe,
     eurRangeDe,
 } from '../pricing';
@@ -16,16 +18,16 @@ import type { FaqCopy } from './types';
 
 export const faqDe: FaqCopy[] = [
     {
-        question: 'Was kostet das?',
-        answer: `Jeder Auftrag wird nach Stunden auf Basis eines schriftlichen Plans abgerechnet. Sie zahlen also für geleistete Arbeit, nicht für einen Festpreis mit Risikoaufschlag. Zur Orientierung: Die meisten Rettungen kosten ${eurRangeDe(RESCUE_RANGE_EUR)}, die meisten ersten Versionen einer neuen App ${eurRangeDe(FIRST_VERSION_RANGE_EUR)}, und die Rolle als Tech Lead beginnt bei etwa ${eurAmountDe(TECH_LEAD_MONTHLY_MIN_EUR)} im Monat, für mindestens ${TECH_LEAD_MIN_HOURS_PER_MONTH} Stunden. Der erste Schritt, ein Check oder ein Produktplan, ist etwa eine Woche Arbeit, kostet rund ${eurAmountDe(FIRST_STEP_PRICE_EUR)} und endet mit einem Plan samt Kosten, bevor Sie sich auf mehr festlegen.`,
+        question: 'Was kosten ein Code-Audit, ein MVP oder ein Interim-CTO?',
+        answer: `Alles hat einen Preis, bevor die Arbeit beginnt. Das Code-Audit kostet ${eurAmountDe(HEALTH_CHECK_PRICE_EUR)} zum Festpreis, mit vollständiger Sicherheitsprüfung ${eurAmountDe(HEALTH_CHECK_WITH_SECURITY_EUR)}. Ein Produktplan für eine neue App kostet dasselbe. Beides dauert fünf Werktage, und geht es innerhalb von ${FEE_CREDIT_DAYS} Tagen weiter, rechne ich das Honorar auf den Auftrag an. Danach bekommt jede Phase einen schriftlichen Festpreis: Die meisten Rettungen kosten insgesamt ${eurRangeDe(RESCUE_RANGE_EUR)}, die meisten ersten Versionen einer neuen App ${eurRangeDe(FIRST_VERSION_RANGE_EUR)}. Als Interim-CTO oder Fractional CTO arbeite ich beratend ab ${eurAmountDe(ADVISOR_MONTHLY_MIN_EUR)} im Monat oder im Team für ${eurRangeDe(EMBEDDED_MONTHLY_RANGE_EUR)} im Monat, jeweils für mindestens drei Monate.`,
     },
     {
         question: 'Können Sie Code übernehmen, den jemand anderes geschrieben hat?',
-        answer: 'Ja, das ist der Großteil jeder Rettung. Ich beginne mit einem Check von Code, Hosting und Konten und sage Ihnen dann klar, was sich zu behalten lohnt, was zuerst repariert werden muss und was es kostet. Ist es günstiger, einen Teil neu zu bauen, sage ich das und begründe es.',
+        answer: 'Ja, das ist der Großteil jeder Rettung. Ich beginne mit dem Code-Audit, das Code, Hosting und Konten prüft, und sage Ihnen dann klar, was sich zu behalten lohnt, was zuerst repariert werden muss und was es kostet. Ist es günstiger, einen Teil neu zu bauen, sage ich das und begründe es.',
     },
     {
         question: 'Meine App wurde mit Lovable, Bolt oder ChatGPT gebaut. Können Sie helfen?',
-        answer: 'Ja. KI-Baukästen bringen Sie schnell zu einer Demo, hinterlassen aber oft Lücken bei Sicherheit, Datenhaltung und Struktur, die sich zeigen, sobald echte Menschen sie nutzen. Ich prüfe, was da ist, behebe, was riskant ist, und mache daraus etwas, auf dem ein Entwicklungsteam weiterbauen kann. Manchmal bleibt das meiste erhalten, manchmal muss der Kern sauber neu gebaut werden.',
+        answer: 'Ja. KI-Baukästen bringen Sie schnell zu einer Demo, hinterlassen aber oft Lücken bei Sicherheit, Datenhaltung und Struktur, die sich zeigen, sobald echte Menschen sie nutzen. Ich prüfe, was da ist, behebe, was riskant ist, und mache daraus etwas, auf dem ein Entwicklungsteam weiterbauen kann. Manchmal bleibt das meiste erhalten, manchmal muss der Kern sauber neu gebaut werden. Welcher Fall es ist, zeigt das Code-Audit, bevor Sie mehr Geld ausgeben.',
     },
     {
         question: 'Ich habe keinen technischen Hintergrund. Ist das ein Problem?',
@@ -36,12 +38,12 @@ export const faqDe: FaqCopy[] = [
         answer: 'Ihnen, vom ersten Tag an. Der Code liegt in Ihrem Repository, Hosting und Dienste laufen auf Ihren Konten, und Sie haben die Admin-Zugänge. Wenn ich eine App übernehme, ist es eine der ersten Aufgaben, alles auf Ihren Namen umzustellen.',
     },
     {
-        question: 'Warum nach Stunden und nicht zum Festpreis?',
-        answer: 'Software verändert sich, während Sie lernen, was Ihre Kundschaft braucht. Ein Festpreis rechnet dieses Risiko entweder ein oder macht jede Änderung zur Verhandlung. Mit Stunden auf Basis eines schriftlichen Plans bleibt es transparent: Sie sehen die Stunden jede Woche, können Prioritäten jederzeit ändern und zahlen nicht mehr, sobald Sie mich nicht mehr brauchen.',
+        question: 'Warum ein Festpreis pro Phase und nicht nach Stunden?',
+        answer: 'Weil Sie die Kosten kennen sollten, bevor die Arbeit beginnt. Ein einziger Festpreis für das ganze Projekt müsste alles einrechnen, was noch niemand weiß. Deshalb setze ich den Preis Phase für Phase fest: Jede bekommt einen schriftlichen Umfang und einen Festpreis, auf Basis dessen, was das Code-Audit oder der Produktplan ergeben hat. Ändern sich Ihre Prioritäten, planen wir die nächste Phase neu, statt Stunden zu zählen. Und Sie bezahlen das Ergebnis, nicht meine Stunden: Werde ich mit einer Phase früher fertig, kostet sie dasselbe, und Sie haben sie früher.',
     },
     {
-        question: 'Kann ich Sie über Upwork beauftragen?',
-        answer: 'Ja. Upwork übernimmt Vertrag, Zeiterfassung und Zahlungsschutz für beide Seiten. Wenn Ihnen ein direkter Vertrag lieber ist, geht das auch.',
+        question: 'Interim-CTO oder Fractional CTO: Was ist der Unterschied?',
+        answer: 'Ein Interim-CTO übernimmt die Rolle für eine feste Zeit in Vollzeit, oft bis eine feste Besetzung gefunden ist. Ein Fractional CTO macht dieselbe Arbeit in Teilzeit, so lange es hilft. Manche sagen auch CTO as a Service dazu. Ich arbeite als Fractional CTO, beratend oder im Team, und war selbst Interim-CTO eines jungen Health-Tech-Startups.',
     },
     {
         question: 'Sie sitzen in Bangkok. Wie funktioniert das mit der Zeitverschiebung?',
@@ -57,7 +59,7 @@ export const faqDe: FaqCopy[] = [
     },
     {
         question: 'Was passiert nach dem Projekt?',
-        answer: 'Sie bekommen Dokumentation, Tests und eine Einführung, damit Sie oder Ihr Team ohne mich weitermachen können. Wenn Sie möchten, dass ich bleibe, kann ich ein kleines monatliches Budget für Reparaturen und Updates übernehmen oder in die Rolle als Tech Lead wechseln.',
+        answer: 'Sie bekommen Dokumentation, Tests und eine Einführung, damit Sie oder Ihr Team ohne mich weitermachen können. Wenn Sie möchten, dass ich bleibe, kann ich ein kleines monatliches Budget für Reparaturen und Updates übernehmen oder als Fractional CTO weiterarbeiten.',
     },
     {
         question: 'Können Sie mir helfen, ein eigenes Entwicklungsteam aufzubauen?',

@@ -1,14 +1,17 @@
 /**
- * The project ranges and monthly figures the services cards and the
- * `/services` pages quote.
+ * The prices the services cards, the `/services` pages and their FAQ quote.
  *
- * Ranges and monthly figures only, never an hourly rate, and no fixed-price
- * packages: the first step of every engagement is described as about a week
- * of work and, like everything after it, billed by the hour against a
- * written plan.
+ * Fixed prices per phase, never an hourly rate. The first step is a
+ * fixed-price product: the App Health Check for an app that exists, the
+ * product plan for one that does not yet. Both take five working days, and
+ * the fee is credited toward the follow-on work if it starts within 30 days.
+ * Every phase after that gets its own fixed price in writing, set from what
+ * the first step found. The project ranges below are what most of those
+ * phases add up to. The fractional CTO is a monthly fee at one of two levels,
+ * for at least three months.
  *
- * Change a figure here; every card, page and FAQ answer that quotes one
- * reads it from this file.
+ * Change a figure here; every card, page, FAQ answer and the structured data
+ * read it from this file.
  */
 
 export interface PriceRange {
@@ -16,17 +19,23 @@ export interface PriceRange {
     max: number;
 }
 
-/** What most app rescues cost, health check included. */
-export const RESCUE_RANGE_USD: PriceRange = { min: 4_000, max: 15_000 };
+/** The App Health Check, and the product plan at the same price: fixed. */
+export const HEALTH_CHECK_PRICE_USD = 3_500;
 
-/** What most first versions of a new app cost, product plan included. */
-export const FIRST_VERSION_RANGE_USD: PriceRange = { min: 10_000, max: 30_000 };
+/** The App Health Check with a full security review added. */
+export const HEALTH_CHECK_WITH_SECURITY_USD = 4_500;
 
-/** The least the part-time tech lead costs in a month. */
-export const TECH_LEAD_MONTHLY_MIN_USD = 1_800;
+/** What most app rescues cost after the check, in fixed-price phases. */
+export const RESCUE_RANGE_USD: PriceRange = { min: 12_000, max: 40_000 };
 
-/** What the first step, a health check or a product plan, roughly costs. */
-export const FIRST_STEP_PRICE_USD = 1_500;
+/** What most first versions of a new app cost after the product plan, in fixed-price phases. */
+export const FIRST_VERSION_RANGE_USD: PriceRange = { min: 25_000, max: 60_000 };
+
+/** The fractional CTO's Advisor level: the least it costs in a month. */
+export const ADVISOR_MONTHLY_MIN_USD = 3_500;
+
+/** The fractional CTO's Embedded level: its monthly range. */
+export const EMBEDDED_MONTHLY_RANGE_USD: PriceRange = { min: 8_000, max: 12_000 };
 
 /*
  * The German page quotes euros. These are set in their own right, not
@@ -35,35 +44,41 @@ export const FIRST_STEP_PRICE_USD = 1_500;
  * the exchange rate.
  */
 
+/** The App Health Check (Code-Audit) and the product plan for the German page. */
+export const HEALTH_CHECK_PRICE_EUR = 3_500;
+
+/** The Code-Audit with the full security review, for the German page. */
+export const HEALTH_CHECK_WITH_SECURITY_EUR = 4_500;
+
 /** The rescue range for the German page. */
-export const RESCUE_RANGE_EUR: PriceRange = { min: 5_000, max: 22_000 };
+export const RESCUE_RANGE_EUR: PriceRange = { min: 12_000, max: 35_000 };
 
 /** The first-version range for the German page. */
-export const FIRST_VERSION_RANGE_EUR: PriceRange = { min: 15_000, max: 40_000 };
+export const FIRST_VERSION_RANGE_EUR: PriceRange = { min: 25_000, max: 55_000 };
 
-/** The tech lead's monthly minimum for the German page. */
-export const TECH_LEAD_MONTHLY_MIN_EUR = 2_000;
+/** The Advisor level's monthly minimum for the German page. */
+export const ADVISOR_MONTHLY_MIN_EUR = 3_000;
 
-/** The first step's rough price for the German page. */
-export const FIRST_STEP_PRICE_EUR = 2_200;
+/** The Embedded level's monthly range for the German page. */
+export const EMBEDDED_MONTHLY_RANGE_EUR: PriceRange = { min: 7_000, max: 10_000 };
 
-/** The smallest monthly commitment for the part-time tech lead. */
-export const TECH_LEAD_MIN_HOURS_PER_MONTH = 20;
+/** Within this many days of the first step, its fee is credited toward the follow-on work. */
+export const FEE_CREDIT_DAYS = 30;
 
-/** `$4–15K`, the short form the English copy uses for a range. */
+/** The Advisor level's time in a month, in hours. */
+export const ADVISOR_HOURS_PER_MONTH: PriceRange = { min: 8, max: 10 };
+
+/** `$12–40K`, the short form the English copy uses for a range. */
 export const usdRangeEn = ({ min, max }: PriceRange) => `$${thousands(min)}–${thousands(max)}K`;
 
-/** `$1.5K`, the short form the English copy uses for a single rough figure. */
-export const usdThousandsEn = (value: number) => `$${thousands(value)}K`;
-
-/** `$1,800`, a single figure written out in full for English copy. */
+/** `$3,500`, a single figure written out in full for English copy. */
 export const usdAmountEn = (value: number) => `$${groupDigits(value, ',')}`;
 
-/** `5.000–22.000 €`, the form German readers expect (no-break space before the sign). */
-export const eurRangeDe = ({ min, max }: PriceRange) => `${groupDigits(min, '.')}–${groupDigits(max, '.')} €`;
+/** `12.000–35.000 €`, the form German readers expect (no-break space before the sign). */
+export const eurRangeDe = ({ min, max }: PriceRange) => `${groupDigits(min, '.')}–${groupDigits(max, '.')}\u00a0€`;
 
-/** `2.000 €`, a single figure in the German form (no-break space before the sign). */
-export const eurAmountDe = (value: number) => `${groupDigits(value, '.')} €`;
+/** `3.500 €`, a single figure in the German form (no-break space before the sign). */
+export const eurAmountDe = (value: number) => `${groupDigits(value, '.')}\u00a0€`;
 
 const thousands = (value: number) => String(Math.round(value / 100) / 10);
 

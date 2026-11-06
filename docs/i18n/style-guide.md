@@ -49,7 +49,7 @@ Every translator works to this brief:
 |---|---|---|
 | I build the hard part. | Ich baue den harten Teil. | not fixed yet: see the note below |
 | …what is urgent, in plain English | …was dringend ist, in einfachem Englisch | …was dringend ist, verständlich erklärt |
-| Every engagement is billed by the hour against a written plan. | Die Abrechnung jedes Auftrags erfolgt auf Stundenbasis unter Zugrundelegung eines schriftlichen Plans. | Jeder Auftrag wird nach Stunden abgerechnet, auf Basis eines schriftlichen Plans. |
+| Every phase gets a written scope and a fixed price before it starts. | Jede Phase erhält vor ihrem Beginn einen schriftlichen Umfang und einen festen Preis. | Jede Phase bekommt vorab einen schriftlichen Umfang und einen Festpreis. |
 | A fixed price either pads for that risk or turns every change into a negotiation. | Ein Festpreis polstert entweder für dieses Risiko oder verwandelt jede Änderung in eine Verhandlung. | Ein Festpreis rechnet dieses Risiko entweder ein oder macht jede Änderung zur Verhandlung. |
 | Cancel any time. | Jederzeit abbrechen. | Jederzeit kündbar. |
 | Free, and no deck needed. | Kostenlos, und kein Deck nötig. | Kostenlos, ohne Vorbereitung. |
@@ -162,8 +162,10 @@ Code-Review-Prozess" and "ein Startup-Team". Plurals follow English: "Startups",
 | AI | KI | "KI-Tools", "KI-Funktionen", "KI-gestützt". Never "AI" in running text |
 | GDPR | DSGVO | |
 | rescue (engagement) | Rettung, App-Rettung | as in `de.ts` |
-| health check | Check | "Gesundheits- und Sicherheitscheck" on first mention |
-| code audit / security review | Code Review / Sicherheitsprüfung | as in `de.ts` |
+| App Health Check (the fixed-price first step) | Code-Audit | "das Code-Audit", every time; never "Check" or "Gesundheitscheck" |
+| code audit / security review | Code-Audit / Sicherheitsprüfung | "Code Review" stays for reviewing a team's pull requests |
+| fixed price per phase | Festpreis pro Phase | |
+| Advisor / Embedded (fractional CTO levels) | beratend / im Team | |
 | product plan | Produktplan | |
 | engagement | Auftrag | never "Engagement" |
 | milestone | Etappe | only for the phases of Stefan's own offering (services copy, `de.ts`). In startup or investor prose: „Meilenstein“ („verpasste Meilensteine“) |
@@ -238,7 +240,7 @@ title, so each one fits in 60 characters with the ` | Stefan Knoch` suffix:
 
 | Slug | German title |
 |---|---|
-| how-to-use-ai-to-build-apps-10x-speed | Mit KI Apps 10× schneller bauen |
+| how-to-use-ai-to-build-apps-10x-speed | Wie ich mit KI schneller Apps baue |
 | nodejs-vs-python-framework-magic | Node.js vs Python: Was Framework-Magie kostet |
 | how-to-hire-your-first-developer | Den ersten Entwickler einstellen: So geht’s |
 | why-startups-dont-need-product-owners | Warum Startups keinen Product Owner brauchen |
@@ -295,13 +297,14 @@ Coding, Workflows, Clean Code, Fractional CTO) stay as they are.
 
 - German pages quote euros at the DACH rates in `config/pricing.ts`: the
   `*_EUR` constants through `eurRangeDe` and `eurAmountDe`, never typed by hand.
-  Examples: `eurRangeDe(RESCUE_RANGE_EUR)` gives "5.000–22.000 €", and
-  `eurAmountDe(TECH_LEAD_MONTHLY_MIN_EUR)` gives "2.000 €".
+  Examples: `eurRangeDe(RESCUE_RANGE_EUR)` gives "12.000–35.000 €", and
+  `eurAmountDe(HEALTH_CHECK_PRICE_EUR)` gives "3.500 €".
 - The euro figures are set on their own terms. **Never convert a dollar figure, and
   never copy one over.** The German engagements copy builds its `range`
-  strings from `RESCUE_RANGE_EUR`, `FIRST_VERSION_RANGE_EUR` and
-  `TECH_LEAD_MONTHLY_MIN_EUR`.
-- Leave `TECH_LEAD_MIN_HOURS_PER_MONTH` and `yearsShipping()` as
+  strings from the `*_EUR` constants: `HEALTH_CHECK_PRICE_EUR`,
+  `RESCUE_RANGE_EUR`, `FIRST_VERSION_RANGE_EUR`, `ADVISOR_MONTHLY_MIN_EUR` and
+  the others.
+- Leave `FEE_CREDIT_DAYS`, `ADVISOR_HOURS_PER_MONTH` and `yearsShipping()` as
   interpolations.
 - **No `$` anywhere** in German copy outside code blocks. A test enforces this.
   A dollar fact that isn't a price (Eko's funding) is written "28 Mio. USD".

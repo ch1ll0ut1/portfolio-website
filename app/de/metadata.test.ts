@@ -76,7 +76,7 @@ describe('German route metadata', () => {
     });
 
     it('should title the German homepage with the German positioning', () => {
-        expect(home.title).toEqual({ absolute: 'Stefan Knoch — Softwarearchitekt & Tech Lead' });
+        expect(home.title).toEqual({ absolute: 'Stefan Knoch — Freier Softwarearchitekt & Interim-CTO' });
     });
 
     it('should give a German post its German card', async () => {

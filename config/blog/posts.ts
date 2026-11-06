@@ -13,6 +13,7 @@ export const rawBlogPosts: PostEntry[] = [
     {
         id: '1',
         date: '2025-08-14',
+        updated: '2026-11-06',
         tags: ['AI', 'Productivity', 'Development', 'Cursor', 'Claude Code', 'v0', 'ChatGPT'],
         slug: 'how-to-use-ai-to-build-apps-10x-speed',
         published: true,

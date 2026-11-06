@@ -457,7 +457,7 @@ Und es erfordert Respekt vor den Menschen, die die Software am Ende wirklich nut
 
 ## Wie ich mit KI entwickle
 
-Ich nutze KI in meiner eigenen Arbeit intensiv. Mit welchem Workflow ich damit Apps baue, habe ich in [Mit KI Apps 10× schneller bauen](/de/blog/how-to-use-ai-to-build-apps-10x-speed) aufgeschrieben.
+Ich nutze KI in meiner eigenen Arbeit intensiv. Mit welchem Workflow ich damit Apps baue, habe ich in [Wie ich mit KI schneller Apps baue](/de/blog/how-to-use-ai-to-build-apps-10x-speed) aufgeschrieben.
 
 Aber ich nutze sie als Werkzeug der Softwareentwicklung, nicht als Ersatz dafür.
 

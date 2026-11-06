@@ -5,7 +5,7 @@
 Künstliche Intelligenz ist 2025 keine Spielerei mehr.  
 Sie ist mehr als „Autovervollständigung für Code“. Sie ist eine **Reihe von Workflows, die jede Phase der Softwareentwicklung beschleunigen können**, vom Brainstorming bis zum Deployment.
 
-In den letzten zwei Jahren haben viele von uns erlebt, dass Entwicklungsteams, die sich auf KI einlassen, **drei- bis zehnmal so schnell** arbeiten, ohne an Qualität einzubüßen. Ich selbst habe Produkte in Tagen gebaut, die früher Wochen gedauert hätten. Das gelang aber erst, als ich verstanden hatte, wie man KI richtig einsetzt. Wie das aussieht, beschreibe ich in [Mit KI Apps 10× schneller bauen](/de/blog/how-to-use-ai-to-build-apps-10x-speed).
+In den letzten zwei Jahren haben viele von uns erlebt, dass Entwicklungsteams, die sich auf KI einlassen, **drei- bis zehnmal so schnell** arbeiten, ohne an Qualität einzubüßen. Ich selbst habe Produkte in Tagen gebaut, die früher Wochen gedauert hätten. Das gelang aber erst, als ich verstanden hatte, wie man KI richtig einsetzt. Wie das aussieht, beschreibe ich in [Wie ich mit KI schneller Apps baue](/de/blog/how-to-use-ai-to-build-apps-10x-speed).
 
 In diesem Artikel stelle ich die **zehn wirkungsvollsten KI-Workflows** vor, die Sie 2025 in der Entwicklung kennen sollten.
 

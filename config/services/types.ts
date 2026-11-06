@@ -20,7 +20,7 @@ export interface ServiceOfferCopy {
     youGet: string[];
     /** The steps in order: the free call, the first week, then the weekly rhythm. */
     howItRuns: string[];
-    /** The typical size: the first step and the usual total. */
+    /** The price: the first step's fixed fee, or the usual total of the fixed-price phases. */
     range: string;
     /** Work from the CV that shows this has been done before. */
     proof: string[];
@@ -93,7 +93,7 @@ export interface ServicesPageCopy {
         typical: string;
         proof: string;
         offerCta: string;
-        /** Says the ranges are a guide and the billing hourly. */
+        /** Says the ranges are a guide and every phase gets a fixed price. */
         billing: string;
     };
     offers: ServiceOfferCopy[];

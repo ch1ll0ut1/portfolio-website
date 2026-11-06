@@ -5,9 +5,12 @@
 import { describe, expect, it } from 'vitest';
 import { INFORMAL_ADDRESS, dictionaryStrings, keyPaths } from '@/test/dictionary';
 import {
+    ADVISOR_MONTHLY_MIN_EUR,
+    EMBEDDED_MONTHLY_RANGE_EUR,
     FIRST_VERSION_RANGE_EUR,
+    HEALTH_CHECK_PRICE_EUR,
+    HEALTH_CHECK_WITH_SECURITY_EUR,
     RESCUE_RANGE_EUR,
-    TECH_LEAD_MONTHLY_MIN_EUR,
     eurAmountDe,
     eurRangeDe,
 } from '../../pricing';
@@ -40,9 +43,21 @@ describe('engagementsCopy', () => {
         it('should quote the euro figures set for DACH', () => {
             const { engagements } = engagementsDe;
 
+            expect(engagements['health-check'].range).toContain(eurAmountDe(HEALTH_CHECK_PRICE_EUR));
+            expect(engagements['health-check'].range).toContain(eurAmountDe(HEALTH_CHECK_WITH_SECURITY_EUR));
             expect(engagements.rescue.range).toContain(eurRangeDe(RESCUE_RANGE_EUR));
             expect(engagements.build.range).toContain(eurRangeDe(FIRST_VERSION_RANGE_EUR));
-            expect(engagements['tech-lead'].range).toContain(eurAmountDe(TECH_LEAD_MONTHLY_MIN_EUR));
+            expect(engagements['tech-lead'].range).toContain(eurAmountDe(ADVISOR_MONTHLY_MIN_EUR));
+            expect(engagements['tech-lead'].range).toContain(eurRangeDe(EMBEDDED_MONTHLY_RANGE_EUR));
+        });
+
+        it('should call the App Health Check the Code-Audit, and name the search terms in the headings', () => {
+            const { engagements } = engagementsDe;
+
+            expect(engagements['health-check'].name).toContain('Code-Audit');
+            expect(engagements['health-check'].short).toBe('Code-Audit');
+            expect(engagements.build.name).toContain('App oder MVP entwickeln lassen');
+            expect(engagements['tech-lead'].name).toContain('Interim-CTO oder Fractional CTO');
         });
     });
 });

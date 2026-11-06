@@ -69,7 +69,7 @@ describe('route metadata', () => {
     });
 
     it('should title the homepage with the positioning, within 60 characters', () => {
-        expect(home.title).toEqual({ absolute: 'Stefan Knoch — Software Architect & Tech Lead' });
+        expect(home.title).toEqual({ absolute: 'Stefan Knoch — Freelance Software Architect & Fractional CTO' });
     });
 
     it('should describe /privacy with its own title and description on every network', () => {

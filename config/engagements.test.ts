@@ -26,9 +26,9 @@ describe('Engagements Configuration', () => {
             ]));
         });
 
-        it('should offer exactly three engagements', () => {
+        it('should offer the Health Check first, then the three engagements it leads into', () => {
             // Assert
-            expect(engagements).toHaveLength(3);
+            expect(engagements.map(engagement => engagement.id)).toEqual(['health-check', 'rescue', 'build', 'tech-lead']);
         });
 
         it('should have unique ids', () => {
@@ -65,7 +65,7 @@ describe('Engagements Configuration', () => {
 
             // Assert
             expect(featured).toHaveLength(1);
-            expect(itemAt(featured, 0).id).toBe('build');
+            expect(itemAt(featured, 0).id).toBe('health-check');
         });
     });
 
@@ -78,12 +78,19 @@ describe('Engagements Configuration', () => {
 
         it('should have a label for the range lines', () => {
             // Assert
-            expect(engagementsEn.rangeLabel).toBe('Typical');
+            expect(engagementsEn.rangeLabel).toBe('Price');
         });
 
         it('should link every card to its section of the services page', () => {
             // Assert
             expect(engagementPath('rescue')).toBe('/services#rescue');
+        });
+
+        it('should name the search terms in the English headings', () => {
+            // Assert
+            expect(engagementsEn.engagements['health-check'].name).toMatch(/code audit/i);
+            expect(engagementsEn.engagements['tech-lead'].name).toContain('Fractional CTO');
+            expect(engagementsEn.engagements.build.name).toContain('MVP');
         });
 
         it('should quote ranges, never an hourly rate', () => {
