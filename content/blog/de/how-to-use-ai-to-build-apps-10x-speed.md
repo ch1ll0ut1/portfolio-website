@@ -143,7 +143,7 @@ Worauf es ankommt:
 - In kurzen, geplanten Iterationen arbeiten.
 - Die eigenen Vorlieben aufschreiben, damit die KI sie nicht vergisst.
 
-So arbeite ich **um ein Vielfaches schneller**, ohne auszubrennen oder in KI-Fehlern zu versinken.
+So arbeite ich **um ein Mehrfaches schneller**, ohne auszubrennen oder in KI-Fehlern zu versinken.
 
 Features zu bauen ist allerdings nur ein Teil der Arbeit. Wie KI im restlichen Zyklus hilft, von der Planung über Code Reviews bis zum Deployment, beschreibe ich in [10 KI-Workflows für Entwicklungsteams](/de/blog/10-ai-workflows-every-developer-should-know-2025).
 
