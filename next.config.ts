@@ -2,6 +2,7 @@ import type { NextConfig } from 'next';
 import { withBotId } from 'botid/next/config';
 import { assertLegalNoticeFilled } from './config/legalNotice/provider';
 import { siteConfig } from './config/site';
+import { GERMAN_NOT_FOUND_PATH } from './lib/i18n/paths';
 import { groupedImageRewrites } from './lib/og/groupedImageRewrites';
 import { CSP_HEADER_NAME, LOCAL_HOST_CONDITION, buildContentSecurityPolicy } from './lib/contentSecurityPolicy';
 
@@ -94,9 +95,16 @@ const nextConfig: NextConfig = {
         ];
     },
     async rewrites() {
-        // The English share cards' URLs from before the `(en)` route group;
-        // see lib/og/groupedImageRewrites.ts.
-        return groupedImageRewrites();
+        return {
+            beforeFiles: [],
+            // The English share cards' URLs from before the `(en)` route group;
+            // see lib/og/groupedImageRewrites.ts.
+            afterFiles: groupedImageRewrites(),
+            // Checked only once no page or dynamic route matched: an unknown
+            // German path gets the German 404, from one static page, instead
+            // of the English global one. See app/de/nicht-gefunden/page.tsx.
+            fallback: [{ source: '/de/:path+', destination: GERMAN_NOT_FOUND_PATH }],
+        };
     },
     async headers() {
         return [

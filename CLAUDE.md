@@ -64,7 +64,8 @@ app/                    # Next.js app router pages
 │   └── page.tsx       # Homepage
 ├── de/                # German twins under their root layout (<html lang="de">):
 │                      #   thin routes over the shared page bodies with 'de',
-│                      #   a catch-all to the German 404, and the German error page
+│                      #   one static German 404 that unknown /de paths are rewritten to
+│                      #   (fallback rewrite in next.config.ts), and the German error page
 ├── global-not-found.tsx # 404 for unmatched URLs: a whole document, imports only globals.css
 ├── globals.css        # Global styles
 └── ...                # Metadata routes (sitemap, robots, manifest, icons, feed.xml), global-error

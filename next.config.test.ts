@@ -46,9 +46,20 @@ describe('next.config.ts rewrites', () => {
     it('should keep serving the English share cards at their old URLs', async () => {
         const rewrites = await nextConfig.rewrites?.();
 
-        expect(rewrites).toEqual(expect.arrayContaining([
-            { source: '/work/:slug/opengraph-image', destination: '/work/:slug/opengraph-image-j99tbg' },
-        ]));
+        expect(rewrites).toMatchObject({
+            afterFiles: expect.arrayContaining([
+                { source: '/work/:slug/opengraph-image', destination: '/work/:slug/opengraph-image-j99tbg' },
+            ]),
+        });
+    });
+
+    // Fallback: after every page and dynamic route, so real German pages are never shadowed.
+    it('should send every German path no page claims to the German 404, after all routes', async () => {
+        const rewrites = await nextConfig.rewrites?.();
+
+        expect(rewrites).toMatchObject({
+            fallback: [{ source: '/de/:path+', destination: '/de/nicht-gefunden' }],
+        });
     });
 });
 

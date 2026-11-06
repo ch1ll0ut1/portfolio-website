@@ -1,11 +1,11 @@
 /**
- * Tests for the German 404 and the catch-all that sends unknown German paths to it.
+ * Tests for the German 404 and the page unknown German paths are rewritten to.
  */
 
 import { describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { notFound } from 'next/navigation';
-import MissingGermanPage from './[...missing]/page';
+import MissingGermanPage from './nicht-gefunden/page';
 import GermanNotFound, { metadata } from './not-found';
 
 vi.mock('next/navigation', () => ({
@@ -25,8 +25,8 @@ describe('German 404', () => {
         expect(metadata.robots).toBeNull();
     });
 
-    it('should answer every unclaimed German path with not-found', async () => {
-        await expect(MissingGermanPage({ params: Promise.resolve({ missing: ['nope'] }) })).rejects.toThrow('NEXT_NOT_FOUND');
+    it('should answer every unclaimed German path with not-found', () => {
+        expect(() => MissingGermanPage()).toThrow('NEXT_NOT_FOUND');
         expect(notFound).toHaveBeenCalled();
     });
 });

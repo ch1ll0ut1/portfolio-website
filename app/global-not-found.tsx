@@ -49,7 +49,7 @@ const PANEL_CSS = `
  * theme, `js`/`motion`) are brought in here, and it goes without the site
  * chrome, whose CSS would otherwise land on every page (see `PANEL_CSS`).
  *
- * Unknown paths under `/de` never get here; app/de/[...missing] sends them to
+ * Unknown paths under `/de` never get here; app/de/nicht-gefunden answers them with
  * the German 404. A German reader who mistyped an English path gets one line
  * in German: this page has no nav and so no language switch, and without
  * JavaScript the boot script forwards no one. The link stores the choice as

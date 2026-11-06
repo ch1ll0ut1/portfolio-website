@@ -39,6 +39,12 @@ export const localizedPath = (locale: Locale, enPath: string) => {
 /** The language of the page at `pathname`: German under `/de`, English everywhere else. */
 export const localeFromPath = (pathname: string): Locale => /^\/de(?=$|[/?#])/.test(pathname) ? 'de' : 'en';
 
+/**
+ * Where next.config.ts rewrites every path under `/de` that no German page
+ * claims: one static page that answers with the German 404.
+ */
+export const GERMAN_NOT_FOUND_PATH = '/de/nicht-gefunden';
+
 /** The same page as `pathname` in `target`, which is `pathname` itself when it already is in `target`. */
 export const twinPath = (pathname: string, target: Locale) => {
     if (localeFromPath(pathname) === target) {
