@@ -44,10 +44,13 @@ export const SiteDocument: FC<Props> = ({ locale, children }) => {
                             included — across client-side navigation. Every page
                             renders its own `<main id="main">` for the skip link. */}
                         <SiteNav tools={<NavTools />} />
+                        {/* Before the page in the document, though docked to the
+                            bottom on screen: the keyboard reaches it right after
+                            the nav rather than after the whole page. */}
+                        <CookieConsent />
                         {children}
                         <SiteFooter />
                         <GlobalChrome />
-                        <CookieConsent />
                         {/* Requests nothing from Google until analytics consent is granted. */}
                         <GoogleAnalytics />
                         <Analytics />

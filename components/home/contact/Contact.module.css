@@ -31,7 +31,7 @@
 .title {
     font-size: clamp(3rem, 9.5vw, 9rem);
     line-height: .92;
-    letter-spacing: -.05em;
+    letter-spacing: -.0075em;
     font-variation-settings: 'wdth' 76;
     max-width: 12ch;
 }

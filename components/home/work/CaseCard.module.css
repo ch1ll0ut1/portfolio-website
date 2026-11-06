@@ -58,7 +58,7 @@
 
 .title {
     font-size: clamp(2.6rem, 5.5vw, 4.6rem);
-    letter-spacing: -.045em;
+    letter-spacing: -.01em;
     font-variation-settings: 'wdth' 76;
 }
 

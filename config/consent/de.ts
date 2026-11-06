@@ -4,7 +4,7 @@ export const consentDe: ConsentCopy = {
     title: 'Cookie-Einstellungen',
     privacyLink: 'Datenschutzerklärung',
     banner: {
-        body: 'Ich verwende Cookies, um zu verstehen, wie die Website genutzt wird. Notwendige Cookies sind immer aktiv. Ob Sie Statistik-Cookies zulassen, entscheiden Sie. Ihre Einwilligung können Sie jederzeit unter „Cookie-Einstellungen“ in der Fußzeile ändern oder widerrufen.',
+        body: 'Mit Ihrer Einwilligung zeigen mir Statistik-Cookies, wie die Website genutzt wird. Sie können sie jederzeit in der Fußzeile widerrufen.',
         customize: 'Anpassen',
         rejectAll: 'Alle ablehnen',
         acceptAll: 'Alle akzeptieren',

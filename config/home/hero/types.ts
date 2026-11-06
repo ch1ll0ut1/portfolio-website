@@ -20,7 +20,7 @@ export interface HeroCopy {
         after: string;
     };
     /**
-     * The small line set above the headline, inside the h1: who, how long,
+     * The small line set above the headline, outside the h1: who, how long,
      * which languages and which hours.
      */
     kicker: (yearsShipping: number) => string[];

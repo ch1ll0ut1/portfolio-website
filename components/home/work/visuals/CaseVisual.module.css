@@ -65,7 +65,7 @@
     font-size: clamp(3rem, 7vw, 6.5rem);
     font-weight: 650;
     line-height: .9;
-    letter-spacing: -.05em;
+    letter-spacing: -.01em;
     font-variation-settings: 'wdth' 75;
 }
 

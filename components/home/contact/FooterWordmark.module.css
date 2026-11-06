@@ -28,7 +28,7 @@
     font-family: var(--font-display);
     font-weight: 620;
     font-size: 14.5vw;
-    letter-spacing: -.06em;
+    letter-spacing: 0;
     font-variation-settings: 'wdth' 80, 'wght' 620, 'opsz' 96;
 }
 

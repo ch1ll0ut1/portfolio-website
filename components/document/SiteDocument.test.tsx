@@ -45,4 +45,17 @@ describe('SiteDocument', () => {
         expect(doc.querySelector('main')?.textContent).toBe('Page');
         expect(doc.body.querySelector('footer')).not.toBeNull();
     });
+
+    it('should put the cookie banner after the nav and before the page, so the keyboard reaches it early', () => {
+        // Arrange
+        const doc = renderDocument('en');
+        const banner = doc.querySelector('section[aria-labelledby="consent-banner-title"]');
+        const nav = doc.querySelector('nav');
+        const main = doc.querySelector('main');
+
+        // Assert
+        expect(banner).not.toBeNull();
+        expect(nav?.compareDocumentPosition(banner as Node)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+        expect(banner?.compareDocumentPosition(main as Node)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+    });
 });

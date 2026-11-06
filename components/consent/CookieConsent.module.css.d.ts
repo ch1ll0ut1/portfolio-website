@@ -2,10 +2,10 @@
 declare const styles: {
     readonly actions: string;
     readonly body: string;
+    readonly customize: string;
     readonly link: string;
     readonly panel: string;
     readonly pending: string;
     readonly root: string;
-    readonly title: string;
 };
 export default styles;

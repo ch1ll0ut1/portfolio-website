@@ -4,7 +4,7 @@ export const consentEn: ConsentCopy = {
     title: 'Cookie preferences',
     privacyLink: 'Privacy policy',
     banner: {
-        body: 'I use cookies to understand how the site is used. Essential cookies are always on; analytics cookies are up to you, and you can change your mind any time under Cookie settings in the footer.',
+        body: 'With your consent, analytics cookies show me how the site is used. You can change or withdraw it any time in the footer.',
         customize: 'Customize',
         rejectAll: 'Reject all',
         acceptAll: 'Accept all',

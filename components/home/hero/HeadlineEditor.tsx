@@ -21,8 +21,7 @@ export interface Props {
 const HeadlineEditorView: FC<Props> = ({ titleRef, hintId, onInput, onKeyDown, onPaste, onBlur }) => {
     const { headline, kicker: kickerFor, editor } = heroCopy[useLocale()];
     const kicker = kickerFor(yearsShipping());
-    /** The kicker, then the shipped headline: the heading in reading order. */
-    const headingName = `${kicker.join(KICKER_SEPARATOR)}. ${headline.before}${headline.highlight}${headline.after}`;
+    const headingName = `${headline.before}${headline.highlight}${headline.after}`;
     const editorLabel = editor.label;
 
     useEffect(() => {
@@ -70,14 +69,15 @@ const HeadlineEditorView: FC<Props> = ({ titleRef, hintId, onInput, onKeyDown, o
         };
     }, [titleRef, hintId, editorLabel, onInput, onKeyDown, onPaste, onBlur]);
 
-    // The heading is named by the kicker and the shipped headline, not by
+    // The kicker sits above the heading, not in it, so the heading is the
+    // headline alone. The heading is named by the shipped headline, not by
     // whatever the visitor has typed into the editor inside it: the page's
     // outline stays the page's, and the editor is a widget within it. A label
     // rather than a hidden copy of the text, so the heading's text content
     // carries the headline once.
     return (
-        <h1 aria-label={headingName}>
-            <span className={styles.kicker}>
+        <>
+            <p className={styles.kicker}>
                 {kicker.map((part, index) => (
                     // The separator trails its part, so a wrapped line never starts with one.
                     <span key={part} className={styles.kickerPart}>
@@ -85,20 +85,21 @@ const HeadlineEditorView: FC<Props> = ({ titleRef, hintId, onInput, onKeyDown, o
                         {index < kicker.length - 1 && KICKER_SEPARATOR}
                     </span>
                 ))}
-            </span>
-            {' '}
-            <span
-                ref={titleRef}
-                className={styles.title}
-                spellCheck={false}
-                autoCapitalize="off"
-                data-cursor="text"
-            >
-                {headline.before}
-                <mark>{headline.highlight}</mark>
-                {headline.after}
-            </span>
-        </h1>
+            </p>
+            <h1 aria-label={headingName}>
+                <span
+                    ref={titleRef}
+                    className={styles.title}
+                    spellCheck={false}
+                    autoCapitalize="off"
+                    data-cursor="text"
+                >
+                    {headline.before}
+                    <mark>{headline.highlight}</mark>
+                    {headline.after}
+                </span>
+            </h1>
+        </>
     );
 };
 
