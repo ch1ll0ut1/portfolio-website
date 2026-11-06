@@ -480,10 +480,28 @@
     font-size: .74rem;
     line-height: 1.75;
     color: var(--fg-2);
-    overflow-x: auto;
-    max-height: 280px;
     font-variation-settings: 'wdth' 85;
     tab-size: 2;
+}
+
+/* A line that is wider than the panel wraps rather than scrolls, in every
+   language and at every width. The indent keeps its own column, so a wrapped
+   line's continuation hangs one step in from where the line starts. */
+.row {
+    display: flex;
+}
+
+.indent {
+    flex: none;
+    white-space: pre;
+}
+
+.code {
+    min-width: 0;
+    padding-left: 2ch;
+    text-indent: -2ch;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
 }
 
 .ln {
@@ -636,7 +654,9 @@
         margin-top: 0;
     }
 
-    .treeCode {
-        max-height: 220px;
+    /* Keeps the file name, a selection and „normalisiert …“ on one line at
+       390px. */
+    .treeBar {
+        gap: 8px;
     }
 }

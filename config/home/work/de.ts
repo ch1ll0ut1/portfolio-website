@@ -95,7 +95,7 @@ export const workDe: WorkCopy = {
     visuals: {
         edithing: {
             valid: 'gültig',
-            normalizing: 'normalisiert',
+            normalizing: 'normalisiert\u00A0…',
             line: line => `Z. ${line}`,
         },
         bluereceipt: {
