@@ -73,7 +73,7 @@ export const processEn: ProcessCopy = {
                 label: 'Refinement',
                 heading: 'Treat iteration as part of the craft',
                 paragraphs: [
-                    'A first implementation makes the idea real enough to review. From there, we refine workflows, polish details, fix edge cases, and make the experience feel right.',
+                    'A first implementation makes the idea real enough to review. From there, I refine the workflows with you, polish the details, fix the edge cases, and keep going until the experience feels right.',
                     'This is not failure. This is how good products are shaped.',
                 ],
             },
@@ -83,7 +83,6 @@ export const processEn: ProcessCopy = {
         label: 'Product cycles',
         heading: 'Feature-by-feature product cycles.',
         bridge: 'Build is the step that takes the most time. Inside it, every feature runs the same nine-step cycle.',
-        intro: 'Each important feature moves through a small product cycle: goal, feature definition, feasibility, UX and workflow, first implementation, review, refinement, testing, and release.',
         steps: {
             'vision-goal': {
                 title: 'Vision & goal',
@@ -122,6 +121,10 @@ export const processEn: ProcessCopy = {
                 description: 'Ship the stable slice or move into the next feature cycle with the lessons learned.',
             },
         },
+    },
+    more: {
+        text: 'The principles I work by, the cycle each feature runs through, and who I work best with are on the services page.',
+        link: 'How I work',
     },
     fit: {
         label: 'Fit',

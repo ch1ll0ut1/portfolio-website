@@ -45,6 +45,7 @@
     font-weight: 600;
     font-size: 1.05rem;
     letter-spacing: -.01em;
+    white-space: nowrap;
     transition: color var(--dur-xs) var(--ease-ui);
 }
 
@@ -66,11 +67,5 @@
 @media (prefers-reduced-motion: reduce) {
     .caret {
         animation: none;
-    }
-}
-
-@media (max-width: 520px) {
-    .name {
-        display: none;
     }
 }

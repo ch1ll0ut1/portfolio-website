@@ -43,12 +43,21 @@
 
 /* The buyer's words, set like a selected line in the editor. */
 .problem {
-    margin: 0;
-    padding-left: 16px;
-    border-left: 2px solid var(--select);
+    display: grid;
+    gap: 6px;
+}
+
+.problemLead {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    letter-spacing: .04em;
+    color: var(--muted);
+}
+
+.problemText {
     font-size: clamp(1.05rem, 1.4vw, 1.2rem);
     font-style: italic;
-    color: var(--fg);
+    color: var(--fg-2);
 }
 
 .block {
@@ -88,8 +97,11 @@
     color: var(--muted);
 }
 
-.cta {
-    justify-self: start;
+/* The form first, the call beside it. */
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
 }
 
 /* The caret-marker list of the homepage cards. */

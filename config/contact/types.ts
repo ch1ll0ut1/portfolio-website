@@ -27,7 +27,19 @@ export interface ContactCopy {
         kicker: string;
         /** The page's h1: what the visitor came to do, in plain words. */
         heading: string;
-        /** `{linkedin}` is the LinkedIn link, worded by `linkedInLink`. */
+        /** Who I am, what to send, and when I answer. */
+        lede: string;
+        /** What happens after the form is sent, in order. */
+        next: {
+            title: string;
+            steps: string[];
+        };
+        /** The way round the form: booking the call straight away. */
+        book: {
+            question: string;
+            link: string;
+        };
+        /** `{linkedin}` is the LinkedIn link, worded by `linkedInLink`. Secondary to the form. */
         linkedIn: string;
         linkedInLink: string;
         /** `{privacy}` is the privacy policy link, worded by `privacyLink`. */

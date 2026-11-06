@@ -90,6 +90,7 @@ export const engagementsDe: EngagementsCopy = {
         },
     ],
     rangeLabel: 'Preis',
-    linkLabel: 'Ablauf und Kosten',
+    askLabel: 'Dazu anfragen',
+    linkLabel: 'Details',
     featured: ', empfohlen',
 };

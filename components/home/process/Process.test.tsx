@@ -26,13 +26,13 @@ describe('Process Section', () => {
     });
 
     it('should render the section heading', () => {
-        render(<Process />);
+        render(<Process locale="en" />);
 
         expect(screen.getByRole('heading', { level: 2, name: 'How a project runs' })).toBeInTheDocument();
     });
 
     it('should render all four steps with their descriptions', () => {
-        render(<Process />);
+        render(<Process locale="en" />);
 
         processSteps.forEach((step) => {
             expect(screen.getByRole('heading', { level: 3, name: step.title })).toBeInTheDocument();
@@ -41,7 +41,7 @@ describe('Process Section', () => {
     });
 
     it('should number every step', () => {
-        render(<Process />);
+        render(<Process locale="en" />);
 
         processSteps.forEach((step, index) => {
             expect(screen.getAllByText(String(index + 1)).length).toBeGreaterThan(0);
@@ -50,7 +50,7 @@ describe('Process Section', () => {
     });
 
     it('should render each step transcript so it reads without animation', () => {
-        render(<Process />);
+        render(<Process locale="en" />);
 
         // Output lines land whole, so their text is matchable as written.
         expect(screen.getAllByText('call booked, no prep required').length).toBeGreaterThan(0);
@@ -60,24 +60,35 @@ describe('Process Section', () => {
     });
 
     it('should show a step counter for the active step', () => {
-        render(<Process />);
+        render(<Process locale="en" />);
 
         expect(screen.getByText(/01\s*\/\s*04/)).toBeInTheDocument();
     });
 
     it('should hide the decorative terminals from assistive technology', () => {
-        const { container } = render(<Process />);
+        const { container } = render(<Process locale="en" />);
         const hidden = container.querySelectorAll('[aria-hidden="true"] [data-screen]');
 
-        expect(hidden.length).toBe(processSteps.length * 2);
+        // One terminal, with a screen per step; the stacked layout has no inline ones.
+        expect(hidden.length).toBe(processSteps.length);
     });
 
     it('should form a heading outline from the section title down', () => {
-        render(<Process />);
+        render(<Process locale="en" />);
 
-        // Four steps plus one heading for each folded-in block.
-        expect(screen.getAllByRole('heading', { level: 3 })).toHaveLength(processSteps.length + 3);
-        // Three principles plus the two fit lists.
-        expect(screen.getAllByRole('heading', { level: 4 })).toHaveLength(5);
+        expect(screen.getAllByRole('heading', { level: 3 })).toHaveLength(processSteps.length);
+        expect(screen.queryAllByRole('heading', { level: 4 })).toHaveLength(0);
+    });
+
+    it('should point to the principles and the feature cycle on the services page', () => {
+        render(<Process locale="en" />);
+
+        expect(screen.getByRole('link', { name: /how i work/i })).toHaveAttribute('href', '/services#how-i-work');
+    });
+
+    it('should point to the German services page in German', () => {
+        render(<Process locale="de" />);
+
+        expect(screen.getByRole('link', { name: /so arbeite ich/i })).toHaveAttribute('href', '/de/leistungen#how-i-work');
     });
 });

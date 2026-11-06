@@ -220,6 +220,23 @@
     gap: 12px;
 }
 
+.nextAlt {
+    color: var(--fg-2);
+    font-size: var(--fs-small);
+}
+
+.nextAltLink {
+    color: var(--fg);
+    text-decoration: underline;
+    text-decoration-color: var(--caret);
+    text-decoration-thickness: 2px;
+    text-underline-offset: .2em;
+}
+
+.nextAltLink:hover {
+    text-decoration-color: currentColor;
+}
+
 .others {
     display: grid;
     gap: 20px;

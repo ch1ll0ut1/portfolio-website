@@ -58,8 +58,12 @@ export interface ProcessCopy {
         heading: string;
         /** Ties the nine-step cycle to the "Build" step it runs inside. */
         bridge: string;
-        intro: string;
         steps: Record<FeatureCycleStepId, TitledCopy>;
+    };
+    /** The line under the stepper that points to the rest on the services page. */
+    more: {
+        text: string;
+        link: string;
     };
     fit: {
         label: string;

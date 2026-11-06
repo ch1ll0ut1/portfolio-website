@@ -168,9 +168,17 @@ describe('Case study pages', () => {
         it('should keep a figure that is no word the same in both languages', () => {
             const german = caseStudiesFor('de');
 
-            caseStudiesFor('en').filter(study => study.id !== 'edithing').forEach((study, index) => {
-                expect(german.filter(other => other.id !== 'edithing')[index]?.metric.value).toBe(study.metric.value);
+            caseStudiesFor('en').filter(study => study.id !== 'edithing').forEach((study) => {
+                expect(german.find(other => other.id === study.id)?.metric.value).toBe(study.metric.value);
             });
+        });
+
+        it('should lead the German list with the German client and keep the rest in order', () => {
+            const english = caseStudiesFor('en').map(study => study.id);
+            const german = caseStudiesFor('de').map(study => study.id);
+
+            expect(german[0]).toBe('socialbee');
+            expect(german.slice(1)).toEqual(english.filter(id => id !== 'socialbee'));
         });
     });
 });

@@ -14,9 +14,11 @@ type Props = ComponentProps<typeof ContactForm> & {
 };
 
 /**
- * The contact page body: what to send and when I answer, then a short
- * first-person intro that points to LinkedIn first, then the form for
- * everything else. The form reads the language from the layout's provider.
+ * The contact page body. The form is the main path: a short first-person
+ * intro, the way round it (booking the call straight away), then the form
+ * with what happens after it beside it — or under it on a phone — and
+ * LinkedIn as a quiet alternative. The form reads the language from the
+ * layout's provider.
  */
 export const ContactPage: FC<Props> = ({ locale, ...formProps }) => {
     const copy = contactCopy[locale];
@@ -27,15 +29,12 @@ export const ContactPage: FC<Props> = ({ locale, ...formProps }) => {
                 <header className={styles.header}>
                     <p className={styles.kicker}>{copy.page.kicker}</p>
                     <MaskHeading className={styles.title}>{copy.page.heading}</MaskHeading>
-                    <p className={styles.lead}>{copy.invitation}</p>
-                    <p className={styles.lead}>
-                        {fillSlots(copy.page.linkedIn, {
-                            linkedin: (
-                                <a className={styles.link} href={links.social.linkedin} target="_blank" rel="noopener noreferrer">
-                                    {copy.page.linkedInLink}
-                                </a>
-                            ),
-                        })}
+                    <p className={styles.lead}>{copy.page.lede}</p>
+                    <p className={styles.book}>
+                        <span>{copy.page.book.question}</span>
+                        <a className="btn" href={links.calendly} target="_blank" rel="noopener noreferrer">
+                            <span className="btn__label">{copy.page.book.link}</span>
+                        </a>
                     </p>
                     <p className={styles.note}>
                         {fillSlots(copy.page.privacyNote, {
@@ -48,7 +47,25 @@ export const ContactPage: FC<Props> = ({ locale, ...formProps }) => {
                     </p>
                 </header>
 
-                <ContactForm {...formProps} />
+                <div className={styles.body}>
+                    <ContactForm {...formProps} />
+
+                    <aside className={styles.aside} aria-labelledby="contact-next">
+                        <h2 id="contact-next" className={styles.asideTitle}>{copy.page.next.title}</h2>
+                        <ol className={styles.steps}>
+                            {copy.page.next.steps.map(step => <li key={step}>{step}</li>)}
+                        </ol>
+                        <p className={styles.note}>
+                            {fillSlots(copy.page.linkedIn, {
+                                linkedin: (
+                                    <a className={styles.link} href={links.social.linkedin} target="_blank" rel="noopener noreferrer">
+                                        {copy.page.linkedInLink}
+                                    </a>
+                                ),
+                            })}
+                        </p>
+                    </aside>
+                </div>
             </article>
         </div>
     );

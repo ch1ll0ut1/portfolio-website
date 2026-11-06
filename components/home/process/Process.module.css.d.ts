@@ -10,6 +10,8 @@ declare const styles: {
     readonly grid: string;
     readonly isActive: string;
     readonly isDone: string;
+    readonly more: string;
+    readonly moreLink: string;
     readonly name: string;
     readonly num: string;
     readonly off: string;
@@ -19,9 +21,7 @@ declare const styles: {
     readonly railCaret: string;
     readonly screen: string;
     readonly screens: string;
-    readonly secondary: string;
     readonly step: string;
-    readonly stepTerm: string;
     readonly steps: string;
     readonly stepsWrap: string;
     readonly sticky: string;

@@ -1,5 +1,6 @@
 import { type FC } from 'react';
 import Link from 'next/link';
+import { links } from '@/config/links';
 import type { ServiceOfferCopy, ServicesPageCopy } from '@/config/services/types';
 import type { Locale } from '@/lib/i18n/locale';
 import { contactHref } from './contactHref';
@@ -24,9 +25,12 @@ export const OfferSection: FC<Props> = ({ offer, labels, locale }) => {
             <div className={styles.lead}>
                 <p className={styles.subtitle}>{offer.subtitle}</p>
                 <h2 id={titleId} className={styles.name}>{offer.name}</h2>
-                <blockquote className={styles.problem}>
-                    <p>{offer.problem}</p>
-                </blockquote>
+                {/* The buyer's situation in their own words, led in as such: no
+                    blockquote, so it cannot pass for an unattributed testimonial. */}
+                <div className={styles.problem}>
+                    <p className={styles.problemLead}>{labels.problemLead}</p>
+                    <p className={styles.problemText}>{offer.problem}</p>
+                </div>
                 <div className={styles.block}>
                     <h3 className={styles.label}>{labels.forWho}</h3>
                     <p>{offer.forWho}</p>
@@ -36,9 +40,14 @@ export const OfferSection: FC<Props> = ({ offer, labels, locale }) => {
                     <p className={styles.rangeValue}>{offer.range}</p>
                     <p className={styles.billing}>{labels.billing}</p>
                 </div>
-                <Link className={`btn btn--primary ${styles.cta}`} href={contactHref(locale)}>
-                    <span className="btn__label">{labels.offerCta}</span>
-                </Link>
+                <div className={styles.actions}>
+                    <Link className="btn btn--primary" href={contactHref(locale)}>
+                        <span className="btn__label">{labels.offerCta}</span>
+                    </Link>
+                    <a className="btn" href={links.calendly} target="_blank" rel="noopener noreferrer">
+                        <span className="btn__label">{labels.bookCta}</span>
+                    </a>
+                </div>
             </div>
 
             <div className={styles.detail}>

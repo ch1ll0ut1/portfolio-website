@@ -3,6 +3,7 @@
 import { type FC, useEffect, useId, useRef } from 'react';
 import Link from 'next/link';
 import { useInView } from '@/lib/motion';
+import { contactHref } from '@/components/services/contactHref';
 import { type Engagement, engagementPath } from '@/config/engagements';
 import { engagementsCopy } from '@/config/home/services';
 import { localizedPath } from '@/lib/i18n/paths';
@@ -126,15 +127,19 @@ export const ServiceCard: FC<Props> = ({ engagement, index }) => {
                     <span>{copy.rangeLabel}</span>
                     {engagement.range}
                 </p>
-                <Link className={styles.more} href={localizedPath(locale, engagementPath(engagement.id))}>
-                    {copy.linkLabel}
-                    <span className="visually-hidden">
-                        :
-                        {' '}
-                        {engagement.name}
-                    </span>
-                    <span aria-hidden="true"> →</span>
-                </Link>
+                <div className={styles.actions}>
+                    <Link className={`btn btn--primary ${styles.ask}`} href={contactHref(locale)}>
+                        <span className="btn__label">
+                            {copy.askLabel}
+                            <span className="visually-hidden">{`: ${engagement.name}`}</span>
+                        </span>
+                    </Link>
+                    <Link className={styles.more} href={localizedPath(locale, engagementPath(engagement.id))}>
+                        {copy.linkLabel}
+                        <span className="visually-hidden">{`: ${engagement.name}`}</span>
+                        <span aria-hidden="true"> →</span>
+                    </Link>
+                </div>
             </div>
 
             {engagement.featured && <div ref={traceRef} className={styles.trace} aria-hidden="true" />}

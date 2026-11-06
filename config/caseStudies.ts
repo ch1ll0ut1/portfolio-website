@@ -100,8 +100,26 @@ const caseStudyData: CaseStudyData[] = [
     },
 ];
 
+/**
+ * Cases moved to the front in a language. German readers, mostly DACH
+ * buyers, meet the German client first; the rest keep their order.
+ */
+const leadingCases: Record<Locale, CaseVisualId[]> = {
+    en: [],
+    de: ['socialbee'],
+};
+
+const inLocaleOrder = (locale: Locale) => {
+    const leading = leadingCases[locale];
+
+    return [
+        ...caseStudyData.filter(data => leading.includes(data.id)),
+        ...caseStudyData.filter(data => !leading.includes(data.id)),
+    ];
+};
+
 /** The case studies, in card order, told in `locale`. */
-export const caseStudiesFor = (locale: Locale): CaseStudy[] => caseStudyData.map((data) => {
+export const caseStudiesFor = (locale: Locale): CaseStudy[] => inLocaleOrder(locale).map((data) => {
     const { linkLabel, metricLabel, ...story } = workCopy[locale].cases[data.id];
 
     return {

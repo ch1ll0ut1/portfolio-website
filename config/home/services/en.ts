@@ -85,6 +85,7 @@ export const engagementsEn: EngagementsCopy = {
         },
     ],
     rangeLabel: 'Price',
-    linkLabel: 'How it works and what it costs',
+    askLabel: 'Ask about this',
+    linkLabel: 'Details',
     featured: ', featured',
 };

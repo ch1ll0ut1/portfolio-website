@@ -15,6 +15,8 @@ interface Props {
     /** Accessible name. Use `labelledBy` instead when a visible title exists. */
     label?: string;
     labelledBy?: string;
+    /** Extra class on the dialog, for overlays placed elsewhere on the screen. */
+    className?: string;
     /** Extra class on the panel, for overlays that want a different width. */
     panelClassName?: string;
     /** Focused on open. */
@@ -45,7 +47,7 @@ interface Props {
  * effect: a child's layout effect runs before its parent's, while the dialog is
  * still `display: none` and every offset reads 0.
  */
-export const Overlay: FC<Props> = ({ open, label, labelledBy, panelClassName, focusRef, onClose, onKeyDown, children }) => {
+export const Overlay: FC<Props> = ({ open, label, labelledBy, className, panelClassName, focusRef, onClose, onKeyDown, children }) => {
     const dialogRef = useRef<HTMLDialogElement>(null);
 
     useLayoutEffect(() => {
@@ -118,7 +120,12 @@ export const Overlay: FC<Props> = ({ open, label, labelledBy, panelClassName, fo
     }, [onClose, onKeyDown]);
 
     return (
-        <dialog className={styles.root} ref={dialogRef} aria-label={label} aria-labelledby={labelledBy}>
+        <dialog
+            className={className ? `${styles.root} ${className}` : styles.root}
+            ref={dialogRef}
+            aria-label={label}
+            aria-labelledby={labelledBy}
+        >
             <div className={styles.scrim} onClick={onClose} aria-hidden="true" />
             <div className={panelClassName ? `${styles.panel} ${panelClassName}` : styles.panel}>
                 {children}

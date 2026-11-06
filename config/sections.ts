@@ -27,8 +27,8 @@ export interface SiteSection {
 export const sections: SiteSection[] = [
     { id: 'top', chord: 'h', inNav: false },
     { id: 'proof', chord: '', inNav: false },
-    { id: 'work', chord: 'w', inNav: true },
     { id: 'services', chord: 's', inNav: true, page: '/services' },
+    { id: 'work', chord: 'w', inNav: true },
     { id: 'process', chord: 'p', inNav: true },
     { id: 'experience', chord: 'e', inNav: true },
     { id: 'writing', chord: 'b', inNav: true, page: '/blog' },

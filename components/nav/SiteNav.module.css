@@ -114,6 +114,9 @@
     }
 }
 
+/* On a phone the name, Menu, the language and the theme switch fill the row
+   (about 320px of 354px at 390px wide); "Book a call" would need another
+   100px in English and 140px in German, so it leads the menu instead. */
 @media (max-width: 520px) {
     .tools .book {
         display: none;

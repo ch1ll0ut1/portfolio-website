@@ -86,7 +86,7 @@ describe('route metadata', () => {
     });
 
     it('should describe /contact with its own title, description and canonical URL', () => {
-        const title = `Contact ${siteConfig.name} — hire a software architect & tech lead`;
+        const title = `Contact ${siteConfig.name} — Software Architect & Fractional CTO`;
         const description = contact.description;
 
         expect(description).toEqual(expect.any(String));

@@ -4,6 +4,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
+import { filterCommands } from '@/components/chrome/commandFilter';
 import { chromeEn } from './chrome/en';
 import { commandsFor } from './commands';
 import { chordSections } from './sections';
@@ -17,7 +18,21 @@ describe('commandsFor', () => {
         expect(goTo.map(command => command.label)).toEqual(
             chordSections.filter(section => section.id !== 'top').map(section => chromeEn.sections[section.id]),
         );
-        expect(goTo.map(command => command.hint)).toEqual(['G W', 'G S', 'G P', 'G E', 'G B', 'G C']);
+        expect(goTo.map(command => command.hint)).toEqual(['G S', 'G W', 'G P', 'G E', 'G B', 'G C']);
+    });
+
+    // The one query a buyer types into a consultant's palette.
+    it.each(['price', 'pricing', 'cost', 'Preis', 'Kosten'])('should find the services and their prices for "%s" in both languages', (query) => {
+        (['en', 'de'] as const).forEach((locale) => {
+            const ids = filterCommands(commandsFor(locale), query).map(command => command.id);
+
+            expect(ids).toEqual(expect.arrayContaining(['go-services', 'services-page']));
+        });
+    });
+
+    it('should find the contact form for "email" and the call for "Termin"', () => {
+        expect(filterCommands(commands, 'email').map(command => command.id)).toContain('contact-form');
+        expect(filterCommands(commandsFor('de'), 'Termin').map(command => command.id)).toContain('book-call');
     });
 
     it('should have unique ids and a label for every command', () => {

@@ -47,6 +47,32 @@ describe('ServicesPage', () => {
         expect(link).toHaveAttribute('lang', 'de');
     });
 
+    // A buyer's situation, not a client's words: no blockquote, and led in as the reader's thought.
+    it('should lead in each offer\'s problem as the reader\'s thought, not a testimonial', () => {
+        const { container } = render(<ServicesPage copy={servicesEn} />);
+
+        expect(container.querySelector('blockquote')).toBeNull();
+        expect(screen.getAllByText('You might be thinking:')).toHaveLength(servicesEn.offers.length);
+    });
+
+    it('should give every offer the contact form and booking a call', () => {
+        render(<ServicesPage copy={servicesEn} />);
+
+        servicesEn.offers.forEach((offer) => {
+            const section = within(screen.getByRole('region', { name: offer.name }));
+
+            expect(section.getByRole('link', { name: servicesEn.labels.offerCta })).toHaveAttribute('href', '/contact?topic=project');
+            expect(section.getByRole('link', { name: servicesEn.labels.bookCta })).toHaveAttribute('href', links.calendly);
+        });
+    });
+
+    it('should give the German offers the German contact page', () => {
+        render(<ServicesPage copy={servicesDe} />);
+
+        expect(screen.getAllByText('Vielleicht denken Sie gerade:')).toHaveLength(servicesDe.offers.length);
+        expect(screen.getAllByRole('link', { name: servicesDe.labels.offerCta })[0]).toHaveAttribute('href', '/de/kontakt?topic=project');
+    });
+
     it('should anchor a section per offer at the id the homepage cards link to', () => {
         const { container } = render(<ServicesPage copy={servicesEn} />);
 

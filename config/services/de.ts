@@ -67,7 +67,9 @@ export const servicesDe: ServicesPageCopy = {
         howItRuns: 'So läuft es ab',
         typical: 'Preis',
         proof: 'Schon gemacht',
+        problemLead: 'Vielleicht denken Sie gerade:',
         offerCta: 'Über Ihr Projekt sprechen',
+        bookCta: 'Gespräch buchen',
         billing: 'Die Spannen sind eine Orientierung, kein Angebot. Jede Phase bekommt vorab einen schriftlichen Umfang und einen Festpreis.',
     },
     offers: [

@@ -7,7 +7,7 @@
  * so losing one would silently make a button do nothing — which is what these
  * tests exist to catch.
  *
- * Which of the label and the keycap is visible is a breakpoint concern, and
+ * Which of the ⌘K button and Menu is visible is a breakpoint concern, and
  * belongs to the visual axis rather than here.
  */
 
@@ -17,6 +17,7 @@ import { NavTools } from './NavTools';
 
 vi.mock('next/navigation', () => ({
     usePathname: () => '/services',
+    useRouter: () => ({ push: vi.fn() }),
 }));
 
 const MAC = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)';
@@ -31,8 +32,9 @@ describe('<NavTools> Component', () => {
         render(<NavTools />);
 
         expect(screen.getByRole('button', { name: 'Open command menu' })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: 'Menu' })).toBeInTheDocument();
         expect(screen.getByRole('button', { name: 'Switch color theme' })).toBeInTheDocument();
-        expect(screen.getAllByRole('button')).toHaveLength(2);
+        expect(screen.getAllByRole('button')).toHaveLength(3);
     });
 
     it('should offer this page in the other language, ahead of the theme switch', () => {
@@ -57,14 +59,23 @@ describe('<NavTools> Component', () => {
         expect(screen.getByRole('button', { name: 'Switch color theme' })).toHaveAttribute('data-theme-toggle');
     });
 
-    it('should carry both the written label and the keyboard shortcut', () => {
+    it('should show the keyboard shortcut on the command menu button', () => {
         vi.spyOn(navigator, 'userAgent', 'get').mockReturnValue(MAC);
         render(<NavTools />);
 
         const command = screen.getByRole('button', { name: 'Open command menu' });
 
-        expect(command).toHaveTextContent('Menu');
         expect(command.querySelector('kbd')).toHaveTextContent('⌘K');
+    });
+
+    // The breakpoint shows one of the two; the mobile menu is no palette.
+    it('should open the mobile menu from Menu, not the command palette', () => {
+        render(<NavTools />);
+
+        const menu = screen.getByRole('button', { name: 'Menu' });
+
+        expect(menu).not.toHaveAttribute('data-cmdk');
+        expect(menu).toHaveAttribute('aria-expanded', 'false');
     });
 
     it('should spell the shortcut with Ctrl off an Apple platform', () => {

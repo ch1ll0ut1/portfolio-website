@@ -7,7 +7,7 @@ export const heroEn: HeroCopy = {
         after: '.',
     },
     kicker: yearsShipping => [
-        'Software architect & tech lead',
+        'Freelance software architect & fractional CTO',
         `${yearsShipping} years`,
         'English & Deutsch',
         'Europe, US & Asia hours',

@@ -15,6 +15,8 @@ declare const styles: {
     readonly metricLabel: string;
     readonly metricValue: string;
     readonly next: string;
+    readonly nextAlt: string;
+    readonly nextAltLink: string;
     readonly nextBody: string;
     readonly nextTitle: string;
     readonly otherClient: string;

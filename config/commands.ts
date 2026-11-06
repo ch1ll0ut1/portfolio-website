@@ -11,7 +11,7 @@
 import { type Locale, otherLocale } from '@/lib/i18n/locale';
 import { localizedPath } from '@/lib/i18n/paths';
 import { chromeCopy } from './chrome';
-import type { CommandGroupId, CommandId } from './chrome/types';
+import type { CommandGroupId, CommandId, SectionId } from './chrome/types';
 import { chordSections } from './sections';
 import { links } from './links';
 
@@ -41,6 +41,8 @@ export interface Command {
     label: string;
     /** Secondary text, also matched by the filter. */
     hint: string;
+    /** Words a visitor might search for, matched but never shown. */
+    keywords?: string;
     action: CommandAction;
 }
 
@@ -50,21 +52,38 @@ interface CommandData {
     group: CommandGroupId;
     /** Keys or names; a worded hint comes from the dictionary instead. */
     hint?: string;
+    keywords?: string;
     action: CommandAction;
 }
 
+/*
+ * The words buyers search with, in both languages on both sites: a German
+ * reader on the English page types „Preis“ as readily as "price". Never shown.
+ */
+const PRICE_WORDS = 'price prices pricing cost costs rates fees budget offer packages Preis Preise Kosten Honorar Angebot Leistungen';
+const CONTACT_WORDS = 'email e-mail mail message hire enquiry inquiry Anfrage Nachricht schreiben Kontakt';
+const CALL_WORDS = 'call meeting appointment schedule talk Termin Gespräch Anruf buchen';
+
+/** Search words for the "Go to" commands, by section. */
+const sectionKeywords: Partial<Record<SectionId, string>> = {
+    services: PRICE_WORDS,
+    contact: `${CONTACT_WORDS} ${CALL_WORDS}`,
+    experience: 'cv resume career Lebenslauf Werdegang',
+    work: 'case studies portfolio projects Referenzen Projekte',
+};
+
 const commandData: CommandData[] = [
-    { id: 'book-call', group: 'actions', hint: 'Calendly', action: { type: 'external', url: links.calendly } },
+    { id: 'book-call', group: 'actions', hint: 'Calendly', keywords: CALL_WORDS, action: { type: 'external', url: links.calendly } },
     { id: 'switch-theme', group: 'actions', hint: 'T', action: { type: 'theme' } },
     { id: 'shortcuts', group: 'actions', hint: '?', action: { type: 'shortcuts' } },
     { id: 'single-key-shortcuts', group: 'actions', hint: 'T, L, ?, G', action: { type: 'toggleSingleKeys' } },
     { id: 'custom-cursor', group: 'actions', action: { type: 'toggleCursor' } },
     { id: 'cookie-settings', group: 'actions', action: { type: 'cookieSettings' } },
     { id: 'github', group: 'elsewhere', hint: 'ch1ll0ut1', action: { type: 'external', url: links.social.github } },
-    { id: 'linkedin', group: 'elsewhere', hint: 'skdevde', action: { type: 'external', url: links.social.linkedin } },
-    { id: 'services-page', group: 'elsewhere', action: { type: 'route', href: '/services' } },
+    { id: 'linkedin', group: 'elsewhere', hint: 'skdevde', keywords: 'message cv profile', action: { type: 'external', url: links.social.linkedin } },
+    { id: 'services-page', group: 'elsewhere', keywords: PRICE_WORDS, action: { type: 'route', href: '/services' } },
     { id: 'blog', group: 'elsewhere', action: { type: 'route', href: '/blog' } },
-    { id: 'contact-form', group: 'elsewhere', action: { type: 'route', href: '/contact' } },
+    { id: 'contact-form', group: 'elsewhere', keywords: CONTACT_WORDS, action: { type: 'route', href: '/contact' } },
 ];
 
 /** The palette's commands, in list order, told in `locale`. */
@@ -88,14 +107,16 @@ export const commandsFor = (locale: Locale): Command[] => {
             group: words.groups.goTo,
             label: sections[section.id],
             hint: `G ${section.chord.toUpperCase()}`,
+            ...(sectionKeywords[section.id] !== undefined && { keywords: sectionKeywords[section.id] }),
             action: { type: 'section', sectionId: section.id },
         }));
 
     return [
         ...goToCommands,
-        ...commandData.flatMap(({ id, group, hint, action }) => {
+        ...commandData.flatMap(({ id, group, hint, keywords, action }) => {
             const command: Command = {
                 id,
+                ...(keywords !== undefined && { keywords }),
                 group: words.groups[group],
                 label: words.items[id].label,
                 hint: words.items[id].hint ?? hint ?? (action.type === 'route' ? localizedPath(locale, action.href) : ''),

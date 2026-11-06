@@ -11,7 +11,6 @@
 import { FC, useCallback, useEffect, useRef } from 'react';
 import { useStageEvent } from '@/lib/motion';
 import type { ProcessStep } from '@/config/processSteps';
-import { StepTerminal } from './StepTerminal';
 import styles from './Process.module.css';
 
 interface Props {
@@ -72,8 +71,6 @@ export const StepList: FC<Props> = ({ steps, activeIndex, pinned }) => {
                             <h3 data-step-title="" aria-label={step.title}>{step.title}</h3>
                             <p>{step.description}</p>
                         </div>
-
-                        <StepTerminal transcript={step.transcript} pinned={pinned} />
                     </li>
                 ))}
             </ol>

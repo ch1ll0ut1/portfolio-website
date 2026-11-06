@@ -136,8 +136,9 @@ export const workDe: WorkCopy = {
     next: {
         title: 'Haben Sie ein ähnliches Projekt?',
         body: 'Ich baue neue Apps, rette fehlerhafte und führe Ihr Entwicklungsteam. Erzählen Sie mir, woran Sie arbeiten, und ich sage Ihnen ehrlich, ob ich zu Ihrem Projekt passe.',
+        book: '30-Minuten-Gespräch buchen',
         services: 'Wie ich helfen kann',
-        contact: 'Kontakt aufnehmen',
+        contact: 'Oder schreiben Sie mir zu Ihrem Projekt',
         others: 'Weitere Referenzen',
     },
     card: {
