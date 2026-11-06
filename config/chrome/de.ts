@@ -28,7 +28,7 @@ export const chromeDe: ChromeCopy = {
         search: 'Befehle suchen',
         close: 'Befehlsmenü schließen',
         list: 'Befehle',
-        empty: 'Keine Treffer. Versuchen Sie „Projekte“ oder „linkedin“.',
+        empty: 'Keine Treffer. Versuchen Sie es mit „Projekte“ oder „LinkedIn“.',
         noResults: 'Keine passenden Befehle',
         results: count => (count === 1 ? '1 Befehl' : `${count} Befehle`),
         move: 'wählen',
