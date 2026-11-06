@@ -28,7 +28,13 @@ describe('next.config.ts redirects', () => {
         });
     });
 
-    it.each(['stefanknoch.com', 'localhost', 'stefan-knoch-portfolio-git-main.vercel.app', 'stefan-knoch-portfolioxvercelxapp'])(
+    it.each([
+        'stefanknoch.com',
+        'localhost',
+        'stefan-knoch-portfolio-git-main.vercel.app',
+        'stefan-knoch-portfolio-k3x9q2abc-stefan-knochs-projects.vercel.app',
+        'stefan-knoch-portfolioxvercelxapp',
+    ])(
         'should leave %s alone',
         async (host) => {
             expect(await redirectsFor(host)).toHaveLength(0);
