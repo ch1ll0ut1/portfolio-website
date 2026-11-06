@@ -12,6 +12,7 @@ import { REDUCED_MOTION_QUERY } from '@/lib/motion';
 import { itemAt } from '@/test/itemAt';
 import { installAnimationFrames } from '../../../test/animationFrames';
 import { installMatchMedia } from '../../../test/motionEnv';
+import { caseStudiesFor } from '@/config/caseStudies';
 import { CaseList } from './CaseList';
 
 const STACK_TOP = 2000;
@@ -90,7 +91,7 @@ describe('<CaseList> focus inside the stack', () => {
     };
 
     it('scrolls a covered card back to rest when focus lands in it', () => {
-        render(<CaseList />);
+        render(<CaseList caseStudies={caseStudiesFor('en')} />);
         layOut(106);
 
         focusSourceLink();
@@ -99,7 +100,7 @@ describe('<CaseList> focus inside the stack', () => {
     });
 
     it('leaves the scroll alone when nothing covers the focused link', () => {
-        render(<CaseList />);
+        render(<CaseList caseStudies={caseStudiesFor('en')} />);
         layOut(STICKY_TOP + CARD_HEIGHT + GAP);
 
         focusSourceLink();
@@ -108,7 +109,7 @@ describe('<CaseList> focus inside the stack', () => {
     });
 
     it('leaves the scroll to the browser when the cards are not stacked', () => {
-        render(<CaseList />);
+        render(<CaseList caseStudies={caseStudiesFor('en')} />);
         layOut(106, 'relative');
 
         focusSourceLink();

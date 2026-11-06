@@ -2,9 +2,8 @@
 
 import type { FC, RefObject } from 'react';
 import { useApplePlatform } from '@/components/chrome/useApplePlatform';
-import { heroCopy } from '@/config/home/hero';
 import type { HeroPanelState } from '@/config/home/hero/types';
-import { useLocale } from '@/lib/i18n/LocaleContext';
+import { useCopy } from '@/lib/i18n/CopyContext';
 import type { HeadingDoc } from './editorModel';
 import { type TokenKind, headlineJsonLines } from './headlineJson';
 import styles from './Hero.module.css';
@@ -44,7 +43,7 @@ const TOKEN_CLASS: Record<TokenKind, string> = {
  * editor would and only the leaves that actually changed flash.
  */
 export const DocumentModelPanel: FC<Props> = ({ doc, baseline, position, state, hintId, editButtonRef, onEdit }) => {
-    const { editor } = heroCopy[useLocale()];
+    const { editor } = useCopy('hero');
     const apple = useApplePlatform();
     const mod = apple ? '⌘' : `${editor.keys.ctrl}+`;
     const highlight = apple ? '⌘⇧H' : `${editor.keys.ctrl}+${editor.keys.shift}+H`;

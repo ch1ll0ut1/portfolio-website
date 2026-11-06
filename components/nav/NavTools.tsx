@@ -1,8 +1,7 @@
 'use client';
 
 import { type FC } from 'react';
-import { chromeCopy } from '@/config/chrome';
-import { useLocale } from '@/lib/i18n/LocaleContext';
+import { useCopy } from '@/lib/i18n/CopyContext';
 import { LanguageSwitch } from '@/components/chrome/LanguageSwitch';
 import { ModKey } from '@/components/chrome/ModKey';
 import { ThemeToggle } from '@/components/chrome/ThemeToggle';
@@ -22,7 +21,7 @@ import styles from './NavTools.module.css';
  * the nav's styling and the chrome's behaviour independent of each other.
  */
 export const NavTools: FC = () => {
-    const { nav } = chromeCopy[useLocale()];
+    const { nav } = useCopy('chrome');
 
     return (
         <>

@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { issueContactToken, sendContactMessage } from '@/app/(en)/contact/actions';
 import { ContactRoute } from '@/components/contact/ContactRoute';
 import { contactMetadata } from '@/components/contact/contactMetadata';
+import { GermanContactCopy } from '@/components/contact/GermanContactCopy';
 
 export const metadata: Metadata = contactMetadata('de');
 
@@ -13,7 +14,9 @@ export const metadata: Metadata = contactMetadata('de');
  * (instrumentation-client.ts).
  */
 const Kontakt: FC = () => (
-    <ContactRoute locale="de" action={sendContactMessage} issueToken={issueContactToken} />
+    <GermanContactCopy>
+        <ContactRoute locale="de" action={sendContactMessage} issueToken={issueContactToken} />
+    </GermanContactCopy>
 );
 
 export default Kontakt;

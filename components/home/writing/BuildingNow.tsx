@@ -2,8 +2,8 @@
 
 import { type FC, useRef, useState } from 'react';
 import { useReveal } from '@/lib/motion';
-import { type BuildingNowProject, buildingNowFor } from '@/config/buildingNow';
-import { useLocale } from '@/lib/i18n/LocaleContext';
+import type { BuildingNowProject } from '@/config/buildingNow';
+import { useCopy } from '@/lib/i18n/CopyContext';
 import { PipelineCanvas } from './PipelineCanvas';
 import styles from './BuildingNow.module.css';
 
@@ -20,8 +20,8 @@ interface Props {
  * no link the pipeline is the card's last row and closes it off on its own.
  */
 export const BuildingNow: FC<Props> = ({ project: given }) => {
-    const locale = useLocale();
-    const project = given ?? buildingNowFor(locale);
+    const { buildingNow } = useCopy('writing');
+    const project: BuildingNowProject = given ?? buildingNow;
     const cardRef = useRef<HTMLElement>(null);
     const [live, setLive] = useState(false);
     const { linkLabel, linkHref } = project;

@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import './globals.css';
 import { ErrorPanel } from '@/components/blog/ErrorPanel';
 import { ReadingShell } from '@/components/blog/ReadingShell';
+import { errorsCopy } from '@/config/errors';
 import { localeFromPath } from '@/lib/i18n/paths';
 
 interface Props {
@@ -18,7 +19,9 @@ interface Props {
  * web fonts are not loaded here — the font stacks fall back to system faces —
  * since whatever broke the layout may be what loads them.
  *
- * It sits above both root layouts, so the language comes from the URL.
+ * It sits above both root layouts, so the language comes from the URL, and
+ * it is the one client module that holds both languages' words: the error
+ * panel's few lines, in config/errors.
  */
 const GlobalError: FC<Props> = ({ error, reset }) => {
     const locale = localeFromPath(usePathname());
@@ -27,7 +30,7 @@ const GlobalError: FC<Props> = ({ error, reset }) => {
         <html lang={locale}>
             <body>
                 <ReadingShell>
-                    <ErrorPanel error={error} onRetry={reset} locale={locale} />
+                    <ErrorPanel error={error} onRetry={reset} copy={errorsCopy[locale].error} locale={locale} />
                 </ReadingShell>
             </body>
         </html>

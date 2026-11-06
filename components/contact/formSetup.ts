@@ -8,7 +8,7 @@
  */
 
 import { useEffect, useState, useSyncExternalStore } from 'react';
-import { type ContactTopic, DEFAULT_CONTACT_TOPIC, isContactTopic } from '@/config/contact';
+import { type ContactTopic, DEFAULT_CONTACT_TOPIC, isContactTopic } from '@/config/contact/form';
 
 export type TokenRequest
     = | { status: 'loading' }

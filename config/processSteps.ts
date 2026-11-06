@@ -23,9 +23,6 @@ export interface ProcessStep extends ProcessStepCopy {
     id: ProcessStepId;
 }
 
-/** Shown in the terminal's title bar. */
-export const terminalPath = '~/your-product';
-
 const stepIds: ProcessStepId[] = ['talk', 'map', 'build', 'handover'];
 
 /** The steps in order, told in `locale`. */

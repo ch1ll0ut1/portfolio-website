@@ -1,8 +1,7 @@
 'use client';
 
 import { type FC } from 'react';
-import { chromeCopy } from '@/config/chrome';
-import { useLocale } from '@/lib/i18n/LocaleContext';
+import { useCopy } from '@/lib/i18n/CopyContext';
 import { orderedChordSections } from './orderedChordSections';
 import styles from './ChordHint.module.css';
 
@@ -19,10 +18,14 @@ interface Props {
  * Decorative: the shortcuts overlay is the accessible version of this list, so
  * the hint itself stays out of the accessibility tree.
  */
-export const ChordHint: FC<Props> = ({ armed }) => (
-    <div className={armed ? `${styles.hint} ${styles.on}` : styles.hint} aria-hidden="true">
-        <kbd>g</kbd>
-        {/* One expression: as separate children the formatter splits them and JSX eats the space. */}
-        <span>{chromeCopy[useLocale()].chordHint(keys)}</span>
-    </div>
-);
+export const ChordHint: FC<Props> = ({ armed }) => {
+    const { chordHint } = useCopy('chrome');
+
+    return (
+        <div className={armed ? `${styles.hint} ${styles.on}` : styles.hint} aria-hidden="true">
+            <kbd>g</kbd>
+            {/* One expression: as separate children the formatter splits them and JSX eats the space. */}
+            <span>{chordHint(keys)}</span>
+        </div>
+    );
+};

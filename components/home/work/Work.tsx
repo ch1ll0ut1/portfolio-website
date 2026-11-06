@@ -1,5 +1,7 @@
 import { type FC } from 'react';
+import { caseStudiesFor } from '@/config/caseStudies';
 import { workCopy } from '@/config/home/work';
+import { projectsIndexFor } from '@/config/projectsIndex';
 import type { Locale } from '@/lib/i18n/locale';
 import { SectionHead } from '../SectionHead';
 import { CaseList } from './CaseList';
@@ -21,9 +23,9 @@ export const Work: FC<Props> = ({ locale }) => (
                 lede={workCopy[locale].heading.lede}
             />
 
-            <CaseList />
+            <CaseList caseStudies={caseStudiesFor(locale)} />
 
-            <MoreProjects />
+            <MoreProjects title={workCopy[locale].moreProjects.title} projectsIndex={projectsIndexFor(locale)} />
         </div>
     </section>
 );

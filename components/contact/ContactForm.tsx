@@ -2,19 +2,19 @@
 
 import { type FC, type SubmitEvent, useActionState, useEffect, useId } from 'react';
 import {
-    type ContactCopy,
     type ContactField,
     type ContactState,
     type ContactValues,
     INITIAL_CONTACT_STATE,
-    contactCopy,
     contactFieldNames,
     contactLimits,
     contactTopics,
-} from '@/config/contact';
+} from '@/config/contact/form';
+import type { ContactCopy } from '@/config/contact/types';
 import { links } from '@/config/links';
+import { useCopy } from '@/lib/i18n/CopyContext';
 import { fillSlots } from '@/lib/i18n/fillSlots';
-import { type Locale, intlLocale } from '@/lib/i18n/locale';
+import { intlLocale } from '@/lib/i18n/locale';
 import { useLocale } from '@/lib/i18n/LocaleContext';
 import { failureMessage, fieldErrorMessages } from './contactMessages';
 import { FormField } from './FormField';
@@ -41,7 +41,7 @@ const FIELD_ORDER: ContactField[] = ['name', 'email', 'message'];
  *
  * The browser's own validation is off (`noValidate`) so every visitor gets the
  * server's verdicts, inline under each field. The server answers in codes;
- * the words come from `contactCopy` in the page's language, which is also
+ * the words come from the contact copy in the page's language, which is also
  * posted with the message (for the email's "Language" line). After a rejected submission,
  * focus moves to the first field to fix; the thank-you is announced through a
  * polite live region and a failure through an alert.
@@ -52,13 +52,13 @@ export const ContactForm: FC<Props> = ({ action, issueToken }) => {
     const queryTopic = useQueryTopic();
     const id = useId();
     const locale = useLocale();
-    const copy = contactCopy[locale];
+    const copy = useCopy('contact');
     const fieldId = (field: string) => `${id}-${field}`;
 
     const values: ContactValues = 'values' in state
         ? state.values
         : { name: '', email: '', topic: queryTopic, message: '' };
-    const errors = state.status === 'invalid' ? fieldErrorMessages(state.errors, locale) : {};
+    const errors = state.status === 'invalid' ? fieldErrorMessages(state.errors, copy, locale) : {};
     // The server hands back a token with every answer (fresh on "expired").
     const token = 'token' in state && state.token ? state.token : issuedToken(tokenRequest);
 
@@ -197,7 +197,7 @@ export const ContactForm: FC<Props> = ({ action, issueToken }) => {
                             {state.status === 'sent' ? copy.form.sent : ''}
                         </p>
                         <p className={styles.alert} role="alert">
-                            {alertText(state, tokenRequest, copy, locale)}
+                            {alertText(state, tokenRequest, copy)}
                         </p>
                     </div>
                 </div>
@@ -208,12 +208,12 @@ export const ContactForm: FC<Props> = ({ action, issueToken }) => {
 
 const issuedToken = (request: TokenRequest) => (request.status === 'ready' ? request.token : '');
 
-const alertText = (state: ContactState, tokenRequest: TokenRequest, copy: ContactCopy, locale: Locale) => {
+const alertText = (state: ContactState, tokenRequest: TokenRequest, copy: ContactCopy) => {
     switch (state.status) {
         case 'invalid':
             return copy.form.invalid;
         case 'failed':
-            return failureMessage(state.reason, locale);
+            return failureMessage(state.reason, copy);
         default:
             return tokenRequest.status === 'failed' ? copy.form.tokenFailed : '';
     }

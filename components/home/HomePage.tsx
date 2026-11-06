@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import { EngagementTracker } from '@/components/analytics/EngagementTracker';
 import { JsonLd } from '@/components/seo/JsonLd';
+import { contactCopy } from '@/config/contact';
 import type { Locale } from '@/lib/i18n/locale';
 import { Contact } from './contact/Contact';
 import { Experience } from './experience/Experience';
@@ -17,9 +18,10 @@ interface Props {
 }
 
 /**
- * The homepage in `locale`, the body of both `/` and `/de`. The sections
- * that read their words through the locale context (hero, process, contact)
- * get it from the language's root layout.
+ * The homepage in `locale`, the body of both `/` and `/de`. Server sections
+ * pick their words by `locale`; client components read theirs through
+ * `useCopy`, which the route fills with its language's `EnglishHomeCopy` or
+ * `GermanHomeCopy`.
  */
 export const HomePage: FC<Props> = ({ locale }) => (
     <>
@@ -36,7 +38,7 @@ export const HomePage: FC<Props> = ({ locale }) => (
             <Process locale={locale} />
             <Experience locale={locale} />
             <Writing locale={locale} />
-            <Contact />
+            <Contact invitation={contactCopy[locale].invitation} />
         </main>
     </>
 );

@@ -6,7 +6,7 @@
  */
 
 import { showToast } from '@/lib/motion';
-import { chromeCopy } from '@/config/chrome';
+import type { ChromeCopy } from '@/config/chrome/types';
 import type { CommandAction } from '@/config/commands';
 import { type Locale, otherLocale } from '@/lib/i18n/locale';
 import { localizedPath } from '@/lib/i18n/paths';
@@ -20,12 +20,14 @@ import { toggleTheme } from './themeStore';
 export interface CommandHandlers {
     openShortcuts: () => void;
     navigate: (href: string) => void;
-    /** The page's language: routes go to its pages, toasts speak it. */
+    /** The page's language: routes go to its pages. */
     locale: Locale;
+    /** What the toggles announce, in the page's language. */
+    toasts: ChromeCopy['toasts'];
 }
 
 export const runCommand = (action: CommandAction, handlers: CommandHandlers) => {
-    const { toasts } = chromeCopy[handlers.locale];
+    const { toasts } = handlers;
 
     switch (action.type) {
         case 'section':

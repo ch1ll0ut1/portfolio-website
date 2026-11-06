@@ -12,6 +12,7 @@ import { itemAt } from '../../../test/itemAt';
 import { installMatchMedia } from '../../../test/motionEnv';
 import { FINE_POINTER_QUERY } from '../../../lib/motion';
 import { projectsIndexFor } from '../../../config/projectsIndex';
+import { workEn } from '../../../config/home/work/en';
 import { MoreProjects } from './MoreProjects';
 import styles from './MoreProjects.module.css';
 
@@ -48,7 +49,7 @@ describe('MoreProjects', () => {
     const setup = (matching: string[] = []) => {
         restoreMedia = installMatchMedia(matching);
 
-        return render(<MoreProjects />);
+        return render(<MoreProjects title={workEn.moreProjects.title} projectsIndex={projectsIndexFor('en')} />);
     };
 
     afterEach(() => {

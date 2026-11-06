@@ -1,4 +1,4 @@
-import { siteConfig } from '../site';
+import { siteIdentity } from '../site/identity';
 import type { ContactCopy } from './types';
 
 export const contactEn: ContactCopy = {
@@ -9,7 +9,7 @@ export const contactEn: ContactCopy = {
         privacy: 'Privacy request',
     },
     meta: {
-        title: `Contact ${siteConfig.name} — Software Architect & Fractional CTO`,
+        title: `Contact ${siteIdentity.name} — Software Architect & Fractional CTO`,
         description: 'Freelance software architect & fractional CTO for your app, your MVP or your team. I reply within one working day, across European, US and Asian hours.',
     },
     breadcrumbs: {

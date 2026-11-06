@@ -2,11 +2,11 @@
 
 import { type FC, useRef } from 'react';
 import Link from 'next/link';
-import { homeContactCopy } from '@/config/home/contact';
 import type { FooterLinkId } from '@/config/home/contact/types';
 import { links } from '@/config/links';
 import { localizedPath } from '@/lib/i18n/paths';
 import { useLocale } from '@/lib/i18n/LocaleContext';
+import { useCopy } from '@/lib/i18n/CopyContext';
 import { requestConsentPreferences } from '@/components/consent/ConsentContext';
 import { externalLinkHandlers } from './outboundTracking';
 import { FooterClock } from './FooterClock';
@@ -49,7 +49,7 @@ const footerLinks: FooterLink[] = [
  */
 export const ContactFooter: FC = () => {
     const locale = useLocale();
-    const copy = homeContactCopy[locale].footer;
+    const copy = useCopy('homeContact').footer;
     const footerRef = useRef<HTMLElement>(null);
 
     return (

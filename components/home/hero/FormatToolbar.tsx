@@ -11,8 +11,7 @@ import {
     useRef,
     useState,
 } from 'react';
-import { heroCopy } from '@/config/home/hero';
-import { useLocale } from '@/lib/i18n/LocaleContext';
+import { useCopy } from '@/lib/i18n/CopyContext';
 import { EASE, clamp, prefersReducedMotion } from '@/lib/motion';
 import { readSelection, serializeEditor } from './editorDom';
 import { type MarkName, type MarkSet, NO_MARKS, isMarkFullyApplied } from './editorModel';
@@ -95,7 +94,7 @@ const nextIndex = (key: string, current: number, count: number) => {
  * intact.
  */
 export const FormatToolbar: FC<Props> = ({ editorRef, hostRef, toolbarRef, onCommand }) => {
-    const labels = heroCopy[useLocale()].editor.toolbar;
+    const labels = useCopy('hero').editor.toolbar;
     const wasVisible = useRef(false);
     const buttonRefs = useRef<(HTMLButtonElement | null)[]>([]);
     const [placement, setPlacement] = useState<{ x: number; y: number } | null>(null);

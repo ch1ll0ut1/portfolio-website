@@ -6,6 +6,8 @@ import { describe, expect, it, vi } from 'vitest';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { BOOT_SCRIPT } from '@/lib/bootScript';
 import type { Locale } from '@/lib/i18n/locale';
+import { EnglishSiteCopy } from './EnglishSiteCopy';
+import { GermanSiteCopy } from './GermanSiteCopy';
 import { SiteDocument } from './SiteDocument';
 
 // next/font and the router only run inside Next.
@@ -22,7 +24,9 @@ vi.mock('next/font/google', () => {
 
 /** Rendered to markup and parsed as a whole document: a test container cannot hold `<html>`. */
 const renderDocument = (locale: Locale) => new DOMParser().parseFromString(
-    renderToStaticMarkup(<SiteDocument locale={locale}><main id="main">Page</main></SiteDocument>),
+    renderToStaticMarkup(
+        <SiteDocument locale={locale} SiteCopy={locale === 'de' ? GermanSiteCopy : EnglishSiteCopy}><main id="main">Page</main></SiteDocument>,
+    ),
     'text/html',
 );
 

@@ -2,9 +2,8 @@
 
 import { type FC, useCallback, useEffect, useRef } from 'react';
 import type { CaseMetric, CaseVisualId } from '@/config/caseStudies';
-import { workCopy } from '@/config/home/work';
 import type { CaseVisualsCopy } from '@/config/home/work/types';
-import { useLocale } from '@/lib/i18n/LocaleContext';
+import { useCopy } from '@/lib/i18n/CopyContext';
 import { prefersReducedMotion, useMaskReveal, useStageEvent } from '@/lib/motion';
 import { whenIdle } from '@/lib/whenIdle';
 import styles from './CaseVisual.module.css';
@@ -63,7 +62,7 @@ const loaders: Record<CaseVisualId, () => Promise<Build>> = {
  * keep it scaled to the panel, and tell its runner when to run.
  */
 export const CaseVisual: FC<Props> = ({ id, metric, covered }) => {
-    const visualsCopy = workCopy[useLocale()].visuals;
+    const visualsCopy = useCopy('work').visuals;
     const hostRef = useRef<HTMLDivElement>(null);
     const metricRef = useRef<HTMLParagraphElement>(null);
     const valueRef = useRef<HTMLSpanElement>(null);

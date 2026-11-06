@@ -6,7 +6,7 @@
 import { describe, it, expect } from 'vitest';
 import { itemAt } from '@/test/itemAt';
 import { processEn } from './home/process/en';
-import { processSteps, processStepsFor, terminalPath } from './processSteps';
+import { processSteps, processStepsFor } from './processSteps';
 
 const processTitle = processEn.title;
 
@@ -40,9 +40,8 @@ describe('Process Steps Configuration', () => {
             });
         });
 
-        it('should have a section title and a terminal path', () => {
+        it('should have a section title', () => {
             expect(processTitle).toBeTruthy();
-            expect(terminalPath).toBe('~/your-product');
         });
     });
 

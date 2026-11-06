@@ -1,15 +1,19 @@
 'use client';
 
-import { type FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { workCopy } from '@/config/home/work';
-import { projectsIndexFor } from '@/config/projectsIndex';
-import { useLocale } from '@/lib/i18n/LocaleContext';
+import { type FC, useCallback, useEffect, useRef, useState } from 'react';
+import type { IndexedProject } from '@/config/projectsIndex';
 import { useFinePointer, useReducedMotion, useStageEvent } from '@/lib/motion';
 import { ProjectPreview } from './ProjectPreview';
 import styles from './MoreProjects.module.css';
 
 /** The marker's CSS height; it is scaled from this to each row's height. */
 const MARKER_HEIGHT = 100;
+
+interface Props {
+    title: string;
+    /** The projects in the page's language, from `projectsIndexFor` on the server. */
+    projectsIndex: IndexedProject[];
+}
 
 /**
  * The project index: a shared sliding marker, hovered row lifted, siblings
@@ -20,9 +24,7 @@ const MARKER_HEIGHT = 100;
  * the next control. Every row's text is on the page either way; the hover
  * treatment is a pointer nicety on top.
  */
-export const MoreProjects: FC = () => {
-    const locale = useLocale();
-    const projectsIndex = useMemo(() => projectsIndexFor(locale), [locale]);
+export const MoreProjects: FC<Props> = ({ title, projectsIndex }) => {
     const listRef = useRef<HTMLOListElement>(null);
     const markerRef = useRef<HTMLDivElement>(null);
     /** The marker jumps to its first row and slides between rows afterwards. */
@@ -75,7 +77,7 @@ export const MoreProjects: FC = () => {
 
     return (
         <div className={styles.index} id="more-work">
-            <h3 className={styles.title}>{workCopy[locale].moreProjects.title}</h3>
+            <h3 className={styles.title}>{title}</h3>
             <ol
                 ref={listRef}
                 className={`${styles.list}${active === null ? '' : ` ${styles.listHot}`}`}

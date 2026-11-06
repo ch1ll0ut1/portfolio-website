@@ -1,4 +1,5 @@
 import { type FC } from 'react';
+import { careerFor } from '@/config/career';
 import { experienceCopy } from '@/config/home/experience';
 import { yearsShipping } from '@/config/site';
 import type { Locale } from '@/lib/i18n/locale';
@@ -28,7 +29,7 @@ export const Experience: FC<Props> = ({ locale }) => (
                 lede={experienceCopy[locale].heading.lede}
             />
 
-            <CareerLog />
+            <CareerLog careerLog={careerFor(locale)} />
         </div>
     </section>
 );

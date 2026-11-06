@@ -4,10 +4,11 @@ import { type FC, useEffect, useId, useRef } from 'react';
 import Link from 'next/link';
 import { useInView } from '@/lib/motion';
 import { contactHref } from '@/components/services/contactHref';
-import { type Engagement, engagementPath } from '@/config/engagements';
-import { engagementsCopy } from '@/config/home/services';
+import type { Engagement } from '@/config/engagements';
+import { engagementPath } from '@/config/pagePaths';
 import { localizedPath } from '@/lib/i18n/paths';
 import { useLocale } from '@/lib/i18n/LocaleContext';
+import { useCopy } from '@/lib/i18n/CopyContext';
 import type { CssVars } from '@/lib/cssVars';
 import { runBorderTrace } from './borderTrace';
 import { useSpotlight } from './useSpotlight';
@@ -41,7 +42,7 @@ export const ServiceCard: FC<Props> = ({ engagement, index }) => {
     const stopTraceRef = useRef<(() => void) | null>(null);
     const settleTimerRef = useRef(0);
     const locale = useLocale();
-    const copy = engagementsCopy[locale];
+    const copy = useCopy('engagements');
     const nameId = useId();
     const delay = index * STAGGER_S;
 

@@ -4,10 +4,10 @@ import { type FC, type ReactNode, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useMagnet } from '@/lib/motion';
-import { chromeCopy } from '@/config/chrome';
 import { navSections } from '@/config/sections';
 import { localizedPath } from '@/lib/i18n/paths';
 import { useLocale } from '@/lib/i18n/LocaleContext';
+import { useCopy } from '@/lib/i18n/CopyContext';
 import { links } from '@/config/links';
 import { BrandMark } from './BrandMark';
 import { useActiveSection } from './useActiveSection';
@@ -65,7 +65,7 @@ export const SiteNav: FC<Props> = ({ tools }) => {
     const bookRef = useRef<HTMLAnchorElement>(null);
 
     const locale = useLocale();
-    const copy = chromeCopy[locale];
+    const copy = useCopy('chrome');
     const home = localizedPath(locale, '/');
     const pathname = usePathname();
     const handleSectionClick = useSectionClick();

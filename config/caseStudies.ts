@@ -144,5 +144,4 @@ export const caseStudies = caseStudiesFor('en');
 /** The case study whose page is `/work/<slug>`, if there is one. */
 export const findCaseStudy = (slug: string) => caseStudies.find(study => study.slug === slug);
 
-/** The English path of a case study's own page. */
-export const caseStudyPath = (study: CaseStudy) => `/work/${study.slug}`;
+export { caseStudyPath } from './pagePaths';

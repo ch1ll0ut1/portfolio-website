@@ -2,9 +2,8 @@
 
 import { type FC, type PointerEvent, useRef } from 'react';
 import { useMagnet } from '@/lib/motion';
-import { homeContactCopy } from '@/config/home/contact';
 import { links } from '@/config/links';
-import { useLocale } from '@/lib/i18n/LocaleContext';
+import { useCopy } from '@/lib/i18n/CopyContext';
 import { conversionHandlers } from './outboundTracking';
 import styles from './CtaMagnet.module.css';
 
@@ -26,7 +25,7 @@ const CONVERSION_LOCATION = 'cta_section';
  * label roll and arrow swap.
  */
 export const CtaMagnet: FC = () => {
-    const label = homeContactCopy[useLocale()].book;
+    const label = useCopy('homeContact').book;
     const ctaRef = useRef<HTMLAnchorElement>(null);
     const tracking = conversionHandlers(CONVERSION_TYPE, CONVERSION_LOCATION);
 

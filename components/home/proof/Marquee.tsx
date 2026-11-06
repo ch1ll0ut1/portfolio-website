@@ -1,8 +1,7 @@
 'use client';
 
 import { type FC, useEffect, useRef, useState } from 'react';
-import { proofCopy } from '@/config/home/proof';
-import { useLocale } from '@/lib/i18n/LocaleContext';
+import { useCopy } from '@/lib/i18n/CopyContext';
 import { prefersReducedMotion, useReducedMotion } from '@/lib/motion';
 import { type MarqueeEngine, startMarquee } from './marqueeEngine';
 import styles from './Proof.module.css';
@@ -29,7 +28,7 @@ export const Marquee: FC<Props> = ({ names }) => {
     const trackRef = useRef<HTMLUListElement>(null);
     const engineRef = useRef<MarqueeEngine | null>(null);
     const reduced = useReducedMotion();
-    const labels = proofCopy[useLocale()].marquee;
+    const labels = useCopy('proof').marquee;
     const [paused, setPaused] = useState(false);
 
     useEffect(() => {

@@ -5,13 +5,14 @@
  * the keyboard chords cannot drift apart. Actions are declared as data rather
  * than callbacks: the palette owns how each one is carried out, which keeps
  * this file importable from tests and from the server. Labels, group headings
- * and worded hints are in the chrome's dictionary, `config/chrome/`.
+ * and worded hints are in the chrome's dictionary, `config/chrome/`, which
+ * the caller hands in: the palette has only its page's language.
  */
 
 import { type Locale, otherLocale } from '@/lib/i18n/locale';
 import { localizedPath } from '@/lib/i18n/paths';
-import { chromeCopy } from './chrome';
-import type { CommandGroupId, CommandId, SectionId } from './chrome/types';
+import { languageOffers } from './chrome/languageOffers';
+import type { ChromeCopy, CommandGroupId, CommandId, SectionId } from './chrome/types';
 import { chordSections } from './sections';
 import { links } from './links';
 
@@ -86,14 +87,14 @@ const commandData: CommandData[] = [
     { id: 'contact-form', group: 'elsewhere', keywords: CONTACT_WORDS, action: { type: 'route', href: '/contact' } },
 ];
 
-/** The palette's commands, in list order, told in `locale`. */
-export const commandsFor = (locale: Locale): Command[] => {
-    const { sections, commands: words } = chromeCopy[locale];
+/** The palette's commands, in list order, told in `locale` with its chrome words, `copy`. */
+export const commandsFor = (locale: Locale, copy: ChromeCopy): Command[] => {
+    const { sections, commands: words } = copy;
     // Labelled in the language it leads to, like the nav's switch.
     const languageCommand: Command = {
         id: 'switch-language',
         group: words.groups.actions,
-        label: chromeCopy[otherLocale(locale)].languageOffer.invite,
+        label: languageOffers[otherLocale(locale)].invite,
         hint: 'L',
         action: { type: 'language' },
     };

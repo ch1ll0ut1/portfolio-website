@@ -10,14 +10,17 @@
 
 import { FC, useRef } from 'react';
 import { useReveal } from '@/lib/motion';
-import { principlesFor } from '@/config/principles';
-import { useLocale } from '@/lib/i18n/LocaleContext';
+import type { PrinciplesContent } from '@/config/principles';
 import styles from './WorkingMethod.module.css';
 
 const REVEAL_STAGGER = 0.08;
 
-export const Principles: FC = () => {
-    const principlesContent = principlesFor(useLocale());
+interface Props {
+    /** The principles in the page's language, from `principlesFor` on the server. */
+    content: PrinciplesContent;
+}
+
+export const Principles: FC<Props> = ({ content: principlesContent }) => {
     const ref = useRef<HTMLDivElement>(null);
 
     useReveal(ref, { selector: '[data-reveal]', stagger: REVEAL_STAGGER });

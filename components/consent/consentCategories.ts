@@ -7,8 +7,7 @@
  * here.
  */
 
-import { consentCopy } from '@/config/consent';
-import type { Locale } from '@/lib/i18n/locale';
+import type { ConsentCopy } from '@/config/consent/types';
 import type { ConsentState } from '@/lib/consentStorage';
 
 export interface ConsentCategory {
@@ -24,9 +23,9 @@ const categories: Pick<ConsentCategory, 'key' | 'locked'>[] = [
     { key: 'analytics', locked: false },
 ];
 
-/** The categories, in display order, told in `locale`. */
-export const consentCategoriesFor = (locale: Locale): ConsentCategory[] => categories.map(({ key, locked }) => ({
+/** The categories, in display order, told in the page's consent words, `copy`. */
+export const consentCategoriesFor = (copy: ConsentCopy): ConsentCategory[] => categories.map(({ key, locked }) => ({
     key,
-    ...consentCopy[locale].categories[key],
+    ...copy.categories[key],
     locked,
 }));

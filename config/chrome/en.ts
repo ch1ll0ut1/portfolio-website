@@ -27,7 +27,6 @@ export const chromeEn: ChromeCopy = {
         brandHome: 'Stefan Knoch, home',
     },
     themeToggle: 'Switch color theme',
-    languageOffer: { code: 'EN', invite: 'Read in English' },
     palette: {
         label: 'Command menu',
         placeholder: 'Jump to a section or run a command',

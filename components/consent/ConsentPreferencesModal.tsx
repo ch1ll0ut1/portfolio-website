@@ -11,10 +11,10 @@
 
 import { type FC, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { consentCopy } from '@/config/consent';
 import type { ConsentState } from '@/lib/consentStorage';
 import { localizedPath } from '@/lib/i18n/paths';
 import { useLocale } from '@/lib/i18n/LocaleContext';
+import { useCopy } from '@/lib/i18n/CopyContext';
 import { useConsent } from './ConsentContext';
 import { ConsentCategoryRow } from './ConsentCategoryRow';
 import { consentCategoriesFor } from './consentCategories';
@@ -27,7 +27,7 @@ interface Props {
 
 export const ConsentPreferencesModal: FC<Props> = ({ onClose, onSave }) => {
     const locale = useLocale();
-    const copy = consentCopy[locale];
+    const copy = useCopy('consent');
     const { consent, updateConsent } = useConsent();
     const dialogRef = useRef<HTMLDialogElement>(null);
     const closeRef = useRef<HTMLButtonElement>(null);
@@ -138,7 +138,7 @@ export const ConsentPreferencesModal: FC<Props> = ({ onClose, onSave }) => {
                         {copy.dialog.intro}
                     </p>
                     <ul className={styles.list}>
-                        {consentCategoriesFor(locale).map(category => (
+                        {consentCategoriesFor(copy).map(category => (
                             <ConsentCategoryRow
                                 category={category}
                                 checked={category.key === 'essential' || analytics}
