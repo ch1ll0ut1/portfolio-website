@@ -76,12 +76,12 @@ export const servicesDe: ServicesPageCopy = {
                 'Einen Blick auf Hosting, Deployments, Backups, laufende Kosten und darauf, wem welches Konto gehört',
                 'Die Grundlagen der Sicherheit: Logins, Zugriffsrechte, offen liegende Daten, Passwörter und Schlüssel im Code. Eine vollständige Sicherheitsprüfung gibt es als Zusatz',
                 'Einen schriftlichen Bericht, verständlich erklärt, mit einem Plan nach Risiko und Kosten und einem Festpreis für die erste Phase',
-                'Eine Besprechung der Ergebnisse von 60 Minuten, mit Zeit für Ihre Fragen',
+                'Eine 60-minütige Besprechung der Ergebnisse, mit Zeit für Ihre Fragen',
                 'Auch als technische Due Diligence geeignet: bevor Sie in eine App investieren, sie kaufen oder mit ihr eine Finanzierung einwerben',
             ],
             howItRuns: [
                 'Ein kostenloses Gespräch: was die App tut, was Ihnen Sorgen macht und wie ich an den Code komme.',
-                'Fünf Werktage zum Festpreis: Ich lese Code, Daten und Hosting und fasse zusammen, was ich finde.',
+                'Fünf Werktage zum Festpreis: Ich prüfe Code, Daten und Hosting und schreibe auf, was ich finde.',
                 'Die Besprechung: 60 Minuten zu Bericht, Risiken und Ihren Optionen samt Kosten.',
                 `Ihre Entscheidung. Geht es innerhalb von ${FEE_CREDIT_DAYS} Tagen weiter, rechne ich das Honorar auf den Auftrag an. So oder so gehört der Bericht Ihnen, auch für die Arbeit mit anderen.`,
             ],
@@ -104,7 +104,7 @@ export const servicesDe: ServicesPageCopy = {
             ],
             howItRuns: [
                 'Ein kostenloses Gespräch: Sie erzählen, was schiefläuft.',
-                'Das Code-Audit, fünf Werktage zum Festpreis: Ich lese Code, Daten und Hosting und fasse zusammen, was ich finde.',
+                'Das Code-Audit, fünf Werktage zum Festpreis: Ich prüfe Code, Daten und Hosting und schreibe auf, was ich finde.',
                 'Die Rettung in Phasen zum Festpreis: Jede Woche gehen Reparaturen live, dazu ein kurzer schriftlicher Bericht.',
                 'Eine saubere Übergabe, oder ich bleibe für die nächste Phase.',
             ],
@@ -164,7 +164,7 @@ export const servicesDe: ServicesPageCopy = {
     ],
     process: {
         title: 'So läuft ein Auftrag ab',
-        lede: 'Vier Schritte, bei jedem Projekt gleich. Sie entscheiden erst über den nächsten, wenn Sie den letzten gesehen haben.',
+        lede: 'Vier Schritte, bei jedem Projekt gleich. Über den nächsten Schritt entscheiden Sie erst, wenn Sie das Ergebnis des vorigen kennen.',
         steps: [
             { title: 'Kennenlernen', description: stepDescription('de', 'talk') },
             { title: 'Planen', description: `Fünf Werktage zum Festpreis: Ich lese den Code oder schärfe die Idee, und Sie bekommen einen schriftlichen Plan mit Risiken, Phasen und einem Festpreis für jede Phase. Geht es innerhalb von ${FEE_CREDIT_DAYS} Tagen weiter, rechne ich das Honorar an.` },
