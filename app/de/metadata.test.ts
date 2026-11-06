@@ -6,7 +6,7 @@
 
 import type { Metadata } from 'next';
 import { describe, expect, it, vi } from 'vitest';
-import { blogPostsFor } from '@/config/blog';
+import { blogPostsFor, tagLabel } from '@/config/blog';
 import { caseStudiesFor } from '@/config/caseStudies';
 import { siteConfig } from '@/config/site';
 import { feedAlternateTypes } from '@/lib/feed';
@@ -85,6 +85,15 @@ describe('German route metadata', () => {
         const metadata = await postMetadata(params(post.slug));
 
         expect(metadata.openGraph?.images).toEqual([expect.objectContaining({ url: `/de/blog/${post.slug}/card.png`, alt: post.title })]);
+    });
+
+    it('should tag a German post with the German tag labels', async () => {
+        const metadata = await postMetadata(params(post.slug));
+        const openGraph = metadata.openGraph;
+        const tags = openGraph && 'tags' in openGraph ? openGraph.tags : undefined;
+
+        expect(tags).toEqual(post.tags.map(tag => tagLabel('de', tag)));
+        expect(tags).not.toEqual(post.tags);
     });
 
     it('should announce the German feed from the German layout, for pages without their own', () => {

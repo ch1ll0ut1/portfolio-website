@@ -5,7 +5,7 @@
 
 import type { Metadata } from 'next';
 import { notFoundMetadata } from '@/components/errors/notFoundMetadata';
-import { blogCopy, lastModified } from '@/config/blog';
+import { blogCopy, lastModified, tagLabel } from '@/config/blog';
 import { absoluteUrl, siteConfig } from '@/config/site';
 import { getBlogPostData } from '@/lib/content/blogPosts';
 import { bangkokDateTime } from '@/lib/date';
@@ -56,7 +56,7 @@ export const blogPostMetadata = (slug: string, locale: Locale): Metadata => {
             modifiedTime: bangkokDateTime(lastModified(post)),
             // The author's profile page: Open Graph wants a URL here, not a name.
             authors: [absoluteUrl(localizedPath(locale, '/'))],
-            tags: post.tags,
+            tags: post.tags.map(tag => tagLabel(locale, tag)),
         },
         image: postCardImage(post, locale),
         feed: true,
