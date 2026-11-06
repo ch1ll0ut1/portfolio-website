@@ -37,6 +37,16 @@ describe('commandsFor', () => {
         expect(commandsFor('de').find(command => command.id === 'services-page')?.hint).toBe('/de/leistungen');
     });
 
+    it('should offer the other language, in that language, next to the theme switch', () => {
+        const ids = commands.map(command => command.id);
+        const english = commands.find(command => command.id === 'switch-language');
+        const german = commandsFor('de').find(command => command.id === 'switch-language');
+
+        expect(english).toMatchObject({ label: 'Auf Deutsch lesen', hint: 'L', action: { type: 'language' } });
+        expect(german).toMatchObject({ label: 'Read in English', hint: 'L' });
+        expect(ids.indexOf('switch-language')).toBe(ids.indexOf('switch-theme') + 1);
+    });
+
     it('should keep the English path in the route action, for the palette to localize', () => {
         expect(commandsFor('de').find(command => command.id === 'contact-form')?.action).toEqual({ type: 'route', href: '/contact' });
     });

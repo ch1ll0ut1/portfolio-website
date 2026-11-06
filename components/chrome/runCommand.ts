@@ -8,9 +8,10 @@
 import { showToast } from '@/lib/motion';
 import { chromeCopy } from '@/config/chrome';
 import type { CommandAction } from '@/config/commands';
-import type { Locale } from '@/lib/i18n/locale';
+import { type Locale, otherLocale } from '@/lib/i18n/locale';
 import { localizedPath } from '@/lib/i18n/paths';
 import { requestConsentPreferences } from '@/components/consent/ConsentContext';
+import { switchLanguage } from './languageStore';
 import { openExternal } from './openExternal';
 import { togglePreference } from './preferences';
 import { scrollToSection } from './scrollToSection';
@@ -38,6 +39,9 @@ export const runCommand = (action: CommandAction, handlers: CommandHandlers) => 
             break;
         case 'theme':
             toggleTheme();
+            break;
+        case 'language':
+            switchLanguage(otherLocale(handlers.locale));
             break;
         case 'shortcuts':
             handlers.openShortcuts();

@@ -38,6 +38,26 @@ describe('runCommand', () => {
         window.removeEventListener(OPEN_CONSENT_PREFERENCES_EVENT, listener);
     });
 
+    describe('language', () => {
+        afterEach(() => {
+            localStorage.clear();
+            vi.unstubAllGlobals();
+        });
+
+        it.each([
+            ['en', '/services', 'de', '/de/leistungen'],
+            ['de', '/de/leistungen', 'en', '/services'],
+        ] as const)('should switch a %s page at %s to %s and remember it', (locale, pathname, target, twin) => {
+            const replace = vi.fn();
+
+            vi.stubGlobal('location', { pathname, search: '', hash: '', replace });
+            runCommand({ type: 'language' }, { ...handlers(), locale });
+
+            expect(localStorage.getItem('sk-lang')).toBe(target);
+            expect(replace).toHaveBeenCalledWith(twin);
+        });
+    });
+
     describe('switches', () => {
         beforeEach(() => {
             localStorage.clear();

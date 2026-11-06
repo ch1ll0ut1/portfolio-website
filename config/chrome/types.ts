@@ -44,6 +44,17 @@ export interface ChromeCopy {
         brandHome: string;
     };
     themeToggle: string;
+    /**
+     * This language as it offers itself on the other language's pages: the
+     * nav's switch and the palette's command speak the language they lead to,
+     * so a reader who cannot read the page still finds one they can.
+     */
+    languageOffer: {
+        /** The switch's visible label. */
+        code: string;
+        /** The switch's accessible name and the palette command's label. */
+        invite: string;
+    };
     palette: {
         label: string;
         placeholder: string;
@@ -70,6 +81,8 @@ export interface ChromeCopy {
         close: string;
         palette: string;
         theme: string;
+        /** The `l` row, in the page's language. */
+        language: string;
         goTo: (section: string) => string;
         top: string;
         help: string;

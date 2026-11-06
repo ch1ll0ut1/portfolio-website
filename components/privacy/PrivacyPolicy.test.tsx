@@ -93,8 +93,9 @@ describe('PrivacyPolicy', () => {
     });
 
     // Every key the site writes to localStorage: lib/consentStorage.ts,
-    // components/chrome/themeStore.ts and components/chrome/preferences.ts.
-    it.each(['cookie-consent', 'sk-theme', 'sk-single-key-shortcuts', 'sk-caret-cursor'])(
+    // components/chrome/themeStore.ts, components/chrome/languageStore.ts and
+    // components/chrome/preferences.ts.
+    it.each(['cookie-consent', 'sk-theme', 'sk-lang', 'sk-single-key-shortcuts', 'sk-caret-cursor'])(
         'should name the %s key among the essential storage',
         (key) => {
             // Act
