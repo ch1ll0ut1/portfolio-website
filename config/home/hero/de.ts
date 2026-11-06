@@ -27,7 +27,7 @@ export const heroDe: HeroCopy = {
         panelLabel: 'Live-Dokumentmodell der Überschrift',
         states: {
             synced: 'synchron',
-            normalizing: 'normalisiert',
+            normalizing: 'normalisiert\u00A0…',
             selecting: 'markiert',
         },
         column: column => `Spalte ${column}`,

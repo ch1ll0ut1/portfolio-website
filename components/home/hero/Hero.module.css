@@ -653,4 +653,10 @@
     .tree {
         margin-top: 0;
     }
+
+    /* Keeps the file name, a selection and „normalisiert …“ on one line at
+       390px. */
+    .treeBar {
+        gap: 8px;
+    }
 }
