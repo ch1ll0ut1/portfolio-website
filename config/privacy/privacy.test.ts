@@ -68,6 +68,24 @@ describe('privacy copy', () => {
         expect(allStrings(privacyDe).join(' ')).not.toContain('$');
     });
 
+    it('should name the controller and cite the same GDPR articles in both languages', () => {
+        const en = allStrings(privacyEn).join(' ');
+        const de = allStrings(privacyDe).join(' ');
+
+        expect(en).toContain('controller');
+        expect(de).toContain('Verantwortlicher');
+        ['15', '16', '17', '18 and 21', '20', '7(3)', '77'].forEach((article) => {
+            expect(en).toContain(`Art. ${article} GDPR`);
+        });
+        ['15', '16', '17', '18 und 21', '20', '7 Abs. 3', '77'].forEach((article) => {
+            expect(de.replaceAll('\u00a0', ' ')).toContain(`Art. ${article} DSGVO`);
+        });
+    });
+
+    it('should not class every provider as a processor', () => {
+        expect(allStrings(privacyDe).join(' ')).not.toContain('Auftragsverarbeiter');
+    });
+
     it('should keep the processors, regions and periods the English names', () => {
         const text = allStrings(privacyDe).join(' ');
 

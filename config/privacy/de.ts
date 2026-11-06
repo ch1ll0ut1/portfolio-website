@@ -36,12 +36,12 @@ export const privacyDe: PrivacyCopy = {
         {
             heading: 'Einleitung',
             blocks: [
-                { type: 'paragraph', text: '{name} („ich“) betreibt {host} (die „Website“) und ist Verantwortlicher für die Verarbeitung Ihrer Daten auf der Website. Diese Datenschutzerklärung erklärt, welche personenbezogenen Daten die Website verarbeitet, wenn Sie sie besuchen oder Kontakt aufnehmen, warum sie das tut und welche Möglichkeiten Sie haben.' },
+                { type: 'paragraph', text: '{name} („ich“) betreibt {host} (die „Website“) und ist Verantwortlicher für die Verarbeitung Ihrer Daten auf der Website. Diese Datenschutzerklärung beschreibt, welche personenbezogenen Daten die Website verarbeitet, wenn Sie sie besuchen oder Kontakt aufnehmen, warum sie das tut und welche Möglichkeiten Sie haben.' },
                 { type: 'paragraph', text: 'Die Website erhebt so wenige Daten wie möglich. Sie wurde mit Blick auf die Datenschutz-Grundverordnung (DSGVO) und den California Consumer Privacy Act (CCPA) gebaut.' },
             ],
         },
         {
-            heading: 'Welche Daten ich verarbeite',
+            heading: 'Welche Daten ich erhebe',
             blocks: [
                 { type: 'subheading', text: 'Daten, die Sie mir geben' },
                 { type: 'list', items: directInformation },
@@ -65,7 +65,7 @@ export const privacyDe: PrivacyCopy = {
         {
             heading: 'Dienstleister',
             blocks: [
-                { type: 'paragraph', text: 'Ich verkaufe Ihre personenbezogenen Daten nicht und gebe sie nicht für Werbung weiter. Diese Dienstleister verarbeiten Daten in meinem Auftrag (als Auftragsverarbeiter), jeweils nach ihrer eigenen Datenschutzerklärung:' },
+                { type: 'paragraph', text: 'Ich verkaufe Ihre personenbezogenen Daten nicht und gebe sie nicht für Werbung weiter. Diese Dienstleister verarbeiten Daten in meinem Auftrag, jeweils nach ihrer eigenen Datenschutzerklärung:' },
                 { type: 'list', items: serviceProviders },
             ],
         },
@@ -106,7 +106,7 @@ export const privacyDe: PrivacyCopy = {
         {
             heading: 'Kinder',
             blocks: [
-                { type: 'paragraph', text: 'Die Website richtet sich nicht an Kinder unter 16 Jahren, und ich erhebe wissentlich keine personenbezogenen Daten von ihnen. Sollte es doch geschehen sein, schreiben Sie mir bitte. Ich lösche die Daten dann.' },
+                { type: 'paragraph', text: 'Die Website richtet sich nicht an Kinder unter 16 Jahren, und ich erhebe wissentlich keine personenbezogenen Daten von ihnen. Wenn Sie glauben, dass es doch geschehen ist, schreiben Sie mir bitte. Ich lösche die Daten dann.' },
             ],
         },
         {
