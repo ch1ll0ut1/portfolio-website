@@ -2,12 +2,12 @@ import { FC } from 'react';
 import type { Metadata, Viewport } from 'next';
 import Link from 'next/link';
 import './globals.css';
+import { GermanHomeLink } from '@/components/errors/GermanHomeLink';
 import { errorsCopy } from '@/config/errors';
 import { siteConfig } from '@/config/site';
 import { BOOT_SCRIPT } from '@/lib/bootScript';
 import { fontFamilies } from '@/lib/fonts';
 import { layoutMetadata, layoutViewport } from '@/lib/i18n/layoutMetadata';
-import { localizedPath } from '@/lib/i18n/paths';
 
 /** English, with one German line: the URL matched no route, so no language is known. */
 const COPY = errorsCopy.en.notFound.page;
@@ -51,7 +51,9 @@ const PANEL_CSS = `
  *
  * Unknown paths under `/de` never get here; app/de/[...missing] sends them to
  * the German 404. A German reader who mistyped an English path gets one line
- * in German.
+ * in German: this page has no nav and so no language switch, and without
+ * JavaScript the boot script forwards no one. The link stores the choice as
+ * the switch does (`GermanHomeLink`).
  */
 const GlobalNotFound: FC = () => {
     return (
@@ -72,9 +74,9 @@ const GlobalNotFound: FC = () => {
                                 <Link href="/" className="btn btn--primary">
                                     <span className="btn__label">{COPY.action}</span>
                                 </Link>
-                                <Link href={localizedPath('de', '/')} className="btn" lang="de" hrefLang="de">
+                                <GermanHomeLink className="btn">
                                     <span className="btn__label">{errorsCopy.de.homeInLanguage}</span>
-                                </Link>
+                                </GermanHomeLink>
                             </div>
                         </div>
                     </div>

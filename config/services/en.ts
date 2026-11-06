@@ -38,11 +38,6 @@ export const servicesEn: ServicesPageCopy = {
         home: 'Home',
         page: 'Services',
     },
-    otherLanguage: {
-        label: 'Deutsch',
-        lang: 'de',
-        href: '/de/leistungen',
-    },
     hero: {
         kicker: 'Services',
         title: 'Senior software help for founders and small businesses',
