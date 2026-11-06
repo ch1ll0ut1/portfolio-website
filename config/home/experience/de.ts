@@ -51,11 +51,11 @@ export const experienceDe: ExperienceCopy = {
         },
         '5b94d6a': {
             title: 'Senior Full-Stack-Entwickler, Eko',
-            description: 'Echtzeit-Nachrichten doppelt so schnell gemacht und eine Elasticsearch-Suche für die Apps für iOS und Android gebaut.',
+            description: 'Echtzeit-Nachrichten doppelt so schnell gemacht und eine Elasticsearch-Suche für die iOS- und Android-Apps gebaut.',
         },
         '4e28a1f': {
             title: 'Softwareberater, Bangkok',
-            description: 'Die Entwicklung von Indycloud mit einem Team von zwei Personen geleitet. Alleiniger Entwickler eines Walkthrough-CMS für Hotels, einer Plattform zur Arztsuche und einer Mobile-App, mit der Kinder tippen lernen. Dazu das Backend für einen ML-Chatbot.',
+            description: 'Die Entwicklung von Indycloud mit einem Team von zwei Personen geleitet. Alleiniger Entwickler eines Walkthrough-CMS für Hotels, einer Plattform zur Arztsuche und eines Tippspiels für Kinder auf dem Smartphone. Dazu das Backend für einen ML-Chatbot.',
         },
         '3f7c0b2': {
             title: 'Tech Lead & Projektmanager, Break Media Solutions',
@@ -63,7 +63,7 @@ export const experienceDe: ExperienceCopy = {
         },
         '2a0e5d9': {
             title: 'Full-Stack-Entwickler, Agentur neun.li',
-            description: 'Etwa die Hälfte eines hauseigenen CMS in Liechtenstein geschrieben und Dutzende Kundenwebsites darauf gebaut. Eine davon stand einmal nach vier Stunden online.',
+            description: 'Etwa die Hälfte eines hauseigenen CMS in Liechtenstein geschrieben und Dutzende Kundenwebsites darauf gebaut. Eine davon ging einmal nach nur vier Stunden online.',
         },
     },
 };

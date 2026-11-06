@@ -19,12 +19,12 @@ export const engagementsDe: EngagementsCopy = {
             name: 'Ihre App retten oder übernehmen',
             subtitle: 'Code Review, Sicherheitsprüfung & App-Rettung',
             short: 'App-Rettung',
-            who: 'Für Apps, die fehlerhaft sind oder feststecken oder deren Entwicklung niemand mehr betreut. Auch für Apps, die mit KI-Tools entstanden sind.',
+            who: 'Für Apps, die fehlerhaft sind, deren Entwicklung stockt oder um die sich niemand mehr kümmert. Auch für Apps, die mit KI-Tools entstanden sind.',
             bullets: [
                 'Ein Gesundheits- und Sicherheitscheck in etwa einer Woche, verständlich erklärt',
                 'Ein Plan, nach Kosten sortiert, damit Sie entscheiden, was sich zu reparieren lohnt',
                 'Code, Konten und Zugänge auf Ihren Namen',
-                'Jede Woche ausgelieferte Reparaturen, die riskantesten zuerst',
+                'Jede Woche neue Reparaturen live, die riskantesten zuerst',
             ],
             range: `Die meisten Rettungen ${eurRangeDe(RESCUE_RANGE_EUR)}`,
         },
@@ -37,7 +37,7 @@ export const engagementsDe: EngagementsCopy = {
                 'Ein Produktplan in etwa einer Woche: was zuerst gebaut wird und was es kostet',
                 'Jede Woche eine funktionierende Version zum Durchklicken',
                 'Gebaut auf Konten, die Ihnen gehören, vom ersten Tag an',
-                'KI-Funktionen dort, wo sie den Menschen, die Ihre App nutzen, wirklich helfen',
+                'KI-Funktionen dort, wo sie wirklich helfen',
             ],
             range: `Die meisten ersten Versionen ${eurRangeDe(FIRST_VERSION_RANGE_EUR)}`,
         },
@@ -47,8 +47,8 @@ export const engagementsDe: EngagementsCopy = {
             short: 'Fractional CTO',
             who: 'Für Unternehmen mit einem Entwicklungsteam, aber ohne erfahrene technische Leitung, oder ganz ohne technische Leute im Haus.',
             bullets: [
-                'Code Reviews und eine Prüfung der Pläne Ihres Entwicklungsteams',
-                'Hilfe, ein Entwicklungsteam einzustellen, dem Sie vertrauen können',
+                'Code Reviews und ein zweiter Blick auf die Pläne Ihres Teams',
+                'Hilfe bei der Einstellung: Leute, denen Sie vertrauen können',
                 'Eine Roadmap und ein Budget in verständlicher Sprache',
                 'Ein wöchentliches Gespräch und jemand auf Ihrer Seite, wenn Sie mit Dienstleistern am Tisch sitzen',
             ],
@@ -57,7 +57,7 @@ export const engagementsDe: EngagementsCopy = {
     },
     note: [
         {
-            text: 'Ich arbeite mit modernen KI-Tools in einem Ablauf mit Code Review:',
+            text: 'Ich arbeite mit modernen KI-Tools, und alles geht durchs Code Review:',
             selected: false,
         },
         {

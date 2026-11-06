@@ -22,7 +22,7 @@ export const writingDe: WritingCopy = {
         },
         'how-to-hire-your-first-developer': {
             kind: 'Leitfaden',
-            description: 'Für Gründungsteams ohne Technikhintergrund: echte Fähigkeiten testen statt Lebensläufe lesen, mit einem bezahlten Probeprojekt anfangen und sich von einem Tech Lead beim Urteil helfen lassen.',
+            description: 'Für Gründungsteams ohne Technikhintergrund: echte Fähigkeiten testen statt Lebensläufe lesen, mit einem bezahlten Probeprojekt anfangen und sich beim Urteil von einem Tech Lead unterstützen lassen.',
         },
     },
     defaultKind: 'Artikel',

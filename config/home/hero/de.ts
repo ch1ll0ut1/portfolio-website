@@ -12,12 +12,12 @@ export const heroDe: HeroCopy = {
     },
     kicker: yearsShipping => [
         'Softwarearchitekt & Tech Lead',
-        `${yearsShipping} Jahre`,
+        `${yearsShipping} Jahre Erfahrung`,
         'Deutsch & Englisch',
         'Zeitzonen Europa, USA & Asien',
     ],
     availability: 'Offen für neue Projekte',
-    lede: 'Ich baue neue Apps, bringe fehlerhafte wieder in Ordnung und führe Ihr Entwicklungsteam, damit die Software, auf der Ihr Geschäft läuft, wirklich funktioniert. Für Startups, kleine Unternehmen und das Parlament von Island.',
+    lede: 'Ich baue neue Apps, rette fehlerhafte und führe Ihr Entwicklungsteam, damit die Software, auf der Ihr Geschäft läuft, wirklich funktioniert. Für Startups, kleine Unternehmen und das isländische Parlament.',
     ctas: {
         book: '30-Minuten-Gespräch buchen',
         work: 'Projekte ansehen',

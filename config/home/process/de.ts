@@ -8,7 +8,7 @@ export const processDe: ProcessCopy = {
     title: 'So läuft ein Projekt ab',
     steps: {
         talk: {
-            title: 'Sprechen',
+            title: 'Kennenlernen',
             description: 'Dreißig Minuten über das Problem, die Rahmenbedingungen und was „fertig“ bedeutet. Kostenlos, ohne Vorbereitung.',
             transcript: [
                 [{ text: '$', tone: 'prompt' }, { text: ' book --call 30m' }],
@@ -69,7 +69,7 @@ export const processDe: ProcessCopy = {
                 label: 'Zusammenarbeit',
                 heading: 'Geschäft, UX und Technik an einen Tisch',
                 paragraphs: [
-                    'Sie bringen das Wissen über Ihr Geschäft, Ihre Kundschaft und Ihre Produktziele mit. Ich bringe technisches Urteilsvermögen, Architektur, UX-Denken und Erfahrung in der Umsetzung mit, dazu die Verantwortung, es zu sagen, wenn etwas keinen Sinn ergibt.',
+                    'Sie bringen das Wissen über Ihr Geschäft, über die Menschen, die Ihr Produkt nutzen, und über Ihre Produktziele mit. Ich bringe technisches Urteilsvermögen, Architektur, UX-Denken und Erfahrung in der Umsetzung mit. Und ich sage offen, wenn etwas keinen Sinn ergibt.',
                     'Das zählt vor allem, wenn auch Design, Stakeholder oder andere Entwicklerinnen und Entwickler beteiligt sind. Design prägt die Umsetzung. Technische Grenzen prägen die UX. Geschäftsziele prägen die Architektur.',
                 ],
             },
@@ -77,7 +77,7 @@ export const processDe: ProcessCopy = {
                 label: 'Feinschliff',
                 heading: 'Iteration gehört zum Handwerk',
                 paragraphs: [
-                    'Eine erste Umsetzung macht die Idee greifbar genug, um sie zu beurteilen. Danach schärfen wir Abläufe, feilen an Details, beheben Randfälle und arbeiten weiter, bis es sich richtig anfühlt.',
+                    'Eine erste Umsetzung macht die Idee greifbar genug, um sie zu beurteilen. Danach schärfen wir Abläufe, feilen an Details, kümmern uns um Sonderfälle und arbeiten weiter, bis es sich richtig anfühlt.',
                     'Das ist kein Scheitern. So entstehen gute Produkte.',
                 ],
             },
@@ -115,7 +115,7 @@ export const processDe: ProcessCopy = {
             },
             'iteration-refinement': {
                 title: 'Iteration und Feinschliff',
-                description: 'Den Ablauf glätten, Hürden abbauen, vereinfachen, wo es geht, und das Erlebnis stärken.',
+                description: 'Den Ablauf glätten, Hürden abbauen, vereinfachen, wo es geht, und die Nutzung angenehmer machen.',
             },
             'testing-stabilization': {
                 title: 'Tests und Stabilisierung',
@@ -129,8 +129,8 @@ export const processDe: ProcessCopy = {
     },
     fit: {
         label: 'Passt es?',
-        heading: 'Die beste Arbeit entsteht, wenn die Erwartungen ehrlich sind.',
-        intro: 'Am besten arbeite ich mit Kundschaft, die einen ernsthaften Partner für ihr Produkt sucht, nicht nur helfende Hände.',
+        heading: 'Die beste Arbeit entsteht, wenn beide Seiten ehrlich sagen, was sie erwarten.',
+        intro: 'Am besten arbeite ich mit Kundschaft, die einen ernsthaften Partner für ihr Produkt sucht, nicht nur zusätzliche Hände.',
         lists: {
             'good-fit': {
                 title: 'Mit wem ich am besten arbeite',

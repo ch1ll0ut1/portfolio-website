@@ -3,7 +3,7 @@ import type { ProofCopy } from './types';
 export const proofDe: ProofCopy = {
     heading: 'Teams und Organisationen, für die ich Software gebaut habe',
     clients: [
-        'Parlament von Island',
+        'Isländisches Parlament',
         'Agoda',
         'Eko',
         'Social-Bee',
@@ -13,7 +13,7 @@ export const proofDe: ProofCopy = {
         'Fokus-Nachhilfe',
     ],
     stats: {
-        'since': 'Software ausgeliefert seit',
+        'since': 'Softwareentwicklung seit',
         'teams': 'Tech Teams von null aufgebaut',
         'team-size': 'Größtes Entwicklungsteam, das ich geführt habe',
         'messaging': 'Nachrichten-Performance bei Eko',
