@@ -113,7 +113,7 @@
     font-family: var(--font-display);
     font-size: clamp(1.6rem, 3.4vw, 2.9rem);
     font-weight: 500;
-    letter-spacing: -.03em;
+    letter-spacing: -.015em;
     color: var(--muted);
     white-space: nowrap;
     font-variation-settings: 'wdth' 80;

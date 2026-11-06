@@ -63,7 +63,7 @@
 
 .name {
     font-size: var(--fs-2);
-    letter-spacing: -.035em;
+    letter-spacing: -.01em;
     font-variation-settings: 'wdth' 80;
 }
 
