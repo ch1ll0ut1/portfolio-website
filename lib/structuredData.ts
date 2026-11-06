@@ -38,8 +38,12 @@ interface PersonOptions {
 /** The `@id` of the site owner's Person node. */
 export const PERSON_ID = absoluteUrl('/#person');
 
-/** The `@id` of the WebSite node. */
-export const WEBSITE_ID = absoluteUrl('/#website');
+/**
+ * The `@id` of the WebSite node in `locale`. Each language's homepage names
+ * its own, since the two say different things (`inLanguage`, `url`); one
+ * shared `@id` would leave a search engine to merge them as it likes.
+ */
+export const websiteId = (locale: Locale = 'en') => absoluteUrl(`${localizedPath(locale, '/')}#website`);
 
 /**
  * Serializes structured data for inline embedding. `<` is escaped so a value
@@ -105,10 +109,10 @@ export const personSchema = ({ offers = [], locale = 'en' }: PersonOptions = {})
 /** The WebSite node, published by the site owner, in the language of the page it is on. */
 export const websiteSchema = (locale: Locale = 'en'): JsonLdObject => ({
     '@type': 'WebSite',
-    '@id': WEBSITE_ID,
+    '@id': websiteId(locale),
     'name': siteConfig.name,
     'alternateName': new URL(siteConfig.url).hostname,
-    'url': absoluteUrl(),
+    'url': absoluteUrl(localizedPath(locale, '/')),
     'inLanguage': locale,
     'publisher': personRef(),
 });
@@ -120,7 +124,7 @@ export const profilePageSchema = (locale: Locale = 'en'): JsonLdObject => ({
     'url': absoluteUrl(localizedPath(locale, '/')),
     'name': siteCopy[locale].title,
     'inLanguage': locale,
-    'isPartOf': { '@id': WEBSITE_ID },
+    'isPartOf': { '@id': websiteId(locale) },
     'mainEntity': personRef(),
     'dateModified': bangkokDateTime(siteConfig.staticPagesUpdated),
 });

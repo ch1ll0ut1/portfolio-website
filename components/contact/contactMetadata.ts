@@ -4,7 +4,7 @@ import { absoluteUrl } from '@/config/site';
 import type { Locale } from '@/lib/i18n/locale';
 import { pageMetadata } from '@/lib/i18n/metadata';
 import { localizedPath } from '@/lib/i18n/paths';
-import { WEBSITE_ID, breadcrumbSchema, jsonLdGraph, personRef } from '@/lib/structuredData';
+import { breadcrumbSchema, jsonLdGraph, personRef, websiteId } from '@/lib/structuredData';
 
 /**
  * The contact page's metadata in `locale`, with its twin. The title is
@@ -39,7 +39,7 @@ export const contactJsonLd = (locale: Locale) => {
         'name': meta.title,
         'description': meta.description,
         'inLanguage': locale,
-        'isPartOf': { '@id': WEBSITE_ID },
+        'isPartOf': { '@id': websiteId(locale) },
         'mainEntity': personRef(),
     };
 

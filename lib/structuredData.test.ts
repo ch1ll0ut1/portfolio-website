@@ -4,7 +4,6 @@ import { links } from '@/config/links';
 import { siteConfig, siteCopy } from '@/config/site';
 import {
     PERSON_ID,
-    WEBSITE_ID,
     authorRef,
     blogPostBreadcrumbs,
     blogPostingSchema,
@@ -14,6 +13,7 @@ import {
     personSchema,
     profilePageSchema,
     serializeJsonLd,
+    websiteId,
     websiteSchema,
 } from './structuredData';
 
@@ -62,7 +62,7 @@ describe('structuredData', () => {
                 '@type': 'Person',
                 '@id': `${siteConfig.url}/#person`,
                 'name': siteConfig.name,
-                'jobTitle': 'Software architect & tech lead',
+                'jobTitle': 'Freelance software architect & fractional CTO',
                 'knowsLanguage': ['en', 'de'],
                 'sameAs': expect.arrayContaining([links.social.linkedin, links.social.github]),
             });
@@ -174,6 +174,21 @@ describe('structuredData', () => {
             });
         });
 
+        it('should give the German site its own @id, so the two languages are not merged into one node', () => {
+            // Act
+            const english = websiteSchema('en');
+            const german = websiteSchema('de');
+
+            // Assert
+            expect(german).toMatchObject({
+                '@id': `${siteConfig.url}/de#website`,
+                'url': `${siteConfig.url}/de`,
+                'inLanguage': 'de',
+            });
+            expect(german['@id']).not.toBe(english['@id']);
+            expect(profilePageSchema('de')).toMatchObject({ isPartOf: { '@id': german['@id'] } });
+        });
+
         it('should make the person the main entity of the homepage', () => {
             // Act
             const schema = profilePageSchema();
@@ -182,7 +197,7 @@ describe('structuredData', () => {
             expect(schema).toMatchObject({
                 '@type': 'ProfilePage',
                 'url': siteConfig.url,
-                'isPartOf': { '@id': WEBSITE_ID },
+                'isPartOf': { '@id': websiteId('en') },
                 'mainEntity': { '@id': PERSON_ID },
             });
         });
