@@ -11,6 +11,9 @@ import { answersAsExpected, expectedStatus } from './routes.mjs';
 const IGNORED_ERRORS = [
     /favicon/i,
     /Download the React DevTools/i,
+    // Vercel Analytics and Speed Insights load from /_vercel/, which only
+    // exists on Vercel: under a local `next start` both scripts 404.
+    /\/_vercel\//,
 ];
 
 const slug = route => (route === '/' ? 'home' : route.replace(/^\/+|\/+$/g, '').replace(/\//g, '-'));
@@ -49,8 +52,10 @@ export const checkRoute = async (browser, route, testCase, { base, out }) => {
         }
 
         const text = message.text();
+        // A failed load names its address in the location, not the text.
+        const source = message.location().url ?? '';
 
-        if (!IGNORED_ERRORS.some(pattern => pattern.test(text))) {
+        if (!IGNORED_ERRORS.some(pattern => pattern.test(text) || pattern.test(source))) {
             errors.push(text);
         }
     });
