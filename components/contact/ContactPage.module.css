@@ -1,15 +1,75 @@
-/* The contact page: the privacy policy's measure and header, with the blog
-   index's masked heading. */
+/* The contact page: the privacy policy's header, with the blog index's masked
+   heading, then the form with what happens next beside it from 1024px up. */
 
 .page {
-    max-width: 74ch;
+    max-width: 1080px;
     margin-inline: auto;
 }
 
 .header {
     display: grid;
     gap: 16px;
+    max-width: 74ch;
     margin-bottom: clamp(32px, 4.5vw, 56px);
+}
+
+/* The way round the form, booking the call, on one line with its question. */
+.book {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 16px;
+    margin-top: 4px;
+    color: var(--fg-2);
+}
+
+.body {
+    display: grid;
+    gap: clamp(32px, 4vw, 48px);
+}
+
+@media (min-width: 1024px) {
+    .body {
+        grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+        align-items: start;
+    }
+}
+
+.aside {
+    display: grid;
+    gap: 16px;
+    align-content: start;
+}
+
+.asideTitle {
+    font-size: var(--fs-3);
+    letter-spacing: -.01em;
+}
+
+/* Numbered like the services pages' steps: the count is the content. */
+.steps {
+    display: grid;
+    gap: 14px;
+    margin-bottom: 8px;
+    padding: 0;
+    list-style: none;
+    counter-reset: step;
+}
+
+.steps li {
+    display: grid;
+    grid-template-columns: 2rem minmax(0, 1fr);
+    gap: 8px;
+    color: var(--fg-2);
+    counter-increment: step;
+}
+
+.steps li::before {
+    content: counter(step, decimal-leading-zero);
+    padding-top: .2em;
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    color: var(--caret-text);
 }
 
 .kicker {

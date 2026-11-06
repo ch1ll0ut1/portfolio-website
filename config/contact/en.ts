@@ -9,8 +9,8 @@ export const contactEn: ContactCopy = {
         privacy: 'Privacy request',
     },
     meta: {
-        title: `Contact ${siteConfig.name} — hire a software architect & tech lead`,
-        description: 'Hire a software architect & tech lead for your app, your MVP or your team. I reply within one working day from Bangkok, across European, US and Asian hours.',
+        title: `Contact ${siteConfig.name} — Software Architect & Fractional CTO`,
+        description: 'Freelance software architect & fractional CTO for your app, your MVP or your team. I reply within one working day, across European, US and Asian hours.',
     },
     breadcrumbs: {
         home: 'Home',
@@ -19,9 +19,22 @@ export const contactEn: ContactCopy = {
     page: {
         kicker: 'Contact',
         heading: 'Tell me about your app, your MVP or your team',
-        linkedIn: 'LinkedIn is the fastest way to reach me: {linkedin}. This form is for anything else, including privacy requests. It lands in my inbox, and I reply by email.',
+        lede: 'I am a freelance software architect and fractional CTO. Tell me what you’re building and where it’s stuck. The form lands in my inbox, and I reply by email.',
+        next: {
+            title: 'What happens next',
+            steps: [
+                'I reply within one working day, from Bangkok (UTC+7), which covers the full European working day, US mornings, and all of Asia.',
+                'A free 30-minute call: the problem, the constraints, and what done looks like.',
+                'A written proposal with a fixed price for the first step: usually the App Health Check for an app you have, or a product plan for one you want.',
+            ],
+        },
+        book: {
+            question: 'Prefer to talk first?',
+            link: 'Book a 30-min call',
+        },
+        linkedIn: 'On LinkedIn? You can {linkedin} too.',
         linkedInLink: 'message me there',
-        privacyNote: 'What happens to what you send is in the {privacy}.',
+        privacyNote: 'Privacy requests go through this form as well. What happens to what you send is in the {privacy}.',
         privacyLink: 'privacy policy',
     },
     form: {

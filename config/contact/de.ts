@@ -14,8 +14,8 @@ export const contactDe: ContactCopy = {
         privacy: 'Datenschutzanfrage',
     },
     meta: {
-        title: `${siteIdentity.name} kontaktieren — Softwarearchitekt & Tech Lead`,
-        description: 'Softwarearchitekt & Tech Lead für Ihre App, Ihr MVP oder Ihr Team. Antwort innerhalb eines Werktags aus Bangkok, passend für Europa, die USA und Asien.',
+        title: `${siteIdentity.name} kontaktieren — Softwarearchitekt & Interim-CTO`,
+        description: 'Freier Softwarearchitekt & Interim-CTO für Ihre App, Ihr MVP oder Ihr Team. Antwort innerhalb eines Werktags, passend für Europa, die USA und Asien.',
     },
     breadcrumbs: {
         home: 'Startseite',
@@ -24,9 +24,22 @@ export const contactDe: ContactCopy = {
     page: {
         kicker: 'Kontakt',
         heading: 'Erzählen Sie mir von Ihrer App, Ihrem MVP oder Ihrem Team',
-        linkedIn: 'Am schnellsten geht es über LinkedIn: {linkedin}. Dieses Formular ist für alles andere da, auch für Datenschutzanfragen. Es landet in meinem Postfach, und ich antworte per E-Mail.',
-        linkedInLink: 'Schreiben Sie mir dort',
-        privacyNote: 'Was mit Ihren Angaben geschieht, steht in der {privacy}.',
+        lede: 'Ich bin freier Softwarearchitekt und Interim-CTO. Erzählen Sie mir, was Sie bauen und wo es hakt. Das Formular landet in meinem Postfach, und ich antworte per E-Mail.',
+        next: {
+            title: 'So geht es weiter',
+            steps: [
+                'Ich antworte innerhalb eines Werktags, aus Bangkok (UTC+7). Von dort aus decke ich den ganzen europäischen Arbeitstag ab, dazu den Vormittag in den USA und ganz Asien.',
+                'Ein kostenloses Gespräch von 30 Minuten: worum es geht, was der Rahmen ist und wann es fertig ist.',
+                'Ein schriftliches Angebot mit Festpreis für den ersten Schritt: meist das Code-Audit für eine bestehende App oder ein Produktplan für eine neue.',
+            ],
+        },
+        book: {
+            question: 'Lieber erst sprechen?',
+            link: '30-Minuten-Gespräch buchen',
+        },
+        linkedIn: 'Sie sind auf LinkedIn? Dann {linkedin}.',
+        linkedInLink: 'schreiben Sie mir gern dort',
+        privacyNote: 'Auch Datenschutzanfragen gehen über dieses Formular. Was mit Ihren Angaben geschieht, steht in der {privacy}.',
         privacyLink: 'Datenschutzerklärung',
     },
     form: {

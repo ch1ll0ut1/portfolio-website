@@ -3,9 +3,10 @@
  */
 
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { contactCopy } from '@/config/contact';
 import { links } from '@/config/links';
+import { itemAt } from '@/test/itemAt';
 import { installMatchMedia } from '@/test/motionEnv';
 import { ContactPage } from './ContactPage';
 
@@ -36,15 +37,46 @@ describe('ContactPage', () => {
         expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(copy.page.heading);
     });
 
-    it('should say what to send and how soon I reply', () => {
+    it('should say who I am and what to send', () => {
         // Act
         renderPage();
 
         // Assert
-        expect(screen.getByText(copy.invitation)).toBeInTheDocument();
+        expect(screen.getByText(copy.page.lede)).toHaveTextContent('freelance software architect and fractional CTO');
     });
 
-    it('should point to LinkedIn first, in a new tab', () => {
+    it('should not steer buyers away from the form', () => {
+        // Act
+        renderPage();
+
+        // Assert
+        expect(screen.queryByText(/fastest way to reach me/i)).toBeNull();
+        expect(screen.queryByText(/for anything else/i)).toBeNull();
+    });
+
+    it('should say what happens after the form is sent, in order', () => {
+        // Act
+        renderPage();
+
+        // Assert
+        const steps = within(screen.getByRole('complementary', { name: 'What happens next' })).getAllByRole('listitem');
+        expect(steps.map(step => step.textContent)).toEqual(copy.page.next.steps);
+        expect(itemAt(steps, 0)).toHaveTextContent('one working day');
+        expect(itemAt(steps, 2)).toHaveTextContent('fixed price');
+    });
+
+    it('should offer booking the call directly, ahead of the form', () => {
+        // Act
+        renderPage();
+
+        // Assert
+        const book = screen.getByRole('link', { name: 'Book a 30-min call' });
+        expect(book).toHaveAttribute('href', links.calendly);
+        expect(book.compareDocumentPosition(screen.getByRole('button', { name: /send message/i })))
+            .toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+    });
+
+    it('should keep LinkedIn as a secondary way, after the form, in a new tab', () => {
         // Act
         renderPage();
 
@@ -52,7 +84,8 @@ describe('ContactPage', () => {
         const linkedIn = screen.getByRole('link', { name: 'message me there' });
         expect(linkedIn).toHaveAttribute('href', links.social.linkedin);
         expect(linkedIn).toHaveAttribute('target', '_blank');
-        expect(screen.getByText(/including privacy requests/)).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /send message/i }).compareDocumentPosition(linkedIn))
+            .toBe(Node.DOCUMENT_POSITION_FOLLOWING);
     });
 
     it('should link to the privacy policy before the form collects anything', () => {
