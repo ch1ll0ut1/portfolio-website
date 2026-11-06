@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import type { ServicesPageCopy } from '@/config/services/types';
 import { pageMetadata } from './i18n/metadata';
+import { localizedPath } from './i18n/paths';
 import { SERVICES_PATH, serviceSchema } from './serviceStructuredData';
 import { type JsonLdObject, breadcrumbSchema, jsonLdGraph } from './structuredData';
 
@@ -23,7 +24,7 @@ export const servicesJsonLd = (copy: ServicesPageCopy): JsonLdObject => jsonLdGr
         copy.lang,
     )),
     breadcrumbSchema([
-        { name: copy.breadcrumbs.home, path: '/' },
+        { name: copy.breadcrumbs.home, path: localizedPath(copy.lang, '/') },
         { name: copy.breadcrumbs.page, path: copy.path },
     ]),
 );
