@@ -1,20 +1,20 @@
 'use client';
 
-import { type FC, type MouseEvent, type ReactNode, useRef } from 'react';
+import { type FC, type ReactNode, useRef } from 'react';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { useMagnet } from '@/lib/motion';
 import { chromeCopy } from '@/config/chrome';
 import { navSections } from '@/config/sections';
 import { localizedPath } from '@/lib/i18n/paths';
 import { useLocale } from '@/lib/i18n/LocaleContext';
 import { links } from '@/config/links';
-import { scrollToSection } from '@/components/chrome/scrollToSection';
 import { BrandMark } from './BrandMark';
 import { useActiveSection } from './useActiveSection';
 import { useHeaderScroll } from './useHeaderScroll';
 import { useNavEntrance } from './useNavEntrance';
 import { useRouteFocus } from './useRouteFocus';
+import { useSectionClick } from './useSectionClick';
 import { useSlidingPill } from './useSlidingPill';
 import styles from './SiteNav.module.css';
 
@@ -48,10 +48,12 @@ export interface Props {
  * They are `next/link`s, so from a reading route they are a client-side
  * navigation: the nav stays mounted, Next scrolls to the fragment, and
  * `useRouteFocus` puts focus on the section.
- * On the homepage a plain click is taken over and handed to `scrollToSection`,
- * the same move the palette and the `g` chords make, so focus lands on the
- * section along with the scroll; the URL still gains the fragment. Modified
- * clicks (new tab, new window) are left to the browser.
+ * On the homepage a plain click is taken over by `useSectionClick`, so focus
+ * lands on the section along with the scroll.
+ *
+ * Below 961px the link row folds away and the tools' Menu button opens the
+ * mobile menu (`MobileMenu`) with the same links; the command palette stays
+ * on ⌘K / Ctrl K.
  *
  * Rendered once by the root layout, so it stays mounted across client-side
  * navigation: the entrance plays once per visit, not once per route.
@@ -66,7 +68,7 @@ export const SiteNav: FC<Props> = ({ tools }) => {
     const copy = chromeCopy[locale];
     const home = localizedPath(locale, '/');
     const pathname = usePathname();
-    const router = useRouter();
+    const handleSectionClick = useSectionClick();
     const activeSectionId = useActiveSection(NAV_IDS, pathname);
     const pageId = navSections.find(section => section.page !== undefined && isOnPage(pathname, localizedPath(locale, section.page)))?.id;
     const activeId = pageId ?? activeSectionId;
@@ -76,19 +78,6 @@ export const SiteNav: FC<Props> = ({ tools }) => {
     useNavEntrance(headerRef);
     useMagnet(bookRef, { strength: BOOK_MAGNET });
     useRouteFocus(pathname);
-
-    const handleSectionClick = (event: MouseEvent<HTMLAnchorElement>, id: string) => {
-        if (pathname !== home || isModifiedClick(event) || !document.getElementById(id)) {
-            return;
-        }
-
-        event.preventDefault();
-        scrollToSection(id, (href) => {
-            router.push(href);
-        }, locale);
-        // Next keeps its router in step with native history calls.
-        window.history.pushState(null, '', `#${id}`);
-    };
 
     return (
         <>
@@ -157,9 +146,4 @@ export const SiteNav: FC<Props> = ({ tools }) => {
 /** Whether `pathname` is `page` or somewhere under it, such as a post under `/blog`. */
 const isOnPage = (pathname: string | null, page: string) => (
     pathname === page || (pathname?.startsWith(`${page}/`) ?? false)
-);
-
-/** A click the browser should keep: another button, or opening elsewhere. */
-const isModifiedClick = (event: MouseEvent) => (
-    event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey
 );

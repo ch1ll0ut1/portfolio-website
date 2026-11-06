@@ -11,6 +11,8 @@ import { storeLanguage, switchLanguage } from './languageStore';
 interface Props {
     /** Styling comes from the host, so the nav keeps one definition of its pill. */
     className?: string;
+    /** Writes the invitation out next to the code, as the mobile menu does. */
+    spelledOut?: boolean;
 }
 
 /**
@@ -21,7 +23,7 @@ interface Props {
  * does not land on the language just left; a modified click (new tab or
  * window, download) stores the choice and leaves the navigation to the browser.
  */
-export const LanguageSwitch: FC<Props> = ({ className }) => {
+export const LanguageSwitch: FC<Props> = ({ className, spelledOut = false }) => {
     const target = otherLocale(useLocale());
     const pathname = usePathname();
     const offer = chromeCopy[target].languageOffer;
@@ -48,11 +50,18 @@ export const LanguageSwitch: FC<Props> = ({ className }) => {
             href={twinPath(pathname, target)}
             hrefLang={target}
             lang={target}
-            aria-label={offer.invite}
+            aria-label={spelledOut ? undefined : offer.invite}
             onClick={handleClick}
             onAuxClick={handleClick}
         >
-            {offer.code}
+            {spelledOut
+                ? (
+                    <>
+                        <span aria-hidden="true">{offer.code}</span>
+                        <span>{offer.invite}</span>
+                    </>
+                )
+                : offer.code}
         </a>
     );
 };

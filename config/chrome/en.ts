@@ -17,6 +17,12 @@ export const chromeEn: ChromeCopy = {
         book: 'Book a call',
         menu: 'Menu',
         openMenu: 'Open command menu',
+        mobileMenu: {
+            label: 'Menu',
+            close: 'Close menu',
+            book: 'Book a 30-min call',
+            write: 'Write to me',
+        },
         brandTop: 'Stefan Knoch, back to top',
         brandHome: 'Stefan Knoch, home',
     },

@@ -7,6 +7,8 @@ import { useLocale } from '@/lib/i18n/LocaleContext';
 interface Props {
     /** Styling comes from the host, so the nav keeps one definition of its pill. */
     className?: string;
+    /** Writes the label out next to the icon, as the mobile menu does. */
+    spelledOut?: boolean;
 }
 
 /**
@@ -17,17 +19,22 @@ interface Props {
  * button, the `t` shortcut and the palette's theme command share one path —
  * and what lets a host render its own button with the same attribute instead.
  */
-export const ThemeToggle: FC<Props> = ({ className }) => (
-    <button className={className} type="button" data-theme-toggle aria-label={chromeCopy[useLocale()].themeToggle}>
-        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
-            <circle cx="12" cy="12" r="5" fill="currentColor" />
-            <path
-                d="M12 1.5v2.5M12 20v2.5M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M1.5 12H4M20 12h2.5M4.6 19.4l1.8-1.8M17.6 6.4l1.8-1.8"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-                fill="none"
-            />
-        </svg>
-    </button>
-);
+export const ThemeToggle: FC<Props> = ({ className, spelledOut = false }) => {
+    const label = chromeCopy[useLocale()].themeToggle;
+
+    return (
+        <button className={className} type="button" data-theme-toggle aria-label={spelledOut ? undefined : label}>
+            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                <circle cx="12" cy="12" r="5" fill="currentColor" />
+                <path
+                    d="M12 1.5v2.5M12 20v2.5M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M1.5 12H4M20 12h2.5M4.6 19.4l1.8-1.8M17.6 6.4l1.8-1.8"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    fill="none"
+                />
+            </svg>
+            {spelledOut ? <span>{label}</span> : null}
+        </button>
+    );
+};

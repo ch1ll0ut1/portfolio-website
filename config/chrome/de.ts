@@ -17,6 +17,12 @@ export const chromeDe: ChromeCopy = {
         book: 'Gespräch buchen',
         menu: 'Menü',
         openMenu: 'Befehlsmenü öffnen',
+        mobileMenu: {
+            label: 'Menü',
+            close: 'Menü schließen',
+            book: '30-Minuten-Gespräch buchen',
+            write: 'Nachricht schreiben',
+        },
         brandTop: 'Stefan Knoch, nach oben',
         brandHome: 'Stefan Knoch, Startseite',
     },

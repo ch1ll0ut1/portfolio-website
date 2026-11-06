@@ -37,8 +37,17 @@ export interface ChromeCopy {
         /** The accessible name of the section links. */
         sections: string;
         book: string;
+        /** The visible label of the button that opens the mobile menu. */
         menu: string;
+        /** The command palette button's accessible name. */
         openMenu: string;
+        /** The mobile menu: its accessible name, its close button and its two actions. */
+        mobileMenu: {
+            label: string;
+            close: string;
+            book: string;
+            write: string;
+        };
         /** The brand link's name: to the top of the homepage, or to it from elsewhere. */
         brandTop: string;
         brandHome: string;

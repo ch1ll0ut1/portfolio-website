@@ -76,7 +76,7 @@ describe('<CommandPalette>', () => {
     it('should select the first row by default', async () => {
         await mount();
 
-        expect(selectedOption()).toHaveTextContent('Work');
+        expect(selectedOption()).toHaveTextContent('Services');
     });
 
     it('should narrow the list to matching rows as the user types', async () => {
@@ -114,7 +114,7 @@ describe('<CommandPalette>', () => {
         await mount();
         await user.keyboard('{ArrowDown}');
 
-        expect(selectedOption()).toHaveTextContent('Services');
+        expect(selectedOption()).toHaveTextContent('Work');
     });
 
     it('should wrap from the first row to the last on arrow up', async () => {
@@ -145,7 +145,7 @@ describe('<CommandPalette>', () => {
         await user.keyboard('{ArrowDown}{ArrowDown}');
         await user.type(screen.getByRole('combobox'), 'go');
 
-        expect(selectedOption()).toHaveTextContent('Work');
+        expect(selectedOption()).toHaveTextContent('Services');
     });
 
     it('should run the selected command on Enter and close', async () => {
@@ -331,7 +331,7 @@ describe('<CommandPalette>', () => {
         await waitFor(() => {
             expect(screen.getByRole('combobox')).toHaveValue('');
         });
-        expect(selectedOption()).toHaveTextContent('Work');
+        expect(selectedOption()).toHaveTextContent('Services');
     });
 
     it('should slide the highlight when the arrows move the selection', async () => {
@@ -355,7 +355,7 @@ describe('<CommandPalette>', () => {
         view.rerender(<CommandPalette open onClose={onClose} onOpenShortcuts={onOpenShortcuts} />);
 
         await waitFor(() => {
-            expect(selectedOption()).toHaveTextContent('Work');
+            expect(selectedOption()).toHaveTextContent('Services');
         });
         expect(highlight()).not.toHaveClass(styles.live);
     });

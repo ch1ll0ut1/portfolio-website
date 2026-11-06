@@ -36,9 +36,9 @@
     border-color: var(--fg-2);
 }
 
-/* The written-out label only appears once the nav links collapse, where this
-   button becomes the way into the section list. */
-.label {
+/* "Menu" only appears once the nav links collapse, where it becomes the way
+   into the section list; the ⌘K button steps aside for it. */
+.menu {
     display: none;
     font-size: .88rem;
     font-weight: 500;
@@ -49,11 +49,11 @@
 }
 
 @media (max-width: 960px) {
-    .label {
-        display: inline;
+    .menu {
+        display: inline-flex;
     }
 
-    .shortcut {
+    .palette {
         display: none;
     }
 }
