@@ -157,5 +157,20 @@ describe('Case study pages', () => {
                 expect(study.link?.label).toBe(copy.linkLabel);
             });
         });
+
+        it('should write the Edithing ordinal the way each language does', () => {
+            const edithing = (locale: 'en' | 'de') => caseStudiesFor(locale).find(study => study.id === 'edithing');
+
+            expect(edithing('en')?.metric.value).toBe('3rd');
+            expect(edithing('de')?.metric.value).toBe('3.');
+        });
+
+        it('should keep a figure that is no word the same in both languages', () => {
+            const german = caseStudiesFor('de');
+
+            caseStudiesFor('en').filter(study => study.id !== 'edithing').forEach((study, index) => {
+                expect(german.filter(other => other.id !== 'edithing')[index]?.metric.value).toBe(study.metric.value);
+            });
+        });
     });
 });
