@@ -2,8 +2,11 @@
  * Cookie consent banner and preferences dialog.
  *
  * Presentation only — every consent decision is taken by `ConsentContext`.
- * The banner is a bottom-docked surface panel using the global button
- * primitives, so it reads as site chrome in both themes. The dialog is
+ * The banner is a slim bar docked to the bottom edge, using the global button
+ * primitives, so it reads as site chrome in both themes and leaves the hero's
+ * calls to action uncovered. It comes before the page's main content in the
+ * document, so the keyboard reaches it right after the nav, without focus
+ * being moved or trapped. The dialog is
  * rendered here too, but opens independently of the banner, so it can be
  * reopened from the footer or the command palette after the first choice.
  *
@@ -68,22 +71,24 @@ export const CookieConsent: FC = () => {
                 onFocus={focus.onFocus}
             >
                 <div className={styles.panel}>
-                    <div>
-                        <h2 className={styles.title} id="consent-banner-title">{copy.title}</h2>
-                        <p className={styles.body}>
-                            {copy.banner.body}
-                            {' '}
-                            <Link className={styles.link} href={localizedPath(locale, '/privacy')}>{copy.privacyLink}</Link>
-                        </p>
-                    </div>
+                    {/* Names the region for assistive technology; the bar itself
+                        stays one line of copy and one row of buttons. */}
+                    <h2 className="visually-hidden" id="consent-banner-title">{copy.title}</h2>
+                    <p className={styles.body}>
+                        {copy.banner.body}
+                        {' '}
+                        <Link className={styles.link} href={localizedPath(locale, '/privacy')}>{copy.privacyLink}</Link>
+                    </p>
 
+                    {/* Reject and accept carry the same weight: neither is the
+                        page's primary button. */}
                     <div className={styles.actions}>
                         <button
-                            className="btn"
+                            className={styles.customize}
                             type="button"
                             onClick={openPreferences}
                         >
-                            <span className="btn__label">{copy.banner.customize}</span>
+                            {copy.banner.customize}
                         </button>
                         <button
                             className="btn"
@@ -96,7 +101,7 @@ export const CookieConsent: FC = () => {
                             <span className="btn__label">{copy.banner.rejectAll}</span>
                         </button>
                         <button
-                            className="btn btn--primary"
+                            className="btn"
                             type="button"
                             onClick={() => {
                                 focus.returnFocus();
