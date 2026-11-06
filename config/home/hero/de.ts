@@ -11,7 +11,7 @@ export const heroDe: HeroCopy = {
         after: '.',
     },
     kicker: yearsShipping => [
-        'Softwarearchitekt & Tech Lead',
+        'Freier Softwarearchitekt & Interim-CTO',
         `${yearsShipping} Jahre Erfahrung`,
         'Deutsch & Englisch',
         'Zeitzonen Europa, USA & Asien',
