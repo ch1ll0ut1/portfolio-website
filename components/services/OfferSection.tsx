@@ -1,12 +1,14 @@
 import { type FC } from 'react';
 import Link from 'next/link';
 import type { ServiceOfferCopy, ServicesPageCopy } from '@/config/services/types';
-import { CONTACT_HREF } from './contactHref';
+import type { Locale } from '@/lib/i18n/locale';
+import { contactHref } from './contactHref';
 import styles from './OfferSection.module.css';
 
 interface Props {
     offer: ServiceOfferCopy;
     labels: ServicesPageCopy['labels'];
+    locale: Locale;
 }
 
 /**
@@ -14,7 +16,7 @@ interface Props {
  * chooser can link straight to it: the problem in the buyer's words, who it
  * is for, what they get, how it runs, the typical size and the proof.
  */
-export const OfferSection: FC<Props> = ({ offer, labels }) => {
+export const OfferSection: FC<Props> = ({ offer, labels, locale }) => {
     const titleId = `${offer.id}-title`;
 
     return (
@@ -34,7 +36,7 @@ export const OfferSection: FC<Props> = ({ offer, labels }) => {
                     <p className={styles.rangeValue}>{offer.range}</p>
                     <p className={styles.billing}>{labels.billing}</p>
                 </div>
-                <Link className={`btn btn--primary ${styles.cta}`} href={CONTACT_HREF}>
+                <Link className={`btn btn--primary ${styles.cta}`} href={contactHref(locale)}>
                     <span className="btn__label">{labels.offerCta}</span>
                 </Link>
             </div>

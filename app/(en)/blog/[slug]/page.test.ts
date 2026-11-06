@@ -41,7 +41,11 @@ describe('/blog/[slug]', () => {
 
             expect(metadata.title).toBe(post.title);
             expect(metadata.description).toBe(post.excerpt);
-            expect(metadata.alternates).toEqual({ canonical: `/blog/${post.slug}`, types: feedAlternateTypes });
+            expect(metadata.alternates).toEqual({
+                canonical: `/blog/${post.slug}`,
+                languages: { 'en': `/blog/${post.slug}`, 'de': `/de/blog/${post.slug}`, 'x-default': `/blog/${post.slug}` },
+                types: feedAlternateTypes('en'),
+            });
             expect(metadata.openGraph).toMatchObject({
                 title: post.title,
                 description: post.excerpt,

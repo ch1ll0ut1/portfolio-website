@@ -10,6 +10,10 @@ export interface SiteCopy {
      * homepage share card. `title` carries the same words title-cased.
      */
     jobTitle: string;
+    /** The phrase of `jobTitle` the site's share card selects. */
+    jobTitleHighlight: string;
     /** Meta description and the Person schema's description. */
     description: string;
+    /** How long he has been at it, e.g. "since 2008": the end of every share card's footer line. */
+    since: string;
 }

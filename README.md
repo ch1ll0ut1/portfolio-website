@@ -112,7 +112,7 @@ portfolio-website/
 │       ├── BrandMark.tsx        # Retyping wordmark
 │       └── NavTools.tsx         # Slot for the chrome's tools
 ├── config/                      # Section data and types, one file per section
-│   ├── blog.ts                  # Blog post metadata
+│   ├── blog/                    # Blog post metadata and words per language
 │   ├── sections.ts              # Section ids and nav order
 │   ├── career.ts                # Roles behind the experience section
 │   └── ... (caseStudies, engagements, proof, processSteps, principles, fit)
@@ -322,7 +322,7 @@ Blog posts are written in Markdown and stored in `content/blog/` with comprehens
 
 Content is managed through TypeScript configuration files:
 
-- `config/blog.ts` - Blog post metadata, including `published` and `featured`
+- `config/blog/posts.ts` - Blog post metadata, including `published` and `featured`; titles and excerpts per language in `config/blog/en.ts` and `de.ts`
 - `config/sections.ts` - Section ids and nav order
 - `config/caseStudies.ts` - Case studies behind the work section
 - `config/engagements.ts` - The three engagement models

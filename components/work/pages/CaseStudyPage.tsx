@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { notFound } from 'next/navigation';
 import { ReadingShell } from '@/components/blog/ReadingShell';
 import { JsonLd } from '@/components/seo/JsonLd';
-import { findCaseStudy } from '@/config/caseStudies';
+import { caseStudiesFor } from '@/config/caseStudies';
 import { caseStudyDetailsFor } from '@/config/caseStudyDetails';
 import { caseStudyBreadcrumbs, caseStudySchema } from '@/lib/caseStudySchema';
 import type { Locale } from '@/lib/i18n/locale';
@@ -21,7 +21,7 @@ interface Props {
  * document's server render.
  */
 export const CaseStudyPage: FC<Props> = ({ slug, locale }) => {
-    const study = findCaseStudy(slug);
+    const study = caseStudiesFor(locale).find(candidate => candidate.slug === slug);
 
     if (!study) {
         notFound();

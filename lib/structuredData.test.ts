@@ -222,6 +222,18 @@ describe('structuredData', () => {
             expect(items.map(item => item.path)).toEqual(['/de', '/de/blog', '/de/blog/a-post']);
         });
 
+        it('should link the English original and its German translation both ways', () => {
+            // Act
+            const english = blogPostingSchema(post, 'en');
+            const german = blogPostingSchema(post, 'de');
+
+            // Assert
+            expect(english.workTranslation).toEqual({ '@type': 'BlogPosting', 'url': `${siteConfig.url}/de/blog/a-post`, 'inLanguage': 'de-DE' });
+            expect(german.translationOfWork).toEqual({ '@type': 'BlogPosting', 'url': `${siteConfig.url}/blog/a-post`, 'inLanguage': 'en-US' });
+            expect(english).not.toHaveProperty('translationOfWork');
+            expect(german).not.toHaveProperty('workTranslation');
+        });
+
         it('should date the post in Bangkok time', () => {
             // Act
             const schema = blogPostingSchema(post, 'en');

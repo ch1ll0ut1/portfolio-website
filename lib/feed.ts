@@ -1,6 +1,6 @@
 /**
- * The blog's RSS 2.0 feeds (`/feed.xml`, and `/de/feed.xml` once the German
- * posts exist) and the `<link rel="alternate">` that announces the English one.
+ * The blog's RSS 2.0 feeds (`/feed.xml` and `/de/feed.xml`) and the
+ * `<link rel="alternate">` that announces each.
  */
 
 import { type BlogPost, blogCopy, lastModified, tagLabel } from '@/config/blog';
@@ -15,13 +15,13 @@ const FEED_PATH = '/feed.xml';
 const feedTitle = (locale: Locale) => blogCopy[locale].feed.title(siteConfig.name);
 
 /**
- * The feed as `alternates.types` metadata. Next replaces a parent's
- * `alternates` with a page's own, so every page that sets a canonical spreads
- * this in too, or the link is lost there.
+ * The feed in `locale` as `alternates.types` metadata. Next replaces a
+ * parent's `alternates` with a page's own, so every page that sets a
+ * canonical spreads this in too, or the link is lost there.
  */
-export const feedAlternateTypes = {
-    'application/rss+xml': [{ url: FEED_PATH, title: feedTitle('en') }],
-};
+export const feedAlternateTypes = (locale: Locale) => ({
+    'application/rss+xml': [{ url: localizedPath(locale, FEED_PATH), title: feedTitle(locale) }],
+});
 
 /**
  * The RSS document for `posts` in `locale` (newest first, published only: the

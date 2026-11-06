@@ -94,6 +94,14 @@ describe('ServicesPage', () => {
         });
     });
 
+    it('should send the German page\'s visitors to the German contact form', () => {
+        render(<ServicesPage copy={servicesDe} />);
+
+        screen.getAllByRole('link', { name: servicesDe.hero.writeLabel }).forEach((link) => {
+            expect(link).toHaveAttribute('href', '/de/kontakt?topic=project');
+        });
+    });
+
     it('should name the case studies behind the outcomes', () => {
         render(<ServicesPage copy={servicesDe} />);
 
@@ -108,6 +116,17 @@ describe('ServicesPage', () => {
             .forEach((study) => {
                 expect(screen.getByRole('link', { name: `${servicesEn.outcomes.linkLabel}: ${study.title}` }))
                     .toHaveAttribute('href', caseStudyPath(study));
+            });
+    });
+
+    it('should link each German outcome to the German case study page', () => {
+        render(<ServicesPage copy={servicesDe} />);
+
+        caseStudies
+            .filter(study => servicesDe.outcomes.items.some(item => item.caseId === study.id))
+            .forEach((study) => {
+                expect(screen.getByRole('link', { name: `${servicesDe.outcomes.linkLabel}: ${study.title}` }))
+                    .toHaveAttribute('href', `/de/referenzen/${study.slug}`);
             });
     });
 });

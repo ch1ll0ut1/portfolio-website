@@ -4,7 +4,7 @@
  */
 
 import { blogCopy } from '@/config/blog';
-import { siteConfig } from '@/config/site';
+import { siteConfig, siteCopy } from '@/config/site';
 import type { Locale } from '@/lib/i18n/locale';
 
 const ELLIPSIS = '…';
@@ -89,11 +89,11 @@ export const headlineSize = (text: string) => {
     return 72;
 };
 
-/** `stefanknoch.com · Bangkok · since 2008`, the footer line of every card. */
-export const siteMetaLine = () => [
+/** `stefanknoch.com · Bangkok · since 2008` in `locale`, the footer line of every card. */
+export const siteMetaLine = (locale: Locale) => [
     new URL(siteConfig.url).host,
     siteConfig.city,
-    `since ${siteConfig.sinceYear}`,
+    siteCopy[locale].since,
 ].join(' · ');
 
 /** `blog · 2025-08-14 · 10 min read` in `locale`; parts that are empty are left out. */

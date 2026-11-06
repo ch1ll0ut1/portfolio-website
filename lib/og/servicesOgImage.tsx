@@ -10,7 +10,7 @@ import { ogPalette } from './palette';
  * phrase selected, and the three offers under it.
  */
 export const servicesOgImage = (copy: ServicesPageCopy) => createOgImage(
-    <OgLayout kicker={copy.meta.shareKicker}>
+    <OgLayout locale={copy.lang} kicker={copy.meta.shareKicker}>
         <OgHeadline text={copy.hero.title} highlight={copy.meta.shareHighlight} fontSize={72} />
         <span
             style={{

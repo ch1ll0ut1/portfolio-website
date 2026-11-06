@@ -34,7 +34,7 @@ export const Article: FC<Props> = ({ post, locale, newer, older, related = [] })
             <div className="wrap">
                 <article id={ARTICLE_ID} className={styles.article} data-scroll-target>
                     <ArticleHeader post={post} locale={locale} />
-                    <Markdown content={post.content} />
+                    <Markdown content={post.content} locale={locale} />
                     <AuthorBox locale={locale} />
                 </article>
 

@@ -44,9 +44,29 @@ describe('pageMetadata', () => {
         expect(metadata.openGraph).toMatchObject({ title: 'Stefan Knoch — Privacy' });
     });
 
-    it('should announce the feed only when asked, and only where that language has one', () => {
+    it('should announce the feed of the page\'s own language, and only when asked', () => {
         expect(pageMetadata({ ...page, locale: 'en' }).alternates).not.toHaveProperty('types');
-        expect(pageMetadata({ ...page, locale: 'en', feed: true }).alternates).toMatchObject({ types: feedAlternateTypes });
-        expect(pageMetadata({ ...page, locale: 'de', feed: true }).alternates).not.toHaveProperty('types');
+        expect(pageMetadata({ ...page, locale: 'en', feed: true }).alternates).toMatchObject({ types: feedAlternateTypes('en') });
+        expect(pageMetadata({ ...page, locale: 'de', feed: true }).alternates).toMatchObject({ types: feedAlternateTypes('de') });
+    });
+
+    it('should share under its own share title when given one', () => {
+        const metadata = pageMetadata({ ...page, locale: 'de', shareTitle: 'Datenschutz' });
+
+        expect(metadata.openGraph).toMatchObject({ title: 'Datenschutz' });
+        expect(metadata.twitter).toMatchObject({ title: 'Datenschutz' });
+    });
+
+    it('should share an article with its fields and its own image on both cards', () => {
+        const image = { url: '/de/blog/a/card.png', width: 1200, height: 630, type: 'image/png', alt: 'A' };
+        const metadata = pageMetadata({ ...page, locale: 'de', article: { tags: ['AI'] }, image });
+
+        expect(metadata.openGraph).toMatchObject({ type: 'article', tags: ['AI'], images: [image], locale: 'de_DE' });
+        expect(metadata.twitter).toMatchObject({ images: [image] });
+    });
+
+    it('should set robots only when asked', () => {
+        expect(pageMetadata({ ...page, locale: 'en' })).not.toHaveProperty('robots');
+        expect(pageMetadata({ ...page, locale: 'en', robots: { index: true, follow: true } }).robots).toEqual({ index: true, follow: true });
     });
 });

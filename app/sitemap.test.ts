@@ -198,13 +198,16 @@ describe('robots', () => {
     });
 });
 
-describe('sitemap services pages', () => {
-    it('should list the English and German services pages as each other’s translations', () => {
+describe('sitemap languages', () => {
+    const pathOf = (url: string) => new URL(url).pathname;
+
+    it('should list the English and German services pages as each other’s translations, English as the default', () => {
         // Act
-        const entries = sitemap().filter(entry => ['/services', '/de/leistungen'].includes(new URL(entry.url).pathname));
+        const entries = sitemap().filter(entry => ['/services', '/de/leistungen'].includes(pathOf(entry.url)));
         const languages = {
-            en: `${siteConfig.url}/services`,
-            de: `${siteConfig.url}/de/leistungen`,
+            'en': `${siteConfig.url}/services`,
+            'de': `${siteConfig.url}/de/leistungen`,
+            'x-default': `${siteConfig.url}/services`,
         };
 
         // Assert
@@ -212,5 +215,61 @@ describe('sitemap services pages', () => {
         entries.forEach((entry) => {
             expect(entry.alternates).toEqual({ languages });
         });
+    });
+
+    it('should list the German twin of every page but the homepage', () => {
+        // Act
+        const paths = sitemap().map(entry => pathOf(entry.url));
+
+        // Assert
+        ['/de/blog', '/de/kontakt', '/de/datenschutz', '/de/leistungen'].forEach((path) => {
+            expect(paths).toContain(path);
+        });
+        blogPosts.forEach((post) => {
+            expect(paths).toContain(`/de/blog/${post.slug}`);
+        });
+        caseStudies.forEach((study) => {
+            expect(paths).toContain(`/de/referenzen/${study.slug}`);
+        });
+        expect(paths).not.toContain('/de');
+    });
+
+    it('should name each entry among its own translations, and be named back by every one of them', () => {
+        // Arrange
+        const entries = sitemap();
+        const byUrl = new Map(entries.map(entry => [entry.url, entry]));
+
+        // Assert
+        entries.filter(entry => entry.alternates).forEach((entry) => {
+            const languages = entry.alternates?.languages ?? {};
+
+            expect(Object.keys(languages).sort(), entry.url).toEqual(['de', 'en', 'x-default']);
+            expect(languages['x-default'], entry.url).toBe(languages.en);
+            expect(Object.values(languages), entry.url).toContain(entry.url);
+            [languages.en, languages.de].forEach((twin) => {
+                expect(byUrl.get(twin ?? '')?.alternates, `${entry.url} → ${twin}`).toEqual(entry.alternates);
+            });
+        });
+    });
+
+    it('should date a German page like its English twin', () => {
+        // Act
+        const entries = sitemap();
+
+        // Assert
+        entries.filter(entry => pathOf(entry.url).startsWith('/de/')).forEach((entry) => {
+            const english = entries.find(item => item.url === entry.alternates?.languages?.en);
+
+            expect(english?.lastModified, entry.url).toEqual(entry.lastModified);
+        });
+    });
+
+    it('should list the homepage alone until its German twin exists', () => {
+        // Act
+        const home = sitemap().filter(entry => entry.url === siteConfig.url);
+
+        // Assert
+        expect(home).toHaveLength(1);
+        expect(home[0]).not.toHaveProperty('alternates');
     });
 });

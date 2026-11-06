@@ -7,7 +7,7 @@
  * URL, in German.
  */
 
-import { type Engagement, type EngagementId, engagements } from '@/config/engagements';
+import { type Engagement, type EngagementId, engagementsFor } from '@/config/engagements';
 import { absoluteUrl } from '@/config/site';
 import { type JsonLdObject, personRef } from './structuredData';
 
@@ -38,7 +38,7 @@ export const serviceSchema = (service: ServiceDescription, path: string, languag
 });
 
 /** The engagements in English, as the homepage cards and `/services` describe them. */
-export const englishServices = (): ServiceDescription[] => engagements.map(describeEngagement);
+export const englishServices = (): ServiceDescription[] => engagementsFor('en').map(describeEngagement);
 
 /** The homepage's offers: each engagement's `Service`, wrapped in an `Offer`. */
 export const engagementOffers = (): JsonLdObject[] => englishServices().map(service => ({

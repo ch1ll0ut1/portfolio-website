@@ -62,7 +62,8 @@ app/                    # Next.js app router pages
 │   ├── blog/          # Blog functionality
 │   ├── layout.tsx     # English root layout: SiteDocument with 'en'
 │   └── page.tsx       # Homepage
-├── de/                # German pages under their root layout (<html lang="de">),
+├── de/                # German twins under their root layout (<html lang="de">):
+│                      #   thin routes over the shared page bodies with 'de',
 │                      #   a catch-all to the German 404, and the German error page
 ├── global-not-found.tsx # 404 for unmatched URLs: a whole document, imports only globals.css
 ├── globals.css        # Global styles
@@ -86,13 +87,13 @@ components/            # React components organized by domain
 └── privacy/          # Privacy page body and metadata, per language
 
 config/               # Section data and types, one file per section
-├── blog.ts           # Blog post metadata (`published` and `featured` live here)
+├── blog/             # Blog posts (`posts.ts`: `published`, `featured`) and their words per language
 ├── contact/          # Contact form fields, topics, limits, action codes; page and form copy
 ├── sections.ts       # Section ids and nav order
 └── ...               # career, caseStudies, engagements, proof, processSteps, ...
 
 content/              # Markdown content
-└── blog/             # Blog posts in markdown format
+└── blog/             # Blog posts in markdown format (German in `blog/de/`)
 
 lib/                  # Utilities and shared logic
 ├── analytics.ts      # GA4 event helpers
@@ -123,7 +124,7 @@ Blog content is managed through:
 - **Custom parser** in `components/markdown/parser/` — pure: block, inline, list and table parsers over the types in `types.ts`, with `parseMarkdown` in `blockParser.ts` as the entry
 - **File reads** in `lib/content/` (server-only): the post markdown and its `cache()`-wrapped lookup, and the image measuring the parser is handed
 - **Syntax highlighting** via react-syntax-highlighter
-- **Type-safe configuration** in `config/blog.ts`
+- **Type-safe configuration** in `config/blog/` (facts in `posts.ts`, words in `en.ts` / `de.ts`)
 
 ### Contact Form
 
@@ -141,7 +142,7 @@ Blog content is managed through:
   only ever from the env.
 - **Vercel BotID**: `withBotId` in `next.config.ts` (same-origin proxy, so the
   CSP needs nothing new), `initBotId` in `instrumentation-client.ts` protecting
-  `POST /contact`, `checkBotId()` in `lib/contact/botCheck.ts`. Required for
+  `POST /contact` and `POST /de/kontakt`, `checkBotId()` in `lib/contact/botCheck.ts`. Required for
   every submission on Vercel; if BotID throws, the visitor gets an error
   pointing to LinkedIn (fail closed, not silent).
 - **Rate limit**: `checkRateLimit('contact-form')` from `@vercel/firewall` in

@@ -1,6 +1,7 @@
 import { type FC } from 'react';
 import Link from 'next/link';
-import { caseStudies, caseStudyPath } from '@/config/caseStudies';
+import { caseStudiesFor, caseStudyPath } from '@/config/caseStudies';
+import { localizedPath } from '@/lib/i18n/paths';
 import type { ServicesPageCopy } from '@/config/services/types';
 import styles from './ServicesPage.module.css';
 
@@ -20,7 +21,7 @@ export const Outcomes: FC<Props> = ({ copy }) => (
         </div>
         <ul className={styles.outcomes}>
             {copy.outcomes.items.map((item) => {
-                const study = caseStudies.find(candidate => candidate.id === item.caseId);
+                const study = caseStudiesFor(copy.lang).find(candidate => candidate.id === item.caseId);
                 const title = study?.title ?? item.caseId;
 
                 return (
@@ -29,7 +30,7 @@ export const Outcomes: FC<Props> = ({ copy }) => (
                         <p className={styles.outcomeClient}>{item.client}</p>
                         <p>{item.outcome}</p>
                         {study && (
-                            <Link className={`${styles.outcomeLink} ulink`} href={caseStudyPath(study)}>
+                            <Link className={`${styles.outcomeLink} ulink`} href={localizedPath(copy.lang, caseStudyPath(study))}>
                                 {copy.outcomes.linkLabel}
                                 <span className="visually-hidden">{`: ${title}`}</span>
                             </Link>

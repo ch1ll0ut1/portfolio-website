@@ -15,12 +15,13 @@ describe('contactMetadata', () => {
         // Assert
         expect(metadata.title).toEqual({ absolute: contactCopy.en.meta.title });
         expect(metadata.description).toBe(contactCopy.en.meta.description);
-        expect(metadata.alternates).toEqual({ canonical: '/contact' });
+        expect(metadata.alternates).toEqual({ canonical: '/contact', languages: { 'en': '/contact', 'de': '/de/kontakt', 'x-default': '/contact' } });
         expect(metadata.openGraph).toMatchObject({ url: `${siteConfig.url}/contact` });
     });
 
     it('should point a German page at the German path', () => {
-        expect(contactMetadata('de').alternates).toEqual({ canonical: '/de/kontakt' });
+        expect(contactMetadata('de').alternates).toEqual({ canonical: '/de/kontakt', languages: { 'en': '/contact', 'de': '/de/kontakt', 'x-default': '/contact' } });
+        expect(contactMetadata('de').openGraph).toMatchObject({ locale: 'de_DE', alternateLocale: ['en_US'] });
     });
 });
 

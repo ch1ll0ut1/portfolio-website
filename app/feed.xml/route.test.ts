@@ -4,7 +4,7 @@
  */
 
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { blogPosts, type BlogPost } from '@/config/blog';
+import { blogCopy, blogPosts, type BlogPost } from '@/config/blog';
 import { siteConfig } from '@/config/site';
 import { feedAlternateTypes, rssFeed } from '@/lib/feed';
 import { GET } from './route';
@@ -113,8 +113,14 @@ describe('rssFeed', () => {
 
 describe('feedAlternateTypes', () => {
     it('should announce the feed as RSS under its title', () => {
-        expect(feedAlternateTypes).toEqual({
+        expect(feedAlternateTypes('en')).toEqual({
             'application/rss+xml': [{ url: '/feed.xml', title: `${siteConfig.name} — Writing` }],
+        });
+    });
+
+    it('should announce the German feed under /de with its German title', () => {
+        expect(feedAlternateTypes('de')).toEqual({
+            'application/rss+xml': [{ url: '/de/feed.xml', title: blogCopy.de.feed.title(siteConfig.name) }],
         });
     });
 });
