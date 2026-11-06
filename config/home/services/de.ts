@@ -64,7 +64,7 @@ export const engagementsDe: EngagementsCopy = {
         'tech-lead': {
             name: 'Interim-CTO oder Fractional CTO an Ihrer Seite',
             subtitle: 'Fractional CTO · CTO as a Service · Tech Lead in Teilzeit',
-            short: 'Interim-CTO',
+            short: 'Fractional CTO',
             who: 'Für Unternehmen mit einem Entwicklungsteam, aber ohne erfahrene technische Leitung, oder ganz ohne technische Leute im Haus.',
             bullets: [
                 'Code Reviews und ein zweiter Blick auf die Pläne Ihres Teams',
