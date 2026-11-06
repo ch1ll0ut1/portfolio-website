@@ -115,6 +115,8 @@
 .doc {
     grid-area: doc;
     position: relative;
+    /* The German headline is sized to this column; see `.title:lang(de)`. */
+    container-type: inline-size;
 }
 
 /* The kicker: who, how long, which languages and hours, as a mono eyebrow
@@ -144,7 +146,9 @@
     display: block;
     font-size: var(--fs-hero);
     line-height: .92;
-    letter-spacing: -.045em;
+    /* As tight as the face goes before a pair touches: "rt" in "part" is the
+       first to meet, at about -.01em on a phone. */
+    letter-spacing: -.0075em;
     font-weight: 640;
     font-variation-settings: 'wdth' 78, 'opsz' 96;
     /* 11ch of the display face, written in em: a `ch` width goes stale for a
@@ -157,6 +161,15 @@
     cursor: text;
     border-radius: 8px;
     transition: box-shadow var(--dur-s) var(--ease-ui);
+}
+
+/* The German headline is half again as long as the English, so it is sized to
+   the column rather than the viewport: „Ich übernehme den“ always fits on the
+   first line and „schwierigen Teil.“ (one unbreakable mark) on the second,
+   never three lines with „den“ alone. No larger than the English. */
+.title:lang(de) {
+    font-size: min(var(--fs-hero), 16.5cqi);
+    max-width: none;
 }
 
 .title:focus-visible {
@@ -638,10 +651,13 @@
 @media (max-width: 860px) {
     .hero {
         min-height: auto;
-        padding-top: calc(104px + env(safe-area-inset-top, 0px));
+        padding-top: calc(96px + env(safe-area-inset-top, 0px));
     }
 
+    /* A little tighter than the desktop rhythm, so both calls to action sit
+       on a phone's first screen above the cookie bar. */
     .inner {
+        row-gap: 24px;
         grid-template-columns: minmax(0, 1fr);
         grid-template-areas:
             'status'
@@ -652,6 +668,10 @@
 
     .tree {
         margin-top: 0;
+    }
+
+    .copy {
+        gap: 20px;
     }
 
     /* Keeps the file name, a selection and „normalisiert …“ on one line at
