@@ -14,6 +14,9 @@ import { useLocale } from '@/lib/i18n/LocaleContext';
 import { useSectionClick } from './useSectionClick';
 import styles from './MobileMenu.module.css';
 
+/** What Tab can land on inside the menu: its links and buttons. */
+const FOCUSABLE = 'a[href], button:not([disabled])';
+
 interface Props {
     /** The trigger's look comes from the nav's tools row, like its neighbours. */
     buttonClassName: string;
@@ -25,8 +28,8 @@ interface Props {
  * contact form, then the language and theme switches written out.
  *
  * A sheet on the shared `Overlay`, so it is a native modal `<dialog>`: the
- * page behind is inert, which keeps Tab inside the menu, and Escape, the
- * close button and the scrim close it. Focus goes to the close button, not to
+ * page behind is inert, Tab wraps from the last control to the first (and
+ * back), and Escape, the close button and the scrim close it. Focus goes to the close button, not to
  * a text field, so a phone does not raise its keyboard. The command palette
  * is not part of it; it stays on ⌘K / Ctrl K and the wider screens' button.
  */
@@ -43,6 +46,27 @@ export const MobileMenu: FC<Props> = ({ buttonClassName }) => {
 
     const close = useCallback(() => {
         setOpen(false);
+    }, []);
+
+    // A modal dialog keeps Tab off the page, but lets it out to the browser's
+    // own toolbar after the last control. The menu wraps instead.
+    const keepTabInside = useCallback((event: KeyboardEvent) => {
+        if (event.key !== 'Tab' || !(event.currentTarget instanceof HTMLElement)) {
+            return;
+        }
+
+        const focusable = Array.from(event.currentTarget.querySelectorAll<HTMLElement>(FOCUSABLE));
+        const first = focusable.at(0);
+        const last = focusable.at(-1);
+
+        if (event.shiftKey && document.activeElement === first) {
+            event.preventDefault();
+            last?.focus();
+        }
+        else if (!event.shiftKey && document.activeElement === last) {
+            event.preventDefault();
+            first?.focus();
+        }
     }, []);
 
     return (
@@ -67,6 +91,7 @@ export const MobileMenu: FC<Props> = ({ buttonClassName }) => {
                 panelClassName={styles.panel}
                 focusRef={closeRef}
                 onClose={close}
+                onKeyDown={keepTabInside}
             >
                 <div id={panelId} className={styles.body}>
                     <div className={styles.head}>

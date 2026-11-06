@@ -120,6 +120,21 @@ describe('<MobileMenu> Component', () => {
         expect(dialog.getByRole('button', { name: 'Switch color theme' })).toHaveAttribute('data-theme-toggle');
     });
 
+    it('should keep Tab inside the menu, wrapping at both ends', async () => {
+        render(<MobileMenu buttonClassName="" />);
+
+        const user = await openMenu();
+        const dialog = screen.getByRole('dialog');
+        const close = screen.getByRole('button', { name: 'Close menu' });
+        const theme = within(dialog).getByRole('button', { name: 'Switch color theme' });
+
+        await user.tab({ shift: true });
+        expect(theme).toHaveFocus();
+
+        await user.tab();
+        expect(close).toHaveFocus();
+    });
+
     it('should close with its close button and give focus back to Menu', async () => {
         render(<MobileMenu buttonClassName="" />);
 
