@@ -34,6 +34,10 @@ export const heroEn: HeroCopy = {
             or: ' or ',
             outro: ', or type over it.',
         },
+        keys: {
+            ctrl: 'Ctrl',
+            shift: 'Shift',
+        },
         hintKeyboard: 'With text selected, Alt+F10 moves to the format toolbar. Enter or Escape finishes editing.',
         editButton: 'Edit headline',
         toolbar: {

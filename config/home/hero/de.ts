@@ -38,6 +38,11 @@ export const heroDe: HeroCopy = {
             or: ' oder ',
             outro: '. Oder überschreiben Sie es.',
         },
+        // As German keyboards and Microsoft's German docs label them.
+        keys: {
+            ctrl: 'Strg',
+            shift: 'Umschalt',
+        },
         hintKeyboard: 'Ist Text markiert, führt Alt+F10 zur Formatleiste. Enter oder Escape beendet die Bearbeitung.',
         editButton: 'Überschrift bearbeiten',
         toolbar: {

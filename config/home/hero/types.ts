@@ -50,6 +50,14 @@ export interface HeroEditorCopy {
         or: string;
         outro: string;
     };
+    /**
+     * The modifier keys as the visitor's keyboard labels them, off an Apple
+     * platform (where the hint prints ⌘ and ⇧ in every language).
+     */
+    keys: {
+        ctrl: string;
+        shift: string;
+    };
     /** Read to screen readers only, after the visible hint. */
     hintKeyboard: string;
     editButton: string;

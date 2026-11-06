@@ -16,6 +16,7 @@ import { installMatchMedia } from '../../../test/motionEnv';
 import { heroCtas, heroLocation } from '@/config/hero';
 import { heroEn } from '@/config/home/hero/en';
 import { yearsShipping } from '@/config/site';
+import { LocaleProvider } from '@/lib/i18n/LocaleContext';
 import { Hero } from './Hero';
 import { itemAt } from '@/test/itemAt';
 import { selectOffsets } from './editorDom';
@@ -156,6 +157,21 @@ describe('Hero', () => {
         expect(hint).toHaveTextContent('Ctrl+B');
         expect(hint).toHaveTextContent('Ctrl+Shift+H');
         expect(hint).not.toHaveTextContent('⌘');
+    });
+
+    it('should print the editor shortcuts with the German key names on a German page', () => {
+        vi.spyOn(navigator, 'userAgent', 'get').mockReturnValue('Mozilla/5.0 (X11; Linux x86_64)');
+        render(
+            <LocaleProvider locale="de">
+                <Hero />
+            </LocaleProvider>,
+        );
+
+        const hint = document.getElementById(String(screen.getByRole('textbox', { name: 'Überschrift' }).getAttribute('aria-describedby')));
+
+        expect(hint).toHaveTextContent('Strg+B');
+        expect(hint).toHaveTextContent('Strg+Umschalt+H');
+        expect(hint).not.toHaveTextContent('Ctrl');
     });
 
     it('should keep the highlighted phrase as a mark so the model starts with three leaves', () => {
