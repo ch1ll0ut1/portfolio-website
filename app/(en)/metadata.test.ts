@@ -59,6 +59,15 @@ describe('route metadata', () => {
         });
     });
 
+    it('should name the German homepage as the homepage\'s translation and announce the feed', () => {
+        expect(home.alternates).toEqual({
+            canonical: '/',
+            languages: { 'en': '/', 'de': '/de', 'x-default': '/' },
+            types: feedAlternateTypes('en'),
+        });
+        expect(home.openGraph).toMatchObject({ url: siteConfig.url, alternateLocale: ['de_DE'] });
+    });
+
     it('should title the homepage with the positioning, within 60 characters', () => {
         expect(home.title).toEqual({ absolute: 'Stefan Knoch — Software Architect & Tech Lead' });
     });

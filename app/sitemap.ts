@@ -5,12 +5,10 @@ import { absoluteUrl, siteConfig } from '@/config/site';
 import { localizedPath, pageAlternates } from '@/lib/i18n/paths';
 import { SERVICES_PATH } from '@/lib/serviceStructuredData';
 
-/** One page of the site, by its English path, and the German twin it has. */
+/** One page of the site, by its English path; its German twin is derived from it. */
 interface Page {
     enPath: string;
     lastModified: Date;
-    /** Set while the page has no German twin yet: it is listed alone, without a language map. */
-    englishOnly?: true;
 }
 
 /**
@@ -32,7 +30,7 @@ interface Page {
  * `lastModified` moves anything.
  */
 export default function sitemap(): MetadataRoute.Sitemap {
-    return pages().flatMap(page => (page.englishOnly ? [englishEntry(page)] : pairEntries(page)));
+    return pages().flatMap(pairEntries);
 }
 
 /** The route table: every page the sitemap lists, by its English path. */
@@ -43,8 +41,7 @@ function pages(): Page[] {
     const blogUpdated = newestChange ? new Date(newestChange) : staticUpdated;
 
     return [
-        // `/de` arrives with the German homepage; drop `englishOnly` then.
-        { enPath: '/', lastModified: staticUpdated, englishOnly: true },
+        { enPath: '/', lastModified: staticUpdated },
         { enPath: '/blog', lastModified: blogUpdated },
         { enPath: SERVICES_PATH, lastModified: staticUpdated },
         { enPath: '/contact', lastModified: staticUpdated },
@@ -52,10 +49,6 @@ function pages(): Page[] {
         ...posts.map(post => ({ enPath: `/blog/${post.slug}`, lastModified: new Date(lastModified(post)) })),
         ...caseStudiesFor('en').map(study => ({ enPath: caseStudyPath(study), lastModified: staticUpdated })),
     ];
-}
-
-function englishEntry(page: Page): MetadataRoute.Sitemap[number] {
-    return { url: absoluteUrl(page.enPath), lastModified: page.lastModified };
 }
 
 /** The English page and its German twin, each listing both as its translations. */
