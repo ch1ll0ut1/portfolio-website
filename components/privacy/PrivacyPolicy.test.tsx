@@ -74,6 +74,17 @@ describe('PrivacyPolicy', () => {
         expect(link).toHaveAttribute('rel', 'noopener noreferrer');
     });
 
+    it('should point to the legal notice for the controller\'s address, in each language', () => {
+        // Act
+        const { unmount } = render(<PrivacyPolicy locale="en" lastUpdated="2026-01-01" />);
+
+        // Assert
+        expect(screen.getByRole('link', { name: 'legal notice' })).toHaveAttribute('href', '/imprint');
+        unmount();
+        render(<PrivacyPolicy locale="de" lastUpdated="2026-01-01" />);
+        expect(screen.getByRole('link', { name: 'Impressum' })).toHaveAttribute('href', '/de/impressum');
+    });
+
     it('should not offer an email address', () => {
         // Act
         const { container } = render(<PrivacyPolicy locale="en" lastUpdated="2026-01-01" />);

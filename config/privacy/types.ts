@@ -13,9 +13,10 @@ export interface PolicyItem {
 
 /**
  * One block of a section. Paragraph text may name slots the page fills:
- * `{name}` (the site owner), `{host}` (the site's host) and `{contactForm}`
+ * `{name}` (the site owner), `{host}` (the site's host), `{contactForm}`
  * (a link to the contact form with the privacy topic picked, worded by
- * `contactFormLink`).
+ * `contactFormLink`) and `{legalNotice}` (a link to the legal notice, worded by
+ * `legalNoticeLink`).
  */
 export type PolicyBlock
     = | { type: 'paragraph'; text: string }
@@ -50,5 +51,7 @@ export interface PrivacyCopy {
     lastUpdated: string;
     /** The words of every `{contactForm}` link in the paragraphs. */
     contactFormLink: string;
+    /** The words of the `{legalNotice}` link, which leads to the controller's address. */
+    legalNoticeLink: string;
     sections: PolicySection[];
 }

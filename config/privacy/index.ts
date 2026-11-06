@@ -10,7 +10,7 @@ export type { PolicyBlock, PolicyCardCopy, PolicyItem, PrivacyCopy } from './typ
  * text does, not when the site is rebuilt. Both languages carry the same text,
  * so they share it.
  */
-export const POLICY_LAST_UPDATED = '2026-10-19';
+export const POLICY_LAST_UPDATED = '2026-11-06';
 
 /** The privacy policy in each language: `/privacy` and `/de/datenschutz`. */
 export const privacyCopy: Record<Locale, PrivacyCopy> = {
