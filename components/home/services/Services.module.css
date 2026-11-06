@@ -129,9 +129,21 @@
     font-size: var(--fs-small);
 }
 
-/* The card's way on to its section of /services. */
+/* The card's two ways on: the contact form, and its section of /services. */
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 20px;
+}
+
+.actions .ask {
+    min-height: 44px;
+    padding: 0 1.15em;
+    font-size: .92rem;
+}
+
 .more {
-    justify-self: start;
     font-size: var(--fs-small);
     color: var(--fg);
     text-decoration: underline;

@@ -1,5 +1,6 @@
 import { type FC } from 'react';
 import Link from 'next/link';
+import { links } from '@/config/links';
 import type { ServiceOfferCopy, ServicesPageCopy } from '@/config/services/types';
 import type { Locale } from '@/lib/i18n/locale';
 import { contactHref } from './contactHref';
@@ -36,9 +37,14 @@ export const OfferSection: FC<Props> = ({ offer, labels, locale }) => {
                     <p className={styles.rangeValue}>{offer.range}</p>
                     <p className={styles.billing}>{labels.billing}</p>
                 </div>
-                <Link className={`btn btn--primary ${styles.cta}`} href={contactHref(locale)}>
-                    <span className="btn__label">{labels.offerCta}</span>
-                </Link>
+                <div className={styles.actions}>
+                    <Link className="btn btn--primary" href={contactHref(locale)}>
+                        <span className="btn__label">{labels.offerCta}</span>
+                    </Link>
+                    <a className="btn" href={links.calendly} target="_blank" rel="noopener noreferrer">
+                        <span className="btn__label">{labels.bookCta}</span>
+                    </a>
+                </div>
             </div>
 
             <div className={styles.detail}>

@@ -53,6 +53,8 @@ export interface WorkCopy {
     next: {
         title: string;
         body: string;
+        /** The main action: the 30-minute call, booked directly. */
+        book: string;
         services: string;
         contact: string;
         others: string;

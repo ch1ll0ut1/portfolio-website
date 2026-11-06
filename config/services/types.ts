@@ -93,6 +93,8 @@ export interface ServicesPageCopy {
         typical: string;
         proof: string;
         offerCta: string;
+        /** Beside `offerCta`: the 30-minute call, booked directly. */
+        bookCta: string;
         /** Says the ranges are a guide and every phase gets a fixed price. */
         billing: string;
     };

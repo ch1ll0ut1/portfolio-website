@@ -140,8 +140,9 @@ export const workEn: WorkCopy = {
     next: {
         title: 'Have a project like this?',
         body: 'I build new apps, fix broken ones, and lead your developers. Tell me what you are working on, and I will tell you honestly whether I am the right fit.',
+        book: 'Book a 30-min call',
         services: 'How I can help',
-        contact: 'Get in touch',
+        contact: 'Or write to me about your project',
         others: 'More case studies',
     },
     card: {

@@ -66,6 +66,7 @@ export const servicesEn: ServicesPageCopy = {
         typical: 'Price',
         proof: 'Done before',
         offerCta: 'Talk about your project',
+        bookCta: 'Book a call',
         billing: 'Ranges are a guide, not a quote. Every phase gets a written scope and a fixed price before it starts.',
     },
     offers: [

@@ -68,6 +68,7 @@ export const servicesDe: ServicesPageCopy = {
         typical: 'Preis',
         proof: 'Schon gemacht',
         offerCta: 'Über Ihr Projekt sprechen',
+        bookCta: 'Gespräch buchen',
         billing: 'Die Spannen sind eine Orientierung, kein Angebot. Jede Phase bekommt vorab einen schriftlichen Umfang und einen Festpreis.',
     },
     offers: [

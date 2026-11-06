@@ -8,6 +8,7 @@ import { engagements } from '@/config/engagements';
 import { engagementsEn } from '@/config/home/services/en';
 import { itemAt } from '@/test/itemAt';
 import { installIntersectionObserver, installMatchMedia, settleIntro } from '../../../test/motionEnv';
+import { LocaleProvider } from '@/lib/i18n/LocaleContext';
 import { Services } from './Services';
 import styles from './Services.module.css';
 
@@ -101,10 +102,36 @@ describe('Services', () => {
 
         // Assert
         engagements.forEach((engagement) => {
-            const link = within(cardFor(engagement.id)).getByRole('link', { name: new RegExp(engagement.name, 'i') });
+            const link = within(cardFor(engagement.id)).getByRole('link', { name: /^Details/ });
 
             expect(link).toHaveAttribute('href', `/services#${engagement.id}`);
+            expect(link).toHaveAccessibleName(expect.stringContaining(engagement.name));
         });
+    });
+
+    it('should lead every card with a way to ask about it on the contact form', () => {
+        // Act
+        render(<Services locale="en" />);
+
+        // Assert
+        engagements.forEach((engagement) => {
+            const ask = within(cardFor(engagement.id)).getByRole('link', { name: /^Ask about this/ });
+
+            expect(ask).toHaveAttribute('href', '/contact?topic=project');
+            expect(ask).toHaveAccessibleName(expect.stringContaining(engagement.name));
+        });
+    });
+
+    it('should send the German cards to the German contact page', () => {
+        // Act
+        render(
+            <LocaleProvider locale="de">
+                <Services locale="de" />
+            </LocaleProvider>,
+        );
+
+        // Assert
+        expect(screen.getAllByRole('link', { name: /^Dazu anfragen/ })[0]).toHaveAttribute('href', '/de/kontakt?topic=project');
     });
 
     it('should render one card per engagement', () => {

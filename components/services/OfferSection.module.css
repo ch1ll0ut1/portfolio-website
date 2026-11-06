@@ -88,8 +88,11 @@
     color: var(--muted);
 }
 
-.cta {
-    justify-self: start;
+/* The form first, the call beside it. */
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
 }
 
 /* The caret-marker list of the homepage cards. */

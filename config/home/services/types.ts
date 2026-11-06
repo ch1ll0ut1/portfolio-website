@@ -44,6 +44,8 @@ export interface EngagementsCopy {
     note: EngagementNoteSegment[];
     /** The label that precedes every card's range line. */
     rangeLabel: string;
+    /** The card's main action: the contact form, with the project topic chosen. */
+    askLabel: string;
     /** The card's link to its section on the services page. */
     linkLabel: string;
     /** Appended, for screen readers only, to the featured card's name. */
