@@ -31,9 +31,9 @@ export const HomePage: FC<Props> = ({ locale }) => (
         <main id="main" tabIndex={-1} data-scroll-target>
             <Hero />
             <Proof locale={locale} />
-            <Work locale={locale} />
             <Services locale={locale} />
-            <Process />
+            <Work locale={locale} />
+            <Process locale={locale} />
             <Experience locale={locale} />
             <Writing locale={locale} />
             <Contact />

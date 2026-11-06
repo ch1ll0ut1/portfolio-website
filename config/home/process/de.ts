@@ -77,7 +77,7 @@ export const processDe: ProcessCopy = {
                 label: 'Feinschliff',
                 heading: 'Iteration gehört zum Handwerk',
                 paragraphs: [
-                    'Eine erste Umsetzung macht die Idee greifbar genug, um sie zu beurteilen. Danach schärfen wir Abläufe, feilen an Details, kümmern uns um Sonderfälle und arbeiten weiter, bis es sich richtig anfühlt.',
+                    'Eine erste Umsetzung macht die Idee greifbar genug, um sie zu beurteilen. Danach schärfe ich die Abläufe gemeinsam mit Ihnen, feile an Details, kümmere mich um Sonderfälle und arbeite weiter, bis es sich richtig anfühlt.',
                     'Das ist kein Scheitern. So entstehen gute Produkte.',
                 ],
             },
@@ -87,7 +87,6 @@ export const processDe: ProcessCopy = {
         label: 'Produktzyklen',
         heading: 'Produktzyklen, Feature für Feature.',
         bridge: 'Bauen ist der Schritt, der am längsten dauert. Darin durchläuft jedes Feature denselben Zyklus aus neun Schritten.',
-        intro: 'Jedes wichtige Feature durchläuft einen kleinen Produktzyklus: Ziel, Feature-Definition, Machbarkeit, UX und Ablauf, erste Umsetzung, Review, Feinschliff, Tests und Release.',
         steps: {
             'vision-goal': {
                 title: 'Vision & Ziel',
@@ -126,6 +125,10 @@ export const processDe: ProcessCopy = {
                 description: 'Den stabilen Teil ausliefern oder mit dem Gelernten in den nächsten Feature-Zyklus gehen.',
             },
         },
+    },
+    more: {
+        text: 'Meine Grundsätze, den Zyklus, den jedes Feature durchläuft, und mit wem ich am besten arbeite, finden Sie auf der Leistungsseite.',
+        link: 'So arbeite ich',
     },
     fit: {
         label: 'Passt es?',

@@ -22,7 +22,6 @@ export interface FeatureCycleContent {
     label: string;
     heading: string;
     bridge: string;
-    intro: string;
     steps: FeatureCycleStep[];
 }
 

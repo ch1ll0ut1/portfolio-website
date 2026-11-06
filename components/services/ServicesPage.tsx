@@ -1,6 +1,7 @@
 import { type FC } from 'react';
 import type { ServicesPageCopy } from '@/config/services/types';
 import { FitSection } from './FitSection';
+import { HowIWork } from './HowIWork';
 import { OfferChooser } from './OfferChooser';
 import { OfferSection } from './OfferSection';
 import { Outcomes } from './Outcomes';
@@ -29,6 +30,7 @@ export const ServicesPage: FC<Props> = ({ copy }) => (
             <OfferSection key={offer.id} offer={offer} labels={copy.labels} locale={copy.lang} />
         ))}
         <ServicesProcess copy={copy} />
+        <HowIWork />
         <TimeZones copy={copy} />
         <Outcomes copy={copy} />
         <FitSection copy={copy} />

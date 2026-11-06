@@ -7,17 +7,12 @@ declare const styles: {
     readonly cycleNumber: string;
     readonly cycleStep: string;
     readonly cycleTitle: string;
-    readonly fit: string;
-    readonly fitItems: string;
-    readonly fitList: string;
-    readonly fitLists: string;
     readonly gutter: string;
     readonly gutterNumber: string;
     readonly head: string;
-    readonly isFit: string;
-    readonly isUnfit: string;
     readonly label: string;
     readonly lede: string;
+    readonly method: string;
     readonly principle: string;
     readonly principleList: string;
     readonly principles: string;

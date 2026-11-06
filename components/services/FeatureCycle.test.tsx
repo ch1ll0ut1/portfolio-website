@@ -41,12 +41,6 @@ describe('Feature Cycle Block', () => {
         expect(featureCycleContent.bridge).toMatch(/Build/);
     });
 
-    it('should render the intro', () => {
-        render(<FeatureCycle />);
-
-        expect(screen.getByText(featureCycleContent.intro)).toBeInTheDocument();
-    });
-
     it('should render all nine steps with their descriptions', () => {
         render(<FeatureCycle />);
 

@@ -26,10 +26,9 @@ describe('Feature Cycle Configuration', () => {
             expect(featureCycleContent.bridge).toMatch(/nine/);
         });
 
-        it('should have a label, a heading and an intro', () => {
+        it('should have a label and a heading', () => {
             expect(featureCycleContent.label).toBe('Product cycles');
             expect(featureCycleContent.heading).toBeTruthy();
-            expect(featureCycleContent.intro.length).toBeGreaterThan(40);
         });
 
         it('should have non-empty titles and descriptions', () => {

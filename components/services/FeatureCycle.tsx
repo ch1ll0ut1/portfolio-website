@@ -1,19 +1,20 @@
 'use client';
 
 /**
- * The nine-step feature cycle that runs inside the stepper's "Build" step.
+ * The nine-step feature cycle that runs inside the "Build" step of "How it
+ * works", on the services pages.
  *
  * The `bridge` line is load-bearing: without it a four-step process and a
  * nine-step process on the same page read as a contradiction instead of as one
  * nested inside the other. Kept to a dense strip for the same reason — it is
- * detail under the stepper, not a rival to it.
+ * detail under the steps, not a rival to them.
  */
 
 import { FC, useRef } from 'react';
 import { useMaskReveal, useReveal } from '@/lib/motion';
 import { featureCycleFor } from '@/config/featureCycle';
 import { useLocale } from '@/lib/i18n/LocaleContext';
-import styles from './ProcessBlocks.module.css';
+import styles from './WorkingMethod.module.css';
 
 const REVEAL_STAGGER = 0.035;
 
@@ -31,7 +32,6 @@ export const FeatureCycle: FC = () => {
                 <p className={styles.label}>{featureCycleContent.label}</p>
                 <h3 ref={headingRef}>{featureCycleContent.heading}</h3>
                 <p className={styles.lede}>{featureCycleContent.bridge}</p>
-                <p className={styles.lede}>{featureCycleContent.intro}</p>
             </div>
 
             <ol className={styles.cycleList}>

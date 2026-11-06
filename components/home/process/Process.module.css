@@ -8,7 +8,7 @@
 }
 
 .track {
-    height: 340vh;
+    height: 280vh;
 }
 
 .sticky {
@@ -324,11 +324,6 @@
     }
 }
 
-/* Inline mini terminals, shown in the stacked layout only. */
-.stepTerm {
-    display: none;
-}
-
 @media (min-width: 901px) and (prefers-reduced-motion: no-preference) {
     :global(.js) .rail {
         display: block;
@@ -354,65 +349,30 @@
         opacity: 1;
     }
 
-    /* The inline terminals need JS to type, so the full terminal stays when
-       JS never arrives. */
-    :global(.js) .term {
+    /* Stacked, the steps read on their own: the terminal is the pinned
+       stepper's illustration, not content, and four of them would add a
+       screen of scroll each on a phone. */
+    .term {
         display: none;
     }
-
-    :global(.js) .stepTerm {
-        display: block;
-        grid-column: 1 / -1;
-        margin: 6px 0 4px;
-        min-width: 0;
-        border: 1px solid #1d2a33;
-        border-radius: 10px;
-        background: #0a1116;
-        color: #cfdbe0;
-        overflow: hidden;
-    }
-
-    .stepTerm .bar {
-        padding: 9px 12px;
-        gap: 6px;
-    }
-
-    .stepTerm .bar i {
-        width: 8px;
-        height: 8px;
-    }
-
-    .stepTerm .screen {
-        position: static;
-        inset: auto;
-        opacity: 1;
-        transform: none;
-        margin: 0;
-        padding: 12px 14px 14px;
-        font-size: .7rem;
-        line-height: 1.8;
-        white-space: pre-wrap;
-        overflow-wrap: anywhere;
-        font-variation-settings: 'wdth' 85;
-    }
 }
 
-/* ---------- Secondary tier ----------
-   The folded-in principles, feature cycle and fit lists. Quieter and tighter
-   than the stepper on purpose: this is supporting detail, not a second
-   signature moment. */
-.secondary {
-    position: relative;
-    padding-block: clamp(56px, 7vw, 96px);
-    display: grid;
-    gap: clamp(48px, 5.5vw, 72px);
+/* ---------- The way on to the services page's detail ---------- */
+.more {
+    padding-block: 8px clamp(56px, 7vw, 96px);
+    max-width: 62ch;
+    color: var(--fg-2);
 }
 
-.secondary::before {
-    content: '';
-    position: absolute;
-    inset-inline: var(--gutter);
-    top: 0;
-    height: 1px;
-    background: var(--line);
+.moreLink {
+    color: var(--fg);
+    font-weight: 500;
+    text-decoration: underline;
+    text-decoration-color: var(--caret);
+    text-decoration-thickness: 2px;
+    text-underline-offset: .2em;
+}
+
+.moreLink:hover {
+    text-decoration-color: currentColor;
 }

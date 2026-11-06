@@ -12,7 +12,7 @@ import { FC, useRef } from 'react';
 import { useReveal } from '@/lib/motion';
 import { principlesFor } from '@/config/principles';
 import { useLocale } from '@/lib/i18n/LocaleContext';
-import styles from './ProcessBlocks.module.css';
+import styles from './WorkingMethod.module.css';
 
 const REVEAL_STAGGER = 0.08;
 
