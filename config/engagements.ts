@@ -1,11 +1,12 @@
 /**
- * The three ways to work together: the homepage's services cards, the share
- * card, the homepage's `Offer` structured data and the English `/services`
- * page all read them from here. Their words are in `config/home/services/`.
+ * The ways to work together: the homepage's services cards, the share card,
+ * the homepage's `Offer` structured data and the English `/services` page all
+ * read them from here. Their words are in `config/home/services/`.
  *
- * Each one is named by the buyer's problem; the trade term it is searched by
- * rides along as `subtitle`. One engagement is marked `featured`, which is what
- * earns it the raised surface, the parked caret and the traced border.
+ * The App Health Check comes first: the fixed-price entry product, and the
+ * one marked `featured`, which earns it the raised surface, the parked caret
+ * and the traced border. The other three are named by the buyer's problem;
+ * the trade term each is searched by rides along as `subtitle`.
  */
 
 import type { Locale } from '@/lib/i18n/locale';
@@ -13,7 +14,7 @@ import { engagementsCopy } from './home/services';
 import type { EngagementCopy } from './home/services/types';
 
 /** Anchor ids on `/services` and `/de/leistungen`, shared by both. */
-export type EngagementId = 'rescue' | 'build' | 'tech-lead';
+export type EngagementId = 'health-check' | 'rescue' | 'build' | 'tech-lead';
 
 export interface Engagement extends EngagementCopy {
     /** Stable key, and the section anchor on the services pages. */
@@ -23,8 +24,9 @@ export interface Engagement extends EngagementCopy {
 }
 
 const engagementData: { id: EngagementId; featured: boolean }[] = [
+    { id: 'health-check', featured: true },
     { id: 'rescue', featured: false },
-    { id: 'build', featured: true },
+    { id: 'build', featured: false },
     { id: 'tech-lead', featured: false },
 ];
 

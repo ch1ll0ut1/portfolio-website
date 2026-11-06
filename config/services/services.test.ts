@@ -45,7 +45,7 @@ describe('services copy', () => {
         languages.forEach((copy) => {
             const ids = copy.offers.map(offer => offer.id);
 
-            expect(copy.chooser.rows).toHaveLength(3);
+            expect(copy.chooser.rows.map(row => row.offerId).sort()).toEqual([...ids].sort());
             copy.chooser.rows.forEach((row) => {
                 expect(ids).toContain(row.offerId);
             });
@@ -86,6 +86,36 @@ describe('services copy', () => {
     it('should never quote an hourly rate', () => {
         languages.forEach((copy) => {
             expect(JSON.stringify(copy)).not.toMatch(/\$\d+\s*(\/|per)\s*h|USD\s*\/\s*h|pro Stunde/i);
+        });
+    });
+
+    it('should drop the hourly billing and the Upwork question in both languages', () => {
+        languages.forEach((copy) => {
+            const text = JSON.stringify(copy);
+
+            expect(text).not.toMatch(/Upwork/);
+            expect(text).not.toMatch(/by the hour|billed hourly|nach Stunden abgerechnet|about a week|etwa eine Woche/i);
+        });
+    });
+
+    it('should quote no dollars on the German page', () => {
+        expect(JSON.stringify(servicesDe)).not.toContain('$');
+    });
+
+    it('should put the search terms in the titles, the headings and the copy', () => {
+        expect(servicesEn.meta.title).toContain('Fractional CTO');
+        expect(servicesDe.meta.title).toContain('App entwickeln lassen');
+        expect(servicesDe.meta.title).toContain('Interim-CTO');
+        expect(servicesDe.meta.title).not.toContain('Tech Lead');
+        expect(servicesEn.hero.lede).toContain('freelance');
+        expect(servicesDe.hero.lede).toContain('freiberuflich');
+        expect(servicesEn.offers.find(offer => offer.id === 'rescue')?.forWho).toMatch(/Lovable, Bolt/);
+        expect(servicesDe.offers.find(offer => offer.id === 'rescue')?.forWho).toMatch(/Lovable, Bolt/);
+    });
+
+    it('should keep the descriptions within 155 characters', () => {
+        languages.forEach((copy) => {
+            expect(copy.meta.description.length).toBeLessThanOrEqual(155);
         });
     });
 

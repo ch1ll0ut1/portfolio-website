@@ -5,29 +5,30 @@
  */
 
 import {
-    FIRST_STEP_PRICE_USD,
+    ADVISOR_MONTHLY_MIN_USD,
+    EMBEDDED_MONTHLY_RANGE_USD,
+    FEE_CREDIT_DAYS,
     FIRST_VERSION_RANGE_USD,
+    HEALTH_CHECK_PRICE_USD,
+    HEALTH_CHECK_WITH_SECURITY_USD,
     RESCUE_RANGE_USD,
-    TECH_LEAD_MIN_HOURS_PER_MONTH,
-    TECH_LEAD_MONTHLY_MIN_USD,
     usdAmountEn,
     usdRangeEn,
-    usdThousandsEn,
 } from '../pricing';
 import type { FaqCopy } from './types';
 
 export const faqEn: FaqCopy[] = [
     {
-        question: 'What does it cost?',
-        answer: `Every engagement is billed by the hour against a written plan, so you pay for the work done, not for a padded fixed price. As a guide: most rescues cost ${usdRangeEn(RESCUE_RANGE_USD)}, most first versions of a new app ${usdRangeEn(FIRST_VERSION_RANGE_USD)}, and the tech-lead role starts at about ${usdAmountEn(TECH_LEAD_MONTHLY_MIN_USD)} a month, for at least ${TECH_LEAD_MIN_HOURS_PER_MONTH} hours. The first step, a health check or a product plan, is about a week of work, costs roughly ${usdThousandsEn(FIRST_STEP_PRICE_USD)}, and ends with a priced plan before you commit to more.`,
+        question: 'What does a code audit, an MVP, or a fractional CTO cost?',
+        answer: `Everything is priced before the work starts. The App Health Check is ${usdAmountEn(HEALTH_CHECK_PRICE_USD)} fixed, or ${usdAmountEn(HEALTH_CHECK_WITH_SECURITY_USD)} with a full security review, and a product plan for a new app costs the same. Both take five working days, and the fee is credited toward the work if you go ahead within ${FEE_CREDIT_DAYS} days. After that, each phase gets a fixed price in writing: most rescues come to ${usdRangeEn(RESCUE_RANGE_USD)} in all, most first versions of a new app ${usdRangeEn(FIRST_VERSION_RANGE_USD)}. As your fractional CTO, the Advisor level starts at ${usdAmountEn(ADVISOR_MONTHLY_MIN_USD)} a month and the Embedded level is ${usdRangeEn(EMBEDDED_MONTHLY_RANGE_USD)} a month, for at least three months.`,
     },
     {
         question: 'Can you take over code another developer wrote?',
-        answer: 'Yes, that is most rescue work. I start with a health check of the code, the hosting, and the accounts, then tell you plainly what is worth keeping, what needs fixing first, and what it costs. If rebuilding a part is the cheaper path, I say so, and why.',
+        answer: 'Yes, that is most rescue work. I start with the App Health Check of the code, the hosting, and the accounts, then tell you plainly what is worth keeping, what needs fixing first, and what it costs. If rebuilding a part is the cheaper path, I say so, and why.',
     },
     {
         question: 'My app was built with Lovable, Bolt, or ChatGPT. Can you help?',
-        answer: 'Yes. AI builders get you to a demo fast, but often leave gaps in security, data handling, and structure that show up once real users arrive. I check what is there, fix what is risky, and turn it into something a developer can keep building on. Sometimes most of it stays; sometimes the core needs rebuilding properly.',
+        answer: 'Yes. AI builders get you to a demo fast, but often leave gaps in security, data handling, and structure that show up once real users arrive. I check what is there, fix what is risky, and turn it into something a developer can keep building on. Sometimes most of it stays; sometimes the core needs rebuilding properly. The App Health Check tells you which, before you spend more.',
     },
     {
         question: 'I am not technical. Is that a problem?',
@@ -38,12 +39,12 @@ export const faqEn: FaqCopy[] = [
         answer: 'You do, from the first day. The code lives in your repository, the hosting and services run on your accounts, and you hold the admin access. When I take over an app, moving everything into your name is one of the first jobs.',
     },
     {
-        question: 'Why hourly, and not a fixed price?',
-        answer: 'Software changes as you learn what your users need. A fixed price either pads for that risk or turns every change into a negotiation. Hourly billing against a written plan keeps it honest: you see the hours every week, you can change priorities at any time, and you stop paying the moment you stop needing me.',
+        question: 'Why a fixed price per phase, and not hourly?',
+        answer: 'Because you should know the cost before the work starts. One fixed price for a whole project would have to pad for everything nobody knows yet, so I price one phase at a time: each gets a written scope and a fixed price, set from what the Health Check or the product plan found. If your priorities change, we rescope the next phase instead of counting hours. And you pay for the result, not my hours: if I finish a phase sooner, it costs the same and you have it earlier.',
     },
     {
-        question: 'Can I hire you through Upwork?',
-        answer: 'Yes. Upwork handles the contract, the time tracking, and payment protection on both sides. If you prefer a direct contract, that works too.',
+        question: 'Interim CTO or fractional CTO: what is the difference?',
+        answer: 'An interim CTO fills the role full-time for a set period, often while you hire a permanent one. A fractional CTO does the same job part-time, for as long as it helps; some call it a part-time CTO or CTO as a service. I work as a fractional CTO, at the Advisor or the Embedded level, and I have held an interim CTO role at an early-stage health-tech startup.',
     },
     {
         question: 'You are in Bangkok. How does the time difference work?',
@@ -59,7 +60,7 @@ export const faqEn: FaqCopy[] = [
     },
     {
         question: 'What happens after the project?',
-        answer: 'You get documentation, tests, and a walkthrough, so you or another developer can carry on without me. If you want me to stay, I can keep a small monthly budget for fixes and updates, or move into the tech-lead role.',
+        answer: 'You get documentation, tests, and a walkthrough, so you or another developer can carry on without me. If you want me to stay, I can keep a small monthly budget for fixes and updates, or move into the fractional CTO role.',
     },
     {
         question: 'Can you help me hire my own developers?',

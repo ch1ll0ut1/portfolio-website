@@ -1,6 +1,6 @@
 /**
  * The site's own share card in either language: the positioning line with
- * one phrase selected, and the three engagements under it. The homepage
+ * one phrase selected, and the engagements under it. The homepage
  * shows it, and so do the pages without a card of their own (contact,
  * privacy) through their image files.
  */

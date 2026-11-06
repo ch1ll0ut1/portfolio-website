@@ -1,5 +1,5 @@
 /**
- * The shape of the engagements' words: the three cards of the homepage's
+ * The shape of the engagements' words: the four cards of the homepage's
  * services section, its heading and its closing note. The cards' names,
  * subtitles and short names are also what the share card and the `Offer`
  * structured data say.
@@ -9,7 +9,7 @@ import type { EngagementId } from '../../engagements';
 
 /** One engagement, as its card tells it. */
 export interface EngagementCopy {
-    /** The buyer's problem, used as the card's heading. */
+    /** The card's heading: the product's name or the buyer's problem. */
     name: string;
     /** The trade term a search uses for it, shown small under the name. */
     subtitle: string;

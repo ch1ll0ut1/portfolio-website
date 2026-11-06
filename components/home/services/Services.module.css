@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Services — three engagement models.
+   Services — four engagement models, two by two: the fixed-price check first.
 
    Ported from the prototype's `services.css`, so the geometry and the timings
    match the design exactly. `.wrap`, `.section` and `.sec-head` come from
@@ -17,7 +17,7 @@
 
 .offers {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: clamp(14px, 2vw, 22px);
 }
 
