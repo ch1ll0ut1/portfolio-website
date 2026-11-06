@@ -3,7 +3,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { engagements } from '@/config/engagements';
+import { engagements, engagementsFor } from '@/config/engagements';
 import { itemAt } from '@/test/itemAt';
 import { engagementOffers, englishServices, serviceSchema } from './serviceStructuredData';
 import { PERSON_ID } from './structuredData';
@@ -34,6 +34,23 @@ describe('engagementOffers', () => {
                 'itemOffered': {
                     '@id': `https://stefanknoch.com/services#${itemAt(engagements, index).id}`,
                     'name': itemAt(engagements, index).name,
+                },
+            });
+        });
+    });
+
+    it('should offer every engagement in German on the German services page', () => {
+        const german = engagementsFor('de');
+        const offers = engagementOffers('de');
+
+        expect(offers).toHaveLength(german.length);
+        offers.forEach((offer, index) => {
+            expect(offer).toMatchObject({
+                '@type': 'Offer',
+                'itemOffered': {
+                    '@id': `https://stefanknoch.com/de/leistungen#${itemAt(german, index).id}`,
+                    'name': itemAt(german, index).name,
+                    'inLanguage': 'de',
                 },
             });
         });

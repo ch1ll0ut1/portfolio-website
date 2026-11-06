@@ -9,6 +9,8 @@
 
 import { type Engagement, type EngagementId, engagementsFor } from '@/config/engagements';
 import { absoluteUrl } from '@/config/site';
+import type { Locale } from './i18n/locale';
+import { localizedPath } from './i18n/paths';
 import { type JsonLdObject, personRef } from './structuredData';
 
 /** What a `Service` node says about one offer, in the page's language. */
@@ -40,10 +42,13 @@ export const serviceSchema = (service: ServiceDescription, path: string, languag
 /** The engagements in English, as the homepage cards and `/services` describe them. */
 export const englishServices = (): ServiceDescription[] => engagementsFor('en').map(describeEngagement);
 
-/** The homepage's offers: each engagement's `Service`, wrapped in an `Offer`. */
-export const engagementOffers = (): JsonLdObject[] => englishServices().map(service => ({
+/**
+ * The offers of the homepage in `locale`: each engagement's `Service`, in
+ * that language and anchored at the services page in it, wrapped in an `Offer`.
+ */
+export const engagementOffers = (locale: Locale = 'en'): JsonLdObject[] => engagementsFor(locale).map(engagement => ({
     '@type': 'Offer',
-    'itemOffered': serviceSchema(service, SERVICES_PATH, 'en'),
+    'itemOffered': serviceSchema(describeEngagement(engagement), localizedPath(locale, SERVICES_PATH), locale),
 }));
 
 const describeEngagement = (engagement: Engagement): ServiceDescription => ({
