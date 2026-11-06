@@ -10,6 +10,7 @@ import path from 'node:path';
 const DOM_TS_TESTS = [
     'components/chrome/caretCursorEngine.test.ts',
     'components/chrome/isEditingTarget.test.ts',
+    'components/chrome/languageStore.test.ts',
     'components/chrome/pickCursorMode.test.ts',
     'components/chrome/runCommand.test.ts',
     'components/chrome/themeStore.test.ts',

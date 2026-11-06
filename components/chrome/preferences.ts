@@ -13,7 +13,7 @@
 import { useSyncExternalStore } from 'react';
 
 export type Preference
-    /** `t`, `?` and the `g` chords. ⌘K is not affected. */
+    /** `t`, `l`, `?` and the `g` chords. ⌘K is not affected. */
     = | 'singleKeyShortcuts'
     /** The custom caret cursor. */
       | 'caretCursor';

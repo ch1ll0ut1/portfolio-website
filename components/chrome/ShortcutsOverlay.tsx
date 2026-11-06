@@ -118,6 +118,7 @@ export const ShortcutsOverlay: FC<Props> = ({ open, onClose }) => {
 const buildShortcuts = (apple: boolean, { shortcuts, sections }: ChromeCopy): Shortcut[] => [
     { keys: [apple ? '⌘' : 'Ctrl', 'K'], label: shortcuts.palette },
     { keys: ['T'], label: shortcuts.theme },
+    { keys: ['L'], label: shortcuts.language },
     ...orderedChordSections.map(section => ({
         keys: ['G', section.chord.toUpperCase()],
         label: section.id === 'top' ? shortcuts.top : shortcuts.goTo(sections[section.id]),

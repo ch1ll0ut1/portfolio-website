@@ -21,6 +21,7 @@ export const chromeEn: ChromeCopy = {
         brandHome: 'Stefan Knoch, home',
     },
     themeToggle: 'Switch color theme',
+    languageOffer: { code: 'EN', invite: 'Read in English' },
     palette: {
         label: 'Command menu',
         placeholder: 'Jump to a section or run a command',
@@ -60,11 +61,12 @@ export const chromeEn: ChromeCopy = {
         close: 'Close shortcuts',
         palette: 'Command menu',
         theme: 'Switch color theme',
+        language: 'Switch language',
         goTo: section => `Go to ${section.toLowerCase()}`,
         top: 'Back to top',
         help: 'This list',
         setting: 'Single-key shortcuts',
-        settingHint: 'T, ? and the G chords. The command menu always works.',
+        settingHint: 'T, L, ? and the G chords. The command menu always works.',
     },
     chordHint: keys => `then ${keys}`,
     toasts: {

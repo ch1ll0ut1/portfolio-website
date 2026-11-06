@@ -3,9 +3,11 @@
 import { type FC, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { chordSections } from '@/config/sections';
+import { otherLocale } from '@/lib/i18n/locale';
 import { useLocale } from '@/lib/i18n/LocaleContext';
 import { ChordHint } from './ChordHint';
 import { isEditingTarget } from './isEditingTarget';
+import { switchLanguage } from './languageStore';
 import { usePreference } from './preferences';
 import { scrollToSection } from './scrollToSection';
 import { toggleTheme } from './themeStore';
@@ -21,7 +23,7 @@ interface Props {
 }
 
 /**
- * The page's keyboard layer: one document handler for ⌘K, `t`, `?` and the
+ * The page's keyboard layer: one document handler for ⌘K, `t`, `l`, `?` and the
  * `g` chords.
  *
  * Single-letter shortcuts are only safe because every path checks the event
@@ -99,6 +101,9 @@ export const KeyboardChords: FC<Props> = ({ overlayOpen, onTogglePalette, onOpen
             }
             else if (key === 't' && !event.shiftKey) {
                 toggleTheme();
+            }
+            else if (key === 'l' && !event.shiftKey) {
+                switchLanguage(otherLocale(locale));
             }
             else if (key === 'g' && !event.shiftKey) {
                 arm();

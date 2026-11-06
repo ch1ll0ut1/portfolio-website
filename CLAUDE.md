@@ -126,6 +126,18 @@ Blog content is managed through:
 - **Syntax highlighting** via react-syntax-highlighter
 - **Type-safe configuration** in `config/blog/` (facts in `posts.ts`, words in `en.ts` / `de.ts`)
 
+### Language Preference
+
+- **Default** is the browser's language; a language picked on the site (nav
+  switch, palette, `L`) is stored as `sk-lang` (`components/chrome/languageStore.ts`)
+  and wins in both directions on every load.
+- **The boot script** (`lib/bootScript.ts`, first block) forwards to the twin
+  page: always for a stored choice; with none, only EN→DE, only on arrival
+  from another site, and only when the first `en`/`de` entry in
+  `navigator.languages` is `de`. It embeds `DE_SEGMENTS`, so its mapping is
+  `twinPath`'s. A crawler (en-US, nothing stored) is never moved.
+- **Other open tabs** do not follow a switch; they pick it up on their next load.
+
 ### Contact Form
 
 - **`/contact`** is prerendered like every other page. The form fetches its

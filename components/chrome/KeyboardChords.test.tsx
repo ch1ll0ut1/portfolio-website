@@ -105,6 +105,18 @@ describe('<KeyboardChords>', () => {
         expect(document.documentElement.dataset.theme).toBe('light');
     });
 
+    it('should switch to the other language on l', () => {
+        const replace = vi.fn();
+
+        vi.stubGlobal('location', { pathname: '/services', search: '', hash: '', replace });
+        mount();
+        press('l');
+        vi.unstubAllGlobals();
+
+        expect(replace).toHaveBeenCalledWith('/de/leistungen');
+        expect(localStorage.getItem('sk-lang')).toBe('de');
+    });
+
     it('should jump to a section when g is followed by its chord', () => {
         const scrollIntoView = vi.fn();
         const section = document.createElement('section');
@@ -258,7 +270,7 @@ describe('<KeyboardChords>', () => {
             setPreference('singleKeyShortcuts', false);
         });
 
-        it('should ignore t, ? and the g chords', () => {
+        it('should ignore t, l, ? and the g chords', () => {
             const scrollIntoView = vi.fn();
             const section = document.createElement('section');
 
@@ -268,9 +280,12 @@ describe('<KeyboardChords>', () => {
 
             mount();
             press('t');
+            press('l');
             press('?');
             press('g');
             press('w');
+
+            expect(localStorage.getItem('sk-lang')).toBeNull();
 
             expect(document.documentElement.dataset.theme).toBeUndefined();
             expect(onOpenShortcuts).not.toHaveBeenCalled();

@@ -79,6 +79,14 @@ describe('<ShortcutsOverlay>', () => {
         expect(onClose).not.toHaveBeenCalled();
     });
 
+    it('should list the language switch among the single-key rows', async () => {
+        await mount();
+
+        const row = screen.getByText('Switch language').closest('div');
+
+        expect(row?.querySelector('kbd')).toHaveTextContent('L');
+    });
+
     it('should list a row for every section chord', async () => {
         await mount();
 

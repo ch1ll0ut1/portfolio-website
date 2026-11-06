@@ -23,3 +23,9 @@ export const ogLocale: Record<Locale, string> = {
 
 /** The language a page's twin is in. */
 export const otherLocale = (locale: Locale): Locale => locale === 'en' ? 'de' : 'en';
+
+/**
+ * Where a language picked on the site is stored. The boot script reads it
+ * before first paint, `components/chrome/languageStore.ts` writes it.
+ */
+export const LANGUAGE_STORAGE_KEY = 'sk-lang';

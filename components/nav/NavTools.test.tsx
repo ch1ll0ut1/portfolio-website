@@ -15,6 +15,10 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { NavTools } from './NavTools';
 
+vi.mock('next/navigation', () => ({
+    usePathname: () => '/services',
+}));
+
 const MAC = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)';
 const LINUX = 'Mozilla/5.0 (X11; Linux x86_64)';
 
@@ -29,6 +33,16 @@ describe('<NavTools> Component', () => {
         expect(screen.getByRole('button', { name: 'Open command menu' })).toBeInTheDocument();
         expect(screen.getByRole('button', { name: 'Switch color theme' })).toBeInTheDocument();
         expect(screen.getAllByRole('button')).toHaveLength(2);
+    });
+
+    it('should offer this page in the other language, ahead of the theme switch', () => {
+        render(<NavTools />);
+
+        const link = screen.getByRole('link', { name: 'Auf Deutsch lesen' });
+
+        expect(link).toHaveAttribute('href', '/de/leistungen');
+        expect(link.compareDocumentPosition(screen.getByRole('button', { name: 'Switch color theme' })))
+            .toBe(Node.DOCUMENT_POSITION_FOLLOWING);
     });
 
     it('should mark the command trigger with the attribute the chrome listens on', () => {
