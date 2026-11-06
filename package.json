@@ -15,7 +15,8 @@
     "test:watch": "vitest --watch",
     "test:coverage": "vitest run --coverage",
     "visual-check": "node scripts/visual-check.mjs",
-    "a11y-check": "node scripts/a11y-check.mjs"
+    "a11y-check": "node scripts/a11y-check.mjs",
+    "i18n-check": "node scripts/i18n-check.mjs"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",
