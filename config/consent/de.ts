@@ -19,11 +19,11 @@ export const consentDe: ConsentCopy = {
     categories: {
         essential: {
             title: 'Notwendige Cookies',
-            description: 'Nötig, damit die Website funktioniert. Sie speichern Ihre Cookie-Auswahl und lassen sich nicht abschalten.',
+            description: 'Nötig, damit die Website funktioniert. Diese Cookies speichern Ihre Auswahl und lassen sich nicht abschalten.',
         },
         analytics: {
             title: 'Statistik-Cookies',
-            description: 'Zeigen mir anonym über Google Analytics, welche Wege durch die Website genommen werden. So sehe ich, was sich zu behalten lohnt. Solange diese Option aus ist, wird Google Analytics gar nicht geladen.',
+            description: 'Zeigen mir anonym über Google Analytics, wie die Website genutzt wird. So sehe ich, was sich zu behalten lohnt. Solange diese Option aus ist, wird Google Analytics gar nicht geladen.',
         },
     },
 };

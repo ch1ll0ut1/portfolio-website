@@ -1,16 +1,13 @@
 /**
  * The English services page, `/services`.
  *
- * Names, subtitles and who each engagement is for come from
- * `config/engagements.ts`, the same source as the homepage cards; prices from
+ * Names, subtitles and who each engagement is for, the talk and hand-over
+ * steps, the outcomes and the fit lists come from the homepage's config
+ * through `./fromHome.ts`, as they do in `de.ts`; prices from
  * `config/pricing.ts`. Facts come from the CV (`config/career.ts`,
  * `config/caseStudies.ts`); nothing here is a claim the CV cannot back.
  */
 
-import { type EngagementId, engagements } from '../engagements';
-import { caseStudies } from '../caseStudies';
-import { fitContent } from '../fit';
-import { processSteps } from '../processSteps';
 import {
     FIRST_STEP_PRICE_USD,
     FIRST_VERSION_RANGE_USD,
@@ -23,12 +20,8 @@ import {
 } from '../pricing';
 import { yearsShipping } from '../site';
 import { faqEn } from './faqEn';
-import type { OutcomeCopy, ServiceOfferCopy, ServicesPageCopy } from './types';
-
-/** The case studies the proof section summarizes, in order. */
-const OUTCOME_CASES = ['eko', 'socialbee', 'edithing'] as const;
-
-const [goodFit, notFit] = fitContent.lists;
+import { fitListsFor, fromEngagement, outcomesFor, stepDescription } from './fromHome';
+import type { ServicesPageCopy } from './types';
 
 export const servicesEn: ServicesPageCopy = {
     lang: 'en',
@@ -74,7 +67,7 @@ export const servicesEn: ServicesPageCopy = {
     },
     offers: [
         {
-            ...fromEngagement('rescue'),
+            ...fromEngagement('en', 'rescue'),
             problem: '“The developer is gone, the app keeps breaking, and nobody can tell me how bad it really is.”',
             youGet: [
                 'A health and security check in about a week: what works, what is risky, and what is urgent, in plain English',
@@ -97,7 +90,7 @@ export const servicesEn: ServicesPageCopy = {
             ],
         },
         {
-            ...fromEngagement('build'),
+            ...fromEngagement('en', 'build'),
             problem: '“I have an idea and a budget. I need a real product, not a demo that falls over with its first hundred users.”',
             youGet: [
                 'A product plan in about a week: what to build first, what to leave out, and what it costs',
@@ -120,7 +113,7 @@ export const servicesEn: ServicesPageCopy = {
             ],
         },
         {
-            ...fromEngagement('tech-lead'),
+            ...fromEngagement('en', 'tech-lead'),
             problem: '“I have developers, or I am about to hire some, but nobody senior to tell me whether the work is any good.”',
             youGet: [
                 'Reviews of your developers’ code, plans, and estimates',
@@ -147,10 +140,10 @@ export const servicesEn: ServicesPageCopy = {
         title: 'How it works',
         lede: 'The same four steps for every engagement. You only commit to the next one once you have seen the last.',
         steps: [
-            { title: 'Talk', description: stepDescription('talk') },
+            { title: 'Talk', description: stepDescription('en', 'talk') },
             { title: 'Plan', description: 'About a week of paid work: I read the code or shape the idea, and you get a written plan with risks, milestones, and cost. You decide with real numbers.' },
             { title: 'Build', description: 'Progress you can see every week, on accounts you own, with a short written update: what is done, what is next, and the hours used.' },
-            { title: 'Hand over', description: stepDescription('handover') },
+            { title: 'Hand over', description: stepDescription('en', 'handover') },
         ],
     },
     timeZones: {
@@ -168,14 +161,11 @@ export const servicesEn: ServicesPageCopy = {
         title: 'What came out of it',
         lede: 'Three projects, three different problems.',
         linkLabel: 'Read the case study',
-        items: OUTCOME_CASES.map(outcomeOf),
+        items: outcomesFor('en'),
     },
     fit: {
         title: 'A good fit?',
-        goodTitle: goodFit.title,
-        good: goodFit.items,
-        notTitle: notFit.title,
-        not: notFit.items,
+        ...fitListsFor('en'),
     },
     faq: {
         title: 'Questions clients ask',
@@ -186,33 +176,3 @@ export const servicesEn: ServicesPageCopy = {
         lede: 'A free 30-minute call, or a message if you prefer writing. I reply within one working day.',
     },
 };
-
-function fromEngagement(id: EngagementId): Pick<ServiceOfferCopy, 'id' | 'name' | 'subtitle' | 'forWho'> {
-    const engagement = engagements.find(candidate => candidate.id === id);
-
-    if (!engagement) {
-        throw new Error(`No engagement "${id}" in config/engagements.ts`);
-    }
-
-    return { id, name: engagement.name, subtitle: engagement.subtitle, forWho: engagement.who };
-}
-
-function stepDescription(id: string) {
-    const step = processSteps.find(candidate => candidate.id === id);
-
-    if (!step) {
-        throw new Error(`No process step "${id}" in config/processSteps.ts`);
-    }
-
-    return step.description;
-}
-
-function outcomeOf(id: OutcomeCopy['caseId']): OutcomeCopy {
-    const study = caseStudies.find(candidate => candidate.id === id);
-
-    if (!study) {
-        throw new Error(`No case study "${id}" in config/caseStudies.ts`);
-    }
-
-    return { caseId: id, client: study.client, outcome: study.result };
-}

@@ -4,8 +4,9 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { engagements } from '../engagements';
-import { fitContent } from '../fit';
+import { caseStudiesFor } from '../caseStudies';
+import { engagements, engagementsFor } from '../engagements';
+import { fitFor } from '../fit';
 import { yearsShipping } from '../site';
 import { servicesDe } from './de';
 import { servicesEn } from './en';
@@ -61,9 +62,25 @@ describe('services copy', () => {
         expect(servicesDe.hero.lede).toContain(`${yearsShipping()} Jahre`);
     });
 
-    it('should use the fit lists from config in English', () => {
-        expect(servicesEn.fit.good).toEqual(fitContent.lists[0].items);
-        expect(servicesEn.fit.not).toEqual(fitContent.lists[1].items);
+    it('should use the fit lists from the homepage config in both languages', () => {
+        [{ copy: servicesEn, fit: fitFor('en') }, { copy: servicesDe, fit: fitFor('de') }].forEach(({ copy, fit }) => {
+            expect(copy.fit.good).toEqual(fit.lists[0].items);
+            expect(copy.fit.not).toEqual(fit.lists[1].items);
+        });
+    });
+
+    it('should take who each offer is for from the homepage engagements in both languages', () => {
+        [{ copy: servicesEn, cards: engagementsFor('en') }, { copy: servicesDe, cards: engagementsFor('de') }].forEach(({ copy, cards }) => {
+            expect(copy.offers.map(offer => offer.forWho)).toEqual(cards.map(card => card.who));
+        });
+    });
+
+    it('should tell the outcomes as the case study cards do in both languages', () => {
+        [{ copy: servicesEn, studies: caseStudiesFor('en') }, { copy: servicesDe, studies: caseStudiesFor('de') }].forEach(({ copy, studies }) => {
+            copy.outcomes.items.forEach((item) => {
+                expect(item.outcome).toBe(studies.find(study => study.id === item.caseId)?.result);
+            });
+        });
     });
 
     it('should never quote an hourly rate', () => {

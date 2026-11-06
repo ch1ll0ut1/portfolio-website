@@ -41,12 +41,12 @@ export const serviceProviders: PolicyItem[] = [
 ];
 
 export const dataRights: PolicyItem[] = [
-    { label: 'Access', text: 'Ask for a copy of the personal data I hold about you' },
-    { label: 'Correction', text: 'Ask me to correct inaccurate or incomplete data' },
-    { label: 'Deletion', text: 'Ask me to delete your personal data' },
-    { label: 'Portability', text: 'Ask for your data in a machine-readable format' },
-    { label: 'Withdrawal of consent', text: 'Turn analytics off at any time, without affecting anything processed before' },
-    { label: 'Restriction and objection', text: 'Ask me to limit, or object to, processing based on legitimate interest' },
+    { label: 'Access (Art. 15 GDPR)', text: 'Ask for a copy of the personal data I hold about you' },
+    { label: 'Correction (Art. 16 GDPR)', text: 'Ask me to correct inaccurate or incomplete data' },
+    { label: 'Deletion (Art. 17 GDPR)', text: 'Ask me to delete your personal data' },
+    { label: 'Portability (Art. 20 GDPR)', text: 'Ask for your data in a machine-readable format' },
+    { label: 'Withdrawal of consent (Art. 7(3) GDPR)', text: 'Turn analytics off at any time, without affecting anything processed before' },
+    { label: 'Restriction and objection (Art. 18 and 21 GDPR)', text: 'Ask me to limit, or object to, processing based on legitimate interest' },
 ];
 
 export const cookieManagement: PolicyItem[] = [

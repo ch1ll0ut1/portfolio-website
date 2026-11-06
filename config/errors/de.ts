@@ -9,7 +9,7 @@ export const errorsDe: ErrorsCopy = {
         page: {
             title: 'Seite nicht gefunden',
             description: 'Die gesuchte Seite gibt es nicht.',
-            body: 'Diese Seite gibt es nicht, oder sie ist umgezogen, seit der Link entstanden ist.',
+            body: 'Diese Seite gibt es nicht (mehr), oder sie ist umgezogen.',
             action: 'Zur Startseite',
         },
         post: {
@@ -28,7 +28,7 @@ export const errorsDe: ErrorsCopy = {
     error: {
         kicker: 'Fehler',
         title: 'Etwas ist schiefgelaufen',
-        body: 'Diese Seite konnte nicht geladen werden. Ein neuer Versuch hilft meistens; wenn nicht, können Sie auf der Startseite neu beginnen.',
+        body: 'Diese Seite konnte nicht geladen werden. Meist hilft ein neuer Versuch. Wenn nicht, können Sie auf der Startseite neu beginnen.',
         home: 'Zur Startseite',
         retry: 'Erneut versuchen',
     },

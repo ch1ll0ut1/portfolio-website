@@ -32,7 +32,7 @@ export const privacyEn: PrivacyCopy = {
         {
             heading: 'Introduction',
             blocks: [
-                { type: 'paragraph', text: '{name} (“I”, “me”, or “my”) runs {host} (the “Website”). This policy explains what personal data the Website processes when you visit it or get in touch, why, and what you can do about it.' },
+                { type: 'paragraph', text: '{name} (“I”, “me”, or “my”) runs {host} (the “Website”) and is the controller responsible for processing your data on the Website. This policy explains what personal data the Website processes when you visit it or get in touch, why, and what you can do about it.' },
                 { type: 'paragraph', text: 'The Website collects as little as it can. It was written with the General Data Protection Regulation (GDPR) and the California Consumer Privacy Act (CCPA) in mind.' },
             ],
         },
@@ -137,7 +137,7 @@ export const privacyEn: PrivacyCopy = {
         {
             heading: 'Supervisory Authority',
             blocks: [
-                { type: 'paragraph', text: 'If you are in the European Economic Area and feel I have not handled your concern properly, you can lodge a complaint with your local data protection authority.' },
+                { type: 'paragraph', text: 'If you are in the European Economic Area and feel I have not handled your concern properly, you can lodge a complaint with your local data protection authority (Art. 77 GDPR).' },
             ],
         },
     ],

@@ -14,7 +14,7 @@ export const blogDe: BlogCopy = {
     posts: {
         'how-to-use-ai-to-build-apps-10x-speed': {
             title: 'Mit KI Apps 10× schneller bauen',
-            excerpt: 'Mein Workflow aus der Praxis: ChatGPT, v0, Claude Code und Cursor kombinieren, Apps deutlich schneller bauen und die KI auf Kurs halten, wenn sie danebenliegt.',
+            excerpt: 'Mein Workflow aus der Praxis: ChatGPT, v0, Claude Code und Cursor kombinieren, Apps viel schneller bauen und die KI auf Kurs halten, wenn sie danebenliegt.',
         },
         'nodejs-vs-python-framework-magic': {
             title: 'Node.js vs Python: Was Framework-Magie kostet',
@@ -22,11 +22,11 @@ export const blogDe: BlogCopy = {
         },
         'how-to-hire-your-first-developer': {
             title: 'Den ersten Entwickler einstellen: So geht’s',
-            excerpt: 'Für Gründungsteams und Führungskräfte ohne Technikwissen: die erste Entwicklungsstelle richtig besetzen, mit klaren Schritten, Praxistests und erfahrenem Rat.',
+            excerpt: 'Für Gründungs- und Führungsteams ohne Technikwissen: die erste Entwicklungsstelle richtig besetzen, mit klaren Schritten, Praxistests und erfahrenem Rat.',
         },
         'why-startups-dont-need-product-owners': {
             title: 'Warum Startups keinen Product Owner brauchen',
-            excerpt: 'Ein zu früh eingestellter Product Owner ist ein häufiger Fehler in Startups und neuen Tech Teams. Warum die Rolle anfangs wenig bringt und wann sie sich lohnt.',
+            excerpt: 'Viele Startups und neue Tech Teams stellen zu früh einen Product Owner ein. Warum die Rolle anfangs wenig bringt und wann sie sich wirklich lohnt.',
         },
         'how-to-build-a-startup-dev-team-for-real-world-success': {
             title: 'Ein Startup-Team aufbauen, das funktioniert',
@@ -34,15 +34,15 @@ export const blogDe: BlogCopy = {
         },
         'startup-burnout-trap': {
             title: 'Burnout: Wie Überarbeitung Startups ruiniert',
-            excerpt: '13-Stunden-Tage machen Startups nicht schneller. Sie bringen Burnout, technische Schulden und verschenkte Talente. Mehr Leute retten keine schlechte Kultur.',
+            excerpt: '13-Stunden-Tage machen Startups nicht schneller. Sie bringen Burnout, technische Schulden und vergeudete Talente. Mehr Leute retten keine schlechte Kultur.',
         },
         '10-ai-workflows-every-developer-should-know-2025': {
             title: '10 KI-Workflows für Entwicklungsteams',
-            excerpt: 'KI ist mehr als Autovervollständigung. Zehn Workflows von Planung und UI-Gerüst bis zu Tests, Reviews und Deployment, mit denen Teams viel schneller ausliefern.',
+            excerpt: 'KI ist mehr als Autovervollständigung: zehn Workflows von Planung und UI-Gerüst bis zu Tests, Reviews und Deployment, mit denen Teams schneller ausliefern.',
         },
         'why-good-software-engineering-is-expensive': {
             title: 'Warum gute Softwareentwicklung teuer ist',
-            excerpt: 'KI kann Code erzeugen, aber kein technisches Urteilsvermögen ersetzen. Gute Software ist teuer, weil schlechte später mehr kostet: Fehler, Neubau, Schulden.',
+            excerpt: 'KI erzeugt Code, ersetzt aber kein technisches Urteilsvermögen. Gute Software ist teuer, weil schlechte später mehr kostet: Fehler, Neubau, Schulden.',
         },
     },
     // Tags not listed here (names, Burnout, UX, Vibe Coding, Workflows, Clean Code, Fractional CTO) show as they are.
@@ -68,7 +68,7 @@ export const blogDe: BlogCopy = {
     },
     indexMeta: {
         title: 'Blog – Softwareentwicklung, Führung und KI',
-        description: 'Über Softwareentwicklung, technische Führung, Einstellung und Software mit KI: aus Jahren, in denen ich Produkte ausgeliefert und Teams geführt habe.',
+        description: 'Über Softwareentwicklung, technische Führung, Recruiting und Software mit KI: aus Jahren, in denen ich Produkte ausgeliefert und Teams geführt habe.',
     },
     indexHeading: {
         kicker: 'Blog',
@@ -98,7 +98,7 @@ export const blogDe: BlogCopy = {
         kicker: 'Geschrieben von',
         bio: {
             beforeYear: 'Softwarearchitekt & Tech Lead seit',
-            afterYear: '. Ich baue neue Apps, repariere kaputte und führe Entwicklungsteams für Startups und kleine Unternehmen. Ich arbeite remote aus Bangkok, auf Englisch und',
+            afterYear: '. Ich baue neue Apps, rette fehlerhafte und führe Entwicklungsteams für Startups und kleine Unternehmen. Ich arbeite remote aus Bangkok, auf Englisch und',
             german: 'Deutsch',
             end: '.',
         },
@@ -110,7 +110,7 @@ export const blogDe: BlogCopy = {
     cardKicker: 'blog',
     feed: {
         title: name => `${name} – Blog`,
-        description: 'Artikel über Softwareentwicklung, technische Führung, Einstellung und Software mit KI.',
+        description: 'Artikel über Softwareentwicklung, technische Führung, Recruiting und Software mit KI.',
         language: 'de-de',
     },
     schemaName: name => `Blog von ${name}`,

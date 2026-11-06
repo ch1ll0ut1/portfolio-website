@@ -7,7 +7,7 @@ import { siteIdentity } from '../site/identity';
 import type { ContactCopy } from './types';
 
 export const contactDe: ContactCopy = {
-    invitation: 'Erzählen Sie mir, was Sie bauen und wo es hakt. Ich antworte innerhalb eines Werktags, aus Bangkok (UTC+7). Das deckt den ganzen europäischen Arbeitstag ab, dazu den Vormittag in den USA und ganz Asien.',
+    invitation: 'Erzählen Sie mir, was Sie bauen und wo es hakt. Ich antworte innerhalb eines Werktags, aus Bangkok (UTC+7). Von dort aus decke ich den ganzen europäischen Arbeitstag ab, dazu den Vormittag in den USA und ganz Asien.',
     topics: {
         general: 'Allgemein',
         project: 'Projekt',
@@ -24,7 +24,7 @@ export const contactDe: ContactCopy = {
     page: {
         kicker: 'Kontakt',
         heading: 'Erzählen Sie mir von Ihrer App, Ihrem MVP oder Ihrem Team',
-        linkedIn: 'Am schnellsten erreichen Sie mich auf LinkedIn: {linkedin}. Dieses Formular ist für alles andere da, auch für Datenschutzanfragen. Es landet in meinem Postfach, und ich antworte per E-Mail.',
+        linkedIn: 'Am schnellsten geht es über LinkedIn: {linkedin}. Dieses Formular ist für alles andere da, auch für Datenschutzanfragen. Es landet in meinem Postfach, und ich antworte per E-Mail.',
         linkedInLink: 'Schreiben Sie mir dort',
         privacyNote: 'Was mit Ihren Angaben geschieht, steht in der {privacy}.',
         privacyLink: 'Datenschutzerklärung',

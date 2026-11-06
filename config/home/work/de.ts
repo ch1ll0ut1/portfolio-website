@@ -14,7 +14,7 @@ import type { WorkCopy } from './types';
 export const workDe: WorkCopy = {
     heading: {
         title: 'Ausgewählte Projekte',
-        lede: 'Vier Projekte, bei denen es genau um den schwierigen Teil ging: strukturierte Dokumente, typisierte Daten von der Datenbank bis zur Oberfläche, eine Abteilung aus dem Nichts und ein Nachrichtensystem unter Last.',
+        lede: 'Vier Projekte, bei denen es genau um den schwierigen Teil ging: strukturierte Dokumente, typisierte Daten von der Datenbank bis zur Oberfläche, eine Abteilung, die bei null anfing, und ein Nachrichtensystem unter Last.',
     },
     card: {
         problem: 'Problem',
@@ -27,24 +27,24 @@ export const workDe: WorkCopy = {
         edithing: {
             role: 'Leitender Architekt',
             client: 'Isländisches Parlament',
-            problem: 'Isländisches Recht steckt in tief verschachtelten Dokumenten: Kapitel, Artikel, Absätze und nummerierte Punkte. Gewöhnliche Editoren ebnen diese Struktur ein oder lassen sie zerbrechen.',
+            problem: 'Isländisches Recht steckt in tief verschachtelten Dokumenten: Kapitel, Artikel, Absätze und nummerierte Punkte. Normale Editoren machen daraus Fließtext oder bringen die Struktur durcheinander.',
             did: 'Ich habe auf Slate.js ein typisiertes, hierarchisches Dokumentmodell entworfen, das laufend normalisiert wird. So bleibt die rechtliche Struktur bei jedem Tastendruck gültig.',
-            result: 'Ein Open-Source-Editor, in dem Islands Gesetzessammlung, Gesetzentwürfe und Änderungsanträge verfasst werden. Mein dritter Rich-Text-Editor im Produktiveinsatz, nach Slimwiki und DirectMail.',
+            result: 'Ein Open-Source-Editor, um die Gesetzessammlung, Gesetzentwürfe und Änderungsanträge zu verfassen. Mein dritter Rich-Text-Editor im Produktiveinsatz, nach Slimwiki und DirectMail.',
             linkLabel: 'Quellcode auf GitHub ansehen',
             metricLabel: 'Editor im Produktiveinsatz',
         },
         bluereceipt: {
             role: 'Technischer Mitgründer',
             client: 'SMS-Marketing für Shopify-Shops',
-            problem: 'Marketing-Automatisierung, gemeinsames Bearbeiten, Shopify und Twilio mussten mit einem einzigen Datenmodell auskommen. Und jede Nachricht musste zuverlässig über Twilio rausgehen.',
-            did: 'Ich habe eine durchgängig typisierte Datenschicht gebaut, vom Datenbankschema bis zu einem generierten Frontend-SDK, mit eigenem ORM. Dazu eine Automatisierungs-Pipeline für Schema-Abgleich, API-Dokumentation, SDK-Generierung, visuelle Tests und Deployments. Auf AWS CDK habe ich ECS statt Serverless gewählt und die Standards für ein Team von sechs Personen festgelegt.',
+            problem: 'Marketing-Automatisierung, gemeinsames Bearbeiten, Shopify und Twilio mussten auf ein gemeinsames Datenmodell passen. Und jede Nachricht musste zuverlässig über Twilio verschickt werden.',
+            did: 'Ich habe eine durchgängig typisierte Datenschicht gebaut, vom Datenbankschema bis zu einem generierten Frontend-SDK, mit eigenem ORM. Dazu eine Automatisierungs-Pipeline für Schema-Abgleich, API-Dokumentation, SDK-Generierung, visuelle Tests und Deployments. Mit AWS CDK habe ich auf ECS statt Serverless gesetzt und die Standards für ein Team von sechs Personen festgelegt.',
             result: 'Brach eine Schemaänderung etwas, scheiterte der Build, statt dass der Fehler in Produktion landete. Und Deployments liefen von Anfang bis Ende automatisch.',
             metricLabel: 'eine typisierte Datenschicht',
         },
         socialbee: {
             role: 'Tech Lead & Produktarchitekt',
             client: 'Plattform für Zugewanderte, Deutschland',
-            problem: 'Eine Organisation, die Zugewanderte bei deutschen Behördengängen, mit Kursen und mit Informationsmaterial unterstützt, hatte eine Mission, aber kein Tech Team.',
+            problem: 'Eine Organisation, die Zugewanderte bei Behördengängen in Deutschland, mit Kursen und mit Informationsmaterial unterstützt, hatte eine Mission, aber kein Tech Team.',
             did: 'Ich habe die Tech- und Produktabteilung von null aufgebaut: das Team für Entwicklung und Design eingestellt, die Abläufe festgelegt, die UX mit den Stakeholdern entworfen und die Plattform auf AWS mit automatisierten Pipelines konzipiert.',
             result: 'Ein vollständiges technisches Fundament, von der Kernplattform bis zu CI/CD und der AWS-Infrastruktur, und ein eigenes Team, das ich eingestellt und begleitet habe.',
             metricLabel: 'Tech-Abteilung',
@@ -104,7 +104,7 @@ export const workDe: WorkCopy = {
             clean: 'tsc · 0 Fehler',
             failed: 'tsc · 1 Fehler',
             checking: 'tsc · prüft',
-            caught: 'Im Build abgefangen, bevor es live ging.',
+            caught: 'Im Build abgefangen, bevor der Fehler live ging.',
         },
         socialbee: {
             title: 'tech-abteilung',
