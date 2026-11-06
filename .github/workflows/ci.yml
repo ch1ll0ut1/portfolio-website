@@ -54,3 +54,14 @@ jobs:
       # `pnpm build` would re-run lint and tsc, which the steps above already did
       - name: Build application
         run: pnpm exec next build
+
+      # Same-language links and reciprocal hreflang over every page in the
+      # sitemap, against the build just made (scripts/i18n-check.mjs)
+      - name: Check the two languages against each other
+        run: |
+          pnpm exec next start -p 3100 &
+          for attempt in $(seq 1 60); do
+            curl -sf -o /dev/null http://localhost:3100/sitemap.xml && break
+            sleep 1
+          done
+          pnpm i18n-check --base http://localhost:3100
