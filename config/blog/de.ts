@@ -97,7 +97,7 @@ export const blogDe: BlogCopy = {
         headshotAlt: 'Stefan Knoch',
         kicker: 'Geschrieben von',
         bio: {
-            beforeYear: 'Softwarearchitekt & Tech Lead seit',
+            beforeYear: 'Freier Softwarearchitekt & Interim-CTO seit',
             afterYear: '. Ich baue neue Apps, rette fehlerhafte und führe Entwicklungsteams für Startups und kleine Unternehmen. Ich arbeite remote aus Bangkok, auf Englisch und',
             german: 'Deutsch',
             end: '.',

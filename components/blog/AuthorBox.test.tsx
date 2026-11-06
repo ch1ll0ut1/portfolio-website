@@ -37,7 +37,7 @@ describe('AuthorBox', () => {
         render(<AuthorBox locale="en" />);
 
         // Assert
-        const bio = screen.getByText(/Software architect & tech lead since/);
+        const bio = screen.getByText(/Freelance software architect & fractional CTO since/);
         expect(bio).toHaveTextContent(`since ${siteConfig.sinceYear}.`);
         expect(bio).toHaveTextContent(/remotely from Bangkok in English and Deutsch/);
     });
