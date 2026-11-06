@@ -1,15 +1,13 @@
 import type { HeroCopy } from './types';
 
 /**
- * The German hero.
- *
- * The headline is the first of three proposals for "I build the hard part."
- * and waits for Stefan's pick; the other two are in the hand-over.
+ * The German hero. The headline is Stefan's pick for "I build the hard part.";
+ * the contact band's heading echoes it.
  */
 export const heroDe: HeroCopy = {
     headline: {
-        before: 'Ich baue das ',
-        highlight: 'Knifflige',
+        before: 'Ich übernehme den ',
+        highlight: 'schwierigen Teil',
         after: '.',
     },
     kicker: yearsShipping => [
@@ -39,6 +37,11 @@ export const heroDe: HeroCopy = {
             comma: ', ',
             or: ' oder ',
             outro: '. Oder überschreiben Sie es.',
+        },
+        // As German keyboards and Microsoft's German docs label them.
+        keys: {
+            ctrl: 'Strg',
+            shift: 'Umschalt',
         },
         hintKeyboard: 'Ist Text markiert, führt Alt+F10 zur Formatleiste. Enter oder Escape beendet die Bearbeitung.',
         editButton: 'Überschrift bearbeiten',

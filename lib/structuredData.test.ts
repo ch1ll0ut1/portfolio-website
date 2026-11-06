@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { type BlogPost } from '@/config/blog';
 import { links } from '@/config/links';
-import { siteConfig } from '@/config/site';
+import { siteConfig, siteCopy } from '@/config/site';
 import {
     PERSON_ID,
     WEBSITE_ID,
@@ -110,6 +110,51 @@ describe('structuredData', () => {
                 'jobTitle': siteConfig.jobTitle,
                 'sameAs': [links.social.linkedin, links.social.github],
             });
+        });
+    });
+
+    describe('German pages', () => {
+        it('should give the author his German job title', () => {
+            // Act
+            const ref = authorRef('de');
+
+            // Assert
+            expect(ref).toMatchObject({ '@id': PERSON_ID, 'jobTitle': siteCopy.de.jobTitle });
+        });
+
+        it('should describe the person in German on the German homepage', () => {
+            // Act
+            const schema = personSchema({ locale: 'de' });
+
+            // Assert
+            expect(schema).toMatchObject({
+                '@id': PERSON_ID,
+                'jobTitle': siteCopy.de.jobTitle,
+                'description': siteCopy.de.description,
+            });
+        });
+
+        it('should make the German homepage a German profile page at its own URL', () => {
+            // Act
+            const schema = profilePageSchema('de');
+
+            // Assert
+            expect(schema).toMatchObject({
+                '@id': `${siteConfig.url}/de#profilepage`,
+                'url': `${siteConfig.url}/de`,
+                'name': siteCopy.de.title,
+                'inLanguage': 'de',
+                'mainEntity': { '@id': PERSON_ID },
+            });
+        });
+
+        it('should credit a German post to the author with his German job title', () => {
+            // Act
+            const schema = blogPostingSchema(post, 'de');
+
+            // Assert
+            expect(schema.author).toMatchObject({ jobTitle: siteCopy.de.jobTitle });
+            expect(schema.publisher).toMatchObject({ jobTitle: siteCopy.de.jobTitle });
         });
     });
 

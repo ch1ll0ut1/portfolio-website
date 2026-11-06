@@ -80,7 +80,7 @@ const sampleCaseStudies = async (base) => {
  */
 const GERMAN_SEGMENTS = { work: 'referenzen', contact: 'kontakt', privacy: 'datenschutz', services: 'leistungen' };
 
-export const germanPath = path => `/de${path.replace(/^\/([^/]+)/, (_match, segment) => `/${GERMAN_SEGMENTS[segment] ?? segment}`)}`;
+export const germanPath = path => path === '/' ? '/de' : `/de${path.replace(/^\/([^/]+)/, (_match, segment) => `/${GERMAN_SEGMENTS[segment] ?? segment}`)}`;
 
 /** Every route type by default, in both languages; `--routes` narrows it for a quick check. */
 export const resolveRoutes = async (base) => {
@@ -92,8 +92,7 @@ export const resolveRoutes = async (base) => {
 
     const articles = await sampleArticles(base);
     const cases = await sampleCaseStudies(base);
-    // The German homepage, `/de`, is not built yet.
-    const twins = ['/blog', ...articles, ...cases, '/privacy', '/contact', '/services'];
+    const twins = ['/', '/blog', ...articles, ...cases, '/privacy', '/contact', '/services'];
 
-    return ['/', ...twins, MISSING_ARTICLE, ...twins.map(germanPath), MISSING_GERMAN_ARTICLE];
+    return [...twins, MISSING_ARTICLE, ...twins.map(germanPath), MISSING_GERMAN_ARTICLE];
 };

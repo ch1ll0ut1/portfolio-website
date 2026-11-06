@@ -48,8 +48,8 @@ const TOKEN_CLASS: Record<TokenKind, string> = {
 export const DocumentModelPanel: FC<Props> = ({ doc, baseline, position, state, hintId, editButtonRef, onEdit }) => {
     const { editor } = heroCopy[useLocale()];
     const apple = useApplePlatform();
-    const mod = apple ? '⌘' : 'Ctrl+';
-    const highlight = apple ? '⌘⇧H' : 'Ctrl+Shift+H';
+    const mod = apple ? '⌘' : `${editor.keys.ctrl}+`;
+    const highlight = apple ? '⌘⇧H' : `${editor.keys.ctrl}+${editor.keys.shift}+H`;
 
     return (
         <aside className={styles.tree} aria-label={editor.panelLabel}>

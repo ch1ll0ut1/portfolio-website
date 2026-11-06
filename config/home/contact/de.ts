@@ -1,19 +1,18 @@
 /**
  * Das Kontaktband der Startseite und die Fußzeile, die jede Seite zeigt.
  *
- * The German counterpart of `en.ts`. The heading echoes the hero's "the hard
- * part", whose German is not fixed yet: this is the first of three
- * proposals and changes with the hero's.
- * NEEDS STEFAN'S REVIEW before it is promoted anywhere.
+ * The German counterpart of `en.ts`. The heading, Stefan's pick, echoes the
+ * hero's "den schwierigen Teil". `Contact` sets a space between `before` and
+ * the highlight, so `before` carries none.
  */
 
 import type { HomeContactCopy } from './types';
 
 export const homeContactDe: HomeContactCopy = {
     title: {
-        before: 'Überlassen Sie mir den',
-        highlight: 'schwierigen Teil',
-        after: '.',
+        before: 'Das',
+        highlight: 'Schwierige',
+        after: ' übernehme ich.',
     },
     book: '30-Minuten-Gespräch buchen',
     linkedIn: 'Auf LinkedIn schreiben',

@@ -57,7 +57,7 @@ describe('servicesJsonLd', () => {
             expect.objectContaining({
                 '@type': 'BreadcrumbList',
                 'itemListElement': [
-                    expect.objectContaining({ position: 1, name: 'Startseite', item: siteConfig.url }),
+                    expect.objectContaining({ position: 1, name: 'Startseite', item: `${siteConfig.url}/de` }),
                     expect.objectContaining({ position: 2, name: 'Leistungen', item: `${siteConfig.url}/de/leistungen` }),
                 ],
             }),

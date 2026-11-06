@@ -14,7 +14,7 @@
 
 import { type BlogPost, blogCopy, lastModified, tagLabel } from '@/config/blog';
 import { links } from '@/config/links';
-import { absoluteUrl, siteConfig, siteTitle } from '@/config/site';
+import { absoluteUrl, siteConfig, siteCopy } from '@/config/site';
 import { bangkokDateTime } from './date';
 import { type Locale, intlLocale, otherLocale } from './i18n/locale';
 import { localizedPath } from './i18n/paths';
@@ -31,6 +31,8 @@ export interface BreadcrumbItem {
 interface PersonOptions {
     /** `Offer` nodes for `makesOffer`, such as the services he sells. */
     offers?: JsonLdObject[];
+    /** The language of the page the node is on, which his job title and description are in. */
+    locale?: Locale;
 }
 
 /** The `@id` of the site owner's Person node. */
@@ -58,20 +60,21 @@ export const personRef = (): JsonLdObject => ({ '@id': PERSON_ID });
 /**
  * The author reference used inside other schemas: the Person's `@id`, plus
  * enough to stand on its own on a page that does not carry the full node.
+ * His job title is in the language of the page, `locale`.
  */
-export const authorRef = (): JsonLdObject => ({
+export const authorRef = (locale: Locale = 'en'): JsonLdObject => ({
     '@type': 'Person',
     '@id': PERSON_ID,
     'name': siteConfig.name,
     'url': absoluteUrl(),
-    'jobTitle': siteConfig.jobTitle,
+    'jobTitle': siteCopy[locale].jobTitle,
     'sameAs': [links.social.linkedin, links.social.github],
 });
 
-/** The full Person node for the homepage; `offers` become its `makesOffer`. */
-export const personSchema = ({ offers = [] }: PersonOptions = {}): JsonLdObject => ({
-    ...authorRef(),
-    description: siteConfig.description,
+/** The full Person node for the homepage in `locale`; `offers` become its `makesOffer`. */
+export const personSchema = ({ offers = [], locale = 'en' }: PersonOptions = {}): JsonLdObject => ({
+    ...authorRef(locale),
+    description: siteCopy[locale].description,
     image: {
         '@type': 'ImageObject',
         'url': absoluteUrl('/stefan-knoch.jpg'),
@@ -110,12 +113,12 @@ export const websiteSchema = (locale: Locale = 'en'): JsonLdObject => ({
     'publisher': personRef(),
 });
 
-/** The homepage as a ProfilePage about the site owner, in `locale`. */
+/** The homepage in `locale` as a ProfilePage about the site owner. */
 export const profilePageSchema = (locale: Locale = 'en'): JsonLdObject => ({
     '@type': 'ProfilePage',
-    '@id': absoluteUrl('/#profilepage'),
-    'url': absoluteUrl(),
-    'name': siteTitle,
+    '@id': absoluteUrl(`${localizedPath(locale, '/')}#profilepage`),
+    'url': absoluteUrl(localizedPath(locale, '/')),
+    'name': siteCopy[locale].title,
     'inLanguage': locale,
     'isPartOf': { '@id': WEBSITE_ID },
     'mainEntity': personRef(),
@@ -139,12 +142,12 @@ export const blogSchema = (posts: BlogPost[], locale: Locale): JsonLdObject => (
     'name': blogCopy[locale].schemaName(siteConfig.name),
     'description': blogCopy[locale].feed.description,
     'url': absoluteUrl(localizedPath(locale, '/blog')),
-    'author': authorRef(),
+    'author': authorRef(locale),
     'blogPost': posts.map(post => ({
         '@type': 'BlogPosting',
         'headline': post.title,
         'description': post.excerpt,
-        'author': authorRef(),
+        'author': authorRef(locale),
         'datePublished': bangkokDateTime(post.date),
         'dateModified': bangkokDateTime(lastModified(post)),
         'url': postUrl(post, locale),
@@ -175,9 +178,9 @@ export const blogPostingSchema = (post: BlogPost, locale: Locale): JsonLdObject 
         'headline': post.title,
         'description': post.excerpt,
         'image': absoluteUrl(postCardPath(post.slug, locale)),
-        'author': authorRef(),
+        'author': authorRef(locale),
         // A personal site: the author is the publisher, so no organization logo is needed.
-        'publisher': authorRef(),
+        'publisher': authorRef(locale),
         'datePublished': bangkokDateTime(post.date),
         'dateModified': bangkokDateTime(lastModified(post)),
         'mainEntityOfPage': {

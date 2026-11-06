@@ -16,6 +16,7 @@ import { metadata as blog } from './blog/page';
 import { metadata as privacy } from './datenschutz/page';
 import { metadata as contact } from './kontakt/page';
 import { metadata as layout } from './layout';
+import { metadata as home } from './page';
 import { metadata as services } from './leistungen/page';
 import { generateMetadata as caseMetadata } from './referenzen/[slug]/page';
 
@@ -35,6 +36,7 @@ const params = (slug: string) => ({ params: Promise.resolve({ slug }) });
 
 /** Each German page, its own path and its English twin's. */
 const pages = async (): Promise<[string, string, Metadata][]> => [
+    ['/de', '/', home],
     ['/de/blog', '/blog', blog],
     [`/de/blog/${post.slug}`, `/blog/${post.slug}`, await postMetadata(params(post.slug))],
     [`/de/referenzen/${study.slug}`, `/work/${study.slug}`, await caseMetadata(params(study.slug))],
@@ -64,11 +66,17 @@ describe('German route metadata', () => {
         }
     });
 
-    it('should announce the German feed on the German reading pages', async () => {
-        const [index, article] = await pages();
+    it('should announce the German feed on the German homepage and reading pages', async () => {
+        const [homepage, index, article] = await pages();
+
+        expect(homepage?.[2].alternates).toMatchObject({ types: feedAlternateTypes('de') });
 
         expect(index?.[2].alternates).toMatchObject({ types: feedAlternateTypes('de') });
         expect(article?.[2].alternates).toMatchObject({ types: feedAlternateTypes('de') });
+    });
+
+    it('should title the German homepage with the German positioning', () => {
+        expect(home.title).toEqual({ absolute: 'Stefan Knoch — Softwarearchitekt & Tech Lead' });
     });
 
     it('should give a German post its German card', async () => {

@@ -60,7 +60,8 @@ interface CaseStudyData {
     tags: string[];
     /** Target of the outbound link; its label is in the dictionary. */
     linkHref?: string;
-    metricValue: string;
+    /** The figure: one for both languages, or one per language where it is a word, such as an ordinal. */
+    metricValue: string | Record<Locale, string>;
 }
 
 const caseStudyData: CaseStudyData[] = [
@@ -71,7 +72,7 @@ const caseStudyData: CaseStudyData[] = [
         title: 'Edithing',
         tags: ['TypeScript', 'React', 'Slate.js', 'Node.js', 'MySQL', 'Zustand'],
         linkHref: 'https://github.com/althingi-net/edithing',
-        metricValue: '3rd',
+        metricValue: { en: '3rd', de: '3.' },
     },
     {
         id: 'bluereceipt',
@@ -115,7 +116,7 @@ export const caseStudiesFor = (locale: Locale): CaseStudy[] => caseStudyData.map
         result: story.result,
         tags: data.tags,
         ...(data.linkHref !== undefined && linkLabel !== undefined && { link: { href: data.linkHref, label: linkLabel } }),
-        metric: { value: data.metricValue, label: metricLabel },
+        metric: { value: typeof data.metricValue === 'string' ? data.metricValue : data.metricValue[locale], label: metricLabel },
     };
 });
 
