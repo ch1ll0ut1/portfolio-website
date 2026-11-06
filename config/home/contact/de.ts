@@ -23,6 +23,7 @@ export const homeContactDe: HomeContactCopy = {
             linkedin: 'LinkedIn',
             blog: 'Blog',
             privacy: 'Datenschutz',
+            imprint: 'Impressum',
             contact: 'Kontakt',
         },
         cookieSettings: 'Cookie-Einstellungen',

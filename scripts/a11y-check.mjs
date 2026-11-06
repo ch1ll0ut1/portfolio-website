@@ -40,7 +40,7 @@ const routes = async () => {
         return listed.split(',');
     }
 
-    const twins = ['/', '/blog', ...await newestArticle(), ...await firstCaseStudy(), '/privacy', '/contact', '/services'];
+    const twins = ['/', '/blog', ...await newestArticle(), ...await firstCaseStudy(), '/privacy', '/imprint', '/contact', '/services'];
 
     return [...twins, ...twins.map(germanPath), '/de/blog/this-article-does-not-exist'];
 };

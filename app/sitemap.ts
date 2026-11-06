@@ -46,6 +46,7 @@ function pages(): Page[] {
         { enPath: SERVICES_PATH, lastModified: staticUpdated },
         { enPath: '/contact', lastModified: staticUpdated },
         { enPath: '/privacy', lastModified: staticUpdated },
+        { enPath: '/imprint', lastModified: staticUpdated },
         ...posts.map(post => ({ enPath: `/blog/${post.slug}`, lastModified: new Date(lastModified(post)) })),
         ...caseStudiesFor('en').map(study => ({ enPath: caseStudyPath(study), lastModified: staticUpdated })),
     ];

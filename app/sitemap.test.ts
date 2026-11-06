@@ -15,6 +15,7 @@ describe('sitemap', () => {
         expect(urls).toContain(siteConfig.url);
         expect(urls).toContain(`${siteConfig.url}/blog`);
         expect(urls).toContain(`${siteConfig.url}/privacy`);
+        expect(urls).toContain(`${siteConfig.url}/imprint`);
         expect(urls).toContain(`${siteConfig.url}/contact`);
         blogPosts.forEach((post) => {
             expect(urls).toContain(`${siteConfig.url}/blog/${post.slug}`);
@@ -222,7 +223,7 @@ describe('sitemap languages', () => {
         const paths = sitemap().map(entry => pathOf(entry.url));
 
         // Assert
-        ['/de', '/de/blog', '/de/kontakt', '/de/datenschutz', '/de/leistungen'].forEach((path) => {
+        ['/de', '/de/blog', '/de/kontakt', '/de/datenschutz', '/de/impressum', '/de/leistungen'].forEach((path) => {
             expect(paths).toContain(path);
         });
         blogPosts.forEach((post) => {
