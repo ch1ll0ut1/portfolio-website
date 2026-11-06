@@ -12,6 +12,6 @@ export const siteDe: SiteCopy = {
     title: `${name} — Freier Softwarearchitekt & Interim-CTO`,
     jobTitle: 'Freier Softwarearchitekt & Interim-CTO',
     jobTitleHighlight: 'Interim-CTO',
-    description: `Freiberuflicher Softwarearchitekt & Interim-CTO seit ${sinceYear}. Ich baue Apps, rette fehlerhafte und führe Ihr Team. Remote, auf Deutsch, in Ihrer Zeitzone.`,
+    description: `Freiberuflicher Softwarearchitekt & Interim-CTO seit ${sinceYear}. Ich baue neue Apps, rette fehlerhafte und führe Ihr Team, für Startups und kleine Unternehmen.`,
     since: `seit ${sinceYear}`,
 };
