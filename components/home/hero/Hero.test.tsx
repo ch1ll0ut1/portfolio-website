@@ -47,15 +47,19 @@ describe('Hero', () => {
         expect(heading).toHaveTextContent(`${heroEn.headline.before}${heroEn.headline.highlight}${heroEn.headline.after}`);
     });
 
-    it('should carry the kicker inside the heading, with the years counted from the start year', () => {
+    it('should set the kicker above the heading, not in it, with the years counted from the start year', () => {
         render(<Hero />);
 
         const heading = screen.getByRole('heading', { level: 1 });
+        const kicker = screen.getByText(itemAt(heroEn.kicker(yearsShipping()), 0), { exact: false }).closest('p');
 
+        expect(kicker).not.toBeNull();
         heroEn.kicker(yearsShipping()).forEach((part) => {
-            expect(heading).toHaveTextContent(part);
+            expect(kicker).toHaveTextContent(part);
+            expect(heading).not.toHaveTextContent(part);
         });
-        expect(heading).toHaveTextContent(`${yearsShipping()} years`);
+        expect(kicker).toHaveTextContent(`${yearsShipping()} years`);
+        expect(kicker?.compareDocumentPosition(heading)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
     });
 
     it('should hold the headline text once, with no hidden copy for the name', () => {
@@ -75,8 +79,7 @@ describe('Hero', () => {
 
         editor().textContent = 'Something else entirely';
 
-        expect(heading).toHaveAccessibleName(expect.stringContaining(`${heroEn.headline.before}${heroEn.headline.highlight}${heroEn.headline.after}`));
-        expect(heading).toHaveAccessibleName(expect.stringContaining(itemAt(heroEn.kicker(yearsShipping()), 0)));
+        expect(heading).toHaveAccessibleName(`${heroEn.headline.before}${heroEn.headline.highlight}${heroEn.headline.after}`);
         expect(heading).not.toHaveAccessibleName(expect.stringContaining('Something else'));
         expect(heading).not.toHaveAttribute('contenteditable');
     });

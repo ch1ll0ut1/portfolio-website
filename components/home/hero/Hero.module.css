@@ -117,9 +117,9 @@
     position: relative;
 }
 
-/* The h1's kicker: who, how long, which languages and hours, as a mono
-   eyebrow above the headline. A span, like the editor beside it, since a
-   heading only holds phrasing content. */
+/* The kicker: who, how long, which languages and hours, as a mono eyebrow
+   above the headline. Its own paragraph rather than part of the h1, so the
+   heading is the headline alone. */
 .kicker {
     display: flex;
     flex-wrap: wrap;
