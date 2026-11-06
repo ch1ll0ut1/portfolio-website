@@ -36,7 +36,7 @@ export const caseStudySchema = (study: CaseStudy, detail: CaseStudyDetail, local
         'description': detail.description,
         'url': url,
         'image': absoluteUrl(`${path}/opengraph-image`),
-        'author': authorRef(locale),
+        'author': authorRef(),
         'about': detail.topics.map(name => ({ '@type': 'Thing', name })),
         'keywords': [...detail.topics, ...study.tags].join(', '),
         ...(startYear ? { dateCreated: startYear } : {}),

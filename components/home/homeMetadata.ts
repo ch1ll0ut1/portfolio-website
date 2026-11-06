@@ -27,5 +27,5 @@ export const homeMetadata = (locale: Locale): Metadata => {
 export const homeJsonLd = (locale: Locale) => jsonLdGraph(
     websiteSchema(locale),
     profilePageSchema(locale),
-    personSchema({ offers: engagementOffers(locale), locale }),
+    personSchema({ offers: engagementOffers(locale) }),
 );

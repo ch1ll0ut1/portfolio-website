@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { contactCopy } from '@/config/contact';
 import { absoluteUrl } from '@/config/site';
-import type { Locale } from '@/lib/i18n/locale';
+import { type Locale, intlLocale } from '@/lib/i18n/locale';
 import { pageMetadata } from '@/lib/i18n/metadata';
 import { localizedPath } from '@/lib/i18n/paths';
 import { breadcrumbSchema, jsonLdGraph, personRef, websiteId } from '@/lib/structuredData';
@@ -38,7 +38,7 @@ export const contactJsonLd = (locale: Locale) => {
         'url': absoluteUrl(path),
         'name': meta.title,
         'description': meta.description,
-        'inLanguage': locale,
+        'inLanguage': intlLocale[locale],
         'isPartOf': { '@id': websiteId(locale) },
         'mainEntity': personRef(),
     };
