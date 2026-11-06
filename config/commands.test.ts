@@ -17,7 +17,7 @@ describe('commandsFor', () => {
         expect(goTo.map(command => command.label)).toEqual(
             chordSections.filter(section => section.id !== 'top').map(section => chromeEn.sections[section.id]),
         );
-        expect(goTo.map(command => command.hint)).toEqual(['G W', 'G S', 'G P', 'G E', 'G B', 'G C']);
+        expect(goTo.map(command => command.hint)).toEqual(['G S', 'G W', 'G P', 'G E', 'G B', 'G C']);
     });
 
     it('should have unique ids and a label for every command', () => {
