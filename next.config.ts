@@ -1,8 +1,16 @@
 import type { NextConfig } from 'next';
 import { withBotId } from 'botid/next/config';
+import { assertLegalNoticeFilled } from './config/legalNotice/provider';
 import { siteConfig } from './config/site';
 import { groupedImageRewrites } from './lib/og/groupedImageRewrites';
 import { CSP_HEADER_NAME, LOCAL_HOST_CONDITION, buildContentSecurityPolicy } from './lib/contentSecurityPolicy';
+
+/*
+ * The live site must never show a legal notice with placeholders, so a
+ * production deployment's build stops here while one is left. Previews and
+ * local builds go on and show them, marked.
+ */
+assertLegalNoticeFilled();
 
 const dev = process.env.NODE_ENV !== 'production';
 /** Read at build time: each Vercel deployment builds on its own. */

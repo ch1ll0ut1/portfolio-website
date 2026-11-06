@@ -14,6 +14,7 @@ import { itemAt } from '@/test/itemAt';
 import { generateMetadata as postMetadata } from './blog/[slug]/page';
 import { metadata as blog } from './blog/page';
 import { metadata as privacy } from './datenschutz/page';
+import { metadata as imprint } from './impressum/page';
 import { metadata as contact } from './kontakt/page';
 import { metadata as layout } from './layout';
 import { metadata as home } from './page';
@@ -42,6 +43,7 @@ const pages = async (): Promise<[string, string, Metadata][]> => [
     [`/de/referenzen/${study.slug}`, `/work/${study.slug}`, await caseMetadata(params(study.slug))],
     ['/de/kontakt', '/contact', contact],
     ['/de/datenschutz', '/privacy', privacy],
+    ['/de/impressum', '/imprint', imprint],
     ['/de/leistungen', '/services', services],
 ];
 

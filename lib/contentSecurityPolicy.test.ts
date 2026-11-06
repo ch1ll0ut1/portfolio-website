@@ -10,6 +10,11 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { BOOT_SCRIPT } from './bootScript';
 import { BOOT_SCRIPT_HASH, CSP_HEADER_NAME, LOCAL_HOST_CONDITION, buildContentSecurityPolicy, keyword } from './contentSecurityPolicy';
 
+// next.config.ts stops a production build while the legal notice has
+// placeholders; these tests load it under VERCEL_ENV=production for its
+// headers alone (config/legalNotice/legalNotice.test.ts covers the guard).
+vi.mock('../config/legalNotice/provider', () => ({ assertLegalNoticeFilled: () => undefined }));
+
 /** Every source the Vercel Toolbar adds, as Vercel's docs list them. */
 const VERCEL_TOOLBAR_SOURCES = new Set(['https://vercel.live', 'https://vercel.com', 'https://assets.vercel.com', 'wss://ws-us3.pusher.com', 'blob:']);
 

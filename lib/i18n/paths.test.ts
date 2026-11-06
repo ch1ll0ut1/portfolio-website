@@ -16,6 +16,7 @@ const PAIRS: [string, string][] = [
     ['/services', '/de/leistungen'],
     ['/contact', '/de/kontakt'],
     ['/privacy', '/de/datenschutz'],
+    ['/imprint', '/de/impressum'],
 ];
 
 describe('localizedPath', () => {
