@@ -62,7 +62,8 @@ export const pageAlternates = (enPath: string) => ({
 /** The English path of the German page at `dePath`. */
 function englishPath(dePath: string) {
     const [path, suffix] = splitSuffix(dePath);
-    const rest = path.slice(GERMAN_PREFIX.length);
+    // One leading slash, so `/de//host` never becomes the protocol-relative `//host`.
+    const rest = path.slice(GERMAN_PREFIX.length).replace(/^\/+/, '/');
 
     return `${rest === '' ? '/' : mapFirstSegment(rest, toEnglish)}${suffix}`;
 }

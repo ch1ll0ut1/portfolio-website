@@ -76,14 +76,35 @@ const ROUTES = [
     '/de/impressum',
 ];
 
+/** A return to the page; `persisted` when the browser restored it from its back/forward cache. */
+const pageshow = (persisted: boolean) => {
+    const event = new Event('pageshow');
+
+    Object.defineProperty(event, 'persisted', { value: persisted });
+    window.dispatchEvent(event);
+};
+
 describe('BOOT_SCRIPT', () => {
     let restoreMedia: () => void;
+    const pageshowListeners: EventListenerOrEventListenerObject[] = [];
 
     beforeEach(() => {
         restoreMedia = installMatchMedia([]);
+        // Each run adds its own pageshow listener to the one window: collect them to take them off again.
+        const add = window.addEventListener.bind(window);
+
+        vi.spyOn(window, 'addEventListener').mockImplementation((type: string, listener: EventListenerOrEventListenerObject) => {
+            if (type === 'pageshow') {
+                pageshowListeners.push(listener);
+            }
+            add(type, listener);
+        });
     });
 
     afterEach(() => {
+        pageshowListeners.splice(0).forEach((listener) => {
+            window.removeEventListener('pageshow', listener);
+        });
         html.className = '';
         html.style.visibility = '';
         delete html.dataset.theme;
@@ -183,6 +204,58 @@ describe('BOOT_SCRIPT', () => {
         it('should carry the query and hash across', () => {
             expect(visit({ path: '/blog/x', search: '?utm_source=x', hash: '#intro', stored: 'de' })).toBe('/de/blog/x?utm_source=x#intro');
             expect(visit({ path: '/de/kontakt', search: '?topic=audit', hash: '#form', stored: 'en' })).toBe('/contact?topic=audit#form');
+        });
+
+        it('should collapse the slashes after /de, never leaving the site for a protocol-relative URL', () => {
+            expect(visit({ path: '/de//evil.com', stored: 'en' })).toBe('/evil.com');
+            expect(visit({ path: '/de///evil.com/x', stored: 'en' })).toBe('/evil.com/x');
+        });
+
+        describe('a page restored from the back/forward cache', () => {
+            // The visitor switched to German on /blog/x; Back restores the English /blog untouched.
+            it('should apply the choice stored since it was first loaded', () => {
+                expect(visit({ path: '/blog' })).toBeNull();
+                localStorage.setItem(LANGUAGE_STORAGE_KEY, 'de');
+                const replace = vi.fn<(url: string) => void>();
+
+                vi.stubGlobal('location', { origin: ORIGIN, pathname: '/blog', search: '', hash: '', replace });
+                pageshow(true);
+
+                expect(replace).toHaveBeenCalledExactlyOnceWith('/de/blog');
+                expect(html.style.visibility).toBe('hidden');
+            });
+
+            it('should leave a page already in the stored language, so the twin cannot bounce back', () => {
+                expect(visit({ path: '/de/blog', stored: 'de' })).toBeNull();
+                const replace = vi.fn<(url: string) => void>();
+
+                vi.stubGlobal('location', { origin: ORIGIN, pathname: '/de/blog', search: '', hash: '', replace });
+                pageshow(true);
+
+                expect(replace).not.toHaveBeenCalled();
+            });
+
+            it('should not run the browser-language detection again', () => {
+                expect(visit({ path: '/blog', languages: ['de-DE'], referrer: `${ORIGIN}/` })).toBeNull();
+                Object.defineProperty(document, 'referrer', { value: 'https://www.google.com/', configurable: true });
+                const replace = vi.fn<(url: string) => void>();
+
+                vi.stubGlobal('location', { origin: ORIGIN, pathname: '/blog', search: '', hash: '', replace });
+                pageshow(true);
+
+                expect(replace).not.toHaveBeenCalled();
+            });
+
+            it('should do nothing on an ordinary load', () => {
+                expect(visit({ path: '/blog' })).toBeNull();
+                localStorage.setItem(LANGUAGE_STORAGE_KEY, 'de');
+                const replace = vi.fn<(url: string) => void>();
+
+                vi.stubGlobal('location', { origin: ORIGIN, pathname: '/blog', search: '', hash: '', replace });
+                pageshow(false);
+
+                expect(replace).not.toHaveBeenCalled();
+            });
         });
 
         it('should hide the page only when it is being replaced', () => {
