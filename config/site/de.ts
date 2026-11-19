@@ -9,9 +9,9 @@ import type { SiteCopy } from './types';
 const { name, sinceYear } = siteIdentity;
 
 export const siteDe: SiteCopy = {
-    title: `${name} — Freier Softwarearchitekt & Interim-CTO`,
-    jobTitle: 'Freier Softwarearchitekt & Interim-CTO',
-    jobTitleHighlight: 'Interim-CTO',
-    description: `Freiberuflicher Softwarearchitekt & Interim-CTO seit ${sinceYear}. Ich baue neue Apps, rette fehlerhafte und führe Ihr Team, für Startups und kleine Unternehmen.`,
+    title: `${name} — Freier Softwarearchitekt & Fractional CTO`,
+    jobTitle: 'Freier Softwarearchitekt & Fractional CTO',
+    jobTitleHighlight: 'Fractional CTO',
+    description: `Freier Softwarearchitekt & Fractional CTO seit ${sinceYear}. Ich baue neue Apps, rette fehlerhafte und führe Ihr Team, für Startups und kleine Unternehmen.`,
     since: `seit ${sinceYear}`,
 };

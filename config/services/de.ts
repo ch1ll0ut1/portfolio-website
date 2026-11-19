@@ -5,7 +5,9 @@
  * parts taken from the homepage's config through `./fromHome.ts`. Prices come
  * from `config/pricing.ts` in euros, set for DACH in their own right and in
  * German number format. Written for DACH search terms (App entwickeln lassen,
- * App retten, Code-Audit, Interim-CTO, DSGVO). The App Health Check is the
+ * App retten, Code-Audit, Fractional CTO, DSGVO;
+ * „Interim-CTO“ only for a full-time role: the FAQ that sets it apart and the
+ * past health-tech role). The App Health Check is the
  * „Code-Audit“ here.
  * NEEDS STEFAN'S REVIEW before it is promoted anywhere.
  */
@@ -31,8 +33,8 @@ export const servicesDe: ServicesPageCopy = {
     lang: 'de',
     path: '/de/leistungen',
     meta: {
-        title: 'App entwickeln lassen & retten, Interim-CTO — Stefan Knoch',
-        description: `Freiberuflicher Softwarearchitekt, ${yearsShipping()} Jahre Erfahrung: Code-Audit zum Festpreis, App retten, App oder MVP entwickeln lassen, Interim-CTO.`,
+        title: 'App entwickeln lassen, retten, Fractional CTO — Stefan Knoch',
+        description: `Freiberuflicher Softwarearchitekt, ${yearsShipping()} Jahre Erfahrung: Code-Audit zum Festpreis, App retten, App oder MVP entwickeln lassen, Fractional CTO.`,
         shareKicker: 'leistungen',
         shareHighlight: 'kleine Unternehmen',
     },
@@ -43,7 +45,7 @@ export const servicesDe: ServicesPageCopy = {
     hero: {
         kicker: 'Leistungen',
         title: 'Erfahrene Software-Hilfe für Gründungsteams und kleine Unternehmen',
-        lede: `Ich bin freiberuflicher Softwarearchitekt und Interim-CTO. Ich rette Apps, die nicht mehr rund laufen, entwickle neue Apps von Anfang an sauber und führe Entwicklungsteams für Unternehmen ohne erfahrene technische Leitung. ${yearsShipping()} Jahre Erfahrung, auf Deutsch oder Englisch, zu europäischen, amerikanischen und asiatischen Arbeitszeiten.`,
+        lede: `Ich bin freiberuflicher Softwarearchitekt und Fractional CTO. Ich rette Apps, die nicht mehr rund laufen, entwickle neue Apps von Anfang an sauber und führe Entwicklungsteams für Unternehmen ohne erfahrene technische Leitung. ${yearsShipping()} Jahre Erfahrung, auf Deutsch oder Englisch, zu europäischen, amerikanischen und asiatischen Arbeitszeiten.`,
         callLabel: 'Kostenloses Gespräch buchen',
         writeLabel: 'Nachricht schreiben',
     },

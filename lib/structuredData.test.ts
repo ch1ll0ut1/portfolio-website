@@ -64,7 +64,7 @@ describe('structuredData', () => {
                 'name': siteConfig.name,
                 'jobTitle': [
                     { '@value': 'Freelance software architect & fractional CTO', '@language': 'en-US' },
-                    { '@value': 'Freier Softwarearchitekt & Interim-CTO', '@language': 'de-DE' },
+                    { '@value': 'Freier Softwarearchitekt & Fractional CTO', '@language': 'de-DE' },
                 ],
                 'knowsLanguage': ['en', 'de'],
                 'sameAs': expect.arrayContaining([links.social.linkedin, links.social.github]),

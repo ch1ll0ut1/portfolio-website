@@ -165,6 +165,7 @@ Code-Review-Prozess" and "ein Startup-Team". Plurals follow English: "Startups",
 | App Health Check (the fixed-price first step) | Code-Audit | "das Code-Audit", every time; never "Check" or "Gesundheitscheck" |
 | code audit / security review | Code-Audit / Sicherheitsprüfung | "Code Review" stays for reviewing a team's pull requests |
 | fixed price per phase | Festpreis pro Phase | |
+| fractional CTO (Stefan's offer) | Fractional CTO | Stefan's call. Never „Interim-CTO“ for his part-time offer: titles, kicker, contact, services, author box and structured data all say „Fractional CTO“. „Interim-CTO“ means a full-time, temporary role. Use it only there: the FAQ that compares the two (which also catches the search term) and his past health-tech role |
 | Advisor / Embedded (fractional CTO levels) | beratend / im Team | |
 | product plan | Produktplan | |
 | engagement | Auftrag | never "Engagement" |
