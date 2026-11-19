@@ -57,7 +57,7 @@ describe('engagementsCopy', () => {
             expect(engagements['health-check'].name).toContain('Code-Audit');
             expect(engagements['health-check'].short).toBe('Code-Audit');
             expect(engagements.build.name).toContain('App oder MVP entwickeln lassen');
-            expect(engagements['tech-lead'].name).toContain('Interim-CTO oder Fractional CTO');
+            expect(engagements['tech-lead'].name).toContain('Fractional CTO');
         });
     });
 });

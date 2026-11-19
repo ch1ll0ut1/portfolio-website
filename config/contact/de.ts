@@ -14,8 +14,8 @@ export const contactDe: ContactCopy = {
         privacy: 'Datenschutzanfrage',
     },
     meta: {
-        title: `${siteIdentity.name} kontaktieren — Softwarearchitekt & Interim-CTO`,
-        description: 'Freier Softwarearchitekt & Interim-CTO für Ihre App, Ihr MVP oder Ihr Team. Antwort innerhalb eines Werktags, passend für Europa, die USA und Asien.',
+        title: `Kontakt — ${siteIdentity.name}, Softwarearchitekt & Fractional CTO`,
+        description: 'Freier Softwarearchitekt & Fractional CTO für Ihre App, Ihr MVP oder Ihr Team. Antwort innerhalb eines Werktags, passend für Europa, die USA und Asien.',
     },
     breadcrumbs: {
         home: 'Startseite',
@@ -24,7 +24,7 @@ export const contactDe: ContactCopy = {
     page: {
         kicker: 'Kontakt',
         heading: 'Erzählen Sie mir von Ihrer App, Ihrem MVP oder Ihrem Team',
-        lede: 'Ich bin freier Softwarearchitekt und Interim-CTO. Schreiben Sie mir, was Sie bauen und wo es hakt. Ihre Nachricht landet in meinem Postfach, und ich antworte per E-Mail.',
+        lede: 'Ich bin freier Softwarearchitekt und Fractional CTO. Schreiben Sie mir, was Sie bauen und wo es hakt. Ihre Nachricht landet in meinem Postfach, und ich antworte per E-Mail.',
         next: {
             title: 'So geht es weiter',
             steps: [

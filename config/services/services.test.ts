@@ -100,7 +100,7 @@ describe('services copy', () => {
     it('should put the search terms in the titles, the headings and the copy', () => {
         expect(servicesEn.meta.title).toContain('Fractional CTO');
         expect(servicesDe.meta.title).toContain('App entwickeln lassen');
-        expect(servicesDe.meta.title).toContain('Interim-CTO');
+        expect(servicesDe.meta.title).toContain('Fractional CTO');
         expect(servicesDe.meta.title).not.toContain('Tech Lead');
         expect(servicesEn.hero.lede).toContain('freelance');
         expect(servicesDe.hero.lede).toContain('freiberuflich');

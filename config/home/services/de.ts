@@ -62,7 +62,7 @@ export const engagementsDe: EngagementsCopy = {
             range: `Die meisten ersten Versionen ${eurRangeDe(FIRST_VERSION_RANGE_EUR)}, Festpreis pro Phase`,
         },
         'tech-lead': {
-            name: 'Interim-CTO oder Fractional CTO an Ihrer Seite',
+            name: 'Fractional CTO: erfahrene technische Leitung an Ihrer Seite',
             subtitle: 'Fractional CTO · CTO as a Service · Tech Lead in Teilzeit',
             short: 'Fractional CTO',
             who: 'Für Unternehmen mit einem Entwicklungsteam, aber ohne erfahrene technische Leitung, oder ganz ohne technische Leute im Haus.',

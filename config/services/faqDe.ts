@@ -18,8 +18,8 @@ import type { FaqCopy } from './types';
 
 export const faqDe: FaqCopy[] = [
     {
-        question: 'Was kosten ein Code-Audit, ein MVP oder ein Interim-CTO?',
-        answer: `Alles hat einen Preis, bevor die Arbeit beginnt. Das Code-Audit kostet ${eurAmountDe(HEALTH_CHECK_PRICE_EUR)} zum Festpreis, mit vollständiger Sicherheitsprüfung ${eurAmountDe(HEALTH_CHECK_WITH_SECURITY_EUR)}. Ein Produktplan für eine neue App kostet dasselbe. Beides dauert fünf Werktage, und geht es innerhalb von ${FEE_CREDIT_DAYS} Tagen weiter, rechne ich das Honorar auf den Auftrag an. Danach bekommt jede Phase einen schriftlichen Festpreis: Die meisten Rettungen kosten insgesamt ${eurRangeDe(RESCUE_RANGE_EUR)}, die meisten ersten Versionen einer neuen App ${eurRangeDe(FIRST_VERSION_RANGE_EUR)}. Als Interim-CTO oder Fractional CTO arbeite ich beratend ab ${eurAmountDe(ADVISOR_MONTHLY_MIN_EUR)} im Monat oder im Team für ${eurRangeDe(EMBEDDED_MONTHLY_RANGE_EUR)} im Monat, jeweils für mindestens drei Monate.`,
+        question: 'Was kosten ein Code-Audit, ein MVP oder ein Fractional CTO?',
+        answer: `Alles hat einen Preis, bevor die Arbeit beginnt. Das Code-Audit kostet ${eurAmountDe(HEALTH_CHECK_PRICE_EUR)} zum Festpreis, mit vollständiger Sicherheitsprüfung ${eurAmountDe(HEALTH_CHECK_WITH_SECURITY_EUR)}. Ein Produktplan für eine neue App kostet dasselbe. Beides dauert fünf Werktage, und geht es innerhalb von ${FEE_CREDIT_DAYS} Tagen weiter, rechne ich das Honorar auf den Auftrag an. Danach bekommt jede Phase einen schriftlichen Festpreis: Die meisten Rettungen kosten insgesamt ${eurRangeDe(RESCUE_RANGE_EUR)}, die meisten ersten Versionen einer neuen App ${eurRangeDe(FIRST_VERSION_RANGE_EUR)}. Als Fractional CTO arbeite ich beratend ab ${eurAmountDe(ADVISOR_MONTHLY_MIN_EUR)} im Monat oder im Team für ${eurRangeDe(EMBEDDED_MONTHLY_RANGE_EUR)} im Monat, jeweils für mindestens drei Monate.`,
     },
     {
         question: 'Können Sie Code übernehmen, den jemand anderes geschrieben hat?',
@@ -43,7 +43,7 @@ export const faqDe: FaqCopy[] = [
     },
     {
         question: 'Interim-CTO oder Fractional CTO: Was ist der Unterschied?',
-        answer: 'Ein Interim-CTO übernimmt die Rolle für eine begrenzte Zeit in Vollzeit, oft bis die Stelle dauerhaft besetzt ist. Ein Fractional CTO macht dieselbe Arbeit in Teilzeit, solange es hilft. Manche sagen auch Teilzeit-CTO oder CTO as a Service dazu. Ich arbeite als Fractional CTO, beratend oder im Team, und war selbst Interim-CTO eines jungen Health-Tech-Startups.',
+        answer: 'Ein Interim-CTO übernimmt die Rolle für eine begrenzte Zeit in Vollzeit, oft bis die Stelle dauerhaft besetzt ist. Ein Fractional CTO macht dieselbe Arbeit in Teilzeit, solange es hilft. Manche nennen das Teilzeit-CTO oder CTO as a Service, oft auch einfach Interim-CTO. Ich arbeite als Fractional CTO, beratend oder im Team, und war selbst Interim-CTO eines jungen Health-Tech-Startups.',
     },
     {
         question: 'Sie sitzen in Bangkok. Wie funktioniert das mit der Zeitverschiebung?',
