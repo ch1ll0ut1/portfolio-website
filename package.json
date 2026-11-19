@@ -24,14 +24,14 @@
     "@vercel/speed-insights": "^2.0.0",
     "botid": "^1.5.11",
     "image-size": "^2.0.4",
-    "next": "16.4.3",
+    "next": "16.4.5",
     "react": "~19.3.0",
     "react-dom": "~19.3.0",
     "react-syntax-highlighter": "^16.1.2"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
-    "@next/eslint-plugin-next": "16.4.3",
+    "@next/eslint-plugin-next": "16.4.5",
     "@stylistic/eslint-plugin": "^5.10.0",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
