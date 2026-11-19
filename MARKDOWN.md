@@ -88,8 +88,8 @@ def hello_world():
 **Features:**
 - Syntax highlighting via `react-syntax-highlighter`
 - Line numbers
-- Dark theme styling
-- Support for 100+ languages
+- Token colours from `CodeTheme.module.css` (class-based, follows the light/dark theme)
+- Grammars registered for the languages the posts use (bash, javascript, python) in `MarkdownCodeBlock.tsx`; register another there before using it, or the block renders unhighlighted
 - Fallback to 'javascript' if no language specified
 
 ### Lists
@@ -165,14 +165,16 @@ SEO-optimized images with alt text and automatic optimization:
 
 **Features:**
 - Next.js Image component with automatic optimization
-- Lazy loading for improved performance
+- Real width and height read from the file at build time (`lib/content/blogImages.ts`), so the image reserves its space before it loads
+- The first image of a post loads eagerly with high priority (it is usually the largest paint); later ones lazy-load
 - Responsive sizing with srcset generation
-- WebP format conversion when supported
+- AVIF/WebP served when the browser supports them
 - Alt text displayed as caption below image
 - Automatic path resolution for blog images
 
 **File Organization:**
 - Store images in `public/images/blog/` directory
+- Convert new artwork before committing it: `node scripts/optimize-images.mjs` writes a WebP (at most 1600px wide) next to each PNG/JPG, then reference the `.webp` and delete the original
 - Relative paths like `image.jpg` resolve to `/images/blog/image.jpg`
 - Absolute paths like `/custom/path/image.png` remain unchanged
 - Supports all common formats (JPG, PNG, WebP, AVIF)
@@ -260,6 +262,21 @@ That concludes our overview.
 
 ## Technical Implementation
 
+### Parsing
+
+Parsing is pure and lives in `components/markdown/parser/`:
+
+- `blockParser.ts` - `parseMarkdown(content, measureImage?)`, the entry point. Walks the lines once, recognises each block by its first line, and parses headings, paragraphs, code blocks, quotes, separators and images itself
+- `listParser.ts` - Ordered and unordered lists, with indented continuation lines, blank lines kept inside an item, and quotes nested in items
+- `tableParser.ts` - Header row, separator row, and body rows with a matching cell count
+- `inlineParser.ts` - Bold, italic, links (also inside bold and italic) and inline code within a line
+- `types.ts` - The element and segment types the parsers produce and the renderer consumes
+
+The parser reads no files. Anything that touches the disk is in `lib/content/`, marked server-only so a client import fails the build:
+
+- `lib/content/blogPosts.ts` - Reads a post's markdown from `content/blog/` and the `cache()`-wrapped lookup the post route shares between its metadata and its page
+- `lib/content/blogImages.ts` - `readImageDimensions`, which the `Markdown` component hands to `parseMarkdown` as `measureImage`
+
 ### Component Architecture
 
 The markdown system is built with modular React components:
@@ -287,7 +304,7 @@ function BlogPost({ content }: { content: string }) {
 
 ### Styling
 
-All components use Tailwind CSS classes and follow the site's design system:
+All components are styled with CSS Modules and follow the site's design tokens in `app/globals.css`:
 - Primary colors for headings and important text
 - Muted colors for body text
 - Action colors for interactive elements (links)
@@ -318,7 +335,7 @@ The markdown processor ensures:
 
 ### Performance
 
-- Code highlighting is optimized with bundle splitting
+- Code is highlighted on the server with only the needed grammars, and tokens carry class names instead of inline styles
 - Tables are responsive and don't break layouts
 - Images are optimized with Next.js Image component (lazy loading, responsive sizes, format conversion)
 - Static generation for improved loading times

@@ -1,0 +1,82 @@
+/*
+ * The "Building now" card. Ported from the `.now*` rules in the prototype's
+ * `writing.css`. `.ulink` comes from `app/globals.css`.
+ *
+ * The dot only pulses while the pipeline inside the card is actually running,
+ * so a card that is off screen or in a hidden tab animates nothing.
+ */
+
+.now {
+    display: grid;
+    gap: 16px;
+    padding: clamp(24px, 3vw, 36px);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+    background: var(--bg-2);
+    min-width: 0;
+}
+
+.label {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--fg-2);
+    font-size: var(--fs-small);
+}
+
+.dot {
+    position: relative;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--caret);
+    flex: none;
+}
+
+.dot::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: var(--caret);
+    opacity: 0;
+}
+
+.isLive .dot::after {
+    animation: now-ping 2.4s var(--ease-out) infinite;
+}
+
+@keyframes now-ping {
+    0% {
+        opacity: .6;
+        transform: scale(1);
+    }
+
+    60%,
+    100% {
+        opacity: 0;
+        transform: scale(3);
+    }
+}
+
+.title {
+    font-size: var(--fs-2);
+    letter-spacing: -.035em;
+    font-variation-settings: 'wdth' 80;
+}
+
+.desc {
+    color: var(--fg-2);
+}
+
+.link {
+    justify-self: start;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .isLive .dot::after {
+        animation: none;
+    }
+}

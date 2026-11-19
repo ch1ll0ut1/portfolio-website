@@ -1,0 +1,66 @@
+/* The preview card that follows the cursor over the project index.
+   Fine pointers only, so it is never in the way on touch. */
+
+.preview {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 60;
+    width: 248px;
+    pointer-events: none;
+}
+
+.card {
+    padding: 14px 16px 16px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+    background: var(--surface);
+    box-shadow: 0 30px 60px -30px rgba(0, 0, 0, .55);
+    opacity: 0;
+    transform: scale(.85) translateY(8px);
+    transform-origin: 0 0;
+    transition: opacity .25s var(--ease-ui), transform .45s var(--ease-out);
+}
+
+.preview.previewOn .card {
+    opacity: 1;
+    transform: none;
+}
+
+.path {
+    font-family: var(--font-mono);
+    font-size: .66rem;
+    color: var(--muted);
+}
+
+.name {
+    margin-top: 10px;
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    font-weight: 650;
+    letter-spacing: -.03em;
+    line-height: 1.05;
+    color: var(--fg);
+    font-variation-settings: 'wdth' 80;
+}
+
+.name::after {
+    content: '';
+    display: inline-block;
+    width: 2px;
+    height: .9em;
+    margin-left: 3px;
+    vertical-align: -.1em;
+    background: var(--caret);
+    animation: var(--caret-blink) 1.05s steps(1) infinite;
+}
+
+.card :global(.tags) {
+    margin-top: 12px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .name::after {
+        animation: none;
+    }
+}

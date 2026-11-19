@@ -10,7 +10,15 @@ pnpm dev            # Start development server
 pnpm build          # Build production (runs lint first)
 pnpm start          # Start production server
 pnpm lint           # Run ESLint
+pnpm exec tsc --noEmit  # Type-check app and tests (one tsconfig covers both)
+pnpm css-types      # Regenerate the *.module.css.d.ts class-name declarations
+pnpm knip           # Report unused files, exports and dependencies
 ```
+
+After adding, renaming or removing a class in a CSS Module, run `pnpm css-types`
+and commit the regenerated `.d.ts`; CI fails on drift (`pnpm css-types --check`).
+Under `noUncheckedIndexedAccess` these declarations are what make `styles.foo` a
+plain `string` — and a misspelt class a type error.
 
 ### Testing
 ```bash
@@ -19,66 +27,169 @@ pnpm test:watch     # Run tests in watch mode
 pnpm test:coverage  # Run tests with coverage report
 ```
 
+### Visual Check
+```bash
+pnpm visual-check   # Sweep every route type in both themes, 1440px and 390px,
+                    # and with reduced motion, against a running dev server
+pnpm a11y-check     # axe-core scan (WCAG 2.2 AA) of every route type in both
+                    # themes, against a running dev server
+```
+
+Both take `--base http://localhost:<port>` and sample articles from the running
+server's `/sitemap.xml`, which lists only published posts. The visual check's
+modules live in `scripts/visual-check/`.
+
 ## Architecture Overview
 
-This is a Next.js 15 portfolio website built with TypeScript, React 19, and Tailwind CSS. The architecture follows modular design principles with clear separation of concerns.
+This is a Next.js 16 portfolio website built with TypeScript, React 19.3 and CSS Modules. The architecture follows modular design principles with clear separation of concerns.
 
 ### Key Technical Stack
-- **Framework**: Next.js 15 with App Router
+- **Framework**: Next.js 16 with App Router, built with Turbopack (the default for `next dev` and `next build`)
 - **Language**: TypeScript with strict configuration
-- **Styling**: Tailwind CSS v4 with PostCSS integration
-- **UI Components**: Radix UI primitives with custom variants
-- **Testing**: Vitest with jsdom environment
+- **Styling**: CSS Modules driven by the design tokens in `app/globals.css`, which also holds the reset and the few global primitives. No CSS framework or PostCSS config
+- **UI Components**: No component library. Global primitive classes (`.wrap`, `.btn`, `.tags`, `.sec-head`) in `app/globals.css`, composed per component in a co-located `.module.css`
+- **Motion**: `lib/motion` — one shared ticker and scroll store behind hooks (`useReveal`, `useScrub`, `useIntro`), all of it inert under reduced motion. Subscription callbacks go through React's `useEffectEvent`
+- **Testing**: Vitest — Node environment by default, jsdom for `.tsx` tests and the DOM-touching `.ts` tests listed in `vitest.config.ts`
 - **Code Quality**: ESLint with TypeScript, stylistic, and import rules
-- **Fonts**: Geist Sans and Geist Mono
+- **Fonts**: Bricolage Grotesque, Schibsted Grotesk and Martian Mono via `next/font/google`, loaded in `lib/fonts.ts`
 - **Deployment**: Vercel with automatic optimization
 
 ### Project Structure
 
 ```
 app/                    # Next.js app router pages
-├── blog/              # Blog functionality
+├── (en)/              # Every English page, under its root layout (<html lang="en">)
+│   ├── blog/          # Blog functionality
+│   ├── layout.tsx     # English root layout: SiteDocument with 'en'
+│   └── page.tsx       # Homepage
+├── de/                # German twins under their root layout (<html lang="de">):
+│                      #   thin routes over the shared page bodies with 'de',
+│                      #   one static German 404 that unknown /de paths are rewritten to
+│                      #   (fallback rewrite in next.config.ts), and the German error page
+├── global-not-found.tsx # 404 for unmatched URLs: a whole document, imports only globals.css
 ├── globals.css        # Global styles
-├── layout.tsx         # Root layout with metadata
-└── page.tsx           # Homepage
+└── ...                # Metadata routes (sitemap, robots, manifest, icons, feed.xml), global-error
+
+assets/fonts/          # Static font cuts (with their OFL licences) for share cards and icons
 
 components/            # React components organized by domain
-├── blog/             # Blog-specific components
-├── cards/            # Card components (Project, Service)
-├── layout/           # Layout components (Header, Footer, Navigation)  
-├── sections/         # Page sections (Hero, About, etc.)
-└── ui/               # Reusable UI primitives
+├── analytics/        # Page view, scroll and time tracking wrappers
+├── blog/             # Reading routes: index, article, 404 panel
+├── chrome/           # Site-wide overlay: command palette, theme, cursor, progress
+├── consent/          # Cookie banner and preferences dialog
+├── document/         # SiteDocument: the html/head/body shell both root layouts render
+├── contact/          # Contact page body, route and metadata, and the form (client)
+├── errors/           # Not-found page and metadata, per language and kind
+├── home/             # One directory per homepage section
+│   ├── hero/         # ... contact, experience, process, proof,
+│   └── ...           #     services, work, writing
+├── markdown/         # Markdown renderer, parser and element components
+├── nav/              # Site nav, brand mark, nav tools
+└── privacy/          # Privacy page body and metadata, per language
 
-config/               # Configuration files with TypeScript interfaces
-├── blog.ts           # Blog configuration and types
-├── experience.ts     # Experience/career data
-├── portfolio.ts      # Portfolio projects data
-└── services.ts       # Services offered data
+config/               # Section data and types, one file per section
+├── blog/             # Blog posts (`posts.ts`: `published`, `featured`) and their words per language
+├── contact/          # Contact form fields, topics, limits, action codes; page and form copy
+├── sections.ts       # Section ids and nav order
+└── ...               # career, caseStudies, engagements, proof, processSteps, ...
 
 content/              # Markdown content
-└── blog/             # Blog posts in markdown format
+└── blog/             # Blog posts in markdown format (German in `blog/de/`)
 
 lib/                  # Utilities and shared logic
-├── markdownProcessor.ts  # Custom markdown processing
-└── utils.ts          # Utility functions (includes cn helper)
+├── analytics.ts      # GA4 event helpers
+├── contact/          # Server-only contact form: validation, spam checks, Resend call
+├── content/          # Server-only file reads: post markdown, image sizes
+├── i18n/             # Locales, the EN/DE URL map, LocaleProvider, useCopy, page and layout metadata
+├── motion/           # Ticker, scroll store and the motion hooks
+└── og/               # Share cards and icons: layout, fonts, `ogPalette` literals
+
+scripts/              # Tooling
+├── a11y-check.mjs    # axe-core accessibility scan
+├── visual-check.mjs  # Playwright visual sweep (entry)
+└── visual-check/     # Its modules: options, routes, sitemap sample, page probes
 ```
 
 ### Component Architecture
 
 Components follow a consistent pattern:
-- **Domain-organized**: Components grouped by feature/domain (blog, cards, sections)
+- **Domain-organized**: Components grouped by feature/domain (blog, chrome, consent, home, nav)
 - **Co-located tests**: Each component has a `.test.tsx` file alongside it
 - **TypeScript interfaces**: Props interfaces named simply as `Props`
 - **Arrow function components**: Using `FC<Props>` pattern
-- **Radix UI integration**: UI primitives use class-variance-authority for variants
 
 ### Content Management
 
 Blog content is managed through:
 - **Markdown files** in `content/blog/` directory
-- **Custom processor** (`lib/markdownProcessor.ts`) for parsing
+- **Custom parser** in `components/markdown/parser/` — pure: block, inline, list and table parsers over the types in `types.ts`, with `parseMarkdown` in `blockParser.ts` as the entry
+- **File reads** in `lib/content/` (server-only): the post markdown and its `cache()`-wrapped lookup, and the image measuring the parser is handed
 - **Syntax highlighting** via react-syntax-highlighter
-- **Type-safe configuration** in `config/blog.ts`
+- **Type-safe configuration** in `config/blog/` (facts in `posts.ts`, words in `en.ts` / `de.ts`)
+
+### Language Preference
+
+- **Default** is the browser's language; a language picked on the site (nav
+  switch, palette, `L`) is stored as `sk-lang` (`components/chrome/languageStore.ts`)
+  and wins in both directions on every load.
+- **The boot script** (`lib/bootScript.ts`, first block) forwards to the twin
+  page: always for a stored choice; with none, only EN→DE, only on arrival
+  from another site, and only when the first `en`/`de` entry in
+  `navigator.languages` is `de`. It embeds `DE_SEGMENTS`, so its mapping is
+  `twinPath`'s. A crawler (en-US, nothing stored) is never moved.
+- **Other open tabs** do not follow a switch; they pick it up on their next load.
+  A page restored from the back/forward cache re-applies a stored choice
+  (`pageshow`, in the boot script).
+
+### Languages
+
+- **Dictionaries** are `Record<Locale, X>` in `config/<domain>/index.ts`, over
+  `en.ts` / `de.ts`, so a missing German key is a type error.
+  `config/i18n.test.ts` checks every pair (keys, empty strings, informal
+  „du“, `$`); a new pair goes into its table.
+- **Client components never import a dictionary index**: they read
+  `useCopy('<name>')` (`lib/i18n/CopyContext.tsx`), filled per language by
+  `EnglishSiteCopy` / `GermanSiteCopy` (root layouts), `…HomeCopy` and
+  `…ContactCopy` (routes), or take server-built data as props.
+  `lib/i18n/clientCopy.test.ts` fails if a client module can reach both
+  languages' files.
+- **A new page pair** touches: `app/(en)/x/page.tsx`; `app/de/<segment>/page.tsx`;
+  `DE_SEGMENTS` (`lib/i18n/paths.ts`); the `pages()` table in `app/sitemap.ts`
+  (`pnpm i18n-check` only sees sitemap pages); the share images in both trees
+  and `ENGLISH_IMAGE_DIRS` (`lib/og/groupedImageRewrites.ts`); BotID in
+  `instrumentation-client.ts` if it has a form; its dictionary pair in
+  `config/i18n.test.ts`. Unknown `/de` paths need nothing: a fallback rewrite
+  sends them to the German 404 (`app/de/nicht-gefunden`).
+
+### Contact Form
+
+- **`/contact`** is prerendered like every other page. The form fetches its
+  signed token from the `issueContactToken` Server Action on mount and reads
+  `?topic=` in the browser; it stays a disabled fieldset with a `<noscript>`
+  LinkedIn note until then. The CSP stays one static header.
+- **Server Action** in `app/contact/actions.ts`, used through `useActionState`
+  in `components/contact/ContactForm.tsx`; JavaScript only. The logic is
+  `lib/contact/handleContactSubmission.ts`: honeypot, field validation,
+  config, signed minimum fill time, then on Vercel only: no `Next-Action`
+  header (a native post) dropped, Firewall rate limit, BotID; then the email.
+- **Resend** through a plain `fetch` (`lib/contact/sendWithResend.ts`), not the
+  SDK, from Resend's Tokyo region. Sender in `config/site/identity.ts`; the recipient
+  only ever from the env.
+- **Vercel BotID**: `withBotId` in `next.config.ts` (same-origin proxy, so the
+  CSP needs nothing new), `initBotId` in `instrumentation-client.ts` protecting
+  `POST /contact` and `POST /de/kontakt`, `checkBotId()` in `lib/contact/botCheck.ts`. Required for
+  every submission on Vercel; if BotID throws, the visitor gets an error
+  pointing to LinkedIn (fail closed, not silent).
+- **Rate limit**: `checkRateLimit('contact-form')` from `@vercel/firewall` in
+  `lib/contact/rateLimit.ts`, against a dashboard rule (README has the steps).
+  A missing rule or a failed check lets the submission on to BotID.
+- **On Vercel or not** is `runsOnVercel()` in `lib/contact/contactConfig.ts`:
+  `VERCEL=1` from the process env, never from the request.
+- **Spam is dropped silently**: the visitor sees "sent", nothing is sent. A
+  rate limit or a BotID failure is shown, since a real person can hit them.
+- **Env vars** (Vercel only): `RESEND_API_KEY`, `CONTACT_TO_EMAIL`,
+  `CONTACT_FORM_SECRET`. Missing any, the build still passes and the form
+  answers "not set up" with a server warning.
 
 ### Code Style Standards
 
@@ -93,12 +204,14 @@ The project enforces strict coding standards:
 
 ### Testing Strategy
 
-- **Vitest** as test runner with jsdom environment
+- **Vitest** as test runner: `.ts` tests run in Node, `.tsx` tests (and the `.ts` tests listed in `DOM_TS_TESTS` in `vitest.config.ts`) in jsdom. A new `.ts` test that touches `document`/`window` goes on that list
+- **No test globals**: tests import `describe`/`it`/`expect`/`vi` from `vitest`; jest-dom matchers come from `test/setup.ts`. `test/itemAt.ts` indexes into a list in a test without a `!`
 - **Testing Library** for React component testing  
 - **Co-located tests** alongside source files
 - **Behavior-focused testing**: Tests focus on component behavior vs implementation details
 - **Coverage reporting** with v8 provider
 - **Test-specific ESLint rules** that relax strict typing for testing
+- **Visual checking** via `pnpm visual-check` (`scripts/visual-check.mjs`), the only visual-regression axis the project has — there is no Storybook and no Chromatic
 
 ### Build Configuration
 
@@ -146,8 +259,8 @@ For complete development standards, testing strategies, and architectural patter
 
 - Build process includes linting, so code must pass ESLint to build successfully
 - All components should have accompanying tests focused on behavior
-- Navigation logic is separated into dedicated Navigation component
-- Markdown content processing uses custom implementation, not external libraries
-- Font loading is handled through Next.js with Geist font family
+- Navigation lives in `components/nav/SiteNav.tsx`, with the global tools it hosts in `components/chrome`
+- Markdown content processing uses custom implementation, not external libraries. The parser stays pure; anything that reads a file goes in `lib/content/`, which is marked server-only
+- Font loading is handled through `next/font/google` (Bricolage Grotesque, Schibsted Grotesk, Martian Mono)
 - The project uses pnpm as package manager, not npm or yarn
 - Components use consolidated structure to reduce over-decomposition

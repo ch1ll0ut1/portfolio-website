@@ -1,0 +1,53 @@
+/* The services pages' questions: native disclosures with a plus that turns
+   into a minus when the answer is open. */
+
+.faq {
+    display: grid;
+    max-width: 860px;
+    border-bottom: 1px solid var(--line);
+}
+
+.question {
+    border-top: 1px solid var(--line);
+}
+
+.question summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    padding-block: 18px;
+    cursor: pointer;
+    list-style: none;
+}
+
+.question summary::-webkit-details-marker {
+    display: none;
+}
+
+/* A plus that turns into a minus when the answer is open. */
+.question summary::after {
+    content: '+';
+    flex: none;
+    font-family: var(--font-mono);
+    color: var(--caret-text);
+}
+
+.question[open] summary::after {
+    content: '−';
+}
+
+.question h3 {
+    font-family: var(--font-body);
+    font-size: 1.06rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: 1.4;
+    font-variation-settings: normal;
+}
+
+.question p {
+    max-width: 68ch;
+    padding-bottom: 20px;
+    color: var(--fg-2);
+}

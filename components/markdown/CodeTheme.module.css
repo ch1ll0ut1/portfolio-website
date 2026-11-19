@@ -1,0 +1,115 @@
+/* Prism token colours for markdown code blocks.
+
+   The highlighter only tags tokens with Prism's class names (`token keyword`,
+   `token string`, ...); every colour comes from here, as a `var()` of the
+   palette `.code` declares in Markdown.module.css. One rule set therefore
+   serves both themes, and a theme switch repaints the code with no JS. Classes
+   instead of the highlighter's inline styles also keep each token's markup to
+   a class name rather than a style attribute repeated on every span. */
+
+.theme {
+    margin: 0;
+    padding: clamp(16px, 2.4vw, 22px) 0;
+    background: var(--code-bg);
+    color: var(--code-plain);
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: clamp(.72rem, 1.6vw, .8rem);
+    line-height: 1.75;
+    tab-size: 4;
+}
+
+.theme code {
+    font-family: var(--font-mono);
+    background: none;
+    color: var(--code-plain);
+    font-variation-settings: 'wdth' 100;
+}
+
+/* The gutter. The highlighter tags these `comment` as well, so they take the
+   comment colour from the rules below and only need layout here. */
+.theme :global(.linenumber) {
+    display: inline-block;
+    min-width: 3.2em;
+    padding-right: 1.4em;
+    padding-left: 1em;
+    text-align: right;
+    user-select: none;
+    opacity: .65;
+}
+
+/* First, so a more specific role on the same token wins: a parameter's
+   punctuation is still punctuation. */
+.theme :global(.parameter),
+.theme :global(.interpolation) {
+    color: var(--code-plain);
+}
+
+.theme :global(.comment),
+.theme :global(.prolog),
+.theme :global(.doctype),
+.theme :global(.cdata) {
+    color: var(--code-comment);
+}
+
+.theme :global(.punctuation),
+.theme :global(.operator) {
+    color: var(--code-punct);
+}
+
+.theme :global(.namespace) {
+    opacity: .7;
+}
+
+.theme :global(.keyword),
+.theme :global(.atrule),
+.theme :global(.important),
+.theme :global(.rule),
+.theme :global(.selector) {
+    color: var(--code-keyword);
+}
+
+.theme :global(.string),
+.theme :global(.char),
+.theme :global(.attr-value),
+.theme :global(.regex),
+.theme :global(.url) {
+    color: var(--code-string);
+}
+
+.theme :global(.function),
+.theme :global(.class-name),
+.theme :global(.maybe-class-name),
+.theme :global(.tag) {
+    color: var(--code-fn);
+}
+
+.theme :global(.number),
+.theme :global(.boolean),
+.theme :global(.constant),
+.theme :global(.builtin) {
+    color: var(--code-number);
+}
+
+.theme :global(.property),
+.theme :global(.attr-name),
+.theme :global(.variable),
+.theme :global(.symbol) {
+    color: var(--code-name);
+}
+
+.theme :global(.inserted) {
+    color: var(--code-add);
+}
+
+.theme :global(.deleted) {
+    color: var(--code-del);
+}
+
+.theme :global(.bold) {
+    font-weight: 600;
+}
+
+.theme :global(.italic) {
+    font-style: italic;
+}

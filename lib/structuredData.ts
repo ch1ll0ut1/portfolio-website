@@ -1,0 +1,227 @@
+/**
+ * Schema.org structured data for every page that emits JSON-LD.
+ *
+ * The builders return plain graph nodes without `@context`; `jsonLdGraph`
+ * gathers a page's nodes into one document and `serializeJsonLd` turns that
+ * into the text of a `<script type="application/ld+json">`. Keeping them all
+ * here means every page describes the author the same way.
+ *
+ * The site owner is one node, `personSchema`, identified by `PERSON_ID`. Other
+ * nodes point at him through that `@id` (`authorRef`, `personRef`), so a
+ * search engine joins them into one entity rather than reading a new person
+ * on every page. Being one node, it says the same on every page in either
+ * language: its job title and description carry both, each as a JSON-LD
+ * language-tagged value (`inBothLanguages`).
+ *
+ * `inLanguage` is always the page's full BCP 47 tag, `intlLocale`.
+ */
+
+import { type BlogPost, blogCopy, lastModified, tagLabel } from '@/config/blog';
+import { links } from '@/config/links';
+import { type SiteCopy, absoluteUrl, siteConfig, siteCopy } from '@/config/site';
+import { bangkokDateTime } from './date';
+import { type Locale, intlLocale, locales, otherLocale } from './i18n/locale';
+import { localizedPath } from './i18n/paths';
+import { postCardPath } from './og/postCard';
+
+export type JsonLdObject = Record<string, unknown>;
+
+/** One step of a breadcrumb trail: its visible name and its site path. */
+export interface BreadcrumbItem {
+    name: string;
+    path: string;
+}
+
+interface PersonOptions {
+    /** `Offer` nodes for `makesOffer`, such as the services he sells. */
+    offers?: JsonLdObject[];
+}
+
+/** The `@id` of the site owner's Person node. */
+export const PERSON_ID = absoluteUrl('/#person');
+
+/**
+ * The `@id` of the WebSite node in `locale`. Each language's homepage names
+ * its own, since the two say different things (`inLanguage`, `url`); one
+ * shared `@id` would leave a search engine to merge them as it likes.
+ */
+export const websiteId = (locale: Locale = 'en') => absoluteUrl(`${localizedPath(locale, '/')}#website`);
+
+/**
+ * Serializes structured data for inline embedding. `<` is escaped so a value
+ * containing `</script>` cannot close the tag early and inject markup, as the
+ * Next.js JSON-LD guide recommends.
+ */
+export const serializeJsonLd = (data: JsonLdObject) => JSON.stringify(data).replace(/</g, '\\u003c');
+
+/** One JSON-LD document holding every node a page describes. */
+export const jsonLdGraph = (...nodes: JsonLdObject[]): JsonLdObject => ({
+    '@context': 'https://schema.org',
+    '@graph': nodes,
+});
+
+/** A bare reference to the site owner, for `mainEntity`, `provider` and the like. */
+export const personRef = (): JsonLdObject => ({ '@id': PERSON_ID });
+
+/**
+ * The author reference used inside other schemas: the Person's `@id`, plus
+ * enough to stand on its own on a page that does not carry the full node.
+ * The same on every page, whatever its language.
+ */
+export const authorRef = (): JsonLdObject => ({
+    '@type': 'Person',
+    '@id': PERSON_ID,
+    'name': siteConfig.name,
+    'url': absoluteUrl(),
+    'jobTitle': inBothLanguages(copy => copy.jobTitle),
+    'sameAs': [links.social.linkedin, links.social.github],
+});
+
+/** The full Person node for either homepage; `offers` become its `makesOffer`. */
+export const personSchema = ({ offers = [] }: PersonOptions = {}): JsonLdObject => ({
+    ...authorRef(),
+    description: inBothLanguages(copy => copy.description),
+    image: {
+        '@type': 'ImageObject',
+        'url': absoluteUrl('/stefan-knoch.jpg'),
+        'width': 800,
+        'height': 800,
+    },
+    address: {
+        '@type': 'PostalAddress',
+        'addressLocality': siteConfig.city,
+        'addressCountry': siteConfig.countryCode,
+    },
+    knowsLanguage: ['en', 'de'],
+    knowsAbout: [
+        'Software Architecture',
+        'Full-Stack Development',
+        'Technical Leadership',
+        'Rich Text Editors',
+        'React',
+        'TypeScript',
+        'Next.js',
+        'Node.js',
+        'AWS',
+        'AI-Augmented Engineering',
+    ],
+    ...(offers.length > 0 ? { makesOffer: offers } : {}),
+});
+
+/** The WebSite node, published by the site owner, in the language of the page it is on. */
+export const websiteSchema = (locale: Locale = 'en'): JsonLdObject => ({
+    '@type': 'WebSite',
+    '@id': websiteId(locale),
+    'name': siteConfig.name,
+    'alternateName': new URL(siteConfig.url).hostname,
+    'url': absoluteUrl(localizedPath(locale, '/')),
+    'inLanguage': intlLocale[locale],
+    'publisher': personRef(),
+});
+
+/** The homepage in `locale` as a ProfilePage about the site owner. */
+export const profilePageSchema = (locale: Locale = 'en'): JsonLdObject => ({
+    '@type': 'ProfilePage',
+    '@id': absoluteUrl(`${localizedPath(locale, '/')}#profilepage`),
+    'url': absoluteUrl(localizedPath(locale, '/')),
+    'name': siteCopy[locale].title,
+    'inLanguage': intlLocale[locale],
+    'isPartOf': { '@id': websiteId(locale) },
+    'mainEntity': personRef(),
+    'dateModified': bangkokDateTime(siteConfig.staticPagesUpdated),
+});
+
+/** A BreadcrumbList from the homepage down to the current page, in that order. */
+export const breadcrumbSchema = (items: BreadcrumbItem[]): JsonLdObject => ({
+    '@type': 'BreadcrumbList',
+    'itemListElement': items.map((item, index) => ({
+        '@type': 'ListItem',
+        'position': index + 1,
+        'name': item.name,
+        'item': absoluteUrl(item.path),
+    })),
+});
+
+/** The Blog node for the index in `locale`, listing every post it shows. */
+export const blogSchema = (posts: BlogPost[], locale: Locale): JsonLdObject => ({
+    '@type': 'Blog',
+    'name': blogCopy[locale].schemaName(siteConfig.name),
+    'description': blogCopy[locale].feed.description,
+    'url': absoluteUrl(localizedPath(locale, '/blog')),
+    'author': authorRef(),
+    'blogPost': posts.map(post => ({
+        '@type': 'BlogPosting',
+        'headline': post.title,
+        'description': post.excerpt,
+        'author': authorRef(),
+        'datePublished': bangkokDateTime(post.date),
+        'dateModified': bangkokDateTime(lastModified(post)),
+        'url': postUrl(post, locale),
+        'mainEntityOfPage': {
+            '@type': 'WebPage',
+            '@id': postUrl(post, locale),
+        },
+    })),
+});
+
+/**
+ * The key that links an article to its twin in the other language: the
+ * German one is a translation of the English original, which in turn names
+ * the German one as its translation.
+ */
+const TRANSLATION_LINK: Record<Locale, string> = {
+    en: 'workTranslation',
+    de: 'translationOfWork',
+};
+
+/** The BlogPosting node for one article page in `locale`, linked to its twin. */
+export const blogPostingSchema = (post: BlogPost, locale: Locale): JsonLdObject => {
+    const url = postUrl(post, locale);
+    const other = otherLocale(locale);
+
+    return {
+        '@type': 'BlogPosting',
+        'headline': post.title,
+        'description': post.excerpt,
+        'image': absoluteUrl(postCardPath(post.slug, locale)),
+        'author': authorRef(),
+        // A personal site: the author is the publisher, so no organization logo is needed.
+        'publisher': authorRef(),
+        'datePublished': bangkokDateTime(post.date),
+        'dateModified': bangkokDateTime(lastModified(post)),
+        'mainEntityOfPage': {
+            '@type': 'WebPage',
+            '@id': url,
+        },
+        'url': url,
+        'keywords': post.tags.map(tag => tagLabel(locale, tag)).join(', '),
+        'inLanguage': intlLocale[locale],
+        'isAccessibleForFree': true,
+        [TRANSLATION_LINK[locale]]: {
+            '@type': 'BlogPosting',
+            'url': postUrl(post, other),
+            'inLanguage': intlLocale[other],
+        },
+    };
+};
+
+/** The breadcrumb trail of one article in `locale`: Home › Writing › the post. */
+export const blogPostBreadcrumbs = (post: BlogPost, locale: Locale): BreadcrumbItem[] => {
+    const names = blogCopy[locale].breadcrumbs;
+
+    return [
+        { name: names.home, path: localizedPath(locale, '/') },
+        { name: names.writing, path: localizedPath(locale, '/blog') },
+        { name: post.title, path: localizedPath(locale, `/blog/${post.slug}`) },
+    ];
+};
+
+/** A post's absolute URL in `locale`. */
+function postUrl(post: BlogPost, locale: Locale) {
+    return absoluteUrl(localizedPath(locale, `/blog/${post.slug}`));
+}
+
+/** A text in every language, as JSON-LD language-tagged values, for a node every page shares. */
+function inBothLanguages(pick: (copy: SiteCopy) => string) {
+    return locales.map(locale => ({ '@value': pick(siteCopy[locale]), '@language': intlLocale[locale] }));
+}

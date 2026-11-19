@@ -1,0 +1,150 @@
+/* The `?` overlay: a plain two-column key/description table. */
+.panel {
+    width: min(420px, 100%);
+}
+
+.head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--line);
+}
+
+.title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.05rem;
+    letter-spacing: -.01em;
+}
+
+.close kbd {
+    color: var(--muted);
+}
+
+.list {
+    display: grid;
+    padding: 8px;
+}
+
+.row {
+    display: grid;
+    grid-template-columns: 5.5em minmax(0, 1fr);
+    align-items: center;
+    gap: 12px;
+    padding: 8px 10px;
+    border-radius: 8px;
+}
+
+.row:nth-child(odd) {
+    background: color-mix(in srgb, var(--bg-2) 55%, transparent);
+}
+
+.row dt {
+    display: flex;
+    gap: 4px;
+}
+
+.row dd {
+    color: var(--fg-2);
+    font-size: var(--fs-small);
+}
+
+.row kbd {
+    font-size: .7rem;
+}
+
+/* A single-key row while those keys are switched off. */
+.off {
+    opacity: .55;
+}
+
+/* The `g` of a chord is the prefix, not the destination, so it reads quieter. */
+.prefix {
+    color: var(--muted);
+}
+
+.setting {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px 16px 14px;
+    border-top: 1px solid var(--line);
+}
+
+.settingLabel {
+    display: grid;
+    gap: 2px;
+    font-size: var(--fs-small);
+    font-weight: 600;
+}
+
+.settingHint {
+    color: var(--muted);
+    font-size: .78rem;
+    font-weight: 400;
+}
+
+/* Same painted native checkbox as the cookie preferences switch, so the
+   semantics, keyboard behaviour and focus ring stay the browser's. */
+.switch {
+    appearance: none;
+    position: relative;
+    flex: none;
+    width: 44px;
+    height: 24px;
+    margin: 0;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--bg-2);
+    cursor: pointer;
+}
+
+.switch::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 3px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--muted);
+    transform: translateY(-50%);
+}
+
+.switch:hover {
+    border-color: var(--fg-2);
+}
+
+.switch:checked {
+    background: color-mix(in srgb, var(--caret) 22%, transparent);
+    border-color: var(--caret);
+}
+
+.switch:checked::after {
+    background: var(--caret);
+    transform: translate(20px, -50%);
+}
+
+:global(.motion) .switch,
+:global(.motion) .switch::after {
+    transition:
+        background var(--dur-xs) var(--ease-ui),
+        border-color var(--dur-xs) var(--ease-ui),
+        transform var(--dur-xs) var(--ease-ui);
+}
+
+@keyframes keys-in {
+    from {
+        opacity: 0;
+        transform: translateX(-6px);
+    }
+}
+
+/* The rows mount with the overlay, so the stagger needs no open state to key off. */
+:global(.motion) .row {
+    animation: keys-in .45s var(--ease-out) both;
+    animation-delay: calc(80ms + var(--i, 0) * 25ms);
+}

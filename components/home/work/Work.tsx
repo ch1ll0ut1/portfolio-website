@@ -1,0 +1,31 @@
+import { type FC } from 'react';
+import { caseStudiesFor } from '@/config/caseStudies';
+import { workCopy } from '@/config/home/work';
+import { projectsIndexFor } from '@/config/projectsIndex';
+import type { Locale } from '@/lib/i18n/locale';
+import { SectionHead } from '../SectionHead';
+import { CaseList } from './CaseList';
+import { MoreProjects } from './MoreProjects';
+
+interface Props {
+    locale: Locale;
+}
+
+/**
+ * Selected work: the stacking case studies, then the smaller projects.
+ */
+export const Work: FC<Props> = ({ locale }) => (
+    <section className="section" id="work" aria-labelledby="work-title">
+        <div className="wrap">
+            <SectionHead
+                id="work-title"
+                title={workCopy[locale].heading.title}
+                lede={workCopy[locale].heading.lede}
+            />
+
+            <CaseList caseStudies={caseStudiesFor(locale)} />
+
+            <MoreProjects title={workCopy[locale].moreProjects.title} projectsIndex={projectsIndexFor(locale)} />
+        </div>
+    </section>
+);

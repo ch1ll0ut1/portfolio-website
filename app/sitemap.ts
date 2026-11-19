@@ -1,38 +1,64 @@
 import { MetadataRoute } from 'next';
-import { blogPosts } from '@/config/blog';
+import { blogPosts, lastModified } from '@/config/blog';
+import { caseStudiesFor, caseStudyPath } from '@/config/caseStudies';
+import { absoluteUrl, siteConfig } from '@/config/site';
+import { localizedPath, pageAlternates } from '@/lib/i18n/paths';
+import { SERVICES_PATH } from '@/lib/serviceStructuredData';
 
+/** One page of the site, by its English path; its German twin is derived from it. */
+interface Page {
+    enPath: string;
+    lastModified: Date;
+}
+
+/**
+ * Every indexable page with a real last-modified date: posts carry their own,
+ * and the static pages share one fixed date so a deploy alone does not mark
+ * them changed. The blog index changes when any of its posts does. The case
+ * study pages count as static pages.
+ *
+ * Each page is listed in both languages, each entry naming both as its
+ * translations with English as `x-default`, the same map the pages' own
+ * hreflang links carry (`pageAlternates`). A German page is dated like its
+ * English one: the facts behind both are the same.
+ *
+ * Only published posts are listed, whatever the environment: the dev server
+ * shows drafts, but the sitemap is what tooling reads as "the posts this site
+ * serves" (the visual and accessibility checks sample it).
+ *
+ * No `changeFrequency` or `priority`: Google ignores both, and only an honest
+ * `lastModified` moves anything.
+ */
 export default function sitemap(): MetadataRoute.Sitemap {
-    const baseUrl = 'https://stefanknoch.com';
+    return pages().flatMap(pairEntries);
+}
 
-    // Static pages
-    const staticPages = [
-        {
-            url: baseUrl,
-            lastModified: new Date(),
-            changeFrequency: 'weekly' as const,
-            priority: 1,
-        },
-        {
-            url: `${baseUrl}/blog`,
-            lastModified: new Date(),
-            changeFrequency: 'daily' as const,
-            priority: 0.8,
-        },
-        {
-            url: `${baseUrl}/privacy`,
-            lastModified: new Date(),
-            changeFrequency: 'monthly' as const,
-            priority: 0.3,
-        },
+/** The route table: every page the sitemap lists, by its English path. */
+function pages(): Page[] {
+    const posts = blogPosts.filter(post => post.published);
+    const staticUpdated = new Date(siteConfig.staticPagesUpdated);
+    const newestChange = posts.map(lastModified).sort().at(-1);
+    const blogUpdated = newestChange ? new Date(newestChange) : staticUpdated;
+
+    return [
+        { enPath: '/', lastModified: staticUpdated },
+        { enPath: '/blog', lastModified: blogUpdated },
+        { enPath: SERVICES_PATH, lastModified: staticUpdated },
+        { enPath: '/contact', lastModified: staticUpdated },
+        { enPath: '/privacy', lastModified: staticUpdated },
+        { enPath: '/imprint', lastModified: staticUpdated },
+        ...posts.map(post => ({ enPath: `/blog/${post.slug}`, lastModified: new Date(lastModified(post)) })),
+        ...caseStudiesFor('en').map(study => ({ enPath: caseStudyPath(study), lastModified: staticUpdated })),
     ];
+}
 
-    // Blog posts
-    const blogPages = blogPosts.map(post => ({
-        url: `${baseUrl}/blog/${post.slug}`,
-        lastModified: new Date(post.date),
-        changeFrequency: 'monthly' as const,
-        priority: 0.6,
+/** The English page and its German twin, each listing both as its translations. */
+function pairEntries(page: Page): MetadataRoute.Sitemap {
+    const languages = Object.fromEntries(Object.entries(pageAlternates(page.enPath)).map(([language, path]) => [language, absoluteUrl(path)]));
+
+    return [page.enPath, localizedPath('de', page.enPath)].map(path => ({
+        url: absoluteUrl(path),
+        lastModified: page.lastModified,
+        alternates: { languages },
     }));
-
-    return [...staticPages, ...blogPages];
 }

@@ -1,0 +1,19 @@
+/* A caret-coloured hairline at the very top, scaled by reading progress. */
+.bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    z-index: 60;
+    pointer-events: none;
+    background: var(--caret);
+    transform-origin: 0 50%;
+    transform: scaleX(var(--sp, 0));
+    opacity: 0;
+    transition: opacity var(--dur-s) var(--ease-ui);
+}
+
+.on {
+    opacity: 1;
+}

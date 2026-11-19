@@ -1,0 +1,197 @@
+/* Social-Bee: a tech department assembling from zero, then handed over. */
+
+.stage {
+    position: absolute;
+    inset: 0;
+}
+
+.edge {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 1px;
+    background: color-mix(in srgb, var(--fg) 24%, transparent);
+    transform-origin: 0 50%;
+    transition: opacity .6s var(--ease-ui);
+}
+
+.edge.edgeSys {
+    background: color-mix(in srgb, var(--select) 55%, transparent);
+}
+
+.edge.edgeDim {
+    opacity: .35;
+}
+
+.node {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 34px;
+    height: 34px;
+    margin: -17px 0 0 -17px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--fg-2);
+    opacity: 0;
+    transform: scale(.5);
+    transition:
+        opacity .35s var(--ease-ui),
+        transform .7s cubic-bezier(.34, 1.56, .64, 1),
+        border-color .3s;
+}
+
+.node.nodeOn {
+    opacity: 1;
+    transform: none;
+}
+
+.node.nodeOn.nodeHandover {
+    opacity: .55;
+}
+
+.node.nodePing {
+    border-color: var(--select);
+}
+
+.person::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 8px;
+    width: 8px;
+    height: 8px;
+    margin-left: -4px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+.person::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 7px;
+    width: 16px;
+    height: 7px;
+    margin-left: -8px;
+    border-radius: 8px 8px 2px 2px;
+    background: currentColor;
+}
+
+.lead {
+    width: 42px;
+    height: 42px;
+    margin: -21px 0 0 -21px;
+    border-color: var(--caret);
+    color: var(--caret-text);
+}
+
+.lead::before {
+    top: 10px;
+    width: 10px;
+    height: 10px;
+    margin-left: -5px;
+}
+
+.lead::after {
+    bottom: 9px;
+    width: 20px;
+    height: 9px;
+    margin-left: -10px;
+}
+
+.sys {
+    border-radius: 9px;
+    display: grid;
+    place-items: center;
+    font-size: 9px;
+    color: var(--select);
+    border-color: color-mix(in srgb, var(--select) 50%, var(--line));
+}
+
+.sys.nodePing {
+    background: var(--select-soft);
+}
+
+.lbl {
+    position: absolute;
+    left: 50%;
+    top: calc(100% + 6px);
+    transform: translateX(-50%);
+    font-size: 9.5px;
+    color: var(--muted);
+    white-space: nowrap;
+}
+
+.lead .lbl {
+    color: var(--fg);
+}
+
+.pulse {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 6px;
+    height: 6px;
+    margin: -3px 0 0 -3px;
+    border-radius: 50%;
+    background: var(--caret);
+}
+
+.git {
+    position: absolute;
+    left: 14px;
+    right: 14px;
+    bottom: 12px;
+    height: 26px;
+    border-top: 1px solid var(--line);
+    overflow: hidden;
+}
+
+.gitLbl {
+    position: absolute;
+    left: 0;
+    top: 9px;
+    font-size: 9.5px;
+    color: var(--muted);
+}
+
+.gitLine {
+    position: absolute;
+    left: 40px;
+    right: 0;
+    top: 16px;
+    height: 1px;
+    background: var(--line);
+}
+
+.gitTrack {
+    position: absolute;
+    left: 44px;
+    top: 0;
+    transition: transform .5s var(--ease-out);
+}
+
+.commit {
+    position: absolute;
+    top: 12px;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    border: 1.5px solid var(--ok);
+    background: var(--surface);
+    animation: pop .5s var(--ease-out) both;
+}
+
+@keyframes pop {
+    from {
+        transform: scale(0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .commit {
+        animation: none;
+    }
+}

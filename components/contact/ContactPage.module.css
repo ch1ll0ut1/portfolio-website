@@ -1,0 +1,124 @@
+/* The contact page: the privacy policy's header, with the blog index's masked
+   heading, then the form with what happens next beside it from 1024px up. */
+
+.page {
+    max-width: 1080px;
+    margin-inline: auto;
+}
+
+.header {
+    display: grid;
+    gap: 16px;
+    max-width: 74ch;
+    margin-bottom: clamp(32px, 4.5vw, 56px);
+}
+
+/* The way round the form, booking the call, on one line with its question. */
+.book {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 16px;
+    margin-top: 4px;
+    color: var(--fg-2);
+}
+
+.body {
+    display: grid;
+    gap: clamp(32px, 4vw, 48px);
+}
+
+@media (min-width: 1024px) {
+    .body {
+        grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+        align-items: start;
+    }
+}
+
+.aside {
+    display: grid;
+    gap: 16px;
+    align-content: start;
+}
+
+.asideTitle {
+    font-size: var(--fs-3);
+    letter-spacing: -.01em;
+}
+
+/* Numbered like the services pages' steps: the count is the content. */
+.steps {
+    display: grid;
+    gap: 14px;
+    margin-bottom: 8px;
+    padding: 0;
+    list-style: none;
+    counter-reset: step;
+}
+
+.steps li {
+    display: grid;
+    grid-template-columns: 2rem minmax(0, 1fr);
+    gap: 8px;
+    color: var(--fg-2);
+    counter-increment: step;
+}
+
+.steps li::before {
+    content: counter(step, decimal-leading-zero);
+    padding-top: .2em;
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    color: var(--caret-text);
+}
+
+.kicker {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-variation-settings: 'wdth' 88;
+}
+
+.kicker::after {
+    content: '';
+    width: 2px;
+    height: .95em;
+    margin-left: .4em;
+    background: var(--caret);
+}
+
+:global(.motion) .kicker::after {
+    animation: var(--caret-blink) 1.1s steps(1, end) infinite;
+}
+
+.title {
+    font-size: var(--fs-1);
+    font-variation-settings: 'wdth' 84;
+}
+
+.lead {
+    max-width: 60ch;
+    color: var(--fg-2);
+    font-size: clamp(1.05rem, 1.4vw, 1.25rem);
+}
+
+.note {
+    color: var(--muted);
+    font-size: var(--fs-small);
+}
+
+.link {
+    color: var(--fg);
+    text-decoration: underline;
+    text-decoration-color: var(--caret);
+    text-decoration-thickness: 2px;
+    text-underline-offset: .2em;
+}
+
+.link:hover {
+    text-decoration-color: currentColor;
+}

@@ -1,6 +1,6 @@
-# How to Build a Startup Dev Team for Real-World Success
+# How to Build a Startup Dev Team That Works
 
-![How to Build a Startup Dev Team for Real-World Success](how-to-build-a-startup-dev-team-for-real-world-success.png)
+![Seven developer archetypes: the Architect, the Glue, the Finisher, the Cheerleader, the Skeptic, the Builder and the Explorer](how-to-build-a-startup-dev-team-for-real-world-success.webp)
 
 There’s a common trap founders fall into when hiring developers for a startup: they think they need to hire only the *smartest*. The myth goes something like this: if you stack your team with the brightest people you can find, you’ll automatically win.
 
@@ -62,6 +62,8 @@ In real life, you don’t just hire “a developer.” You hire a person who nat
 No one is just one archetype. A Builder might also be a Finisher, so they not only ship fast but also clean up their code. An Architect might also be a Skeptic. A Glue might double as a Cheerleader.
 
 In small startup teams especially, people wear multiple hats. The key isn’t fitting people into boxes — it’s making sure you don’t end up with a team of only Builders, or only Architects. That’s when you feel what’s missing.
+
+The same goes beyond engineering: an early team rarely needs people who only manage, which is why [startups don’t need Product Owners](/blog/why-startups-dont-need-product-owners) yet.
 
 ---
 

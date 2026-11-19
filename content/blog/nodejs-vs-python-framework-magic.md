@@ -1,6 +1,6 @@
-# Node.js vs Python: When Framework Magic Stops Feeling Magical
+# Node.js vs Python: The Cost of Framework Magic
 
-![ ](nodejs-vs-python-framework-magic.png)
+![A magic wand between the Node.js and Python logos](nodejs-vs-python-framework-magic.webp)
 
 There was a time when I loved “magic” in frameworks.
 Back in the day, Ruby on Rails blew my mind — models auto-loaded, routes appeared from nowhere, database migrations happened like clockwork.
@@ -34,7 +34,7 @@ The system works because you can see it working.
 
 ## Python Frameworks: The Hidden Costs of Magic
 
-Trying to get into Python after years in TypeScript feels like switching from a precision sports car to a Trabant.
+Trying to get into Python after years in TypeScript feels like trading a precision sports car for a bare-bones economy car.
 The first thing you notice isn’t the speed — it’s the missing features.
 
 Python’s typing is optional and often ignored.

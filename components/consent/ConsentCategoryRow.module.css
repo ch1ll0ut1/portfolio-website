@@ -1,0 +1,91 @@
+/* One category inside the preferences dialog: the inner-row treatment the
+   overlays use — a tinted band on the panel, not a second bordered card. */
+.row {
+    display: grid;
+    gap: 6px;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--bg-2) 55%, transparent);
+}
+
+.head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: .98rem;
+    letter-spacing: -.01em;
+}
+
+.text {
+    color: var(--fg-2);
+    font-size: var(--fs-small);
+}
+
+/* Mirrors the `.tags` pill, for the row that has no switch to show. */
+.badge {
+    flex: none;
+    font-family: var(--font-mono);
+    font-size: .68rem;
+    letter-spacing: .01em;
+    padding: 4px 9px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--muted);
+    font-variation-settings: 'wdth' 88;
+}
+
+/* A native checkbox painted as a track and a knob, so the semantics, the
+   keyboard behaviour and the focus ring all stay the browser's. */
+.switch {
+    appearance: none;
+    position: relative;
+    flex: none;
+    width: 44px;
+    height: 24px;
+    margin: 0;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--bg-2);
+    cursor: pointer;
+}
+
+.switch::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 3px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--muted);
+    transform: translateY(-50%);
+}
+
+.switch:hover {
+    border-color: var(--fg-2);
+}
+
+.switch:checked {
+    background: color-mix(in srgb, var(--caret) 22%, transparent);
+    border-color: var(--caret);
+}
+
+.switch:checked::after {
+    background: var(--caret);
+    transform: translate(20px, -50%);
+}
+
+:global(.motion) .switch,
+:global(.motion) .switch::after {
+    transition:
+        background var(--dur-xs) var(--ease-ui),
+        border-color var(--dur-xs) var(--ease-ui),
+        transform var(--dur-xs) var(--ease-ui);
+}

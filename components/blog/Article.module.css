@@ -1,0 +1,189 @@
+/* The reading layout. One column held at the markdown measure, with the
+   article header sitting slightly wider so the title can breathe. */
+
+.article {
+    max-width: 78ch;
+    margin-inline: auto;
+}
+
+.header {
+    display: grid;
+    gap: 20px;
+    margin-bottom: clamp(40px, 5vw, 64px);
+}
+
+/* ==========================================================================
+   Breadcrumb
+   ========================================================================== */
+.crumbs ol {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    color: var(--muted);
+    font-variation-settings: 'wdth' 88;
+}
+
+.crumb {
+    text-decoration: none;
+    transition: color var(--dur-xs) var(--ease-ui);
+}
+
+.crumb:hover,
+.crumb:focus-visible {
+    color: var(--caret-text);
+}
+
+.crumbSep {
+    opacity: .5;
+}
+
+/* The current page's crumb is informative, not a target, so it is clipped
+   rather than allowed to push the row onto four lines. */
+.crumbCurrent {
+    max-width: 38ch;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--fg-2);
+}
+
+/* ==========================================================================
+   Masthead
+   ========================================================================== */
+.meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    letter-spacing: .02em;
+    color: var(--muted);
+    font-variation-settings: 'wdth' 88;
+}
+
+.dot {
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: currentColor;
+    flex: none;
+}
+
+.title {
+    font-size: clamp(2.1rem, 5vw, 3.6rem);
+    font-variation-settings: 'wdth' 84;
+}
+
+.excerpt {
+    max-width: 64ch;
+    color: var(--fg-2);
+    font-size: clamp(1.05rem, 1.3vw, 1.2rem);
+}
+
+/* ==========================================================================
+   Related posts: the pager's cards, under a heading of their own
+   ========================================================================== */
+.related {
+    display: grid;
+    gap: 18px;
+    max-width: 78ch;
+    margin: clamp(56px, 7vw, 88px) auto 0;
+    padding-top: clamp(28px, 3.6vw, 40px);
+    border-top: 1px solid var(--line);
+}
+
+.relatedTitle {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    font-weight: 500;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-variation-settings: 'wdth' 88;
+}
+
+.relatedList {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+}
+
+.relatedItem {
+    display: grid;
+}
+
+/* Right under the related posts, the pager joins their block. */
+.related + .pager {
+    margin-top: 16px;
+    padding-top: 0;
+    border-top: 0;
+}
+
+/* ==========================================================================
+   Pager
+   ========================================================================== */
+.pager {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+    align-items: stretch;
+    max-width: 78ch;
+    margin: clamp(56px, 7vw, 88px) auto 0;
+    padding-top: clamp(28px, 3.6vw, 40px);
+    border-top: 1px solid var(--line);
+}
+
+.pagerLink {
+    display: grid;
+    gap: 8px;
+    align-content: start;
+    padding: 18px 20px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+    background: var(--bg-2);
+    text-decoration: none;
+    transition:
+        border-color var(--dur-s) var(--ease-ui),
+        transform var(--dur-s) var(--ease-ui);
+}
+
+.pagerLink:hover,
+.pagerLink:focus-visible {
+    border-color: var(--fg-2);
+    transform: translateY(-2px);
+}
+
+.pagerLabel {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--caret-text);
+    font-variation-settings: 'wdth' 88;
+}
+
+.pagerTitle {
+    color: var(--fg);
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -.02em;
+    font-variation-settings: 'wdth' 88;
+}
+
+.pagerAll {
+    justify-self: start;
+    align-self: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pagerLink:hover,
+    .pagerLink:focus-visible {
+        transform: none;
+    }
+}

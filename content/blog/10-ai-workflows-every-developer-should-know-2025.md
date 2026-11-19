@@ -1,11 +1,11 @@
-# 10 AI Workflows Every Developer Should Know in 2025
+# 10 AI Workflows Every Developer Should Know
 
-![10 Workflows which AI can help you with](ai-boosted-development-workflows.png)
+![10 Workflows which AI can help you with](ai-boosted-development-workflows.webp)
 
 Artificial Intelligence in 2025 is no longer a curiosity.  
 It’s not just “autocomplete for code.” It’s a **set of workflows that can accelerate every phase of software development**, from brainstorming to deployment.
 
-In the past two years, we’ve seen developers who embrace AI work at **3–10× speed** without sacrificing quality. I’ve personally built products in days that would have taken weeks — but only once I discovered *how to use AI correctly*.  
+In the past two years, we’ve seen developers who embrace AI work at **3–10× speed** without sacrificing quality. I’ve personally built products in days that would have taken weeks — but only once I discovered [how to use AI correctly](/blog/how-to-use-ai-to-build-apps-10x-speed).  
 
 This article is a deep dive into the **10 most powerful AI workflows every developer should know in 2025**.  
 
@@ -37,7 +37,7 @@ Instead of saying “build this app,” you ask AI to **act as a senior architec
 
 1. Ask AI for multiple architectural patterns.  
 2. Challenge it with edge cases.  
-3. Generate a `ARCHITECTURE.md` file with diagrams and folder structure.  
+3. Generate an `ARCHITECTURE.md` file with diagrams and folder structure.  
 
 **Pro tip:** Don’t accept the first answer. Push the AI to explain *why* one design might fail.
 
@@ -160,7 +160,7 @@ Ask AI: *“Write a GitHub Action that runs tests, lints code, and deploys to st
 
 ---
 
-### 9. AI for Learning & Onboarding
+## 9. AI for Learning & Onboarding
 
 New dev joins the team?  
 AI can summarize the codebase, answer “where is X implemented?” and even create learning paths.
@@ -175,7 +175,7 @@ AI can summarize the codebase, answer “where is X implemented?” and even cre
 
 ---
 
-### 10. AI for Continuous Improvement
+## 10. AI for Continuous Improvement
 
 The final workflow is meta: using AI to improve *itself*.  
 

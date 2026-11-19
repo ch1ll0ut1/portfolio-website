@@ -1,0 +1,26 @@
+/*
+ * The career log's shell. Ported from the prototype's `experience.css`.
+ *
+ * `--log-lane` is the horizontal distance between the two branch lanes and
+ * `--log-gutter` the column the graph occupies. Both are declared here and read
+ * by `CommitRow.module.css`, `CareerGraph.module.css` and by the measuring code
+ * in `useCareerLog`, so one declaration keeps the SVG and the rows aligned.
+ */
+
+.log {
+    --log-lane: 26px;
+    --log-gutter: calc(var(--log-lane) * 2 + 18px);
+
+    position: relative;
+}
+
+.list {
+    display: grid;
+}
+
+@media (max-width: 760px) {
+    .log {
+        --log-lane: 16px;
+        --log-gutter: calc(var(--log-lane) * 2 + 10px);
+    }
+}

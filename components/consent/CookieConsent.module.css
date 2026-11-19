@@ -1,0 +1,146 @@
+/* The consent banner: a slim bar docked to the bottom edge, in the same
+   language as the overlay panels — hairline border, raised surface. One line
+   or two of copy beside one row of buttons on a desktop, the copy above the
+   buttons on a phone, so it never covers the hero's calls to action. Motion is
+   gated on the global `.motion` class, so with reduced motion the bar is
+   simply there. */
+.root {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 92;
+    display: flex;
+}
+
+.panel {
+    width: 100%;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px clamp(16px, 2.4vw, 32px);
+    padding: 12px max(var(--gutter), calc((100% - var(--maxw)) / 2 + var(--gutter)));
+    padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+    border-top: 1px solid var(--line);
+    background: var(--surface);
+    box-shadow: 0 -18px 50px -30px rgb(0 0 0 / 45%);
+}
+
+.body {
+    margin: 0;
+    color: var(--fg-2);
+    font-size: var(--fs-small);
+    line-height: 1.45;
+    max-width: 80ch;
+}
+
+/* An inline link in body copy needs an affordance at rest, so it carries a
+   quiet underline rather than the hover-in `.ulink` used for standalone links. */
+.link {
+    color: var(--fg);
+    white-space: nowrap;
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--fg) 35%, transparent);
+    text-underline-offset: 3px;
+}
+
+.link:hover,
+.link:focus-visible {
+    text-decoration-color: var(--caret);
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Chrome, not a call to action: the buttons sit a size below the page's own,
+   and reject and accept look the same. */
+.actions :global(.btn) {
+    min-height: 40px;
+    padding: 0 1em;
+    font-size: .9rem;
+    white-space: nowrap;
+}
+
+/* The way into the dialog, quieter than the two choices it sits beside. */
+.customize {
+    min-height: 40px;
+    padding: 0 .6em;
+    font-size: .9rem;
+    color: var(--fg-2);
+    white-space: nowrap;
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--fg-2) 35%, transparent);
+    text-underline-offset: 3px;
+}
+
+.customize:hover,
+.customize:focus-visible {
+    color: var(--fg);
+    text-decoration-color: var(--caret);
+}
+
+@media (max-width: 760px) {
+    .panel {
+        grid-template-columns: minmax(0, 1fr);
+        padding-top: 10px;
+        padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+    }
+
+    .body {
+        font-size: .84rem;
+        line-height: 1.4;
+    }
+
+    .actions :global(.btn) {
+        flex: 1 1 0;
+        justify-content: center;
+        padding: 0 .6em;
+        font-size: .85rem;
+    }
+
+    .customize {
+        padding: 0 .3em;
+        font-size: .85rem;
+    }
+}
+
+/* A phone gets the copy above the buttons, so every line counts against the
+   hero: a little less padding and leading keeps its calls to action clear. */
+@media (max-width: 480px) {
+    .panel {
+        row-gap: 8px;
+        padding-top: 8px;
+        padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+    }
+
+    .body {
+        line-height: 1.35;
+    }
+}
+
+:global(.motion) .panel {
+    animation: banner-in var(--dur-s) var(--ease-out) backwards;
+}
+
+/* A rise without a fade, so the banner is content from its first frame. It is
+   in the server HTML, so this plays from first paint, not after hydration. */
+@keyframes banner-in {
+    from {
+        transform: translateY(14px);
+    }
+}
+
+/* Server-rendered before the stored choice can be read. Shown only once the
+   boot script has run and found no stored choice: never to a returning
+   visitor, and never without JavaScript, where its buttons could not work.
+   The client drops the class once it has read storage itself. */
+.pending {
+    display: none;
+}
+
+:global(.js:not(.has-consent)) .pending {
+    display: flex;
+}

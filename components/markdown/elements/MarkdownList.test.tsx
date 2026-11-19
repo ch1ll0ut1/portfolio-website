@@ -6,7 +6,7 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { MarkdownList } from './MarkdownList';
-import { type ListElement } from '../markdownProcessor';
+import { type ListElement } from '../parser/types';
 
 describe('MarkdownList Component', () => {
     it('should render list with plain text items', () => {

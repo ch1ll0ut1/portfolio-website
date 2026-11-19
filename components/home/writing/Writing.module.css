@@ -1,0 +1,17 @@
+/*
+ * The writing section's grid. Ported from `.writing__grid` in the prototype's
+ * `writing.css`. `.section`, `.wrap` and `.sec-head` are global.
+ */
+
+.grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    gap: clamp(24px, 4vw, 56px);
+    align-items: start;
+}
+
+@media (max-width: 900px) {
+    .grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
