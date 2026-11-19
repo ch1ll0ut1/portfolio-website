@@ -680,3 +680,16 @@
         gap: 8px;
     }
 }
+
+/* German phones: the calls to action stack, one row taller than in English,
+   and the cookie bar's copy runs a line longer. A hair less rhythm keeps both
+   buttons above the bar at 390 by 844. */
+@media (max-width: 480px) {
+    :lang(de) .inner {
+        row-gap: 20px;
+    }
+
+    :lang(de) .copy {
+        gap: 16px;
+    }
+}

@@ -107,6 +107,20 @@
     }
 }
 
+/* A phone gets the copy above the buttons, so every line counts against the
+   hero: a little less padding and leading keeps its calls to action clear. */
+@media (max-width: 480px) {
+    .panel {
+        row-gap: 8px;
+        padding-top: 8px;
+        padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+    }
+
+    .body {
+        line-height: 1.35;
+    }
+}
+
 :global(.motion) .panel {
     animation: banner-in var(--dur-s) var(--ease-out) backwards;
 }
